@@ -1,6 +1,14 @@
 (add new changes on top of this file)
 
-23-04-19 Nadine Schwingler  <schwingler@kennziffer.com>
+10-06-01 Nadine Schwingler  <schwingler@kennziffer.com>
+	
+	* Language-Export in Backend. If there are more than one lang-version of the Questionnaire you can now export only the selected lang.
+
+10-05-23 Nadine Schwingler  <schwingler@kennziffer.com>
+	
+	* Security Update
+
+10-04-23 Nadine Schwingler  <schwingler@kennziffer.com>
 	
 	* Changed Version for TER-Compatibility
 

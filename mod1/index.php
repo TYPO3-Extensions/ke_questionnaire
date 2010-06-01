@@ -171,19 +171,28 @@ class tx_kequestionnaire_navframe{
 			while ($row = $TYPO3_DB->sql_fetch_assoc($res)){
 				if(t3lib_BEfunc::readPageAccess($row['pid'],$GLOBALS['BE_USER']->getPagePermsClause(1))){
 					$pagy = t3lib_BEfunc::getRecord('pages',$row['pid']);
-					$out .= '<tr onmouseover="this.style.backgroundColor=\''.t3lib_div::modifyHTMLColorAll($this->doc->bgColor,-5).'\'" onmouseout="this.style.backgroundColor=\'\'">'.
-					'<td style="padding:2px; border:1px #FFFFFF solid" id="ke_questionnaire_'.$row['uid'].'" >'.
-					'<a href="#" onclick="top.fsMod.recentIds[\'txkequestionnaireM1\']='.$row['uid'].
+					$out .= '<tr onmouseover="this.style.backgroundColor=\'';
+					$out .= t3lib_div::modifyHTMLColorAll($this->doc->bgColor,-5);
+					$out .= '\'" onmouseout="this.style.backgroundColor=\'\'">';
+					$out .= '<td style="padding:2px; border:1px #FFFFFF solid" id="ke_questionnaire_'.$row['uid'].'" >';
+					$out .= '<a href="#" onclick="top.fsMod.recentIds[\'txkequestionnaireM1\']='.$row['uid'];
 					//Add Parameters here, to pass them to the submodule
-					';jumpTo(\'id='.$pagy['uid'].'&q_id='.$row['uid'].
-					'\',this,\'ke_questionnaire_'.$row['uid'].'\');">'.
-					'<img src="../../../../typo3conf/ext/ke_questionnaire/mod2/moduleicon.gif" align="top"/>&nbsp;&nbsp;';
+					$out .= ';jumpTo(\'id='.$pagy['uid'].'&q_id='.$row['uid'];
+					$out .= '\',this,\'ke_questionnaire_'.$row['uid'].'\');">';
+					$out .= '<img src="../../../../typo3conf/ext/ke_questionnaire/mod2/moduleicon.gif" align="top"/>&nbsp;&nbsp;';
 					//t3lib_iconWorks::getIconImage('pages',$row,$BACK_PATH,'title="'.htmlspecialchars(t3lib_BEfunc::getRecordPath($pagy['uid'], ' 1=1',20)).'" align="top"');
 					if ($this->extConf['BE_showPageTitle'] == 1){
-						$out .= htmlspecialchars($pagy['title']).'</a></td></tr>';
+						$out .= htmlspecialchars($pagy['title']);
 					} else {
-						$out .= htmlspecialchars($row['header']).'</a></td></tr>';
+						$out .= htmlspecialchars($row['header']);
 					}
+					if ($row['sys_language_uid'] != 0){
+						$out .= ' (';
+						$lang = t3lib_BEfunc::getRecord('sys_language',$row['sys_language_uid']);
+						$out .= $lang['title'];
+						$out .= ')';
+					}
+					$out .= '</a></td></tr>';
 					
 				}
 			}
