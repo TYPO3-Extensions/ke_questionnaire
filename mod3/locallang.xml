@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<T3locallang>
+	<meta type="array">
+		<type>module</type>
+		<description>Language labels for module &quot;web_txkequestionnaireM3&quot;</description>
+	</meta>
+	<data type="array">
+		<languageKey index="default" type="array">
+			<label index="title">Export</label>
+			<label index="function1">Export CSV</label>
+			<label index="function2">Export SPSS</label>
+			<label index="function3">Export PDF</label>
+
+			<label index="none_selected">You must select a Questionnaire first!</label>
+			<label index="result_count">Count of results</label>
+			<label index="finished_count">Count of finished results</label>
+			<label index="error_no_fpdf">You need to install the fpdf-Extension first.</label>
+
+			<label index="download_button">Download</label>
+			<label index="download_button_spss_base">Download SPSS Base-File</label>
+			<label index="download_button_spss_data">Download SPSS Data-File</label>
+			<label index="download_button_pdf_blank">Download the empty PDF-Questionnaire</label>
+			<label index="download_only_finished">download only finished results</label>
+			<label index="download_with_authcode">download with the AuthCode of participant</label>
+
+			<label index="CSV_download_type">Select the type of Export you want to make:</label>
+			<label index="CSV_download_simple">Simple Data-Download</label>
+			<label index="CSV_download_results">Result based Download</label>
+			<label index="CSV_download_questions">Question based Download</label>
+			<label index="CSV_question">Question</label>
+			<label index="CSV_questionPlus">Question / Subquestions</label>
+			<label index="CSV_questionId">Question ID</label>
+			<label index="CSV_answer">Answer</label>
+			<label index="CSV_resultId">Result ID</label>
+			<label index="CSV_resultIdPlus">Result ID / Results</label>
+		</languageKey>
+		<languageKey index="de" type="array">
+			<label index="title">Export</label>
+			<label index="function1">Export CSV</label>
+			<label index="function2">Export SPSS</label>
+			<label index="function3">Export PDF</label>
+
+			<label index="none_selected">Sie müssen zuerst einen Fragebogen auswählen!</label>
+			<label index="result_count">Anzahl der Teilnahmen</label>
+			<label index="finished_count">Anzahl der abgeschlossenen Teilnahmen</label>
+			<label index="error_no_fpdf">Sie müssen zuerst die fpdf-Extension installieren.</label>
+
+			<label index="download_button">Download</label>
+			<label index="download_button_spss_base">Download der SPSS Basis-Datei</label>
+			<label index="download_button_spss_data">Download der SPSS Daten-File</label>
+			<label index="download_button_pdf_blank">Download des leeren PDF-Fragebogens</label>
+			<label index="download_only_finished">nur abgeschlossene Teilnahmen herunterladen</label>
+			<label index="download_with_authcode">mit dem zugehörigen AuthCode herunterladen</label>
+
+			<label index="CSV_download_type">Bitte wählen Sie den Typ des Exports:</label>
+			<label index="CSV_download_simple">Einfacher Daten-Download</label>
+			<label index="CSV_download_results">Teilnahmen basierter Download</label>
+			<label index="CSV_download_questions">Fragen basierter Download</label>
+			<label index="CSV_question">Frage</label>
+			<label index="CSV_questionPlus">Frage / Unterfrage</label>
+			<label index="CSV_questionId">Fragen ID</label>
+			<label index="CSV_answer">Antwort</label>
+			<label index="CSV_resultId">Teilnahme ID</label>
+			<label index="CSV_resultIdPlus">Teilnahme ID / Teilnahmen</label>
+		</languageKey>
+	</data>
+</T3locallang>

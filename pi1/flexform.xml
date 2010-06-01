@@ -1,0 +1,443 @@
+<T3DataStructure>
+	<meta>
+		<langDisable>1</langDisable>
+		<!-- <langChildren>1</langChildren>!-->
+	</meta>
+	<sheets>
+		<sDEF>
+			<ROOT>
+				<TCEforms>
+					<sheetTitle>LLL:EXT:ke_questionnaire/locallang.xml:tt_content.pi_flexform.sheet_general</sheetTitle>
+					<cshFile>LLL:EXT:ke_questionnaire/locallang_csh_flexform.xml</cshFile>
+				</TCEforms>
+				<el>
+				<type>
+					<TCEforms>
+						<label>LLL:EXT:ke_questionnaire/locallang.xml:tt_content.pi_flexform.type</label>
+						<onChange>reload</onChange>
+						<config>
+							<type>select</type>
+							<items type="array">
+								<numIndex index="0" type="array">
+									<numIndex index="0">LLL:EXT:ke_questionnaire/locallang.xml:tt_content.pi_flexform.type.questionnaire</numIndex>
+									<numIndex index="1">QUESTIONNAIRE</numIndex>
+								</numIndex>
+								<numIndex index="1" type="array">
+									<numIndex index="0">LLL:EXT:ke_questionnaire/locallang.xml:tt_content.pi_flexform.type.quiz</numIndex>
+									<numIndex index="1">QUIZ</numIndex>
+								</numIndex>
+								<numIndex index="2" type="array">
+									<numIndex index="0">LLL:EXT:ke_questionnaire/locallang.xml:tt_content.pi_flexform.type.points</numIndex>
+									<numIndex index="1">POINTS</numIndex>
+								</numIndex>         
+							</items>         
+							<maxitems>1</maxitems>
+							<size>1</size>
+							<default>QUESTIONNAIRE</default>
+							<selectedListStyle>width:150px</selectedListStyle>
+							<itemListStyle>width:150px</itemListStyle>
+						</config>
+					</TCEforms>
+				</type>
+				<user_reports>
+					<TCEforms>
+						<exclude>1</exclude>
+						<label>LLL:EXT:ke_questionnaire/locallang.xml:tt_content.pi_flexform.user_reports</label>
+						<displayCond>FIELD:type:!=:QUESTIONNAIRE</displayCond>
+						<config>
+							<type>check</type>
+							<default>1</default>
+						</config>
+					</TCEforms>
+				</user_reports>
+				<q_report_graph>
+					<TCEforms>
+						<exclude>1</exclude>
+						<label>LLL:EXT:ke_questionnaire/locallang.xml:tt_content.pi_flexform.q_report_graph</label>
+						<!--<displayCond>FIELD:type:=:QUIZ</displayCond>!-->
+						<displayCond>EXT:ke_questionnaire_premium:LOADED:true</displayCond>
+						<config>
+							<type>check</type>
+							<default>1</default>
+						</config>
+					</TCEforms>
+				</q_report_graph>
+				<storage_pid>
+					<TCEforms>
+						<exclude>1</exclude>
+						<label>LLL:EXT:ke_questionnaire/locallang.xml:tt_content.pi_flexform.storage_pid</label>
+						<config>
+							<type>group</type>
+							<internal_type>db</internal_type>
+							<allowed>pages</allowed>
+							<size>1</size>
+							<maxitems>1</maxitems>
+							<minitems>1</minitems>
+							<show_thumbs>1</show_thumbs>
+						</config>
+					</TCEforms>
+				</storage_pid>
+				</el>
+			</ROOT>
+		</sDEF>
+		<aDEF>
+			<ROOT>
+				<TCEforms>
+					<sheetTitle>LLL:EXT:ke_questionnaire/locallang.xml:tt_content.pi_flexform.sheet_access</sheetTitle>
+					<cshFile>LLL:EXT:ke_questionnaire/locallang_csh_flexform.xml</cshFile>
+				</TCEforms>
+				<el>
+				<access>
+					<TCEforms>
+						<exclude>1</exclude>
+						<label>LLL:EXT:ke_questionnaire/locallang.xml:tt_content.pi_flexform.access</label>
+						<onChange>reload</onChange>
+						<config>
+							<type>select</type>
+							<items type="array">
+								<numIndex index="0" type="array">
+									<numIndex index="0">LLL:EXT:ke_questionnaire/locallang.xml:tt_content.pi_flexform.access.free</numIndex>
+									<numIndex index="1">FREE</numIndex>
+								</numIndex>
+								<numIndex index="1" type="array">
+									<numIndex index="0">LLL:EXT:ke_questionnaire/locallang.xml:tt_content.pi_flexform.access.fe_users</numIndex>
+									<numIndex index="1">FE_USERS</numIndex>
+								</numIndex>
+								<numIndex index="2" type="array">
+									<numIndex index="0">LLL:EXT:ke_questionnaire/locallang.xml:tt_content.pi_flexform.access.authcode</numIndex>
+									<numIndex index="1">AUTH_CODE</numIndex>
+								</numIndex>         
+							</items>         
+							<maxitems>1</maxitems>
+							<size>1</size>
+							<selectedListStyle>width:150px</selectedListStyle>
+							<itemListStyle>width:150px</itemListStyle>
+						</config>
+					</TCEforms>
+				</access>
+				###TIMER_FF###
+				<max_participations>
+					<TCEforms>
+						<label>LLL:EXT:ke_questionnaire/locallang.xml:tt_content.pi_flexform.max_participations</label>
+						<displayCond>FIELD:access:!=:FREE</displayCond>
+						<config>
+							<type>input</type>
+							<default>1</default>
+							<eval>num</eval>
+							<size>3</size>
+						</config>
+					</TCEforms>
+				</max_participations>
+				<restart_possible>
+					<TCEforms>
+						<label>LLL:EXT:ke_questionnaire/locallang.xml:tt_content.pi_flexform.restart_possible</label>
+						<displayCond>FIELD:access:!=:FREE</displayCond>
+						<config>
+							<type>check</type>
+						</config>
+					</TCEforms>
+				</restart_possible>
+				<history>
+					<TCEforms>
+						<label>LLL:EXT:ke_questionnaire/locallang.xml:tt_content.pi_flexform.history</label>
+						<displayCond>FIELD:access:!=:FREE</displayCond>
+						<config>
+							<type>check</type>
+						</config>
+					</TCEforms>
+				</history>
+				</el>
+			</ROOT>
+		</aDEF>
+		<tDEF>
+			<ROOT>
+				<TCEforms>
+					<sheetTitle>LLL:EXT:ke_questionnaire/locallang.xml:tt_content.pi_flexform.sheet_texts</sheetTitle>
+				</TCEforms>
+				<el>
+				<description>
+					<TCEforms>
+						<label>LLL:EXT:ke_questionnaire/locallang.xml:tt_content.pi_flexform.description</label>
+						<config>
+							<type>text</type>
+							<cols>52</cols>
+							<rows>5</rows>
+						</config>
+						<defaultExtras>richtext[*]:rte_transform[flag=rte_enabled|mode=ts_css]</defaultExtras>
+					</TCEforms>
+				</description>
+				<end_text>
+					<TCEforms>
+						<label>LLL:EXT:ke_questionnaire/locallang.xml:tt_content.pi_flexform.end_text</label>
+						<config>
+							<type>text</type>
+							<cols>52</cols>
+							<rows>5</rows>
+						</config>
+						<defaultExtras>richtext[*]:rte_transform[flag=rte_enabled|mode=ts_css]</defaultExtras>
+					</TCEforms>
+				</end_text>
+				</el>
+			</ROOT>
+		</tDEF>
+		<dDEF>
+			<ROOT>
+				<TCEforms>
+					<sheetTitle>LLL:EXT:ke_questionnaire/locallang.xml:tt_content.pi_flexform.sheet_design</sheetTitle>
+				</TCEforms>
+				<el>
+				<template_dir>
+					<TCEforms>
+						<exclude>1</exclude>
+						<label>LLL:EXT:ke_questionnaire/locallang.xml:tt_content.pi_flexform.template_dir</label>
+						<config>
+							<type>input</type>
+							<wizards type="array">
+								<_PADDING>2</_PADDING>
+								<link type="array">
+									<type>popup</type>
+									<title>Link</title>
+									<icon>link_popup.gif</icon>
+									<script>browse_links.php?mode=wizard&amp;act=folder</script>
+									<params type="array">
+										<blindLinkOptions>file,page,url,mail,spec</blindLinkOptions>
+										<allowedExtensions></allowedExtensions>
+									</params>
+									<JSopenParams>height=300,width=500,status=0,menubar=0,scrollbars=1</JSopenParams>
+								</link>
+							</wizards>
+						</config>
+					</TCEforms>
+				</template_dir>
+				<render_type>
+					<TCEforms>
+						<exclude>1</exclude>
+						<label>LLL:EXT:ke_questionnaire/locallang.xml:tt_content.pi_flexform.render_type</label>
+						<onChange>reload</onChange>
+						<config>
+							<type>select</type>
+							<items type="array">
+								<numIndex index="0" type="array">
+									<numIndex index="0">LLL:EXT:ke_questionnaire/locallang.xml:tt_content.pi_flexform.render_type.all</numIndex>
+									<numIndex index="1">ALL</numIndex>
+								</numIndex>
+								<numIndex index="1" type="array">
+									<numIndex index="0">LLL:EXT:ke_questionnaire/locallang.xml:tt_content.pi_flexform.render_type.questions</numIndex>
+									<numIndex index="1">QUESTIONS</numIndex>
+								</numIndex>
+								<numIndex index="2" type="array">
+									<numIndex index="0">LLL:EXT:ke_questionnaire/locallang.xml:tt_content.pi_flexform.render_type.pages</numIndex>
+									<numIndex index="1">PAGES</numIndex>
+								</numIndex>         
+							</items>         
+							<maxitems>1</maxitems>
+							<size>1</size>
+							<selectedListStyle>width:150px</selectedListStyle>
+							<itemListStyle>width:150px</itemListStyle>
+						</config>
+					</TCEforms>
+				</render_type>
+				<render_count>
+					<TCEforms>
+						<label>LLL:EXT:ke_questionnaire/locallang.xml:tt_content.pi_flexform.render_count</label>
+						<displayCond>FIELD:render_type:!=:ALL</displayCond>
+						<config>
+							<type>input</type>
+							<eval>num</eval>
+							<size>5</size>
+						</config>
+					</TCEforms>
+				</render_count>
+				<render_count_withblind>
+					<TCEforms>
+						<label>LLL:EXT:ke_questionnaire/locallang.xml:tt_content.pi_flexform.render_count_withblind</label>
+						<config>
+							<type>check</type>
+						</config>
+					</TCEforms>
+				</render_count_withblind>
+				<render_count_withoutdependant>
+					<TCEforms>
+						<label>LLL:EXT:ke_questionnaire/locallang.xml:tt_content.pi_flexform.render_count_withoutdependant</label>
+						<config>
+							<type>check</type>
+						</config>
+					</TCEforms>
+				</render_count_withoutdependant>
+				<show_captcha>
+					<TCEforms>
+						<exclude>1</exclude>
+						<label>LLL:EXT:ke_questionnaire/locallang.xml:tt_content.pi_flexform.show_captcha</label>
+						<displayCond>EXT:sr_freecap:LOADED:true</displayCond>
+						<config>
+							<type>check</type>
+						</config>
+					</TCEforms>
+				</show_captcha>
+				<redirect_on_finish_uid>
+					<TCEforms>
+						<label>LLL:EXT:ke_questionnaire/locallang.xml:tt_content.redirect_on_finish_uid</label>
+						<displayCond>FIELD:render_type:!=:ALL</displayCond>
+						<config>
+							<type>select</type>
+							<allownonidvalues>1</allownonidvalues>
+							<items type="array"></items>
+							<itemsProcFunc>tx_kequestionnaire_tx_kequestionnaire_redirect->main</itemsProcFunc>
+						</config>
+					</TCEforms>
+				</redirect_on_finish_uid>
+				<end_page>
+					<TCEforms>
+						<exclude>1</exclude>
+						<label>LLL:EXT:ke_questionnaire/locallang.xml:tt_content.pi_flexform.end_page</label>
+						<config>
+							<type>group</type>
+							<internal_type>db</internal_type>
+							<allowed>pages</allowed>
+							<size>1</size>
+							<maxitems>1</maxitems>
+							<minitems>0</minitems>
+							<show_thumbs>1</show_thumbs>
+						</config>
+					</TCEforms>
+				</end_page>
+				</el>
+			</ROOT>
+		</dDEF>
+		<iDEF>
+			<ROOT>
+				<TCEforms>
+					<sheetTitle>LLL:EXT:ke_questionnaire/locallang.xml:tt_content.pi_flexform.sheet_mailing</sheetTitle>
+				</TCEforms>
+				<el>
+				<mailing>
+					<TCEforms>
+						<label>LLL:EXT:ke_questionnaire/locallang.xml:tt_content.pi_flexform.mailing</label>
+						<config>
+							<type>check</type>
+						</config>
+					</TCEforms>
+				</mailing>
+				<mail_turn>
+					<TCEforms>
+						<exclude>1</exclude>
+						<label>LLL:EXT:ke_questionnaire/locallang.xml:tt_content.pi_flexform.mail_turn</label>
+						<config>
+							<type>select</type>
+							<items type="array">
+								<numIndex index="0" type="array">
+									<numIndex index="0">LLL:EXT:ke_questionnaire/locallang.xml:tt_content.pi_flexform.mail_turn.prompt</numIndex>
+									<numIndex index="1">PROMPT</numIndex>
+								</numIndex>
+								<numIndex index="1" type="array">
+									<numIndex index="0">LLL:EXT:ke_questionnaire/locallang.xml:tt_content.pi_flexform.mail_turn.cron</numIndex>
+									<numIndex index="1">DAILY</numIndex>
+								</numIndex>
+							</items>         
+							<maxitems>1</maxitems>
+							<size>1</size>
+							<selectedListStyle>width:150px</selectedListStyle>
+							<itemListStyle>width:150px</itemListStyle>
+						</config>
+					</TCEforms>
+				</mail_turn>
+				<emails>
+					<TCEforms>
+						<label>LLL:EXT:ke_questionnaire/locallang.xml:tt_content.pi_flexform.emails</label>
+						<config>
+							<type>text</type>
+							<size>250</size>
+							<rows>3</rows>
+						</config>
+					</TCEforms>
+				</emails>
+				<inform_mail_subject>
+					<TCEforms>
+						<label>LLL:EXT:ke_questionnaire/locallang.xml:tt_content.pi_flexform.inform_mail_subject</label>
+						<config>
+							<type>input</type>
+							<size>250</size>
+						</config>
+					</TCEforms>
+				</inform_mail_subject>
+				<inform_mail_text>
+					<TCEforms>
+						<label>LLL:EXT:ke_questionnaire/locallang.xml:tt_content.pi_flexform.inform_mail_text</label>
+						<config>
+							<type>text</type>
+							<size>48</size>
+							<rows>10</rows> 
+						</config>
+					</TCEforms>
+				</inform_mail_text>
+				</el>
+			</ROOT>
+		</iDEF>
+		<mDEF>
+			<ROOT>
+				<TCEforms>
+					<sheetTitle>LLL:EXT:ke_questionnaire/locallang.xml:tt_content.pi_flexform.sheet_invite</sheetTitle>
+				</TCEforms>
+				<el>
+				<mail_from>
+					<TCEforms>
+						<label>LLL:EXT:ke_questionnaire/locallang.xml:tt_content.pi_flexform.mail_from</label>
+						<config>
+							<type>input</type>
+							<size>250</size>
+						</config>
+					</TCEforms>
+				</mail_from>
+				<mail_sender>
+					<TCEforms>
+						<label>LLL:EXT:ke_questionnaire/locallang.xml:tt_content.pi_flexform.mail_sender</label>
+						<config>
+							<type>input</type>
+							<size>250</size>
+						</config>
+					</TCEforms>
+				</mail_sender>
+				<invite_mail_subject>
+					<TCEforms>
+						<label>LLL:EXT:ke_questionnaire/locallang.xml:tt_content.pi_flexform.invite_mail_subject</label>
+						<config>
+							<type>input</type>
+							<size>250</size>
+						</config>
+					</TCEforms>
+				</invite_mail_subject>
+				<invite_mail_text>
+					<TCEforms>
+						<label>LLL:EXT:ke_questionnaire/locallang.xml:tt_content.pi_flexform.invite_mail_text</label>
+						<config>
+							<type>text</type>
+							<size>48</size>
+							<rows>10</rows> 
+						</config>
+					</TCEforms>
+				</invite_mail_text>
+				<remind_mail_subject>
+					<TCEforms>
+						<label>LLL:EXT:ke_questionnaire/locallang.xml:tt_content.pi_flexform.remind_mail_subject</label>
+						<config>
+							<type>input</type>
+							<size>250</size>
+						</config>
+					</TCEforms>
+				</remind_mail_subject>
+				<remind_mail_text>
+					<TCEforms>
+						<label>LLL:EXT:ke_questionnaire/locallang.xml:tt_content.pi_flexform.remind_mail_text</label>
+						<config>
+							<type>text</type>
+							<size>48</size>
+							<rows>10</rows> 
+						</config>
+					</TCEforms>
+				</remind_mail_text>
+				</el>
+			</ROOT>
+		</mDEF>
+		###ADDED_FFSHEET###
+	</sheets>
+</T3DataStructure>

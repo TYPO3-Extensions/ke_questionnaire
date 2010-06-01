@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<T3locallang>
+	<meta type="array">
+		<type>module</type>
+		<description>Language labels for module &quot;web_txkequestionnaireM2&quot;</description>
+	</meta>
+	<data type="array">
+		<languageKey index="default" type="array">
+			<label index="title">Analyse</label>
+			<label index="function1">Basis</label>
+			<label index="function2">Question Charts</label>
+			<label index="function3">Function #3</label>
+
+			<label index="basic_charts">Basic Charts</label>
+			<label index="question_charts">Question Charts</label>
+
+			<label index="result_count">Amount of all results</label>
+			<label index="finished_count">Amount of finished results</label>
+			<label index="parted_count">Amount of partial results</label>
+
+			<label index="timeline_chart">Timeline Chart of participations, based on weeks</label>
+			<label index="timeline_chart_days">Timeline Chart of participations, based on days</label>
+			<label index="timeline_month">Month</label>
+
+			<label index="OFchart_select_week">Weekly</label>
+			<label index="OFchart_select_day">Daily</label>
+
+			<label index="participation_chart">Portion of finished/partial participations</label>
+			<label index="participation_finished">finished</label>
+			<label index="participation_parted">partial</label>
+
+			<label index="tag_label_all">participation(s)</label>
+			<label index="tag_label_finished">finished participations(s)</label>
+			<label index="tag_label_parted">partical participation(s)</label>
+
+			<label index="question_bar_chart">Overview</label>
+			<label index="question_pie_chart">Portions</label>
+
+			<label index="none_selected">You must select a Questionnaire first!</label>
+		</languageKey>
+		<languageKey index="de" type="array">
+			<label index="title">Auswerten</label>
+			<label index="function1">Basis Auswertung</label>
+			<label index="function2">Auswertungen der Fragen</label>
+			<label index="function3">Function #3</label>
+
+			<label index="basic_charts">Basis Auswertungen</label>
+			<label index="question_charts">Auswertungen der Fragen</label>
+
+			<label index="result_count">Gesamtanzahl der Ergebnisse</label>
+			<label index="finished_count">Anzahl vollständiger Teilnahmen</label>
+			<label index="parted_count">Anzahl abgebrochener Teilnahmen</label>
+
+			<label index="timeline_chart">Zeitlicher Ablauf der Teilnehmerzahlen pro Woche</label>
+			<label index="timeline_chart_days">Zeitlicher Ablauf der Teilnehmerzahlen pro Tag</label>
+			<label index="timeline_month">Monat</label>
+
+			<label index="OFchart_select_week">Wochenübersicht</label>
+			<label index="OFchart_select_day">Tagesübersicht</label>
+
+			<label index="participation_chart">Anteil der vollständigen / abgebrochenen Teilnahmen</label>
+			<label index="participation_finished">vollständig</label>
+			<label index="participation_parted">abgebrochen</label>
+
+			<label index="tag_label_all">Teilnahme(n)</label>
+			<label index="tag_label_finished">beendete Teilnahme(n)</label>
+			<label index="tag_label_parted">abgebrochene Teilnahme(n)</label>
+
+			<label index="question_bar_chart">Übersicht</label>
+			<label index="question_pie_chart">Anteile</label>
+
+			<label index="none_selected">Sie müssen zuerst einen Fragebogen auswählen!</label>
+		</languageKey>
+	</data>
+</T3locallang>

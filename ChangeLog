@@ -1,0 +1,21 @@
+(add new changes on top of this file)
+
+23-04-19 Nadine Schwingler  <schwingler@kennziffer.com>
+	
+	* Changed Version for TER-Compatibility
+
+10-04-19 Nadine Schwingler  <schwingler@kennziffer.com>
+	
+	* Added Image Marker for Questions
+
+09-12-23 Nadine Schwingler  <schwingler@kennziffer.com>
+
+	* Changed Flex-Form-Conf for PI1 remember to check the plugin-conf
+
+09-12-12 Nadine Schwingler  <schwingler@kennziffer.com>
+
+	* Added OpenFlash Charts and extendet Matrix
+
+09-09-01 Nadine Schwingler  <schwingler@kennziffer.com>
+
+	* Initial release

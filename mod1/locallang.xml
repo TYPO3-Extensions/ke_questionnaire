@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<T3locallang>
+	<meta type="array">
+		<type>module</type>
+		<description>Language labels for module &quot;txkequestionnaireM1&quot;</description>
+	</meta>
+	<data type="array">
+		<languageKey index="default" type="array">
+			<label index="title">Questionnaire</label>
+			<label index="function1">Function #1</label>
+			<label index="function2">Function #2</label>
+			<label index="function3">Function #3</label>
+			<label index="questionnaires_label">Questionnaires</label>
+		</languageKey>
+		<languageKey index="de" type="array">
+			<label index="title">Fragebögen</label>
+		<label index="questionnaires_label">Fragebögen</label>
+		</languageKey>
+	</data>
+</T3locallang>

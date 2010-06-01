@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<T3locallang>
+	<meta type="array">
+		<type>module</type>
+		<description>Language labels for plugin &quot;tx_kequestionnaire_pi1&quot;</description>
+	</meta>
+	<data type="array">
+		<languageKey index="default" type="array">
+			<label index="test">Test</label>
+			<label index="summe">Sum</label>
+			<label index="no_questions">There are no questions for this questionnaire!</label>
+
+			<label index="format">follow this format: </label>
+			<label index="format_numeric">follow this format: 00,00</label>
+			<label index="format_date">follow this format: tt.mm.yyyy</label>
+			<label index="format_email">follow this format: name@domain.land</label>
+
+			<label index="error_numeric">Please insert Numeric</label>
+			<label index="error_date">Please insert Date</label>
+			<label index="error_email">Please insert Email</label>
+			<label index="error_required">required</label>
+			<label index="error_semantic_required">required</label>
+			<label index="error_required_option">required</label>
+			<label index="error_matrix_required_option">required</label>
+			<label index="error_matrix_required_input">required</label>
+			<label index="error_matrix_numeric">Please insert Numeric</label>
+			<label index="error_matrix_date">Please insert Date</label>
+			<label index="error_matrix_sum">The Sum must be 100%</label>
+
+			<label index="only_feuser">Please log in, this questionnaire is for logged in users only</label>
+			<label index="resume_last">You have started this questionnaire already, do you want to continue your last try?</label>
+			<label index="resume_label">resume</label>
+			<label index="restart_label">restart</label>
+
+			<label index="no_more">You have already participated</label>
+
+			<label index="no_authcode">This questionnaire can only be called with an AuthCode. Please insert your AuthCode</label>
+			<label index="authcode_submit_label">submit AuthCode</label>
+
+			<label index="name">Name</label>
+			<label index="fax">Fax</label>
+			<label index="age">Age</label>
+			<label index="gender">Gender</label>
+			<label index="country">country</label>
+			<label index="status">family state</label>
+			<label index="education">education</label>
+			<label index="job">job</label>
+
+			<label index="title">title</label>
+			<label index="last_name">last name</label>
+			<label index="first_name">fist name</label>
+			<label index="address">street</label>
+			<label index="zip">zip</label>
+			<label index="city">coty</label>
+			<label index="email">email</label>
+
+			<label index="to_questionnaire">to questionnaire</label>
+			<label index="to_last">last page</label>
+			<label index="to_next">next page</label>
+			<label index="submit">submit questionnaire</label>
+
+			<label index="counter_parter">/</label>
+			
+			<label index="quiz_report_title">Ergebnis-Vergleich mit erreichter Punktzahl</label>
+			<label index="quiz_report_total">Gesamt-Durchschnitt</label>
+			<label index="quiz_report_own">eigenes Ergebnis</label>
+			<label index="quiz_report_text">
+				Sie haben ###PERCENT###% der Gesamtpunktzahl erreicht.&lt;br&gt;
+				&lt;br&gt;
+				Es wurden ###POINTS### von ###TOTAL### möglichen Punkten erreicht.&lt;br&gt;
+			</label>
+			<label index="points_report_text">
+				Sie haben ###PERCENT###% der Gesamtpunktzahl erreicht.&lt;br&gt;
+				&lt;br&gt;
+				Es wurden ###POINTS### von ###TOTAL### möglichen Punkten erreicht.&lt;br&gt;
+			</label>
+			
+			<label index="timer_text_total">
+				Sie haben nur begrenzt Zeit diesen Fragebogen zu beantworten.&lt;br&gt;
+				Verbleibende Sekunden: 
+			</label>
+			<label index="timer_text_pages">
+				Sie haben nur begrenzt Zeit die Seiten des Fragebogens zu beantworten.&lt;br&gt;
+				Verbleibende Sekunden: 
+			</label>
+
+			<label index="standard_endtext">Vielen Dank für ihre Teilnahme</label>
+		</languageKey>
+		<languageKey index="de" type="array">
+			<label index="test">Test</label>
+			<label index="summe">Summe</label>
+			<label index="no_questions">Es wurden keine Fragen zu dem Fragebogen angegeben!</label>
+
+			<label index="format">Format beachten: </label>
+			<label index="format_numeric">Format beachten: 00,00</label>
+			<label index="format_date">Format beachten: tt.mm.yyyy</label>
+			<label index="format_email">Format beachten: name@domain.land</label>
+
+			<label index="error_numeric">Bitte Zahl eingeben</label>
+			<label index="error_date">Bitte Datum eingeben</label>
+			<label index="error_email">Bitte Email eingeben</label>
+			<label index="error_required">Dies ist eine Pflichtfrage.</label>
+			<label index="error_semantic_required">Pflichtfeld</label>
+			<label index="error_required_option">Pflichtfeld</label>
+			<label index="error_matrix_required_option">Pflichtfeld</label>
+			<label index="error_matrix_required_input">Pflichtfeld</label>
+			<label index="error_matrix_numeric">Bitte Zahl eingeben</label>
+			<label index="error_matrix_date">Bitte Datum eingeben</label>
+			<label index="error_matrix_sum">Die Summe muss 100% ergeben</label>
+
+			<label index="only_feuser">Diese Umfrage ist nur für eingeloggte User zugänglich. Bitte loggen Sie sich ein!</label>
+			<label index="resume_last">Sie haben diese Umfrage bereits begonnen, möchten Sie mit der Beantwortung fortfahren oder neu beginnen?</label>
+			<label index="resume_label">fortfahren</label>
+			<label index="restart_label">neu beginnen</label>
+
+			<label index="no_more">Sie haben bereits an diesem Fragebogen teilgenommen!</label>
+
+			<label index="no_authcode">Diese Umfrage ist nur mittels Auth-Code zugänglich. Bitte nutzen Sie den Link in Ihrer Email oder tragen Sie den Auth-Code in das Eingabefeld ein.</label>
+			<label index="authcode_submit_label">AuthCode absenden</label>
+
+			<label index="name">Name</label>
+			<label index="fax">Fax</label>
+			<label index="age">Alter</label>
+			<label index="gender">Geschlecht</label>
+			<label index="country">Nationalität</label>
+			<label index="status">Familienstand</label>
+			<label index="education">Ausbildung</label>
+			<label index="job">Beruf</label>
+
+			<label index="title">Titel</label>
+			<label index="last_name">Nachname</label>
+			<label index="first_name">Vorname</label>
+			<label index="address">Strasse</label>
+			<label index="zip">PLZ</label>
+			<label index="city">Ort</label>
+			<label index="email">E-Mail</label>
+
+			<label index="to_questionnaire">Zum Fragebogen</label>
+			<label index="to_last">Vorherige Seite</label>
+			<label index="to_next">Nächste Seite</label>
+			<label index="submit">Fragebogen absenden</label>
+
+			<label index="counter_parter">/</label>
+			
+			<label index="quiz_report_title">Ergebnis-Vergleich mit erreichter Punktzahl</label>
+			<label index="quiz_report_total">Gesamt-Durchschnitt</label>
+			<label index="quiz_report_own">eigenes Ergebnis</label>
+			<label index="quiz_report_text">
+				Sie haben ###PERCENT###% der Gesamtpunktzahl erreicht.&lt;br&gt;
+				&lt;br&gt;
+				Es wurden ###POINTS### von ###TOTAL### möglichen Punkten erreicht.&lt;br&gt;
+			</label>
+			<label index="points_report_text">
+				Sie haben ###PERCENT###% der Gesamtpunktzahl erreicht.&lt;br&gt;
+				&lt;br&gt;
+				Es wurden ###POINTS### von ###TOTAL### möglichen Punkten erreicht.&lt;br&gt;
+			</label>
+			
+			<label index="timer_text_total">
+				Sie haben nur begrenzt Zeit diesen Fragebogen zu beantworten.&lt;br&gt;
+				Verbleibende Sekunden: 
+			</label>
+			<label index="timer_text_pages">
+				Sie haben nur begrenzt Zeit die Seiten des Fragebogens zu beantworten.&lt;br&gt;
+				Verbleibende Sekunden: 
+			</label>
+
+			<label index="standard_endtext">Vielen Dank für ihre Teilnahme</label>
+		</languageKey>
+	</data>
+</T3locallang>

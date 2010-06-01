@@ -1,0 +1,137 @@
+<html>
+<head>
+<link rel="stylesheet" href="styles.css" type="text/css">
+</head>
+<body>
+
+
+<!-- ###QUESTION_SINGLE### begin-->
+<div class="keq_unit" id="question_###NAME###" ###DEPENDANT_STYLE###>
+    <div class="keq_img_left">###IMG_LEFT###</div>
+    <div class="keq_img_right">###IMG_RIGHT###</div>
+    <div class="keq_img_top">###IMG_TOP###</div>
+    <div class="keq_question">
+	###TITLE######TEXT###
+	###HELPBOX###
+    </div>
+    <div class="keq_img_bottom">###IMG_BOTTOM###</div>
+    <div class="keq_cleaner">&nbsp;</div>
+    <div class="keq_input">
+	<!-- ###FIELDS### begin-->
+	<!-- ###INPUT### begin-->###ERRORCLASS###
+	    <!-- ###ERROR_MESSAGE### begin--><div class="keq_error">###ERROR###</div><!-- ###ERROR_MESSAGE### end-->
+	    ###OPEN_PRE_TEXT### <input ###DEPENDANT_AJAX### ###DEPENDANT### type="text" name="###PI###[###NAME###][text]" id="keq_###NAME###" value="###VALUE###" class="keq_inp_large" /> ###OPEN_POST_TEXT###
+	<!-- ###INPUT### end-->
+	<!-- ###FIELDS### end-->
+    </div>
+</div>
+<!-- ###QUESTION_SINGLE### end-->
+
+<hr />
+
+<!-- ###QUESTION_MULTI### begin-->
+<div class="keq_unit" id="question_###NAME###" ###DEPENDANT_STYLE###>
+    <div class="keq_img_left">###IMG_LEFT###</div>
+    <div class="keq_img_right">###IMG_RIGHT###</div>
+    <div class="keq_img_top">###IMG_TOP###</div>
+    <div class="keq_question">
+	###TITLE######TEXT###
+	###HELPBOX###
+    </div>
+    <div class="keq_img_bottom">###IMG_BOTTOM###</div>
+    <div class="keq_cleaner">&nbsp;</div>
+    <div class="keq_input">
+	<!-- ###FIELDS### begin-->
+	<!-- ###INPUT### begin-->
+	    <!-- ###ERROR_MESSAGE### begin--><div class="keq_error">###ERROR###</div><!-- ###ERROR_MESSAGE### end-->
+	    ###OPEN_PRE_TEXT### <textarea ###DEPENDANT### class="keq_inp_textarea" name="###PI###[###NAME###][text]" id="keq_###NAME###" />###VALUE###</textarea>  ###OPEN_POST_TEXT###
+	<!-- ###INPUT### end-->
+	<!-- ###FIELDS### end-->
+    </div>
+</div>
+<!-- ###QUESTION_MULTI### end-->
+
+<hr />
+
+<!-- ###QUESTION_NUMBERIC### begin-->
+<div class="keq_unit" id="question_###NAME###" ###DEPENDANT_STYLE###>
+    <div class="keq_img_left">###IMG_LEFT###</div>
+    <div class="keq_img_right">###IMG_RIGHT###</div>
+    <div class="keq_img_top">###IMG_TOP###</div>
+    <div class="keq_question">
+        ###TITLE######TEXT###
+        ###HELPBOX###
+    </div>
+    <div class="keq_img_bottom">###IMG_BOTTOM###</div>
+    <div class="keq_cleaner">&nbsp;</div>
+    <div class="keq_input">
+	<!-- ###FIELDS### begin-->
+	<!-- ###INPUT### begin-->
+	    <!-- ###ERROR_MESSAGE### begin--><div class="keq_error">###ERROR###</div><!-- ###ERROR_MESSAGE### end-->
+	    ###OPEN_PRE_TEXT### <input ###DEPENDANT### type="text" name="###PI###[###NAME###][text]" id="keq_###NAME###" value="###VALUE###" class="keq_inp_small" ###DEPENDANT_AJAX### /> ###OPEN_POST_TEXT###
+	    <span class="keq_format">
+		###FORMAT_NUMERIC###
+	    </span>
+	<!-- ###INPUT### end-->
+	<!-- ###FIELDS### end-->
+    </div>
+</div>
+<!-- ###QUESTION_NUMBERIC### end-->
+
+<hr />
+
+<!-- ###QUESTION_DATE### begin-->
+<div class="keq_unit" id="question_###NAME###" ###DEPENDANT_STYLE###>
+    <div class="keq_img_left">###IMG_LEFT###</div>
+    <div class="keq_img_right">###IMG_RIGHT###</div>
+    <div class="keq_img_top">###IMG_TOP###</div>
+    <div class="keq_question">
+        ###TITLE######TEXT###
+        ###HELPBOX###
+    </div>
+    <div class="keq_img_bottom">###IMG_BOTTOM###</div>
+    <div class="keq_cleaner">&nbsp;</div>
+    <div class="keq_input">
+	<!-- ###FIELDS### begin-->
+	<!-- ###INPUT### begin-->
+	    <!-- ###ERROR_MESSAGE### begin--><div class="keq_error">###ERROR###</div><!-- ###ERROR_MESSAGE### end-->
+	    ###OPEN_PRE_TEXT### <input ###DEPENDANT### type="text" name="###PI###[###NAME###][text]" id="keq_###NAME###" value="###VALUE###" class="keq_inp_small" /> ###OPEN_POST_TEXT###
+	    <span class="keq_format">
+		###FORMAT_DATE###
+	    </span>
+	<!-- ###INPUT### end-->
+	<!-- ###FIELDS### end-->
+    </div>
+</div>
+<!-- ###QUESTION_DATE### end-->
+
+<hr />
+
+<!-- ###QUESTION_EMAIL### begin-->
+<div class="keq_unit" id="question_###NAME###" ###DEPENDANT_STYLE###>
+    <div class="keq_img_left">###IMG_LEFT###</div>
+    <div class="keq_img_right">###IMG_RIGHT###</div>
+    <div class="keq_img_top">###IMG_TOP###</div>
+    <div class="keq_question">
+	###TITLE######TEXT###
+	###HELPBOX###
+    </div>
+    <div class="keq_img_bottom">###IMG_BOTTOM###</div>
+    <div class="keq_cleaner">&nbsp;</div>
+    <div>
+	<!-- ###FIELDS### begin-->
+	<!-- ###INPUT### begin-->
+	    <!-- ###ERROR_MESSAGE### begin--><div class="keq_error">###ERROR###</div><!-- ###ERROR_MESSAGE### end-->
+	    ###OPEN_PRE_TEXT### <input ###DEPENDANT### type="text" name="###PI###[###NAME###][text]" id="keq_###NAME###" value="###VALUE###" class="keq_inp_large" /> ###OPEN_POST_TEXT###
+	    <span class="keq_format">
+		###FORMAT_EMAIL###
+	    </span>
+	<!-- ###INPUT### end-->
+	<!-- ###FIELDS### end-->
+    </div>
+</div>
+<!-- ###QUESTION_EMAIL### end-->
+
+
+</body>
+</html>

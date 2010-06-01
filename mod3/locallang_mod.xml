@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<T3locallang>
+	<meta type="array">
+		<type>module</type>
+		<description>Language labels for module &quot;web_txkequestionnaireM3&quot; - header, description</description>
+	</meta>
+	<data type="array">
+		<languageKey index="default" type="array">
+			<label index="mlang_tabs_tab">Export</label>
+			<label index="mlang_labels_tabdescr">Export the results of your questionnaires</label>
+		</languageKey>
+		<languageKey index="de" type="array">
+			<label index="mlang_tabs_tab">Exportieren</label>
+			<label index="mlang_labels_tabdescr">Exportiere die Ergebnisse deiner Fragebögen</label>
+		</languageKey>
+	</data>
+</T3locallang>

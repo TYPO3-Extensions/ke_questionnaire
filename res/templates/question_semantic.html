@@ -1,0 +1,74 @@
+<html>
+<head>
+<link rel="stylesheet" href="styles.css" type="text/css">
+</head>
+<body>
+
+<!-- ###QUESTION_SEMANTIC### begin-->
+
+<div class="keq_unit" id="question_###NAME###" ###DEPENDANT_STYLE###>
+	<div class="keq_img_left">###IMG_LEFT###</div>
+	<div class="keq_img_right">###IMG_RIGHT###</div>
+	<div class="keq_img_top">###IMG_TOP###</div>
+	<div class="keq_question">
+	    ###TITLE######TEXT###
+	    ###HELPBOX###
+	</div>
+	<div class="keq_img_bottom">###IMG_BOTTOM###</div>
+	<div class="keq_cleaner">&nbsp;</div>
+	<div class="keq_selection">
+
+		<table>
+		<thead>
+			<tr>
+				<th></th>
+				<!-- ###HEAD### begin-->
+					<!-- ###COLUMN### begin--><th>###VALUE###</th><!-- ###COLUMN### end-->
+				<th>2</th>
+				<th>3</th>
+				<!-- ###HEAD### end-->
+				<th></th>
+				<th></th>
+			</tr>
+		</thead>
+		<tbody>
+			<!-- ###FIELDS### begin-->
+
+				<!-- ###SUBQUESTION### begin-->
+			    <tr class="###ODD_EVEN###">
+					<td>###QUESTION###</td>
+					<!-- ###COLUMNS### begin-->
+						<!-- ###COLUMN### begin-->
+							<td>
+								<input ###DEPENDANT### id="keq_###NAME###_###SUBQUESTION_ID###_###VALUE###" type="radio" name="###PI###[###NAME###][options][###SUBQUESTION_ID###]" value="###VALUE###" ###CHECKED###>
+			    			</td>
+						<!-- ###COLUMN### end-->
+						<td><input type="radio" name="" /></td>
+						<td><input type="radio" name="" /></td>
+						<td><input type="radio" name="" /></td>
+					<!-- ###COLUMNS### end-->
+					<td>###QUESTION2###</td>
+					<td><!-- ###ERROR_MESSAGE### begin--><div class="keq_error">###ERROR###</div><!-- ###ERROR_MESSAGE### end--></td>
+
+				</tr>
+				<!-- ###SUBQUESTION### end-->
+
+				<tr>
+					<td>lorem ipsum</td>
+					<td><input type="radio" name="" /></td>
+					<td><input type="radio" name="" /></td>
+					<td><input type="radio" name="" /></td>
+				</tr>
+			<!-- ###FIELDS### end-->
+
+		</tbody>
+		</table>
+
+	</div>
+</div>
+
+
+<!-- ###QUESTION_SEMANTIC### end-->
+
+</body>
+</html>

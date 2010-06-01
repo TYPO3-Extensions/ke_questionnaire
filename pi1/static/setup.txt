@@ -1,0 +1,451 @@
+
+plugin.tx_kequestionnaire_pi1 {
+	#dateformat.de	= dd.mm.YY
+	#dateformat.en	= mm-dd-YY
+
+	_CSS_DEFAULT_STYLE (
+		.keq_unit {
+			background-color:#EEEEEE;
+			padding:0 3px 3px;
+			width:508px;
+			margin-bottom:15px;
+		}
+
+		.keq_blindunit p.bodytext{
+			color: #FFFFFF;
+		}
+
+		.keq_question {
+			display: block;
+			width: 500px;
+			padding: 3px;
+			background: #DADADA;
+			border: 1px solid black;
+			margin-bottom: 4px;
+		}
+
+		.keq_question p {
+			margin: 0;
+			color: #000000;
+		}
+
+		.tx-kequestionnaire-pi1 .odd {
+			background-color: #DADADA;
+			line-height: 1.5em;
+			padding: 3px;
+		}
+
+		.tx-kequestionnaire-pi1 .even {
+			line-height: 1.5em;
+			padding: 3px;
+		}
+
+		.tx-kequestionnaire-pi1 .title_line {
+			background-color: #DADADA;
+			line-height: 1.5em;
+			padding: 3px;
+			border: 1px solid black;
+		}
+
+		.keq_error {
+			color: red;
+		}
+		
+		.keq_pagecounter_barbox {
+			width: 300px;
+			height: 20px;
+			border: 1px solid black;
+			margin-bottom: 6px;
+			position: relative;
+		}
+		
+		.keq_pagecounter_bar {
+			background: #dadada;
+			height: 100%;
+			z-index: 1;
+			float: left;
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 0;
+		}
+
+		.keq_pagecounter {
+			position: absolute;
+			z-index: 5;
+			left: 45%;
+			margin-top: 2px;
+		}
+
+		.keq_inp_large{
+			width: 300px;
+		}
+
+		.keq_inp_textarea{
+			width: 300px;
+		}
+
+		.keq_question_blind{
+			width: 500px;
+		}
+
+		.keq_selection p {
+			display:inline;
+			margin:0;
+		}
+
+		.keq_selection select {
+			width: 300px;
+		}
+
+		.keq_selection .checkbox_label {
+			padding-top: 1px;
+			margin-left: 30px;
+		}
+
+		.keq_selection .clearer {
+			height: 1px;
+			line-height: 1px;
+			font-size: 1px;
+			clear: both;
+		}
+
+		.keq_selection input {
+			margin: 2px;
+		}
+
+		.keq_selection .checkbox {
+			width: 20px;
+			float: left;
+			margin-top: 4px;
+		}
+
+		.keq_selection thead{
+			color: black;
+		}
+
+		.keq_selection thead th{
+			background-color: #404040;
+		}
+
+		.keq_demographic label {
+			width: 150px;
+			display: block;
+			float: left;
+		}
+
+		.keq_matrix_input, .keq_matrix_radio, .keq_matrix_checkbox, .keq_matrix_th{
+			text-align: center;
+		}
+
+		.keq_navigation {
+			margin-top: 20px;
+		}
+
+		.keq_navigation a {
+			padding: 3px;
+			text-decoration: none;
+			display: block;
+			width: 160px;
+			border: 1px solid #000000;
+			margin: 1px;
+			text-align: center;
+			background-color: #DADADA;
+			float: left;
+			color: #000000;
+		}
+
+		.keq_navigation a:hover
+		{
+			text-decoration: none;
+			color: #000000;
+			background-color: #808080;
+		}
+
+		a.keq_tooltip,
+		a.keq_tooltip:link,
+		a.keq_tooltip:visited,
+		a.keq_tooltip:active {
+			position: relative;
+			text-decoration: none;
+			font-style: bold;
+			border-bottom:0px dotted #4dbcf3;
+		}
+
+		a.keq_tooltip:hover {
+			background: transparent;
+			z-index: 100;
+		}
+
+		a.keq_tooltip span.keq_tip {
+			display: none;
+			text-decoration: none;
+		}
+
+		a.keq_tooltip:hover span.keq_tip {
+			display: block;
+			position: absolute;
+			top: 5px;
+			left: 20px;
+			width: 200px;
+			z-index: 100;
+			padding: 2px 10px 2px 10px;
+			border: 1px dashed #666666;
+			background: #dddddd;
+			color: #000000;
+			font-family: Verdana, Arial, Helvetica, Sans-serif;
+			text-align: left;
+		}
+
+		.keq_selection p{
+			margin: 0;
+		}
+
+		input.keq_radio_rte { display: inline; }
+		input.keq_checkbox_rte { display: inline; }
+
+		.keq_ematrix_spacer {
+			width: 0px;
+			border-left: 1px solid black;
+			padding: 0;
+		}
+		
+		.keq_q_part_text {
+			color: #005500;
+		}
+		
+		.keq_q_no_part_text {
+			color: #550000;
+		}
+		
+		.keq_timer .timer_clock {
+			-moz-background-clip:border;
+			-moz-background-inline-policy:continuous;
+			-moz-background-origin:padding;
+			background:transparent url('../typo3conf/ext/ke_questionnaire/res/images/keq_watchtime.jpg') no-repeat scroll 0 0;
+			color:#278E1C;
+			float:right;
+			font-family:Arial;
+			font-size:16px;
+			font-weight:bold;
+			height:84px;
+			line-height:110px;
+			overflow:hidden;
+			text-align:center;
+			width:62px;
+		}
+		
+		.keq_timer #mins {
+			margin-left: 15px;
+			float: left;
+		}
+		
+		.keq_timer #parter {
+			float: left;
+		}
+		
+		.keq_timer #secs {
+			float: left;
+		}
+		
+		.keq_timer .clearer {
+			height: 1px;
+			line-height: 1px;
+			font-size: 1px;
+			clear: both;
+		}
+		
+		/*From Content.css*/
+		.keq_unit {
+			background-color:#EEEEEE;
+			padding:0 3px 3px;
+			width:700px;
+		}
+		
+		.keq_question {
+			padding: 3px;
+			background: #DADADA;
+			border: 1px solid black;
+			margin-bottom: 4px;
+			width: 691px;
+		}
+		
+		.keq_inp_large{
+			width: 98%;
+		}
+		
+		.keq_inp_textarea{
+			width: 98%;
+		}
+		
+		.keq_question_blind{
+			width: 500px;
+		}
+		
+		.keq_selection select {
+			width: 300px;
+		}
+		
+		.keq_selection thead{
+			color: black;
+		}
+		
+		.keq_selection thead th{
+			background-color: #404040;
+		}
+		
+		.keq_demographic label {
+			width: 150px;
+			display: block;
+			float: left;
+		}
+		
+		.keq_navigation {
+			margin-top: 20px;
+		}
+		
+		.keq_navigation a {
+			padding: 3px;
+			text-decoration: none;
+			display: block;
+			width: 160px;
+			border: 1px solid #000000;
+			margin: 1px;
+			text-align: center;
+			background-color: #DADADA;
+			float: left;
+			color: #000000;
+		}
+		
+		.keq_navigation a:hover 
+		{
+			color: #000000; 
+			background-color: #808080;
+		}
+		
+		/**
+		* Fragebogen-Modul
+		*/
+	        .keq_questionnaire { padding: 15px 0; }
+	        .keq_page {
+			background: #ffffff;
+			padding: 10px 0 0 0;
+	        }
+	        .keq_pagecounter {
+			padding: 0 14px;
+			margin-bottom:6px;
+			text-align: right;
+	        }
+	        .keq_questions {
+			/* border-left: 10px solid #0098A1; */
+	        }
+	        .keq_selection .keq_inp_large { width:600px; }
+	        .keq_input input { width:600px; }
+	       
+	        .keq_input input#keq_66,
+	        .keq_input input#keq_68{
+			width: 30px;
+		}
+	       
+	        .keq_unit {
+			background: transparent;
+			margin-bottom:15px;
+			padding:0 10px 5px 0px;
+			width: auto;
+	        }
+	        .keq_question {
+			/* background:#ccd800; */
+			border-top: 0;
+			border-right: 0;
+			border-bottom: 1px solid #0098A1;
+			border-left: 20px solid #0098A1;
+			background: white;
+			font-weight: bold;
+			display:block;
+			margin-bottom: 0;
+			padding: 4px 6px;
+			width:auto;		 
+	        }
+	        tr.title_line td{
+			background: #F2F2F2;
+			font-style: italic;
+	        }
+	        .keq_blindunit .keq_question {
+			background:#0098A1;
+			color: #fff;
+		}
+	     
+	        .tx-kequestionnaire-pi1 .odd {
+			background-color: transparent;
+			line-height:1.5em;
+			padding:3px;
+	        }
+	     
+	        .tx-kequestionnaire-pi1 .title_line {
+		 	background-color: #d9d9d9;
+			line-height:1.5em;
+			padding:3px;
+			border: 0;
+	        }
+	     
+	        .keq_navigation {
+			margin:20px auto 0 auto;
+			padding: 0 0 10px 0;
+			width: 425px;
+	        }
+	        .keq_navigation a {
+			background-color:#0098A1;
+			border:0;
+			color:#000;
+			display:block;
+			float:left;
+			margin:1px;
+			padding:3px;
+			text-align:center;
+			text-decoration:none;
+			width:200px;
+			font-weight: bold;
+	        }
+	        .keq_navigation a:hover {
+			background-color:#0098A1;
+			color:#fff;
+	        }
+	        .keq_cleaner {
+			clear: both;
+			line-height: 1px;
+			font-size: 1px;
+			height: 1px;
+			overflow: hidden;
+	        }
+	        .keq_selection table {
+			border: 0;
+			margin: 0;
+			width: 100%;
+	        }
+	        .keq_selection thead th {
+			background:#d9d9d9;
+			border: 0;
+			font-weight: normal;
+			font-style: italic;
+			color:#333;
+	        }
+	        .keq_selection, .keq_input {
+			margin: 0 0 0 19px;
+			padding:3px 0 3px 4px;
+			border-left: 1px solid #0098A1;
+			border-right: 0;
+			border-top: 0;
+			border-bottom: 0;
+	        }
+	        .keq_selection tbody td { border-bottom:1px solid #d9d9d9; }
+	        .keq_input { padding:0.45em; }
+	        .keq_question_blind {
+			width:auto;
+			padding:0.45em;
+	        }
+	        .keq_other{ padding:0.45em; }
+	
+		.keq_img_left { float: left }
+		.keq_img_right { float: right }
+	)
+}

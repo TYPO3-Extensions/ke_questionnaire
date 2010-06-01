@@ -1,0 +1,30 @@
+plugin.tx_kequestionnaire_pi1 {
+    dateformat.de	= dd.mm.YY
+    dateformat.en	= mm-dd-YY
+    # Number of page that will give the start timestamp for the result set.
+    # If 0 timestamp is set with finishing the questionnaire
+    timestamp_startpage = 1
+    # If you have a finish-Page and not the ke_questionnaire generated page
+    # you can add the result ID to the link
+    resultIdToFinishPage = 0
+    # central Template Config
+    template_dir = EXT:ke_questionnaire/res/templates/
+}
+
+plugin.tx_kequestionnaire {
+    pdf {
+        orientation = {$plugin.tx_kequestionnaire.orientation}
+        templateFile = {$plugin.tx_kequestionnaire.templateFile}
+        unit = {$plugin.tx_kequestionnaire.unit}
+        format = {$plugin.tx_kequestionnaire.format}
+        margin_left = {$plugin.tx_kequestionnaire.margin_left}
+        margin_right = {$plugin.tx_kequestionnaire.margin_right}
+        margin_top = {$plugin.tx_kequestionnaire.margin_top}
+        font = {$plugin.tx_kequestionnaire.font}
+        font_size = {$plugin.tx_kequestionnaire.font_size}
+        fill_color = {$plugin.tx_kequestionnaire.fill_color}
+        logo_position = {$plugin.tx_kequestionnaire.logo_position}
+        logo_width = {$plugin.tx_kequestionnaire.logo_width}
+        logo_margin_top = {$plugin.tx_kequestionnaire.logo_margin_top}
+    }
+}

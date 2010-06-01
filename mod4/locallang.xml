@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<T3locallang>
+	<meta type="array">
+		<type>module</type>
+		<description>Language labels for module &quot;web_txkequestionnaireM4&quot;</description>
+	</meta>
+	<data type="array">
+		<languageKey index="default" type="array">
+			<label index="title">Invite</label>
+			<label index="invite">Invite Users</label>
+			<label index="authcode">Users for Authcode Generation</label>
+			<label index="remind_users">Users to remind</label>
+
+			<label index="none_selected">You must select a Questionnaire first!</label>
+			<label index="error_missing_text">Please fill field mailtext in plugin</label>
+			<label index="error_missing_marker">Please use markers ###LINK### or ###AUTHCODE### in mailtext</label>
+			<label index="error_missing_subject">Please fill field subject in plugin</label>
+			<label index="error_missing_sender">Please fill fields mail_sender and mail_from in plugin</label>
+			<label index="error_send">Error while sending mail</label>
+			<label index="success_send">All mails where sent</label>
+			<label index="success_generated">All authcodes were generated</label>
+
+			<label index="submit">Submit</label>
+			<label index="back">Back</label>
+			<label index="generateCodes">Generate AuthCodes</label>
+			<label index="generatedAuthcodes">Generated AuthCodes</label>
+
+			<label index="numberOfAuthcodes">Number of Authcodes</label>
+			<label index="numberOfAuthcodesError">Invalid Input</label>
+
+			<label index="sourceTitle">Select Source</label>
+			<label index="sourceInput">Enter addresses</label>
+			<label index="sourceAddressGroup">Select tt_address group</label>
+			<label index="sourceAddress">Select tt_address records</label>
+			<label index="sourceUserGroup">Select Usergroup</label>
+			<label index="sourceUser">Select Users</label>
+
+			<label index="errorInput">Invalid addresses: </label>
+			<label index="errorUser">No user selected</label>
+
+			<label index="function1">Generate AuthCodes</label>
+			<label index="function2">Download AuthCodes</label>
+			<label index="function3">Remind</label>
+		</languageKey>
+		<languageKey index="de" type="array">
+			<label index="title">Einladen</label>
+			<label index="invite">Teilnehmer einladen</label>
+			<label index="authcode">Teilnehmer für AuthCode Generierung</label>
+			<label index="remind_users">zu erinnernde Teilnehmer</label>
+
+			<label index="none_selected">Sie müssen zuerst einen Fragebogen auswählen!</label>
+			<label index="error_missing_text">Bitte füllen Sie das Feld &quot;Einladungstext der Email für das BE Modul Einladen&quot; im Plugin aus</label>
+			<label index="error_missing_marker">Bitte nutzen die die Marker ###LINK### oder ###AUTHCODE### im Feld &quot;Einladungstext der Email für das BE Modul Einladen&quot; im Plugin</label>
+			<label index="error_missing_subject">Bitte füllen Sie das Feld &quot;Titel der Einladungsmail&quot; im Plugin</label>
+			<label index="error_missing_sender">Bitte füllen Sie die Felder &quot;Absender Email&quot; und &quot;Absenderbezeichnung&quot; im Plugin</label>
+			<label index="error_send">Es ist ein Fehler beim Versand der Email aufgetreten!</label>
+			<label index="success_send">Alle Emails wurden versendet</label>
+			<label index="success_generated">Alle AuthCodes wurden generiert</label>
+
+			<label index="submit">Absenden</label>
+			<label index="back">Zurück</label>
+			<label index="generateCodes">AuthCodes Generieren</label>
+			<label index="generatedAuthcodes">Generierte AuthCodes</label>
+
+			<label index="numberOfAuthcodes">Anzahl der AuthCodes</label>
+			<label index="numberOfAuthcodesError">Ungültige Eingabe</label>
+
+			<label index="sourceTitle">Quelle auswählen</label>
+			<label index="sourceInput">Adressen eingeben</label>
+			<label index="sourceAddressGroup">tt_address Gruppe auswählen</label>
+			<label index="sourceAddress">tt_address Datensätze auswählen</label>
+			<label index="sourceUserGroup">Nutzergruppe auswählen</label>
+			<label index="sourceUser">Nutzer auswählen</label>
+
+			<label index="errorInput">Ungültige Adressen: </label>
+			<label index="errorUser">Keine Nutzer ausgewählt</label>
+
+			<label index="function1">AuthCodes generieren</label>
+			<label index="function2">AuthCodes herunterladen</label>
+			<label index="function3">Erinnern</label>
+		</languageKey>
+	</data>
+</T3locallang>

@@ -1,0 +1,193 @@
+<html>
+<head>
+<link rel="stylesheet" href="styles.css" type="text/css">
+</head>
+<body>
+
+<!-- ###QUESTIONNAIRE### begin-->
+<div class="keq_questionnaire">
+    ###PAGES###
+</div>
+<!-- ###QUESTIONNAIRE### end-->
+
+<!-- ###ONLY_FEUSER### begin-->
+<div class="keq_questionnaire">
+    ###TEXT###
+</div>
+<!-- ###ONLY_FEUSER### end-->
+
+<!-- ###NO_AUTHCODE### begin-->
+<div class="keq_questionnaire">
+    <form id="ke_questionnaire" name="ke_questionnaire" class="keq_form" method="post" target="_top" enctype="multipart/form-data" action="###FORM_ACTION###">
+        <p>###TEXT###</p>
+        <input type="text" name="###PI###[auth_code]" value="" id="auth_code" />
+        <div class="keq_navigation">
+            <a name="###PI###[submit_authcode]" href="javascript:document.ke_questionnaire.submit()">###SUBMIT_LABEL###</a>
+        </div>
+    </form>
+</div>
+<!-- ###NO_AUTHCODE### end-->
+
+<!-- ###RESUME_LAST### begin-->
+<div class="keq_questionnaire">
+    <form id="ke_questionnaire" name="ke_questionnaire" class="keq_form" method="post" target="_top" enctype="multipart/form-data" action="###FORM_ACTION###">
+        <p>###TEXT###</p>
+        <div class="keq_navigation">
+            <input type="hidden" name="###PI###[submit_type]" id="submit_type" value="" />
+            <a name="###PI###[submit_lastresultid]" href="javascript:document.getElementById('submit_type').value='resume';document.ke_questionnaire.submit()">###RESUME_LABEL###</a>
+            <a name="###PI###[submit_restart]" value="test" href="javascript:document.getElementById('submit_type').value='restart';document.ke_questionnaire.submit()">###RESTART_LABEL###</a>
+        </div>
+    </form>
+</div>
+<!-- ###RESUME_LAST### end-->
+
+<!-- ###NOMORE### begin-->
+<div class="keq_questionnaire">
+    ###TEXT###
+</div>
+<!-- ###NOMORE### end-->
+
+<!-- Possible Markers:
+    ###QUESTIONS### => All the Questions of the page
+    ###NAV###       => Navigation Buttons/Links
+    ###ACT_PAGE###  => active Page of Questionnaire
+    ###TOTAL_PAGES###   => total of Pages of this Questionnaire
+-->
+<!-- ###OTHER_PAGE### begin-->
+<div class="keq_page">
+    <div class="keq_questions">
+        <div class="keq_other">###TEXT###</div>
+    </div>
+    <form id="ke_questionnaire" name="ke_questionnaire" class="keq_form" method="post" target="_top" enctype="multipart/form-data" action="###FORM_ACTION###">
+        ###NAV###
+        <div style="display:none">
+            ###HIDDEN_FIELDS###
+        </div>
+    </form>
+</div>
+<!-- ###OTHER_PAGE### end-->
+
+<!-- Possible Markers:
+    ###QUESTIONS### => All the Questions of the page
+    ###NAV###       => Navigation Buttons/Links
+    ###ACT_PAGE###  => active Page of Questionnaire
+    ###TOTAL_PAGES###   => total of Pages of this Questionnaire
+-->
+<!-- ###PAGE### begin-->
+<div class="keq_page">
+    ###PAGE_COUNTER###
+    <form id="ke_questionnaire" name="ke_questionnaire" class="keq_form" method="post" target="_top" enctype="multipart/form-data" action="###FORM_ACTION###">
+        ###SHOW_TIMER###
+        ###FORM_PRE_ADD###
+        <div class="keq_questions">
+            ###QUESTIONS###
+            ###CAPTCHA###
+        </div>
+        ###NAV###
+        <div style="display:none">
+            ###HIDDEN_FIELDS###
+        </div>
+        ###FORM_POST_ADD###
+    </form>
+</div>
+###JS###
+<!-- ###PAGE### end-->
+
+<!-- ###PAGECOUNTER### begin-->
+    <div class="keq_pagecounter_barbox">
+        <div class="keq_pagecounter_bar" style="width:###COUNTERBAR_WIDTH###"  id="ke_pagecounter_bar">&nbsp;</div>
+        <div class="keq_pagecounter"  id="ke_pagecounter">###ACT_PAGE######COUNTER_PARTER######TOTAL_PAGES###</div>
+    </div>
+<!-- ###PAGECOUNTER### end-->
+
+<!-- ###NAVIGATION### begin-->
+<div class="keq_navigation">
+    ###LAST### ###NEXT###
+</div>
+<!-- ###NAVIGATION### end-->
+
+<!-- ###NAV_BUTTON### begin-->
+<a href="###HREF###" name="###PI###[###NAME###]">###TEXT###</a>
+<!-- ###NAV_BUTTON### end-->
+
+<!-- ###HIDDEN_FIELD### begin-->
+<input type="hidden" name="###NAME###" id="keq_###NAME###" value="###VALUE###" />
+<!-- ###HIDDEN_FIELD### end-->
+
+<!-- ###FE_DATAMINING### begin-->
+<div class="keq_dataminig">
+    ###USER_SELECT###
+</div>
+<br />
+<!-- ###FE_DATAMINING### end-->
+
+<!-- ###FE_DATAMINING_PART_SUBMIT### begin-->
+<div class="keq_dataminig">
+    ###USER_SELECT###
+</div>
+<br />
+<!-- ###FE_DATAMINING_PART_SUBMIT### end-->
+
+<!-- ###CAPTCHA_BOX### begin-->
+<div class="###PI###-captcha">
+    <label for="###PI###_captcha_response">###SR_FREECAP_NOTICE###</label>
+    ###SR_FREECAP_CANT_READ###
+    <br />
+    <input type="text" size="15" id="keq_###PI###_captcha_response" name="###PI###[captcha_response]" title="###SR_FREECAP_NOTICE###" value="">
+    ###SR_FREECAP_IMAGE###
+    ###SR_FREECAP_ACCESSIBLE###
+    </div>
+<!-- ###CAPTCHA_BOX### end-->
+
+<!-- ###QUIZ_REPORT### begin-->
+<div class="keq_quiz_report">
+    <p>&nbsp;</p>
+    <p>###TEXT###</p>
+    ###CERTIFICATE###
+    <p>###REPORT###</p>
+</div>
+<!-- ###QUIZ_REPORT### end-->
+
+<!-- ###POINTS_REPORT### begin-->
+<div class="keq_points_report">
+    <p>&nbsp;</p>
+    <p>###TEXT###</p>
+    <p>###REPORT###</p>
+</div>
+<!-- ###POINTS_REPORT### end-->
+
+<!-- ###TIMER### begin-->
+<div class="keq_timer">
+    <div class="keq_timer_text">###TEXT###</div>
+    <div class="clearer"> </div>
+    <div class="timer_clock">
+        <div id="mins">###MINS###</div><div id="parter">:</div><div id="secs">###SECS###</div>
+    </div>
+    <div class="clearer"> </div>
+    <script type='text/javascript'>
+        function time() {
+            if (i == 0){
+                document.forms["ke_questionnaire"].submit();
+            } else {
+                i--;
+                mins = Math.floor(i/60);
+                secs = i%60; 
+                document.getElementById("secs").innerHTML = secs;
+                document.getElementById("mins").innerHTML = mins;
+                document.getElementById("timer_left").value = i;    
+            }            
+        }
+        
+        var i=###TIMER_BASE###;
+        setInterval('time()',1000);
+    </script>
+    <input type="hidden" value="###TIMER_BASE###" name="###PI###[timer]" id="timer_left"/>
+    <input type="hidden" value="###TIMER_P###" name="###PI###[timer_a][p]"/>
+    <input type="hidden" value="###TIMER_TSTMP###" name="###PI###[timer_a][tstmp]"/>
+</div>
+<div class="cleaner"></div>
+<br />
+<!-- ###TIMER### end-->
+
+</body>
+</html>

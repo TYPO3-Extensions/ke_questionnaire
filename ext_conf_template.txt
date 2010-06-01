@@ -1,0 +1,21 @@
+# cat=basic/enable; type=string; label=Demographic Fields to exclude:All of fe_users fields are able. Place the not to be ever shown in this list
+demographic_fields_exclude = password,usergroup,starttime,endtime,lockToDomain,image,disable,TSconfig,felogin_redirectPid
+
+# cat=basic/enable; type=string; label=Demographic Address Fields to exclude:All of tt_address fields are able. Place the not to be ever shown in this list
+demographic_address_fields_exclude = hidden,addressgroup,image
+
+# cat=basic/enable; type=boolean; label=Show the Page title in the BE-Module-Tree instead of the Plugin-Title
+BE_showPageTitle = 1
+
+# cat=basic/enable; type=string; label=Marker for Selected Values in CSV Export
+CSV_marker = x
+
+# cat=basic/enable; type=string; label=Parter for CSV Export
+CSV_parter = ,
+
+# cat=basic/enable; type=string; label=Text-Qualifier for CSV Export
+CSV_qualifier = "
+
+# cat=basic/enable; type=integer; label=Max length of Authcode
+maxAuthCodeLength = 0
+

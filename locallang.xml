@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<T3locallang>
+	<meta type="array">
+		<type>module</type>
+		<description>Language labels for extension 'ke_questionnaire'</description>
+	</meta>
+	<data type="array">
+		<languageKey index="default" type="array">
+			<label index="pi1_title">keq questionnaire</label>
+			<label index="pi1_plus_wiz_description">Inserts a questionnaire</label>
+			
+			<label index="tx_kequestionnaire.base">Base</label>
+			<label index="tx_kequestionnaire.flow">Question aspects</label>
+			<label index="tx_kequestionnaire.type_based">Answer aspects</label>
+			<label index="tx_kequestionnaire.type_based.ds">type based aspects</label>
+			<label index="tx_kequestionnaire.sub_types">content</label>
+			<label index="tx_kequestionnaire.answers">answers</label>
+
+			<label index="tt_content.pi_flexform.sheet_general">General</label>
+			<label index="tt_content.pi_flexform.sheet_access">Access</label>
+			<label index="tt_content.pi_flexform.sheet_texts">Texts</label>
+			<label index="tt_content.pi_flexform.sheet_design">Appearance</label>
+			<label index="tt_content.pi_flexform.sheet_mailing">Mailing</label>
+			<label index="tt_content.pi_flexform.sheet_invite">Invite Texts for BE</label>
+
+			<label index="tt_content.pi_flexform.type">Type of questionnaire</label>
+			<label index="tt_content.pi_flexform.type.questionnaire">Questionnaire</label>
+			<label index="tt_content.pi_flexform.type.quiz">Quiz/eLearning</label>
+			<label index="tt_content.pi_flexform.type.points">Points</label>
+
+			<label index="tt_content.pi_flexform.user_reports">Show Analysis in Frontend</label>
+			<label index="tt_content.pi_flexform.q_report_graph">show graphical analysis</label>
+			<label index="tt_content.redirect_on_finish_uid">Question used for redirect on finish</label>
+			
+			<label index="tt_content.pi_flexform.access">Access</label>
+			<label index="tt_content.pi_flexform.access.free">free</label>
+			<label index="tt_content.pi_flexform.access.fe_users">FE-User</label>
+			<label index="tt_content.pi_flexform.access.authcode">AuthCode Invitation</label>
+			<label index="tt_content.pi_flexform.max_participations">Max participations for user \n(not for free access)</label>
+
+			<label index="tt_content.pi_flexform.timer_type">Typ der zur Verfügung stehenden Bearbeitungszeit</label>
+			<label index="tt_content.pi_flexform.timer_type.free">freie Bearbeitung</label>
+			<label index="tt_content.pi_flexform.timer_type.total">Bearbeitungszeit für den gesamten Fragebogen</label>
+			<label index="tt_content.pi_flexform.timer_type.pages">Bearbeitungszeit pro Seite</label>
+			<label index="tt_content.pi_flexform.max_time">Maximale Bearbeitungszeit für Nutzer in Minuten \n(Die Zeit zur Beantwortung des gesamten Fragebogens wird auf diese Zeit beschränkt)</label>
+
+			<label index="tt_content.pi_flexform.storage_pid">Storage Page</label>
+			<label index="tt_content.pi_flexform.restart_possible">Restart possible\n(user can restart the questionnaire)</label>
+			<label index="tt_content.pi_flexform.history">create History</label>
+
+			<label index="tt_content.pi_flexform.description">Starttext for questionnaire</label>
+			<label index="tt_content.pi_flexform.end_text">Endtext for questionnaire</label>
+
+			<label index="tt_content.pi_flexform.template_dir">Template dir</label>
+			<label index="tt_content.pi_flexform.render_type">Render Type</label>
+			<label index="tt_content.pi_flexform.render_type.all">One Page</label>
+			<label index="tt_content.pi_flexform.render_type.questions">questions/page</label>
+			<label index="tt_content.pi_flexform.render_type.pages">amount of pages</label>
+			<label index="tt_content.pi_flexform.render_count">Amount of questions/page, amount of pages</label>
+			<label index="tt_content.pi_flexform.render_count_withblind">Blind elements will be counted for page calculation</label>
+			<label index="tt_content.pi_flexform.render_count_withoutdependant">Dependant questions will NOT be counted for page calculation</label>
+			<label index="tt_content.pi_flexform.linear">Lineare Beantwortung erforderlich \n(Die Anzeige erfolgt automatisch mit 1 Frage / Seite)</label>
+			<label index="tt_content.pi_flexform.show_captcha">Sow Captcha on last page</label>
+			<label index="tt_content.pi_flexform.end_page">Page the user will be headed to. Endtext will NOT be shown.</label>
+
+			<label index="tt_content.pi_flexform.mailing">Send Email Notification\nThis Email will be send to the given email-addresses here</label>
+			<label index="tt_content.pi_flexform.mail_turn">Mail Turn</label>
+			<label index="tt_content.pi_flexform.mail_turn.prompt">direct</label>
+			<label index="tt_content.pi_flexform.mail_turn.cron">per Cronjob</label>
+			<label index="tt_content.pi_flexform.emails">comma separated list of emails</label>
+			<label index="tt_content.pi_flexform.inform_mail_text">Text of Email</label>
+			<label index="tt_content.pi_flexform.inform_mail_subject">Emailsubject</label>
+
+			<label index="tt_content.pi_flexform.invite_mail_text">Text for BE-Invitation Mail</label>
+			<label index="tt_content.pi_flexform.remind_mail_text">Text for BE-Reminder Mail</label>
+			<label index="tt_content.pi_flexform.invite_mail_subject">Title of invitation mail</label>
+			<label index="tt_content.pi_flexform.remind_mail_subject">Title of reminder mail</label>
+			<label index="tt_content.pi_flexform.mail_from">sender</label>
+			<label index="tt_content.pi_flexform.mail_sender">sender email</label>
+
+			<label index="tt_content.pi_flexform.FeUser_Fields_Sheet">Datafields to show</label>
+			<label index="tt_content.pi_flexform.FeUser_Fields">Please select the fields</label>
+			<label index="tt_content.pi_flexform.FeUser_Mandatory_Sheet">mandatory fields</label>
+			<label index="tt_content.pi_flexform.FeUser_Mandatory">Please select the mandatory fields</label>
+			<label index="tt_content.pi_flexform.FeUser_Mandatory_label">(mandatory)</label>
+
+			<label index="tt_content.pi_flexform.pi1_uid">id of PI1</label>
+			<label index="tt_content.pi_flexform.list_type">list type</label>
+			<label index="tt_content.pi_flexform.list_type.user">user</label>
+			<label index="tt_content.pi_flexform.list_type.list">list of all</label>
+			<label index="tt_content.pi_flexform.list_type.shortlist">teaser list</label>
+			<label index="tt_content.pi_flexform.list">Questionnaires to be shown</label>
+			<label index="tt_content.pi_flexform.description_length">Length of description shown</label>
+			
+			<label index="tt_content.pi_flexform.redirect_save">Save your settings to use this.</label>
+			<label index="tt_content.pi_flexform.redirect_no">---</label>
+		</languageKey>
+		<languageKey index="de" type="array">
+			<label index="pi1_title">keq Fragebogen</label>
+			<label index="pi1_plus_wiz_description">Fügt einen Fragebogen hinzu</label>
+			<label index="pi2_title">keq FE Datenerfassung</label>
+			<label index="pi2_plus_wiz_description">Fügt ein Plugin zur FE-Datenerfassung hinzu</label>
+			<label index="pi3_title">keq Anzeige der Teilnahmen</label>
+			<label index="pi3_plus_wiz_description">Zeigt eine Liste der Teilnahmen des aktuellen Nutzers</label>
+			<label index="pi4_title">keq Anonymisierte Auswertungen</label>
+			<label index="pi4_plus_wiz_description">Zeigt anonymisierte Auswertungen eines ausgewählten Fragebogens</label>
+
+			<label index="tx_kequestionnaire.base">Basis</label>
+			<label index="tx_kequestionnaire.flow">Frageeigenschaften</label>
+			<label index="tx_kequestionnaire.type_based">Beantwortungsoptionen</label>
+			<label index="tx_kequestionnaire.type_based.ds">Bearbeitungsoptionen</label>
+			<label index="tx_kequestionnaire.sub_types">Inhalt</label>
+			<label index="tx_kequestionnaire.answers">Antworten</label>
+
+			<label index="tt_content.pi_flexform.sheet_general">Allgemeines</label>
+			<label index="tt_content.pi_flexform.sheet_access">Zugriff</label>
+			<label index="tt_content.pi_flexform.sheet_texts">Texte</label>
+			<label index="tt_content.pi_flexform.sheet_design">Aussehen</label>
+			<label index="tt_content.pi_flexform.sheet_mailing">Benachrichtungen</label>
+			<label index="tt_content.pi_flexform.sheet_invite">Einladungstexte für BE</label>
+
+			<label index="tt_content.pi_flexform.type">Typ des Fragebogens</label>
+			<label index="tt_content.pi_flexform.type.questionnaire">Fragebogen</label>
+			<label index="tt_content.pi_flexform.type.quiz">Quiz/eLearning</label>
+			<label index="tt_content.pi_flexform.type.points">Punktewertung</label>
+
+			<label index="tt_content.pi_flexform.user_reports">Frontend-Auswertungen für Nutzer anzeigen</label>
+			<label index="tt_content.pi_flexform.q_report_graph">graphische Auswertung anzeigen</label>
+
+			<label index="tt_content.pi_flexform.access">Zugriff</label>
+			<label index="tt_content.pi_flexform.access.free">Freier Zugriff</label>
+			<label index="tt_content.pi_flexform.access.fe_users">FE-Nutzer</label>
+			<label index="tt_content.pi_flexform.access.authcode">AuthCode Einladung</label>
+			<label index="tt_content.pi_flexform.max_participations">Maximale Anzahl an Teilnahmen pro Nutzer \n(greift nicht bei freiem Zugriff)</label>
+
+			<label index="tt_content.pi_flexform.timer_type">Typ der zur Verfügung stehenden Bearbeitungszeit</label>
+			<label index="tt_content.pi_flexform.timer_type.free">freie Bearbeitung</label>
+			<label index="tt_content.pi_flexform.timer_type.total">Bearbeitungszeit für den gesamten Fragebogen</label>
+			<label index="tt_content.pi_flexform.timer_type.pages">Bearbeitungszeit pro Seite</label>
+			<label index="tt_content.pi_flexform.max_time">Maximale Bearbeitungszeit für Nutzer in Minuten \n(Die Zeit zur Beantwortung des gesamten Fragebogens wird auf diese Zeit beschränkt)</label>
+
+			<label index="tt_content.pi_flexform.storage_pid">Speicherungsort der Fragebogen-Datensätze</label>
+			<label index="tt_content.pi_flexform.restart_possible">Neustart der Bearbeitung möglich\n(Der Nutzer kann den Fragebogen noch einmal von vorne beginnen, wenn er die Bearbeitung wieder aufnimmt)</label>
+			<label index="tt_content.pi_flexform.history">Änderungsverfolgung\n(Sofern der Nutzer die Bearbeitung wieder aufnimmt, wird der alte Stand in einer Historie gespeichert)</label>
+
+			<label index="tt_content.pi_flexform.description">Beschreibung des Fragebogens</label>
+			<label index="tt_content.pi_flexform.end_text">Abschlusstext des Fragebogens</label>
+
+			<label index="tt_content.pi_flexform.template_dir">Verzeichnis der Templates</label>
+			<label index="tt_content.pi_flexform.render_type">Darstellungsart des Fragebogens</label>
+			<label index="tt_content.pi_flexform.render_type.all">Auf einer Seite</label>
+			<label index="tt_content.pi_flexform.render_type.questions">Auf Basis der Fragenzahl/Seite</label>
+			<label index="tt_content.pi_flexform.render_type.pages">Auf Basis der Gesamtanzahl der Seiten</label>
+			<label index="tt_content.pi_flexform.render_count">Anzahl der Fragen pro Seite / Anzahl der Seiten</label>
+			<label index="tt_content.pi_flexform.render_count_withblind">Blindtexte werden bei der Berechnung der Seitenzahl als Frage gezählt</label>
+			<label index="tt_content.pi_flexform.render_count_withoutdependant">Abhängige Fragen werden NICHT bei der Berechnung der Seitenzahl gezählt</label>
+			<label index="tt_content.pi_flexform.linear">Lineare Beantwortung erforderlich \n(Die Anzeige erfolgt automatisch mit 1 Frage / Seite)</label>
+			<label index="tt_content.pi_flexform.show_captcha">Captcha auf der letzten Seite anzeigen</label>
+			<label index="tt_content.pi_flexform.end_page">Seite, die angezeigt werden soll, nachdem der Fragebogen fertig gestellt wurde\nIn diesem Fall wird der Abschlusstext NICHT angezeigt!</label>
+
+			<label index="tt_content.pi_flexform.mailing">Email Benachrichtigungen versenden\nDies ist eine Informationsmail an den Betreiber des Fragebogens, nicht an den Teilnehmer!</label>
+			<label index="tt_content.pi_flexform.mail_turn">Häufigkeit des Versands \nBei Versand durch Cronjob bitte darauf achten, dass dieser separat eingerichtet werden muss.</label>
+			<label index="tt_content.pi_flexform.mail_turn.prompt">direkt</label>
+			<label index="tt_content.pi_flexform.mail_turn.daily">täglich, gesammelt</label>
+			<label index="tt_content.pi_flexform.mail_turn.weekly">wöchentlich, gesammelt</label>
+			<label index="tt_content.pi_flexform.mail_turn.cron">per Cronjob</label>
+			<label index="tt_content.pi_flexform.emails">Email-Adressen für den Empfang der Benachrichtigung \n(Komma-separierte Liste)</label>
+			<label index="tt_content.pi_flexform.inform_mail_text">Informationstext über die Teilnahme an diesem Fragebogen</label>
+			<label index="tt_content.pi_flexform.inform_mail_subject">Titel der Informationsmail</label>
+
+			<label index="tt_content.pi_flexform.invite_mail_text">Einladungstext der Email für das BE Modul Einladen</label>
+			<label index="tt_content.pi_flexform.remind_mail_text">Erinnerungstext der Email für das BE Modul Einladen</label>
+			<label index="tt_content.pi_flexform.invite_mail_subject">Titel der Einladungsmail</label>
+			<label index="tt_content.pi_flexform.remind_mail_subject">Titel der Erinnerungsmail</label>
+			<label index="tt_content.pi_flexform.mail_from">Absenderbezeichnung</label>
+			<label index="tt_content.pi_flexform.mail_sender">Absender Email</label>
+
+			<label index="tt_content.pi_flexform.FeUser_Fields_Sheet">Anzuzeigende Datenfelder</label>
+			<label index="tt_content.pi_flexform.FeUser_Fields">Bitte wählen Sie die Datenfelder aus.</label>
+			<label index="tt_content.pi_flexform.FeUser_Mandatory_Sheet">Pflicht-Datenfelder</label>
+			<label index="tt_content.pi_flexform.FeUser_Mandatory">Bitte wählen Sie die Datenfelder, die Pflichtfelder darstellen sollen.</label>
+			<label index="tt_content.pi_flexform.FeUser_Mandatory_label">(Pflichtfeld)</label>
+
+			<label index="tt_content.pi_flexform.pi1_uid">ID der PI1 für die die Daten erfasst werden sollen</label>
+			<label index="tt_content.pi_flexform.list_type">Art der Auflistung</label>
+			<label index="tt_content.pi_flexform.list_type.user">Nur für den aktuellen Nutzer</label>
+			<label index="tt_content.pi_flexform.list_type.list">Auflistung der unten angegebene Fragebögen</label>
+			<label index="tt_content.pi_flexform.list_type.shortlist">Kurzliste/Teaser von Fragebögen</label>
+			<label index="tt_content.pi_flexform.list">Anzuzeigende Fragebögen\nBitte wählen sie die Plugins aus.</label>
+			<label index="tt_content.pi_flexform.description_length">Länge der Beschreibung in der Listenansicht</label>
+			
+			<label index="tt_content.pi_flexform.redirect_save">Speichern Sie zunächst Ihre Einstellungen.</label>
+			<label index="tt_content.pi_flexform.redirect_no">---</label>
+		</languageKey>
+	</data>
+</T3locallang>

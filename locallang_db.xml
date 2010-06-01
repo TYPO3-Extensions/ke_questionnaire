@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<T3locallang>
+	<meta type="array">
+		<type>database</type>
+		<description>Language labels for database tables/fields belonging to extension 'ke_questionnaire'</description>
+	</meta>
+	<data type="array">
+		<languageKey index="default" type="array">
+			<label index="tx_kequestionnaire_questions">Question</label>
+			<label index="tx_kequestionnaire_questions.type.I.open">open question</label>
+			<label index="tx_kequestionnaire_questions.type.I.closed">closed question</label>
+			<label index="tx_kequestionnaire_questions.type.I.matrix">matrix</label>
+			<label index="tx_kequestionnaire_questions.type.I.ematrix">extended matrix</label>
+			<label index="tx_kequestionnaire_questions.type.I.refusal">Refusal rate</label>
+			<label index="tx_kequestionnaire_questions.type.I.semantic">semantic differential</label>
+			<label index="tx_kequestionnaire_questions.type.I.demographic">demographic data / address data</label>
+			<label index="tx_kequestionnaire_questions.type.I.privacy">privacy policy</label>
+			<label index="tx_kequestionnaire_questions.type.I.blind">blind</label>
+			<label index="tx_kequestionnaire_questions.type">questiontype</label>
+			<label index="tx_kequestionnaire_questions.title">title</label>
+			<label index="tx_kequestionnaire_questions.show_title">show title?</label>
+			<label index="tx_kequestionnaire_questions.text">text of question</label>
+			<label index="tx_kequestionnaire_questions.helptext">helptext</label>
+			<label index="tx_kequestionnaire_questions.image">image</label>
+			<label index="tx_kequestionnaire_questions.image_position">image position</label>
+			<label index="tx_kequestionnaire_questions.image_position.I.0">left</label>
+			<label index="tx_kequestionnaire_questions.image_position.I.1">right</label>
+			<label index="tx_kequestionnaire_questions.image_position.I.2">top</label>
+			<label index="tx_kequestionnaire_questions.image_position.I.3">bottom</label>
+			<label index="tx_kequestionnaire_questions.mandatory">mandatory question?</label>
+			<label index="tx_kequestionnaire_questions.mandatory_correct">needs to be answered correctly, to continue?</label>
+			<label index="tx_kequestionnaire_questions.time">time to answer</label>
+			<label index="tx_kequestionnaire_questions.dependant_show">show if dependant?</label>
+			<label index="tx_kequestionnaire_questions.open_type.I.0">single line</label>
+			<label index="tx_kequestionnaire_questions.open_type.I.1">multi line</label>
+			<label index="tx_kequestionnaire_questions.open_type">type of open question</label>
+			<label index="tx_kequestionnaire_questions.open_pre_text">open question pre text</label>
+			<label index="tx_kequestionnaire_questions.open_in_text">open question inside Text</label>
+			<label index="tx_kequestionnaire_questions.open_post_text">open question post text</label>
+			<label index="tx_kequestionnaire_questions.open_validation.I.0">none</label>
+			<label index="tx_kequestionnaire_questions.open_validation.I.1">numeric</label>
+			<label index="tx_kequestionnaire_questions.open_validation.I.2">date</label>
+			<label index="tx_kequestionnaire_questions.open_validation.I.3">e-mail</label>
+			<label index="tx_kequestionnaire_questions.open_validation">open question validation</label>
+			<label index="tx_kequestionnaire_questions.closed_type.I.0">single with radiobuttons</label>
+			<label index="tx_kequestionnaire_questions.closed_type.I.1">multiple with checkboxes</label>
+			<label index="tx_kequestionnaire_questions.closed_type.I.2">single selectbox</label>
+			<label index="tx_kequestionnaire_questions.closed_type.I.3">multiple selectbox</label>
+			<label index="tx_kequestionnaire_questions.closed_type.I.4">single with buttons</label>
+			<label index="tx_kequestionnaire_questions.closed_type">closed question type</label>
+			<label index="tx_kequestionnaire_questions.closed_selectsize">size of select-box</label>
+			<label index="tx_kequestionnaire_questions.closed_inputfield">input field for last answer-option</label>
+			<label index="tx_kequestionnaire_questions.matrix_type.I.0">radiobuttons (single)</label>
+			<label index="tx_kequestionnaire_questions.matrix_type.I.1">checkboxes (multiple)</label>
+			<label index="tx_kequestionnaire_questions.matrix_type.I.2">input fields (validation possible)</label>
+			<label index="tx_kequestionnaire_questions.matrix_type">matrix type</label>
+			<label index="tx_kequestionnaire_questions.matrix_validation.I.0">numeric</label>
+			<label index="tx_kequestionnaire_questions.matrix_validation.I.1">date</label>
+			<label index="tx_kequestionnaire_questions.matrix_validation.I.2">percent</label>
+			<label index="tx_kequestionnaire_questions.matrix_validation">matrix validation types</label>
+			<label index="tx_kequestionnaire_questions.demographic_type.I.0">demographic data</label>
+			<label index="tx_kequestionnaire_questions.demographic_type.I.1">address Data</label>
+			<label index="tx_kequestionnaire_questions.demographic_type.I.2">both sets of Data</label>
+			<label index="tx_kequestionnaire_questions.demographic_type">demographic type / address data type</label>
+			<label index="tx_kequestionnaire_questions.demographic_fields">demographic datafields (fe_users)</label>
+			<label index="tx_kequestionnaire_questions.demographic_addressfields">address datafields (tt_address)</label>
+			<label index="tx_kequestionnaire_questions.privacy_post">privacy policy, text after checkbox</label>
+			<label index="tx_kequestionnaire_questions.privacy_link">privacy policy, link to a page</label>
+			<label index="tx_kequestionnaire_questions.privacy_file">privacy policy, attachement</label>
+			<label index="tx_kequestionnaire_questions.answers">answers</label>
+			<label index="tx_kequestionnaire_questions.columns">columns</label>
+			<label index="tx_kequestionnaire_questions.submatrix">sub matrix</label>
+			<label index="tx_kequestionnaire_questions.dependancy">dependancy</label>
+			<label index="tx_kequestionnaire_questions.dependancy_simple">simple dependancy (Only one value is enough to acitvate the question)</label>
+			<label index="tx_kequestionnaire_questions.subquestions">subquestions</label>
+			<label index="tx_kequestionnaire_questions.sublines">sublines</label>
+			
+			<label index="tx_kequestionnaire_answers">Answer</label>
+			<label index="tx_kequestionnaire_answers.title">title</label>
+			<label index="tx_kequestionnaire_answers.value">value</label>
+			<label index="tx_kequestionnaire_answers.correct_answer">is this the correct answer?</label>
+			<label index="tx_kequestionnaire_answers.text">text</label>
+			<label index="tx_kequestionnaire_answers.helptext">helptext</label>
+			<label index="tx_kequestionnaire_answers.image">image</label>
+			<label index="tx_kequestionnaire_answers.finish_page_uid">Page shown after finishing the questionnaire</label>
+			
+			<label index="tx_kequestionnaire_columns">Column (for matrix or semantic differential)</label>
+			<label index="tx_kequestionnaire_columns.title">title</label>
+			<label index="tx_kequestionnaire_columns.image">image</label>
+			<label index="tx_kequestionnaire_columns.different_type.I.0">Radiobuttons (Single)</label>
+			<label index="tx_kequestionnaire_columns.different_type.I.1">Checkboxen (Multiple)</label>
+			<label index="tx_kequestionnaire_columns.different_type.I.2">Input type</label>
+			<label index="tx_kequestionnaire_columns.different_type">Different input type for subquestion</label>
+			
+			<label index="tx_kequestionnaire_subquestions">Subquestion (matrix)</label>
+			<label index="tx_kequestionnaire_subquestions.title_line">is title line (no input fields rendered)</label>
+			<label index="tx_kequestionnaire_subquestions.title">title</label>
+			<label index="tx_kequestionnaire_subquestions.text">text</label>
+			<label index="tx_kequestionnaire_subquestions.image">image</label>
+			
+			<label index="tx_kequestionnaire_dependancies">Dependancy (of questions)</label>
+			<label index="tx_kequestionnaire_dependancies.dependant_question">dependant question</label>
+			<label index="tx_kequestionnaire_dependancies.activating_question">activating question</label>
+			<label index="tx_kequestionnaire_dependancies.activating_value.I.0">value1</label>
+			<label index="tx_kequestionnaire_dependancies.activating_value">activating value</label>
+			<label index="tx_kequestionnaire_dependancies.activating_formula">activating formula</label>
+			
+			<label index="tx_kequestionnaire_sublines">Subline (semantic differential)</label>
+			<label index="tx_kequestionnaire_sublines.start">from</label>
+			<label index="tx_kequestionnaire_sublines.end">to</label>
+			
+			<label index="tx_kequestionnaire_submatrix">Submatrix (extended matrix)</label>
+			<label index="tx_kequestionnaire_submatrix.text">Sub Matrix Header</label>
+			
+			<label index="tx_kequestionnaire_outcomes">Outcome (for Type Point System)</label>
+			<label index="tx_kequestionnaire_outcomes.title">title</label>
+			<label index="tx_kequestionnaire_outcomes.value_start">value range start</label>
+			<label index="tx_kequestionnaire_outcomes.value_end">value range end</label>
+			<label index="tx_kequestionnaire_outcomes.text">text</label>
+			<label index="tx_kequestionnaire_outcomes.image">image</label>
+			
+			<label index="tx_kequestionnaire_authcodes">Auth-Code</label>
+			<label index="tx_kequestionnaire_authcodes.qpid">questionnaire data Pid</label>
+			<label index="tx_kequestionnaire_authcodes.authcode">authcode</label>
+			<label index="tx_kequestionnaire_authcodes.feuser">feuser</label>
+			
+			<label index="tx_kequestionnaire_results">Result</label>
+			<label index="tx_kequestionnaire_results.auth">authentication</label>
+			<label index="tx_kequestionnaire_results.start">start of first processing</label>
+			<label index="tx_kequestionnaire_results.last">last processing</label>
+			<label index="tx_kequestionnaire_results.finished">finished processing</label>
+			<label index="tx_kequestionnaire_results.data">data</label>
+			<label index="tx_kequestionnaire_results.ip">IP-address</label>
+			
+			<label index="tx_kequestionnaire_history">History of Results</label>
+			<label index="tx_kequestionnaire_history.data">data</label>
+			<label index="tx_kequestionnaire_history.history_time">Time of making history</label>
+			<label index="tx_kequestionnaire_history.result_id">result id</label>
+			
+			<label index="tx_kequestionnaire_pdfversion">PDF Version of the questionnaire</label>
+			<label index="tx_kequestionnaire_pdfversion.pdflink">PDF File</label>
+			<label index="tx_kequestionnaire_pdfversion.showtime">When to show?</label>
+			<label index="tx_kequestionnaire_pdfversion.showtime.never">never</label>
+			<label index="tx_kequestionnaire_pdfversion.showtime.before">before participation</label>
+			<label index="tx_kequestionnaire_pdfversion.showtime.after">after participation</label>
+			<label index="tx_kequestionnaire_pdfversion.showtime.always">always</label>
+			
+			<label index="tt_content.list_type_pi1">keq questionnaire</label>
+			<label index="tt_content.list_type_pi2">keq fe data mining</label>
+			<label index="tt_content.list_type_pi3">keq participation list</label>
+		</languageKey>
+		<languageKey index="de" type="array">
+			<label index="tx_kequestionnaire_questions">Frage</label>
+			<label index="tx_kequestionnaire_questions.type.I.open">Offene Frage</label>
+			<label index="tx_kequestionnaire_questions.type.I.closed">Geschlossene Frage</label>
+			<label index="tx_kequestionnaire_questions.type.I.matrix">Matrix</label>
+			<label index="tx_kequestionnaire_questions.type.I.ematrix">Erweiterte Matrix</label>
+			<label index="tx_kequestionnaire_questions.type.I.semantic">Sematisches Differential</label>
+			<label index="tx_kequestionnaire_questions.type.I.demographic">Demographische Daten / Adress-Daten</label>
+			<label index="tx_kequestionnaire_questions.type.I.privacy">Datenschutzerklärung</label>
+			<label index="tx_kequestionnaire_questions.type.I.blind">Textelement</label>
+			<label index="tx_kequestionnaire_questions.type.I.refusal">Rückläuferquoten</label>
+			<label index="tx_kequestionnaire_questions.type">Fragetyp</label>
+			<label index="tx_kequestionnaire_questions.title">Titel</label>
+			<label index="tx_kequestionnaire_questions.show_title">Titel anzeigen?</label>
+			<label index="tx_kequestionnaire_questions.text">Fragetext</label>
+			<label index="tx_kequestionnaire_questions.helptext">Hilfetext</label>
+			<label index="tx_kequestionnaire_questions.image">Bild</label>
+			<label index="tx_kequestionnaire_questions.image_position">Bildposition</label>
+			<label index="tx_kequestionnaire_questions.image_position.I.0">Links</label>
+			<label index="tx_kequestionnaire_questions.image_position.I.1">Rechts</label>
+			<label index="tx_kequestionnaire_questions.image_position.I.2">Oben</label>
+			<label index="tx_kequestionnaire_questions.image_position.I.3">Unten</label>
+			<label index="tx_kequestionnaire_questions.mandatory">Pflichtfrage?</label>
+			<label index="tx_kequestionnaire_questions.mandatory_correct">muss die Frage korrekt beantwortet sein um fort zu fahren?</label>
+			<label index="tx_kequestionnaire_questions.time">Beantwortungszeit</label>
+			<label index="tx_kequestionnaire_questions.dependant_show">Anzeigen bei Abhängigkeit?</label>
+			<label index="tx_kequestionnaire_questions.open_type.I.0">Einzeilig</label>
+			<label index="tx_kequestionnaire_questions.open_type.I.1">Mehrzeilig</label>
+			<label index="tx_kequestionnaire_questions.open_type">Platz für Beantwortung</label>
+			<label index="tx_kequestionnaire_questions.open_pre_text">Text vor dem Eingabefeld</label>
+			<label index="tx_kequestionnaire_questions.open_in_text">Text im Eingabefeld</label>
+			<label index="tx_kequestionnaire_questions.open_post_text">Text hinter dem Eingabefeld</label>
+			<label index="tx_kequestionnaire_questions.open_validation.I.0">keine</label>
+			<label index="tx_kequestionnaire_questions.open_validation.I.1">Zahlen</label>
+			<label index="tx_kequestionnaire_questions.open_validation.I.2">Datum</label>
+			<label index="tx_kequestionnaire_questions.open_validation.I.3">E-Mail</label>
+			<label index="tx_kequestionnaire_questions.open_validation">Überprüfung</label>
+			<label index="tx_kequestionnaire_questions.closed_type.I.0">Einfachauswahl mit Radiobuttons</label>
+			<label index="tx_kequestionnaire_questions.closed_type.I.1">Mehrfachauswahl mit Checkboxen</label>
+			<label index="tx_kequestionnaire_questions.closed_type.I.2">Einfachauswahl mit Select-Box</label>
+			<label index="tx_kequestionnaire_questions.closed_type.I.3">Mehrfachauswahl mit Select-Box</label>
+			<label index="tx_kequestionnaire_questions.closed_type.I.4">Einfachauswahl mit Buttons</label>
+			<label index="tx_kequestionnaire_questions.closed_type">Einfach- oder Mehrfachauswahl</label>
+			<label index="tx_kequestionnaire_questions.closed_selectsize">Höhe der Select-Box (Anzahl an Antworten)</label>
+			<label index="tx_kequestionnaire_questions.closed_inputfield">Eingabefeld definieren</label>
+			<label index="tx_kequestionnaire_questions.matrix_type.I.0">Radiobuttons (Einfachauswahl)</label>
+			<label index="tx_kequestionnaire_questions.matrix_type.I.1">Checkboxen (Mehrfachauswahl)</label>
+			<label index="tx_kequestionnaire_questions.matrix_type.I.2">Eingabefelder (Überprüfung möglich)</label>
+			<label index="tx_kequestionnaire_questions.matrix_type">Beantwortungstypen</label>
+			<label index="tx_kequestionnaire_questions.matrix_validation.I.0">Zahlen</label>
+			<label index="tx_kequestionnaire_questions.matrix_validation.I.1">Datum</label>
+			<label index="tx_kequestionnaire_questions.matrix_validation.I.2">Prozent</label>
+			<label index="tx_kequestionnaire_questions.matrix_validation">Überprüfung</label>
+			<label index="tx_kequestionnaire_questions.matrix_inputfield">Position des Eingabefeldes</label>
+			<label index="tx_kequestionnaire_questions.demographic_type.I.0">demografische Daten</label>
+			<label index="tx_kequestionnaire_questions.demographic_type.I.1">Adress-Daten</label>
+			<label index="tx_kequestionnaire_questions.demographic_type.I.2">beide Datenfelder</label>
+			<label index="tx_kequestionnaire_questions.demographic_type">Datentypen</label>
+			<label index="tx_kequestionnaire_questions.demographic_fields">Demographische Datenfelder (fe_users)</label>
+			<label index="tx_kequestionnaire_questions.demographic_addressfields">Adress Datenfelder (tt_address)</label>
+			<label index="tx_kequestionnaire_questions.privacy_post">Datenschutzerklärung, Text nach der Checkbox</label>
+			<label index="tx_kequestionnaire_questions.privacy_link">Datenschutzerklärung, Link zu einer Seite</label>
+			<label index="tx_kequestionnaire_questions.privacy_file">Datenschutzerklärung, Dateianhang</label>
+			<label index="tx_kequestionnaire_questions.answers">Antworten</label>
+			<label index="tx_kequestionnaire_questions.columns">Angaben Spalten</label>
+			<label index="tx_kequestionnaire_questions.dependancy">Abhängigkeiten</label>
+			<label index="tx_kequestionnaire_questions.dependancy_simple">Einfache Abhängigkeit</label>
+			<label index="tx_kequestionnaire_questions.subquestions">Angaben Zeilen</label>
+			<label index="tx_kequestionnaire_questions.sublines">Angaben Zeilen</label>
+			<label index="tx_kequestionnaire_questions.submatrix">Sub Matrix</label>
+			
+			<label index="tx_kequestionnaire_submatrix">Submatrix (erweiterte Matrix)</label>
+			<label index="tx_kequestionnaire_submatrix.text">Sub Matrix Überschrift</label>
+			
+			<label index="tx_kequestionnaire_answers">Antwort</label>
+			<label index="tx_kequestionnaire_answers.title">Titel</label>
+			<label index="tx_kequestionnaire_answers.value">Wert</label>
+			<label index="tx_kequestionnaire_answers.correct_answer">Ist dies die richtige Antwort?</label>
+			<label index="tx_kequestionnaire_answers.text">Text</label>
+			<label index="tx_kequestionnaire_answers.helptext">Hilfetext / Hinweistext</label>
+			<label index="tx_kequestionnaire_answers.image">Bild</label>
+			<label index="tx_kequestionnaire_answers.finish_page_uid">Abschlussseite bei Beendigung</label>
+			
+			<label index="tx_kequestionnaire_columns">Fragenspalte (für Matrix oder semantisches Differential)</label>
+			<label index="tx_kequestionnaire_columns.title">Titel</label>
+			<label index="tx_kequestionnaire_columns.image">Bild</label>
+			<label index="tx_kequestionnaire_columns.different_type.I.0">Radiobuttons (Einfachauswahl)</label>
+			<label index="tx_kequestionnaire_columns.different_type.I.1">Checkboxen (Mehrfachauswahl)</label>
+			<label index="tx_kequestionnaire_columns.different_type.I.2">Eingabefelder</label>
+			<label index="tx_kequestionnaire_columns.different_type">Abweichender Typ der Unterfrage</label>
+			
+			<label index="tx_kequestionnaire_subquestions">Unterfrage (Matrixfragen)</label>
+			<label index="tx_kequestionnaire_subquestions.title">Titel</label>
+			<label index="tx_kequestionnaire_subquestions.text">Text</label>
+			<label index="tx_kequestionnaire_subquestions.image">Bild</label>
+			<label index="tx_kequestionnaire_subquestions.title_line">Titelzeile (Es werden keine Eingabefelder generiert)</label>
+			
+			<label index="tx_kequestionnaire_dependancies">Abhängigkeit (von Fragen)</label>
+			<label index="tx_kequestionnaire_dependancies.dependant_question">abhängige Frage</label>
+			<label index="tx_kequestionnaire_dependancies.activating_question">auslösende Frage (Bei Änderung bitte speichern, damit die zugehörigen Antworten geladen werden)</label>
+			<label index="tx_kequestionnaire_dependancies.activating_value.I.0">wert1</label>
+			<label index="tx_kequestionnaire_dependancies.activating_value">auslösender Wert (Wenn die auslösende Frage eine geschlossene Frage ist)</label>
+			<label index="tx_kequestionnaire_dependancies.activating_formula">auslösende Klausel (Vergleichsart,Wert)(Wenn die auslösende Frage eine offene Frage ist)</label>
+			
+			<label index="tx_kequestionnaire_sublines">Unterzeile (sematisches Differential)</label>
+			<label index="tx_kequestionnaire_sublines.start">von</label>
+			<label index="tx_kequestionnaire_sublines.end">bis</label>
+			
+			<label index="tx_kequestionnaire_outcomes">Auswertung (für den Typ Punktewertung)</label>
+			<label index="tx_kequestionnaire_outcomes.title">Titel</label>
+			<label index="tx_kequestionnaire_outcomes.value_start">Punktebereich Start</label>
+			<label index="tx_kequestionnaire_outcomes.value_end">Punktebereich Ende</label>
+			<label index="tx_kequestionnaire_outcomes.text">Text</label>
+			<label index="tx_kequestionnaire_outcomes.image">Bild</label>
+			
+			<label index="tx_kequestionnaire_authcodes">Auth-Code</label>
+			<label index="tx_kequestionnaire_authcodes.qpid">Fragebogen Daten Pid</label>
+			<label index="tx_kequestionnaire_authcodes.authcode">Auth-Code</label>
+			<label index="tx_kequestionnaire_authcodes.email">EMail</label>
+			<label index="tx_kequestionnaire_authcodes.feuser">FE-User</label>
+			
+			<label index="tx_kequestionnaire_results">Ergebnis</label>
+			<label index="tx_kequestionnaire_results.auth">Authentifizierung</label>
+			<label index="tx_kequestionnaire_results.start">Start der ersten Bearbeitung</label>
+			<label index="tx_kequestionnaire_results.last">letzte Bearbeitung Timestamp</label>
+			<label index="tx_kequestionnaire_results.finished">Bearbeitung beendet</label>
+			<label index="tx_kequestionnaire_results.data">Daten</label>
+			<label index="tx_kequestionnaire_results.ip">IP-Adresse</label>
+			
+			<label index="tx_kequestionnaire_history">Verlauf der Ergebnisse</label>
+			<label index="tx_kequestionnaire_history.data">Daten</label>
+			<label index="tx_kequestionnaire_history.history_time">Zeitpunkt der Bearbeitung</label>
+			<label index="tx_kequestionnaire_history.result_id">Ergebnis ID</label>
+			
+			<label index="tx_kequestionnaire_pdfversion">PDF Version des Fragebogens</label>
+			<label index="tx_kequestionnaire_pdfversion.pdflink">PDF Datei</label>
+			<label index="tx_kequestionnaire_pdfversion.showtime">Wann soll der Link zum PDF-Download angezeigt werden?</label>
+			<label index="tx_kequestionnaire_pdfversion.showtime.never">niemals</label>
+			<label index="tx_kequestionnaire_pdfversion.showtime.before">vor Teilnahme</label>
+			<label index="tx_kequestionnaire_pdfversion.showtime.after">nach Teilnahme</label>
+			<label index="tx_kequestionnaire_pdfversion.showtime.always">immer</label>
+			
+			<label index="tt_content.list_type_pi1">keq Fragebogen</label>
+			<label index="tt_content.list_type_pi2">keq FE Datenerfassung</label>
+			<label index="tt_content.list_type_pi3">keq Teilnahmeliste</label>
+		</languageKey>
+	</data>
+</T3locallang>

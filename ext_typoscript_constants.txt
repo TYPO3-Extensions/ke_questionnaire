@@ -1,0 +1,31 @@
+plugin.tx_kequestionnaire {
+    ### PDFCONFIG ###
+    pdf {
+        # cat=plugin.ke_questionnaire/pdf/base; type=string; label=orientation: orientation of the PDF-Page. (portrait, landscape)
+        orientation = portrait
+        # cat=plugin.ke_questionnaire/pdf/base; type=string; label= Template File.
+        templateFile =
+        # cat=plugin.ke_questionnaire/pdf/base; type=string; label=unit
+        unit = mm
+        # cat=plugin.ke_questionnaire/pdf/base; type=string; label=format
+        format = A4
+        # cat=plugin.ke_questionnaire/pdf/margins; type=int+; label=margin left
+        margin_left = 10
+        # cat=plugin.ke_questionnaire/pdf/margins; type=int+; label=margin right
+        margin_right = 10
+        # cat=plugin.ke_questionnaire/pdf/margins; type=int+; label=margin top
+        margin_top = 10
+        # cat=plugin.ke_questionnaire/pdf/font; type=string; label=font
+        font = arial
+        # cat=plugin.ke_questionnaire/pdf/font; type=int+; label=font size
+        font_size = 10
+        # cat=plugin.ke_questionnaire/pdf/font; type=int+; label=fill color
+        #fill_color = 75
+        # cat=plugin.ke_questionnaire/pdf/logo; type=string; label=logo position
+        logo_position = top_right
+        # cat=plugin.ke_questionnaire/pdf/logo; type=int+; label=logo width
+        logo_width = 25
+        # cat=plugin.ke_questionnaire/pdf/logo; type=int+; label=logo margin top
+        logo_margin_top = 15
+    }
+}

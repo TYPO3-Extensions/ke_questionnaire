@@ -1,0 +1,213 @@
+<html>
+<head>
+<link rel="stylesheet" href="styles.css" type="text/css">
+</head>
+<body>
+
+
+
+<!-- ###QUESTION_RADIO### begin-->
+<!-- <form method="GET" action="index.php"> -->
+<div class="keq_unit" id="question_###NAME###" ###DEPENDANT_STYLE###>
+    <div class="keq_img_left">###IMG_LEFT###</div>
+    <div class="keq_img_right">###IMG_RIGHT###</div>
+    <div class="keq_img_top">###IMG_TOP###</div>
+    <div class="keq_question">
+	###TITLE######TEXT###
+	###HELPBOX###
+    </div>
+    <div class="keq_img_bottom">###IMG_BOTTOM###</div>
+    <div class="keq_cleaner">&nbsp;</div>
+    <div class="keq_selection">
+	<!-- ###ERROR_MESSAGE### begin--><div class="keq_error">###ERROR###</div><!-- ###ERROR_MESSAGE### end-->
+	<!-- ###FIELDS### begin-->
+	    <!-- ###RADIO### begin-->
+	    <div class="###ODD_EVEN###">
+	    <input ###STYLE### ###DEPENDANT### type="radio" name="###PI###[###NAME###][options]" id="keq_###NAME###_###VALUE###" value="###VALUE###" ###CHECKED### ###DEPENDANT_AJAX### ###RB_JS###>
+	    ###LABEL###
+	    <!-- ###HELP### begin--><a class="keq_tooltip" href="#">
+		<img src="###HELPIMAGE###" />
+		<span class="keq_tip">
+		    ###HELPTEXT###
+		</span>
+	    </a><!-- ###HELP### end-->
+	    <div class="clearer">&nbsp;</div>
+	    </div>
+	    <!-- ###RADIO### end-->
+	    <input type="radio" name="" value=""> lorem ipsum<br>
+	    <input type="radio" name="" value=""> lorem ipsum<br>
+	    <!-- ###RADIO_WITH_INPUT### begin-->
+	    <div class="###ODD_EVEN###">
+		<!-- ###ERROR_MESSAGE### begin--><div class="keq_error">###ERROR###</div><!-- ###ERROR_MESSAGE### end-->
+		<input ###STYLE### ###DEPENDANT###  type="radio" name="###PI###[###NAME###][options]" id="keq_###NAME###_###VALUE###" value="###VALUE_OPTION###" ###CHECKED### ###DEPENDANT_AJAX###/>
+		###LABEL###
+		<input ###DEPENDANT_TEXT###  type="text" name="###PI###[###NAME###][text][###VALUE_OPTION###]" id="keq_###NAME###_###VALUE###_text" value="###VALUE_TEXT###" class="keq_inp_large" />
+		<!-- ###HELP### begin--><a class="keq_tooltip" href="#">
+		    <img src="###HELPIMAGE###" />
+		    <span class="keq_tip">
+		        ###HELPTEXT###
+		    </span>
+		</a><!-- ###HELP### end-->
+		<div class="clearer">&nbsp;</div>
+	    </div>
+	    <!-- ###RADIO_WITH_INPUT### end-->
+	<!-- ###FIELDS### end-->
+    </div>
+</div>
+<!-- ###QUESTION_RADIO### end-->
+
+
+<hr />
+
+<!-- ###QUESTION_CHECKBOX### begin-->
+
+<div class="keq_unit" id="question_###NAME###" ###DEPENDANT_STYLE###>
+    <div class="keq_img_left">###IMG_LEFT###</div>
+    <div class="keq_img_right">###IMG_RIGHT###</div>
+    <div class="keq_img_top">###IMG_TOP###</div>
+    <div class="keq_question">
+        ###TITLE######TEXT###
+        ###HELPBOX###
+    </div>
+    <div class="keq_img_bottom">###IMG_BOTTOM###</div>
+    <div class="keq_cleaner">&nbsp;</div>
+    <div class="keq_selection">
+	<!-- ###ERROR_MESSAGE### begin--><div class="keq_error">###ERROR###</div><!-- ###ERROR_MESSAGE### end-->
+	<!-- ###FIELDS### begin-->
+	    <!-- ###CHECKBOX### begin-->
+	    <div class="###ODD_EVEN###">
+		<input class="checkbox" ###STYLE### ###DEPENDANT### type="checkbox" name="###PI###[###NAME###][options][]" id="keq_###NAME###_###VALUE###" value="###VALUE###" ###CHECKED### ###DEPENDANT_AJAX### />
+		<div class="checkbox_label">###LABEL###</div>
+		<!-- ###HELP### begin--><a class="keq_tooltip" href="#">
+		    <img src="###HELPIMAGE###" />
+		    <span class="keq_tip">
+		        ###HELPTEXT###
+		    </span>
+		</a><!-- ###HELP### end-->
+		<div class="clearer">&nbsp;</div>
+	    </div>
+	    <!-- ###CHECKBOX### end-->
+	    <input ###DEPENDANT### type="checkbox" name="" value=""> lorem ipsum<br>
+	    <input ###DEPENDANT### type="checkbox" name="" value=""> lorem ipsum<br>
+	    <!-- ###CHECKBOX_WITH_INPUT### begin-->
+	    <div class="###ODD_EVEN###">
+		<!-- ###ERROR_MESSAGE### begin--><div class="keq_error">###ERROR###</div><!-- ###ERROR_MESSAGE### end-->
+		<input class="checkbox" ###STYLE### ###DEPENDANT### type="checkbox" name="###PI###[###NAME###][options][]" id="keq_###NAME###_###VALUE###" value="###VALUE_OPTION###" ###CHECKED### ###DEPENDANT_AJAX###>
+		<div class="checkbox_label">###LABEL###
+		    <input ###DEPENDANT_TEXT### type="text" name="###PI###[###NAME###][text][###VALUE_OPTION###]" id="keq_###NAME###_###VALUE###_text" value="###VALUE_TEXT###" class="keq_inp_large" />
+		</div>
+		<div class="clearer">&nbsp;</div>
+		<!-- ###HELP### begin--><a class="keq_tooltip" href="#">
+		    <img src="###HELPIMAGE###" />
+		    <span class="keq_tip">
+		        ###HELPTEXT###
+		    </span>
+		</a><!-- ###HELP### end-->
+		<div class="clearer">&nbsp;</div>
+	    </div>
+	    <!-- ###CHECKBOX_WITH_INPUT### end-->
+	<!-- ###FIELDS### end-->
+    </div>
+</div>
+
+<!-- ###QUESTION_CHECKBOX### end-->
+
+
+<hr />
+
+<!-- ###QUESTION_SELECTFIELD### begin-->
+<div class="keq_unit" id="question_###NAME###" ###DEPENDANT_STYLE###>
+    <div class="keq_img_left">###IMG_LEFT###</div>
+    <div class="keq_img_right">###IMG_RIGHT###</div>
+    <div class="keq_img_top">###IMG_TOP###</div>
+    <div class="keq_question">
+        ###TITLE######TEXT###
+        ###HELPBOX###
+    </div>
+    <div class="keq_img_bottom">###IMG_BOTTOM###</div>
+    <div class="keq_cleaner">&nbsp;</div>
+    <div class="keq_selection">
+        <!-- ###FIELDS### begin-->
+        <!-- ###SELECT### begin--><span class="###ODD_EVEN###">
+	    <!-- ###ERROR_MESSAGE### begin--><div class="keq_error">###ERROR###</div><!-- ###ERROR_MESSAGE### end-->
+	    <select ###DEPENDANT### name="###PI###[###NAME###][options]" id="keq_###NAME###" ###DEPENDANT_AJAX###>
+	    <!-- ###OPTIONS### begin-->
+	        <option>lorem ipsum</option>
+	        <option>lorem ipsum</option>
+	    <!-- ###OPTIONS### end-->
+	    </select></span>
+	<!-- ###SELECT### end-->
+	<!-- ###FIELDS### end-->
+    </div>
+</div>
+<!-- ###QUESTION_SELECTFIELD### end-->
+
+<hr />
+
+
+<!-- ###QUESTION_SELECTFIELD_MULTI### begin-->
+<div class="keq_unit" id="question_###NAME###" ###DEPENDANT_STYLE###>
+    <div class="keq_img_left">###IMG_LEFT###</div>
+    <div class="keq_img_right">###IMG_RIGHT###</div>
+    <div class="keq_img_top">###IMG_TOP###</div>
+    <div class="keq_question">
+	###TITLE######TEXT###
+	###HELPBOX###
+    </div>
+    <div class="keq_img_bottom">###IMG_BOTTOM###</div>
+    <div class="keq_cleaner">&nbsp;</div>
+    <div class="keq_selection">
+	<!-- ###FIELDS### begin-->
+	<!-- ###SELECT### begin--><span class="###ODD_EVEN###">
+	<!-- ###ERROR_MESSAGE### begin--><div class="keq_error">###ERROR###</div><!-- ###ERROR_MESSAGE### end-->
+	<select ###DEPENDANT### name="###PI###[###NAME###][options][]" id="keq_###NAME###" multiple ###CLOSED_SIZE###  ###DEPENDANT_AJAX###>
+	    <!-- ###OPTIONS### begin-->
+		<option>lorem ipsum</option>
+		<option>lorem ipsum</option>
+	    <!-- ###OPTIONS### end-->
+	</select></span>
+	<!-- ###SELECT### end-->
+	<!-- ###FIELDS### end-->
+    </div>
+</div>
+
+
+<!-- ###QUESTION_SELECTFIELD_MULTI### end-->
+
+
+<!-- ###QUESTION_SUBMIT_BUTTONS### begin-->
+<div class="keq_unit" id="question_###NAME###" ###DEPENDANT_STYLE###>
+    <div class="keq_img_left">###IMG_LEFT###</div>
+    <div class="keq_img_right">###IMG_RIGHT###</div>
+    <div class="keq_img_top">###IMG_TOP###</div>
+    <div class="keq_question">
+	###TITLE######TEXT###
+	###HELPBOX###
+    </div>
+    <div class="keq_img_bottom">###IMG_BOTTOM###</div>
+    <div class="keq_cleaner">&nbsp;</div>
+    <div class="keq_selection">
+	<!-- ###FIELDS### begin-->
+	<!-- ###SUBMIT_BUTTONS### begin--><span class="###ODD_EVEN###">
+	<!-- ###ERROR_MESSAGE### begin--><div class="keq_error">###ERROR###</div><!-- ###ERROR_MESSAGE### end-->
+	<input onclick="javascript: document.getElementById('keq_###NAME###').value=###ANSWERVALUE###;document.ke_questionnaire.submit();" class="type_submit_button" type="button" name="###PI###[###NAME###][options]" ###CLOSED_SIZE###  ###DEPENDANT_AJAX### value="###VALUE###" />
+	<!-- ###HELPTT### begin-->
+	<a class="keq_tooltip" href="#">
+		    <img src="###HELPIMAGETT###" />
+		    <span class="keq_tip">
+		        ###HELPTEXTTT###
+		    </span>
+		</a>
+	<!-- ###HELPTT### end-->
+	<br />
+	</span>
+	<!-- ###SUBMIT_BUTTONS### end-->
+	<!-- ###FIELDS### end-->
+	<input type="hidden" name="###PI###[###NAME###][options]" id="keq_###NAME###" value="" />
+    </div>
+</div>
+<!-- ###QUESTION_SUBMIT_BUTTONS### end-->
+
+
+</body>
+</html>
