@@ -1329,14 +1329,14 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 
 	function getPDFDownload($type){
 		if (t3lib_extMgm::isLoaded('ke_dompdf')){
-			require_once(t3lib_extMgm::extPath('ke_questionnaire').'res/other/class.fpdf_export.php');
+			require_once(t3lib_extMgm::extPath('ke_questionnaire').'res/other/class.dompdf_export.php');
 			$pdfdata = '';
 	
 			$conf = $this->loadTypoScriptForBEModule('tx_kequestionnaire');
 			$pdf_conf = $conf['pdf.'];
 			$storage_pid = $this->ff_data['sDEF']['lDEF']['storage_pid']['vDEF'];
 	
-			$pdf = new pdf_export($pdf_conf,$storage_pid, $this->q_data['header'],$this->ff_data['tDEF']['lDEF']['description']['vDEF']);
+			$pdf = new dompdf_export($pdf_conf,$storage_pid, $this->q_data['header'],$this->ff_data['tDEF']['lDEF']['description']['vDEF']);
 	
 			switch ($type){
 				case 'blank':
@@ -1347,11 +1347,11 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 			}
 	
 			//$pdfdata = mb_convert_encoding($pdfdata, "Windows-1252", "UTF-8");
-			header("content-type: application/pdf");
+			/*header("content-type: application/pdf");
 			header("content-length: ".strlen($pdfdata));
 			header("content-disposition: attachment; filename=\"".$this->q_id."_blank.pdf\"");
 	
-			print $pdfdata;	
+			print $pdfdata;*/
 		} elseif (t3lib_extMgm::isLoaded('fpdf')){
 			require_once(t3lib_extMgm::extPath('ke_questionnaire').'res/other/class.fpdf_export.php');
 			$pdfdata = '';
