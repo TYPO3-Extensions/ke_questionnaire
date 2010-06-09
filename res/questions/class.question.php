@@ -519,7 +519,7 @@ class question{
 			"###ERROR_MESSAGE###"=>$this->error?$subpartError:"",
 
 		);
-		//t3lib_div::devLog('this->question '.$this->question['uid'], 'question', 0, $this->question);
+		t3lib_div::devLog('this->question '.$this->question['uid'], 'question', 0, $this->question);
 		//t3lib_div::devLog('this->dependants '.$this->question['uid'], 'question', 0, $this->dependants);
 		//t3lib_div::devLog('this->dependancies '.$this->question['uid'], 'question', 0, $this->dependancies);
 		//#############################################
@@ -546,6 +546,7 @@ class question{
 		    $img = $img_first.$img_path.$this->question['image'].$img_last;
 		    $subpartArray['###IMG_'.strtoupper($this->question['image_position']).'###'] = $img;
 		}
+		//t3lib_div::devLog('subpartArray '.$this->question['uid'], 'question', 0, $subpartArray);
 		//#############################################
 
 		$out = $this->cObj->substituteMarkerArrayCached($this->tmplMain, array(), $subpartArray);

@@ -33,6 +33,7 @@
 							</items>         
 							<maxitems>1</maxitems>
 							<size>1</size>
+							<itemsProcFunc>tx_kequestionnaire_type->main</itemsProcFunc>
 							<default>QUESTIONNAIRE</default>
 							<selectedListStyle>width:150px</selectedListStyle>
 							<itemListStyle>width:150px</itemListStyle>

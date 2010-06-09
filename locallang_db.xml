@@ -11,7 +11,7 @@
 			<label index="tx_kequestionnaire_questions.type.I.closed">closed question</label>
 			<label index="tx_kequestionnaire_questions.type.I.matrix">matrix</label>
 			<label index="tx_kequestionnaire_questions.type.I.ematrix">extended matrix</label>
-			<label index="tx_kequestionnaire_questions.type.I.refusal">Refusal rate</label>
+			<label index="tx_kequestionnaire_questions.type.I.refusal">Hidden Field</label>
 			<label index="tx_kequestionnaire_questions.type.I.semantic">semantic differential</label>
 			<label index="tx_kequestionnaire_questions.type.I.demographic">demographic data / address data</label>
 			<label index="tx_kequestionnaire_questions.type.I.privacy">privacy policy</label>
@@ -159,7 +159,7 @@
 			<label index="tx_kequestionnaire_questions.type.I.demographic">Demographische Daten / Adress-Daten</label>
 			<label index="tx_kequestionnaire_questions.type.I.privacy">Datenschutzerklärung</label>
 			<label index="tx_kequestionnaire_questions.type.I.blind">Textelement</label>
-			<label index="tx_kequestionnaire_questions.type.I.refusal">Rückläuferquoten</label>
+			<label index="tx_kequestionnaire_questions.type.I.refusal">Verstecktes Feld</label>
 			<label index="tx_kequestionnaire_questions.type">Fragetyp</label>
 			<label index="tx_kequestionnaire_questions.title">Titel</label>
 			<label index="tx_kequestionnaire_questions.show_title">Titel anzeigen?</label>

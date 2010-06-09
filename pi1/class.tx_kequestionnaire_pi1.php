@@ -98,6 +98,13 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 		//if there are no questions made for the questionnaire
 		if (count($this->questions) == 0){
 			$content = $this->pi_getLL('no_questions');
+			//Hook to manipulate the Error-Message for no questions
+			if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$this->extKey]['pi1_noQuestions'])){
+				foreach($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$this->extKey]['pi1_noQuestions'] as $_classRef){
+					$_procObj = & t3lib_div::getUserObj($_classRef);
+					$content = $_procObj->pi1_noQuestions($this);
+				}
+			}
 			return $this->pi_wrapInBaseClass($content);
 		}
 		//t3lib_div::devLog('Flex Form Array pi1', $this->prefixId, 0, $this->ffdata);
@@ -188,7 +195,6 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 				break;
 		}
 		//t3lib_div::devLog('lastanswered: '.$this->lastAnswered, $this->prefixId, 0, $this->saveArray[$this->lastAnswered]);
-
 
 		$content = $this->renderContent($subPart,$markerArray);
 		//t3lib_div::devLog('to be saved saveArray '.$this->piVars['result_id'].'-'.$save, $this->prefixId, 0, array($this->saveArray));
@@ -324,6 +330,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 		//else $authCodeId = $this->authCodeId;
 		$where = 'auth='.$authCodeId;
 		$where .= ' AND finished_tstamp = 0';
+		$where .= ' AND deleted = 0';
 		$orderBy = 'start_tstamp DESC,tstamp DESC';
 		$res_results = $GLOBALS['TYPO3_DB']->exec_SELECTquery('uid,finished_tstamp','tx_kequestionnaire_results',$where,'',$orderBy,1);
 		if ($res_results){
@@ -333,6 +340,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 		}
 		$where = 'auth='.$authCodeId;
 		$where .= ' AND finished_tstamp != 0';
+		$where .= ' AND deleted = 0';
 		$res_results = $GLOBALS['TYPO3_DB']->exec_SELECTquery('count(uid) as counter','tx_kequestionnaire_results',$where);
 		//t3lib_div::devLog('checkResults '.$authCodeId, $this->prefixId, 0, array($GLOBALS['TYPO3_DB']->SELECTquery('count(uid) as counter','tx_kequestionnaire_results',$where)));
 		if ($res_results){
@@ -361,11 +369,20 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 					$temp_array = t3lib_div::xml2array(utf8_encode($row['xmldata']));
 				}
 				//t3lib_div::devLog('getResults temp_array', $this->prefixId, 0, array($row['xmldata'],$temp_array));
+				//t3lib_div::devLog('getResults temp_array', $this->prefixId, 0, $temp_array);
 
 				$this->saveArray = $temp_array;
 				$this->piVars['result_id'] = $row['uid'];
+				//Hook to manipulate the loaded Array
+				if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$this->extKey]['pi1_getResultsSaveArray'])){
+					foreach($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$this->extKey]['pi1_getResultsSaveArray'] as $_classRef){
+						$_procObj = & t3lib_div::getUserObj($_classRef);
+						$this->saveArray = $_procObj->pi1_getResultsSaveArray($this);
+					}
+				}
 				//t3lib_div::devLog('getResults row', $this->prefixId, 0, $row);
 				//t3lib_div::devLog('getResults row', $this->prefixId, 0, array(t3lib_div::xml2array($row['xmldata'])));
+				//t3lib_div::devLog('getResults questions NR:'.count($this->questions), $this->prefixId, 0, $this->questions);
 
 				$saveFields = array();
 				$saveFields['last_tstamp'] = mktime();
@@ -451,6 +468,13 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 		$saveFields['pid'] = $this->pid;
 		$saveFields['tstamp'] = mktime();
 		$saveFields['sys_language_uid'] = $GLOBALS['TSFE']->sys_language_uid;
+		//Hook to manipulate the saved Array
+		if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$this->extKey]['pi1_setResultsSaveArray'])){
+			foreach($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$this->extKey]['pi1_setResultsSaveArray'] as $_classRef){
+				$_procObj = & t3lib_div::getUserObj($_classRef);
+				$this->saveArray = $_procObj->pi1_setResultsSaveArray($this);
+			}
+		}
 		if (is_array($this->saveArray)) $saveFields['xmldata'] = t3lib_div::array2xml($this->saveArray);
 
 		//$saveFields['ip'] = $_SERVER['REMOTE_ADDR'];
@@ -954,6 +978,14 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 			}
 		}
 		
+		//Hook to add hidden fields
+		if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$this->extKey]['pi1_renderHiddenFields'])){
+			foreach($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$this->extKey]['pi1_renderHiddenFields'] as $_classRef){
+				$_procObj = & t3lib_div::getUserObj($_classRef);
+				$content .= $_procObj->pi1_renderHiddenFields($this);
+			}
+		}
+		
 		//t3lib_div::devLog('renderHiddenFields', $this->prefixId, 0, array($timestamp_start,$content));
 		
 		return $content;
@@ -1448,11 +1480,6 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 		//t3lib_div::devLog('ffdata', $this->prefixId, 0, $this->ffdata);
 		$this->pid = $this->ffdata['storage_pid'];
 
-		//get the questions of the questionnaire
-		$this->getQuestions();
-		//t3lib_div::devLog('questions', $this->prefixId, 0, $this->questions);
-		//t3lib_div::devLog('allQuestions', $this->prefixId, 0, $this->allQuestions);
-
 		//get the Template
 		//check if there is given a template, or use the standard
 		$template = 'questionnaire.html';
@@ -1473,6 +1500,11 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 			require_once(t3lib_extMgm::extPath('sr_freecap').'pi2/class.tx_srfreecap_pi2.php');
 			$this->freeCap = t3lib_div::makeInstance('tx_srfreecap_pi2');
 		}
+		
+		//get the questions of the questionnaire
+		$this->getQuestions();
+		//t3lib_div::devLog('questions', $this->prefixId, 0, $this->questions);
+		//t3lib_div::devLog('allQuestions', $this->prefixId, 0, $this->allQuestions);
 
 		//centralize the pagecount
 		$this->pageCount = $this->getPageCount();
@@ -1536,47 +1568,64 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 		$this->questionCount['notshown_dependants'] = 0; //don't count dependants when not shown if not activated
 		$this->questionCount['only_questions'] = 0; //no blind-texts counting
 		$this->questionCount['no_dependants'] = 0; //don't count the dependants
-		// $selectFields = 'uid,type,title,demographic_type,open_in_text,open_validation';
-		$selectFields = '*';
-		$where = 'pid='.$this->pid;
-		$where .= ' AND sys_language_uid='.$GLOBALS['TSFE']->sys_language_uid;
-		$where .= $this->cObj->enableFields('tx_kequestionnaire_questions');
-		$orderBy = 'sorting';
-		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery($selectFields,'tx_kequestionnaire_questions',$where,'',$orderBy);
-		// t3lib_div::debug($res,"$where");
-
+		
 		$temp_count = 0;
 		$temp_count_hidden = 0;
-		if ($res){
-			while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)){
-				$question_obj = $this->getQuestionTypeObject($row);
-				//$where = "dependant_question=".$row['uid'] .$this->cObj->enableFields('tx_kequestionnaire_dependancies');
-				//$res_dep = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*','tx_kequestionnaire_dependancies',$where);
-				//if ($res_dep){
-					//if ($GLOBALS['TYPO3_DB']->sql_num_rows($res_dep) > 0){
-					if (count($question_obj->dependancies) > 0){
-						if ($this->ffdata['render_count_withoutdependant'] == 1) $row['is_dependant'] = 1;
-						else {
-							if ($row['dependant_show'] == 0){
-								if ($question_obj->checkDependancies()) $row['no_show'] = 0;
-								else $row['no_show'] = 1;	
-								//$row['no_show'] = $this->checkQuestionIfActivated($row);
-							}
-						}
-					} else {
-						if ($this->ffdata['render_count_withoutdependant'] == 1 AND $row['type'] != 'refusal'){
-							if ($this->ffdata['record_count_withblind'] == 0 AND $row['type'] != 'blind') $temp_count ++;
-							elseif ($this->ffdata['record_count_withblind'] == 1) $temp_count ++;
+		$questions = array();
+		
+		//Hook to manipulate the Question-Array
+		if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$this->extKey]['pi1_getQuestions'])){
+			foreach($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$this->extKey]['pi1_getQuestions'] as $_classRef){
+				$_procObj = & t3lib_div::getUserObj($_classRef);
+				$questions = $_procObj->pi1_getQuestions($this);
+			}
+		}
+		
+		if (!$questions){
+			// $selectFields = 'uid,type,title,demographic_type,open_in_text,open_validation';
+			$selectFields = '*';
+			$where = 'pid='.$this->pid;
+			$where .= ' AND sys_language_uid='.$GLOBALS['TSFE']->sys_language_uid;
+			$where .= $this->cObj->enableFields('tx_kequestionnaire_questions');
+			$orderBy = 'sorting';
+			$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery($selectFields,'tx_kequestionnaire_questions',$where,'',$orderBy);
+			if ($res){
+				while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)){
+					$questions[] = $row;
+				}
+			}
+			// t3lib_div::debug($res,"$where");
+		}
+
+		
+		foreach ($questions as $row){
+			$question_obj = $this->getQuestionTypeObject($row);
+			//$where = "dependant_question=".$row['uid'] .$this->cObj->enableFields('tx_kequestionnaire_dependancies');
+			//$res_dep = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*','tx_kequestionnaire_dependancies',$where);
+			//if ($res_dep){
+				//if ($GLOBALS['TYPO3_DB']->sql_num_rows($res_dep) > 0){
+				if (count($question_obj->dependancies) > 0){
+					if ($this->ffdata['render_count_withoutdependant'] == 1) $row['is_dependant'] = 1;
+					else {
+						if ($row['dependant_show'] == 0){
+							if ($question_obj->checkDependancies()) $row['no_show'] = 0;
+							else $row['no_show'] = 1;	
+							//$row['no_show'] = $this->checkQuestionIfActivated($row);
 						}
 					}
-				//}
-				if ($row['no_show'] == 1) {
-					$temp_count_hidden ++;
+				} else {
+					if ($this->ffdata['render_count_withoutdependant'] == 1 AND $row['type'] != 'refusal'){
+						if ($this->ffdata['record_count_withblind'] == 0 AND $row['type'] != 'blind') $temp_count ++;
+						elseif ($this->ffdata['record_count_withblind'] == 1) $temp_count ++;
+					}
 				}
-				if ($row['type'] != 'blind' AND $row['type'] != 'refusal') $this->questions[] = $row;
-				$this->allQuestions[] = $row;
-				$this->questionsByID[$row['uid']] = $row;
+			//}
+			if ($row['no_show'] == 1) {
+				$temp_count_hidden ++;
 			}
+			if ($row['type'] != 'blind' AND $row['type'] != 'refusal') $this->questions[] = $row;
+			$this->allQuestions[] = $row;
+			$this->questionsByID[$row['uid']] = $row;
 		}
 		$this->questionCount['no_dependants'] = $temp_count;
 		$this->questionCount['notshown_dependants'] = $temp_count_hidden;

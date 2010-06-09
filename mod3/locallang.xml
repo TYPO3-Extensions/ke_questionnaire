@@ -14,7 +14,7 @@
 			<label index="none_selected">You must select a Questionnaire first!</label>
 			<label index="result_count">Count of results</label>
 			<label index="finished_count">Count of finished results</label>
-			<label index="error_no_fpdf_kedompdf">You need to install the ke_dompdf or fpdf-Extension first.</label>
+			<label index="error_no_kedompdf">You need to install the ke_dompdf-Extension first.</label>
 			<label index="kedompdf_fpdf">Both extensions are installed, ke_dompdf will be used</label>
 
 			<label index="download_button">Download</label>

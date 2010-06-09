@@ -1345,14 +1345,7 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 				default:
 					break;
 			}
-	
-			//$pdfdata = mb_convert_encoding($pdfdata, "Windows-1252", "UTF-8");
-			/*header("content-type: application/pdf");
-			header("content-length: ".strlen($pdfdata));
-			header("content-disposition: attachment; filename=\"".$this->q_id."_blank.pdf\"");
-	
-			print $pdfdata;*/
-		} elseif (t3lib_extMgm::isLoaded('fpdf')){
+		} /*elseif (t3lib_extMgm::isLoaded('fpdf')){
 			require_once(t3lib_extMgm::extPath('ke_questionnaire').'res/other/class.fpdf_export.php');
 			$pdfdata = '';
 	
@@ -1376,7 +1369,7 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 			header("content-disposition: attachment; filename=\"".$this->q_id."_blank.pdf\"");
 	
 			print $pdfdata;	
-		}		
+		}*/		
 	}
 
 	function getPossibleAnswersData($q_type,$answer_id){

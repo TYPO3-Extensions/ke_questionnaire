@@ -13,6 +13,7 @@ if (TYPO3_MODE=="BE")	include_once(t3lib_extMgm::extPath("ke_questionnaire")."re
 if (TYPO3_MODE=="BE")	include_once(t3lib_extMgm::extPath("ke_questionnaire")."res/class.tx_kequestionnaire_tx_kequestionnaire_dependancies_activating_value.php");
 if (TYPO3_MODE=="BE")	include_once(t3lib_extMgm::extPath("ke_questionnaire")."res/class.tx_kequestionnaire_tx_kequestionnaire_dependancies_activating_question.php");
 if (TYPO3_MODE=="BE")	include_once(t3lib_extMgm::extPath("ke_questionnaire")."res/class.tx_kequestionnaire_tx_kequestionnaire_redirect.php");
+if (TYPO3_MODE=="BE")	include_once(t3lib_extMgm::extPath("ke_questionnaire")."res/class.tx_kequestionnaire_type.php");
 
 $TCA["tx_kequestionnaire_questions"] = array (
 	"ctrl" => array (

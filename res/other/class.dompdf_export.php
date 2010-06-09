@@ -196,7 +196,9 @@ class dompdf_export {
                                         $html .= '<div class="closed_question_option">';
                                         $html .= $value;
                                         $html .= '</div>';
-                                        $html .= $option['title'];
+                                        $text = $option['title'];
+                                        if ($option['text'] != '') $text = $option['text'];
+                                        $html .= $text;
                                 }
                                 break;
                         case 'matrix':
@@ -274,7 +276,9 @@ class dompdf_export {
                 }
                 foreach ($subquestions as $subquestion){
                         $html .= '<tr>';
-                        $html .= '<td>'.$subquestion['title'].'</td>';
+                        $text = $subquestion['title'];
+                        if ($subquestion['text'] != '') $text = $subquestion['text'];
+                        $html .= '<td>'.$text.'</td>';
                         foreach ($columns as $column){
                                 $html .= '<td class="column">';
                                 if ($column['different_type'] != ''){

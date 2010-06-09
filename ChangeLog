@@ -1,8 +1,13 @@
 (add new changes on top of this file)
 
+10-06-08 Nadine Schwingler  <schwingler@kennziffer.com>
+
+	* Added some hooks to the extension at different places, list of hooks will follow
+	* Some Bug fixes in Analyse BE-Module 
+
 10-06-01 Nadine Schwingler  <schwingler@kennziffer.com>
 	
-	* Language-Export in Backend. If there are more than one lang-version of the Questionnaire you can now export only the selected lang.
+	* Language-Export in Export BE-Module. If there are more than one lang-version of the Questionnaire you can now export only the selected lang.
 
 10-05-23 Nadine Schwingler  <schwingler@kennziffer.com>
 	

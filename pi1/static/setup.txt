@@ -12,7 +12,11 @@ plugin.tx_kequestionnaire_pi1 {
 		}
 
 		.keq_blindunit p.bodytext{
-			color: #FFFFFF;
+			color: #ffffff;
+		}
+		
+		.keq_question_blind p.bodytext{
+			color: #000000;
 		}
 
 		.keq_question {
