@@ -3,7 +3,8 @@
 10-06-08 Nadine Schwingler  <schwingler@kennziffer.com>
 
 	* Added some hooks to the extension at different places, list of hooks will follow
-	* Some Bug fixes in Analyse BE-Module 
+	* Some Bug fixes in Analyse BE-Module
+	* Added Scheduler Support for Email-Notifications for mods and admin
 
 10-06-01 Nadine Schwingler  <schwingler@kennziffer.com>
 	

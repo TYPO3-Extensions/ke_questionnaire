@@ -6,6 +6,9 @@
 	</meta>
 	<data type="array">
 		<languageKey index="default" type="array">
+			<label index="schedulerTask.name">Scheduler Task for Notifications</label>
+			<label index="schedulerTask.description">Send Email notifications for Questionnaire-Participations</label>
+			
 			<label index="tx_kequestionnaire_questions">Question</label>
 			<label index="tx_kequestionnaire_questions.type.I.open">open question</label>
 			<label index="tx_kequestionnaire_questions.type.I.closed">closed question</label>
@@ -150,6 +153,9 @@
 			<label index="tt_content.list_type_pi3">keq participation list</label>
 		</languageKey>
 		<languageKey index="de" type="array">
+			<label index="schedulerTask.name">Scheduler Task für Teilnahme-Benachrichtigungen</label>
+			<label index="schedulerTask.description">Email-Benachrichtigungen bei Teilnahme verschicken.</label>
+			
 			<label index="tx_kequestionnaire_questions">Frage</label>
 			<label index="tx_kequestionnaire_questions.type.I.open">Offene Frage</label>
 			<label index="tx_kequestionnaire_questions.type.I.closed">Geschlossene Frage</label>

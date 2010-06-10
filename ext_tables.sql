@@ -306,6 +306,7 @@ CREATE TABLE tx_kequestionnaire_results (
 	finished_tstamp int(11) DEFAULT '0' NOT NULL,
 	xmldata longtext NOT NULL,
 	ip tinytext NOT NULL,
+        mailsent_tstamp int(11) DEFAULT '0' NOT NULL,
 
 	PRIMARY KEY (uid),
 	KEY parent (pid)

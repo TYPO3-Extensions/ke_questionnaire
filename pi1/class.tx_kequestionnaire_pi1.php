@@ -1041,6 +1041,10 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 			$mail_texts['fromEmail'] = $this->ffdata['mail_sender'];
 			$mail_texts['fromName'] = $this->ffdata['mail_from'];
 			$this->sendMail($email_adresses,$mail_texts);
+			
+			$saveField = array();
+			$saveField['mailsent_tstamp'] = mktime();
+			$GLOBALS['TYPO3_DB']->exec_UPDATEquery('tx_kequestionnaire_results','uid='.$resultId,$saveField);
 		}
 		
 		//if finish page differs by answer, check this here

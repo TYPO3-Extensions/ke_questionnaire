@@ -330,9 +330,13 @@
 									<numIndex index="0">LLL:EXT:ke_questionnaire/locallang.xml:tt_content.pi_flexform.mail_turn.prompt</numIndex>
 									<numIndex index="1">PROMPT</numIndex>
 								</numIndex>
-								<numIndex index="1" type="array">
+								<!--<numIndex index="1" type="array">
 									<numIndex index="0">LLL:EXT:ke_questionnaire/locallang.xml:tt_content.pi_flexform.mail_turn.cron</numIndex>
-									<numIndex index="1">DAILY</numIndex>
+									<numIndex index="1">CRON</numIndex>
+								</numIndex>-->
+								<numIndex index="2" type="array">
+									<numIndex index="0">LLL:EXT:ke_questionnaire/locallang.xml:tt_content.pi_flexform.mail_turn.scheduler</numIndex>
+									<numIndex index="1">SCHEDULER</numIndex>
 								</numIndex>
 							</items>         
 							<maxitems>1</maxitems>

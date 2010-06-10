@@ -122,4 +122,12 @@ t3lib_extMgm::addTypoScript($_EXTKEY,'editorcfg','
 
 t3lib_extMgm::addPItoST43($_EXTKEY,'pi1/class.tx_kequestionnaire_pi1.php','_pi1','list_type',0);
 
+//Add Scheduler Support
+$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['scheduler']['tasks']['tx_kequestionnaire_scheduler'] = array(
+	'extension' => $_EXTKEY, // Selbsterklärend
+	'title' => 'LLL:EXT:'.$_EXTKEY.'/locallang_db.xml:schedulerTask.name', // Der Titel der Aufgabe
+	'description' => 'LLL:EXT:'.$_EXTKEY.'/locallang_db.xml:schedulerTask.description', // Die Beschreibung der Aufgabe
+	//'additionalFields' => 'tx_kersssimulatettnews_scheduleradd' // Zusätzliche Felder
+);
+
 ?>

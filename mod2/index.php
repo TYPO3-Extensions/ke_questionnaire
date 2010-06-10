@@ -378,8 +378,8 @@ class  tx_kequestionnaire_module2 extends t3lib_SCbase {
 	}
 	
 	function getOFQMatrixPieCharts($columns, $results, $question){
-		//t3lib_div::devLog('columns', 'ke_questionnaire auswert Mod', 0, $columns);
-		//t3lib_div::devLog('results', 'ke_questionnaire auswert Mod', 0, $results);
+		t3lib_div::devLog('columns', 'ke_questionnaire auswert Mod', 0, $columns);
+		t3lib_div::devLog('results', 'ke_questionnaire auswert Mod', 0, $results);
 		global $LANG;
 		$values = array();
 		$content = '';
@@ -399,7 +399,7 @@ class  tx_kequestionnaire_module2 extends t3lib_SCbase {
 				$markerArray = array();
 				$markerArray['###QUESTION_SELECT###'] = '';
 				$markerArray['###DIV###'] = '<div id="pie_'.$sub['uid'].'"> </div>';
-				if (is_array($comumns)){
+				if (is_array($columns)){
 					foreach ($columns as $bar){
 						$values[$bar['uid']]['label'] = $bar['title'];
 						$values[$bar['uid']]['value'] = 0;
@@ -416,7 +416,6 @@ class  tx_kequestionnaire_module2 extends t3lib_SCbase {
 											break;
 									}
 								}
-								//t3lib_div::devLog('result '.$bar['uid'], 'ke_questionnaire auswert Mod', 0, array($result[$q_id]['answer']['options'][$sub['uid']][$bar['uid']]));
 							}
 						}
 					}
