@@ -215,13 +215,18 @@ class  tx_kequestionnaire_module2 extends t3lib_SCbase {
 					$title = $LANG->getLL('basic_charts');
 					if ($this->extConf_premium['chart_lib'] == 'openfl2') {
 						$content = $this->getOFBasicCharts();
-					} elseif ($this->extConf_premium['chart_lib'] == 'graph' OR !t3lib_extMgm::isLoaded('ke_questionnaire_premium')) $content = $this->getGRBasicCharts();
+					} elseif ($this->extConf_premium['chart_lib'] == 'graph' OR !t3lib_extMgm::isLoaded('ke_questionnaire_premium')) {
+						$content = $this->getGRBasicCharts();
+					}
 					else $content = 'keine Chart-Library definiert';
 				break;
 				case 2:
 					$title = $LANG->getLL('question_charts');
-					if ($this->extConf_premium['chart_lib'] == 'openfl2') $content = $this->getOFQuestionCharts();
-					elseif ($this->extConf_premium['chart_lib'] == 'graph' OR !t3lib_extMgm::isLoaded('ke_questionnaire_premium')) $content = $this->getGRQuestionCharts();
+					if ($this->extConf_premium['chart_lib'] == 'openfl2') {
+						$content = $this->getOFQuestionCharts();
+					} elseif ($this->extConf_premium['chart_lib'] == 'graph' OR !t3lib_extMgm::isLoaded('ke_questionnaire_premium')) {
+						$content = $this->getGRQuestionCharts();
+					}
 					else $content = 'keine Chart-Library definiert';
 				break;
 				case 3:
@@ -371,8 +376,16 @@ class  tx_kequestionnaire_module2 extends t3lib_SCbase {
 			}
 		}
 		
-		$content = $this->fillTemplate($templ, $markerArray);
-		$content .= $charts;
+		$template = $this->fillTemplate($templ, $markerArray);
+		$content = $template.$charts;
+		
+		// Hook to enable different BE-OFQuestionCharts
+		if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['ke_questionnaire']['mod2_getOFQuestionCharts'])){
+			foreach($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['ke_questionnaire']['mod2_getOFQuestionCharts'] as $_classRef){
+				$_procObj = & t3lib_div::getUserObj($_classRef);
+				$content = $_procObj->mod2_getOFQuestionCharts($this,$templ,$markerArray,$content);
+			}
+		}
 		
 		return $content;
 	}

@@ -760,7 +760,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 		if ($this->ffdata['linear'] == 1) $this->ffdata['render_type'] = 'QUESTIONS';
 		switch ($this->ffdata['render_type']){
 			case 'ALL':
-				$qpp = $amount;
+				$qpp = $this->questionCount['total'];
 				break;
 			case 'QUESTIONS':
 				if ($this->ffdata['linear'] == 1){

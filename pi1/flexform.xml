@@ -252,6 +252,7 @@
 				<render_count_withblind>
 					<TCEforms>
 						<label>LLL:EXT:ke_questionnaire/locallang.xml:tt_content.pi_flexform.render_count_withblind</label>
+						<displayCond>FIELD:render_type:!=:ALL</displayCond>
 						<config>
 							<type>check</type>
 						</config>
@@ -260,6 +261,7 @@
 				<render_count_withoutdependant>
 					<TCEforms>
 						<label>LLL:EXT:ke_questionnaire/locallang.xml:tt_content.pi_flexform.render_count_withoutdependant</label>
+						<displayCond>FIELD:render_type:!=:ALL</displayCond>
 						<config>
 							<type>check</type>
 						</config>

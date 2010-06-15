@@ -127,6 +127,7 @@
 
 			<label index="tt_content.pi_flexform.user_reports">Frontend-Auswertungen für Nutzer anzeigen</label>
 			<label index="tt_content.pi_flexform.q_report_graph">graphische Auswertung anzeigen</label>
+			<label index="tt_content.redirect_on_finish_uid">Frage, welche die Umleitung nach Abschluss bestimmt</label>
 
 			<label index="tt_content.pi_flexform.access">Zugriff</label>
 			<label index="tt_content.pi_flexform.access.free">Freier Zugriff</label>
