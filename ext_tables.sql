@@ -43,6 +43,7 @@ CREATE TABLE tx_kequestionnaire_questions (
 	open_validation varchar(7) DEFAULT '' NOT NULL,
 	closed_type varchar(13) DEFAULT '' NOT NULL,
 	closed_selectsize int(11) DEFAULT '0' NOT NULL,
+        closed_maxanswers int(11) DEFAULT '0' NOT NULL,
 	closed_inputfield int(11) DEFAULT '0' NOT NULL,
 	matrix_type varchar(5) DEFAULT '' NOT NULL,
 	matrix_validation varchar(7) DEFAULT '' NOT NULL,

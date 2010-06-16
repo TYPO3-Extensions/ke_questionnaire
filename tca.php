@@ -313,8 +313,26 @@ $TCA["tx_kequestionnaire_questions"] = array (
 			)
 		),
 		"closed_selectsize" => Array (
+                        "displayCond" => "FIELD:closed_type:=:select_multi",
 			"exclude" => 1,
 			"label" => "LLL:EXT:ke_questionnaire/locallang_db.xml:tx_kequestionnaire_questions.closed_selectsize",
+			"config" => Array (
+				"type"     => "input",
+				"size"     => "4",
+				"max"      => "3",
+				"eval"     => "int",
+				"checkbox" => "0",
+				"range"    => Array (
+					"upper" => "100",
+					"lower" => "0"
+				),
+				"default" => 0
+			)
+		),
+                "closed_maxanswers" => Array (
+                        "displayCond" => "FIELD:closed_type:IN:check_multi,select_multi",
+			"exclude" => 1,
+			"label" => "LLL:EXT:ke_questionnaire/locallang_db.xml:tx_kequestionnaire_questions.closed_maxanswers",
 			"config" => Array (
 				"type"     => "input",
 				"size"     => "4",
@@ -775,6 +793,7 @@ $TCA["tx_kequestionnaire_questions"] = array (
                                 --div--;LLL:EXT:ke_questionnaire/locallang.xml:tx_kequestionnaire.type_based,
                                 closed_type,
                                 closed_selectsize,
+                                closed_maxanswers,
                                 --div--;LLL:EXT:ke_questionnaire/locallang.xml:tx_kequestionnaire.answers,
                                 closed_inputfield,
                                 answers"),

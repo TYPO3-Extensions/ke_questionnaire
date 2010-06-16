@@ -1,8 +1,12 @@
 (add new changes on top of this file)
 
+10-06-15 Nadine Schwingler  <schwingler@kennziffer.com>
+	
+	* Added the possibility to give multiple choise closed questions a max amount of answers
+
 10-06-08 Nadine Schwingler  <schwingler@kennziffer.com>
 
-	* Added some hooks to the extension at different places, list of hooks will follow
+	* Added some hooks to the extension at different places
 	* Some Bug fixes in Analyse BE-Module
 	* Added Scheduler Support for Email-Notifications for mods and admin
 

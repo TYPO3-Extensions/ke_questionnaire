@@ -7,6 +7,7 @@
 		var $fieldName 		= "";		// Name of field
 		var $errors    		= array();     	// Errortext to display
 		var $table="";
+		var $maxAnswers 	= 0;
 		function kequestionnaire_input($fieldName,$type,$value,$subpart,$obj,$options=array(),$subquestions=array(),$columns=array(),$sublines=array(),$label="",$dependants=array()){
 			$this->type=$type;
 			$this->value=$value;
@@ -267,7 +268,7 @@
 			
 			$markerArray["###VALUE###"]=$this->options[$this->fieldName]['uid'];
 
-			$markerArray['###DEPENDANT_AJAX###'] = $this->checkDependant($this->fieldName,$this->options[$this->fieldName]['uid']);
+			$markerArray['###DEPENDANT_AJAX###'] = $this->checkDependant($this->fieldName,$this->options[$this->fieldName]['uid'],false,$this->maxAnswers);
 			//t3lib_div::devLog('markerArray', 'input', 0, $markerArray);
 
 			if(empty($this->errors)){
@@ -313,7 +314,7 @@
 			$markerArray["###VALUE_TEXT###"]=$this->value["text"][$this->fieldName];
 			$markerArray["###VALUE_OPTION###"]=$this->options[$this->fieldName]['uid'];
 			$markerArray["###VALUE###"]=$this->options[$this->fieldName]['uid'];
-			$markerArray['###DEPENDANT_AJAX###'] = $this->checkDependant($this->fieldName,$this->options[$this->fieldName]['uid'],true);
+			$markerArray['###DEPENDANT_AJAX###'] = $this->checkDependant($this->fieldName,$this->options[$this->fieldName]['uid'],true,$this->maxAnswers);
 			
 			//t3lib_div::devLog('markerArray', 'input', 0, $markerArray);
 
@@ -347,7 +348,7 @@
 				$options.="<option value='".$row["uid"]."' $selected>".$row["title"]."</option>";
 			}
 			$subpartArray["###OPTIONS###"]=$options;
-			$markerArray['###DEPENDANT_AJAX###'] = $this->checkDependant($this->fieldName,$row["uid"]);
+			$markerArray['###DEPENDANT_AJAX###'] = $this->checkDependant($this->fieldName,$row["uid"],false,$this->maxAnswers);
 
 			if(empty($this->errors)){
 				$subpartArray["###ERROR_MESSAGE###"]="";
@@ -660,8 +661,8 @@
 
 		}
 
-		function checkDependant($fieldName, $value = '\'\'', $withText = false){
-			//t3lib_div::devLog('checkDependant', 'input', 0, array('fieldName'=>$fieldName,'value'=>$value));
+		function checkDependant($fieldName, $value = '\'\'', $withText = false, $maxAnswers = 0){
+			//t3lib_div::devLog('checkDependant', 'input', 0, array('fieldName'=>$fieldName,'value'=>$value,'maxAnswers'=>$maxAnswers,'type'=>$this->type));
 			//t3lib_div::devLog('dependants '.$fieldName, 'input', 0, $this->dependants);
 			$dependant_id = 0;
 			$dependant_ids = array();
@@ -675,6 +676,39 @@ function keq_disable(idy,par_id) {
     input.disabled = false;
   } else {
     input.disabled = true;
+  }
+}";
+			$maxAnswers_error = $this->obj->pi_getLL('error_maxAnswers');
+			$maxAnswers_error = str_replace('###MAX###',$maxAnswers,$maxAnswers_error);
+			$js_maxAnswers_checkbox = "
+function keq_checkMax(namy,idy) {
+  var amount = 0;
+  var max = ".($maxAnswers).";
+  
+  for (var i=0;i<document.getElementsByName(namy).length;i++){
+	if (document.getElementsByName(namy)[i].checked==true) amount ++;
+	if (amount>max){
+		document.getElementById('keq_'+idy).checked=false;
+		alert ('".$maxAnswers_error."');
+		break;
+	}
+  }  
+}";
+
+			$js_maxAnswers_select = "
+function keq_selectMax(namy) {
+  var amount = 0;
+  var max = ".($maxAnswers).";
+  
+  for (var i=0;i<document.getElementsByName(namy)[0].length;i++){
+	if (document.getElementsByName(namy)[0][i].selected==true) amount ++;
+	if (amount>max){
+		for (var j=0;j<document.getElementsByName(namy)[0].length;j++){
+			document.getElementsByName(namy)[0][j].selected = false;
+		}
+		alert ('".$maxAnswers_error."');
+		break;
+	}
   }
 }";
 
@@ -692,7 +726,17 @@ function keq_disable(idy,par_id) {
 				$js .= 'document.getElementById(\'keq_###NAME###_'.$fieldName.'_text\').disabled = false;';
 				$onchange = 'keq_disable(\'keq_###NAME###_'.$fieldName.'_text\',\'keq_###NAME###_'.$fieldName.'\');';
 				$js .= $onchange;
-				$GLOBALS['TSFE']->setJS('ke_questionnaire',$js_disable);
+				$GLOBALS['TSFE']->setJS('ke_questionnaire_disable',$js_disable);
+			}
+			if ($maxAnswers > 0){
+				if ($this->type == 'checkbox'){
+					$onchange .= "keq_checkMax('tx_kequestionnaire_pi1[###NAME###][options][]','###NAME###_$value');";
+					$GLOBALS['TSFE']->setJS('ke_questionnaire_checkMax',$js_maxAnswers_checkbox);
+				} else {
+					$onchange .= "keq_selectMax('tx_kequestionnaire_pi1[###NAME###][options][]');";
+					$GLOBALS['TSFE']->setJS('ke_questionnaire_selectMax',$js_maxAnswers_select);
+				}
+				$js .= $onchange;
 			}
 
 			if ($js != ''){
@@ -705,7 +749,7 @@ function keq_disable(idy,par_id) {
 					$content .= $onchange;
 					$content .= '"';
 				}*/
-				$this->rb_onchange .= $onchange;
+				$this->closed_onchange .= $onchange;
 			}
 			//t3lib_div::devLog('fieldname '.$fieldName, 'input->checkDependant', 0, array($js, $content));
 			//

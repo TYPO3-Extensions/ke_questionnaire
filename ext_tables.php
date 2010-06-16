@@ -31,6 +31,7 @@ $TCA["tx_kequestionnaire_questions"] = array (
 		'transOrigDiffSourceField' => 'l18n_diffsource',
 		'sortby' => 'sorting',
 		'delete' => 'deleted',
+                'requestUpdate' => 'closed_type',
 		'enablecolumns' => array (
 			'disabled' => 'hidden',
 			'starttime' => 'starttime',
@@ -41,7 +42,7 @@ $TCA["tx_kequestionnaire_questions"] = array (
 		'iconfile'          => t3lib_extMgm::extRelPath($_EXTKEY).'icon_tx_kequestionnaire_questions.gif',
 	),
 	"feInterface" => array (
-		"fe_admin_fieldList" => "sys_language_uid, l18n_parent, l18n_diffsource, hidden, starttime, endtime, fe_group, type, title, show_title, text, helptext, image, mandatory, mandatory_correct, time, dependant_show, open_type, open_pre_text, open_in_text, open_post_text, open_validation, closed_type, closed_selectsize, closed_inputfield, matrix_type, matrix_validation, demographic_type, demographic_fields, demographic_addressfields, privacy_post, privacy_link, privacy_file, answers, columns, dependancy, dependancy_simple, subquestions, sublines",
+		"fe_admin_fieldList" => "sys_language_uid, l18n_parent, l18n_diffsource, hidden, starttime, endtime, fe_group, type, title, show_title, text, helptext, image, mandatory, mandatory_correct, time, dependant_show, open_type, open_pre_text, open_in_text, open_post_text, open_validation, closed_type, closed_selectsize, closed_inputfield, closed_maxanswers,matrix_type, matrix_validation, demographic_type, demographic_fields, demographic_addressfields, privacy_post, privacy_link, privacy_file, answers, columns, dependancy, dependancy_simple, subquestions, sublines",
 	)
 );
 

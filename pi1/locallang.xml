@@ -14,6 +14,8 @@
 			<label index="format_numeric">follow this format: 00,00</label>
 			<label index="format_date">follow this format: tt.mm.yyyy</label>
 			<label index="format_email">follow this format: name@domain.land</label>
+			
+			<label index="error_maxAnswers">You're only allowed to select ###MAX### answers.</label>
 
 			<label index="error_numeric">Please insert Numeric</label>
 			<label index="error_date">Please insert Date</label>
@@ -95,6 +97,8 @@
 			<label index="format_numeric">Format beachten: 00,00</label>
 			<label index="format_date">Format beachten: tt.mm.yyyy</label>
 			<label index="format_email">Format beachten: name@domain.land</label>
+
+			<label index="error_maxAnswers">Sie dürfen maximal ###MAX### Antworten auswählen.</label>
 
 			<label index="error_numeric">Bitte Zahl eingeben</label>
 			<label index="error_date">Bitte Datum eingeben</label>

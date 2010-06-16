@@ -100,6 +100,7 @@ class question_closed extends question {
 				$type= "selectbox_multi";
 				$marker="###SELECT###";
 				$this->fields["select"]=new kequestionnaire_input("select",$type,$this->answer["options"],$marker,$this->obj,$this->options,array(),array(),array(),'',$this->dependants);
+				if ($this->question['closed_maxanswers'] > 0) $this->fields["select"]->maxAnswers = $this->question['closed_maxanswers'];
 			break;
 			case "sbm_button":				
 				$type = "sbm_button";
@@ -110,7 +111,7 @@ class question_closed extends question {
 				//t3lib_div::debug($out,"buildFieldArray");
 			break;
 		}
-    }
+	}
 
 	function buildFieldArrayForRadioAndCheckbox($type,$typeInput,$marker,$markerInput){
 		$this->countInput=$this->question["closed_inputfield"]>0?$this->question["closed_inputfield"]:0;
@@ -125,9 +126,27 @@ class question_closed extends question {
 			}else{
 				$this->fields[$key]=new kequestionnaire_input($key,$type,$this->answer["options"],$marker,$this->obj,$this->options,array(),array(),array(),'',$this->dependants);
 			}
+			if ($this->question['closed_maxanswers'] > 0) $this->fields[$key]->maxAnswers = $this->question['closed_maxanswers'];
 			$i++;
 		}
 		//t3lib_div::devLog('fields', 'question closed', 0, $this->fields);
+	}
+	
+	/**
+	 * Generate Javascript special for this question
+	 *
+	 * @return Javascript String
+	 */
+	function getSpecialJS(){
+		$js = 'test';
+		
+		if ($this->question['closed_type'] == 'check_multi' OR $this->question['closed_type'] == 'select_multi'){
+			if ($this->question['closed_maxanswers'] > 0){
+				$js = 'onchange="alert("test");';
+			}
+		}
+		
+		return $js;
 	}
 
 	/**

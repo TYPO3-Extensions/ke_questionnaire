@@ -275,7 +275,7 @@ class question{
 		$out['###PI###'] = $this->prefixId;
 		$out['###NAME###'] = $this->uid;
 		$out['###TEXT###'] = $this->question['text'];
-
+		
 		// dependancy related
 		$out['###DEPENDANT###'] = '';
 		$out['###DEPENDANT_STYLE###'] = '';
@@ -308,7 +308,7 @@ class question{
 		// Closed
 		$out['###CLOSED_INPUT###'] = $this->question['closed_inputfield'];
 		$out['###CLOSED_SIZE###'] = $this->question['closed_selectsize']>0?"size='".$this->question['closed_selectsize']."'":"";
-
+		
 		// Privacy
 		if($this->question['privacy_link']!="") $out['###PRIVACY_LINK###'] = $this->obj->pi_getPageLink($this->question['privacy_link']);
 		if($this->question['privacy_file']!="") $out['###PRIVACY_LINK###'] = $this->obj->pi_getPageLink("uploads/tx_kequestionnaire/".$this->question['privacy_file']);
@@ -439,6 +439,9 @@ class question{
 		return $content;
 	}
 
+    function getSpecialJS(){
+	return '';
+    }
 
     function getActivatingQuestion($uid){
 	$where = 'uid='.$uid;
@@ -491,8 +494,8 @@ class question{
 			}
 			//#############################################
 			$render_temp = $this->fields[$key]->render();
-			if ($this->fields[$key]->rb_onchange) {
-			    $out['rb_js'] .= $this->fields[$key]->rb_onchange;
+			if ($this->fields[$key]->closed_onchange) {
+			    $out['closed_onchangejs'] .= $this->fields[$key]->closed_onchange;
 			}
 			$out[$marker].= $render_temp;
 		}
@@ -519,17 +522,17 @@ class question{
 			"###ERROR_MESSAGE###"=>$this->error?$subpartError:"",
 
 		);
-		t3lib_div::devLog('this->question '.$this->question['uid'], 'question', 0, $this->question);
+		//t3lib_div::devLog('this->question '.$this->question['uid'], 'question', 0, $this->question);
 		//t3lib_div::devLog('this->dependants '.$this->question['uid'], 'question', 0, $this->dependants);
 		//t3lib_div::devLog('this->dependancies '.$this->question['uid'], 'question', 0, $this->dependancies);
 		//#############################################
 		// KENNZIFFER Nadine Schwingler 09.11.2009
 		// For Javascript to deactivate the textboxes
 		$replace_rbjs = '';
-		if ($this->htmlFields['rb_js']){
-		    $replace_rbjs = 'onchange="'.$this->htmlFields['rb_js'].'"';
+		if ($this->htmlFields['closed_onchangejs']){
+		    $replace_onchangejs = 'onchange="'.$this->htmlFields['closed_onchangejs'].'"';
 		}
-		$subpartArray['###FIELDS###'] = str_replace("###RB_JS###",$replace_rbjs,$subpartArray['###FIELDS###']);
+		$subpartArray['###FIELDS###'] = str_replace("###ONCHANGE_JS###",$replace_onchangejs,$subpartArray['###FIELDS###']);
 		//#############################################
 		//#############################################
 		// KENNZIFFER Nadine Schwingler 19.04.2010

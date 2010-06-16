@@ -52,6 +52,7 @@
 			<label index="tx_kequestionnaire_questions.closed_type.I.4">single with buttons</label>
 			<label index="tx_kequestionnaire_questions.closed_type">closed question type</label>
 			<label index="tx_kequestionnaire_questions.closed_selectsize">size of select-box</label>
+			<label index="tx_kequestionnaire_questions.closed_maxanswers">max answers allowed for user</label>
 			<label index="tx_kequestionnaire_questions.closed_inputfield">input field for last answer-option</label>
 			<label index="tx_kequestionnaire_questions.matrix_type.I.0">radiobuttons (single)</label>
 			<label index="tx_kequestionnaire_questions.matrix_type.I.1">checkboxes (multiple)</label>
@@ -199,6 +200,7 @@
 			<label index="tx_kequestionnaire_questions.closed_type.I.4">Einfachauswahl mit Buttons</label>
 			<label index="tx_kequestionnaire_questions.closed_type">Einfach- oder Mehrfachauswahl</label>
 			<label index="tx_kequestionnaire_questions.closed_selectsize">Höhe der Select-Box (Anzahl an Antworten)</label>
+			<label index="tx_kequestionnaire_questions.closed_maxanswers">max. Anzahl an Antworten, die dem Nutzer erlaubt sind</label>
 			<label index="tx_kequestionnaire_questions.closed_inputfield">Eingabefeld definieren</label>
 			<label index="tx_kequestionnaire_questions.matrix_type.I.0">Radiobuttons (Einfachauswahl)</label>
 			<label index="tx_kequestionnaire_questions.matrix_type.I.1">Checkboxen (Mehrfachauswahl)</label>
