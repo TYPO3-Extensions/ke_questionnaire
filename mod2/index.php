@@ -221,7 +221,8 @@ class  tx_kequestionnaire_module2 extends t3lib_SCbase {
 					else $content = 'keine Chart-Library definiert';
 				break;
 				case 2:
-					$title = $LANG->getLL('question_charts');
+					if ($this->ff_data['sDEF']['lDEF']['type']['vDEF'] == 'RANDOM') $title = $LANG->getLL('question_result_charts');
+					else $title = $LANG->getLL('question_charts');
 					if ($this->extConf_premium['chart_lib'] == 'openfl2') {
 						$content = $this->getOFQuestionCharts();
 					} elseif ($this->extConf_premium['chart_lib'] == 'graph' OR !t3lib_extMgm::isLoaded('ke_questionnaire_premium')) {
@@ -383,7 +384,7 @@ class  tx_kequestionnaire_module2 extends t3lib_SCbase {
 		if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['ke_questionnaire']['mod2_getOFQuestionCharts'])){
 			foreach($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['ke_questionnaire']['mod2_getOFQuestionCharts'] as $_classRef){
 				$_procObj = & t3lib_div::getUserObj($_classRef);
-				$content = $_procObj->mod2_getOFQuestionCharts($this,$templ,$markerArray,$content);
+				$content = $_procObj->mod2_getOFQuestionCharts($this,$templ,$markerArray,$content,$charts);
 			}
 		}
 		
@@ -391,8 +392,8 @@ class  tx_kequestionnaire_module2 extends t3lib_SCbase {
 	}
 	
 	function getOFQMatrixPieCharts($columns, $results, $question){
-		t3lib_div::devLog('columns', 'ke_questionnaire auswert Mod', 0, $columns);
-		t3lib_div::devLog('results', 'ke_questionnaire auswert Mod', 0, $results);
+		//t3lib_div::devLog('columns', 'ke_questionnaire auswert Mod', 0, $columns);
+		//t3lib_div::devLog('results', 'ke_questionnaire auswert Mod', 0, $results);
 		global $LANG;
 		$values = array();
 		$content = '';
@@ -1383,7 +1384,8 @@ class  tx_kequestionnaire_module2 extends t3lib_SCbase {
 	 * @return	string
 	 */
 	function getQuestionSelect($types){
-		$content = '<select name="question" onchange="this.form.submit()">';
+		if ($this->ff_data['sDEF']['lDEF']['type']['vDEF'] == 'RANDOM') $content = '<select id="keq_mod2_question" name="question" onchange="document.getElementById(\'keq_mod2_result\').value=0;this.form.submit()">';
+		else $content = '<select id="keq_mod2_question" name="question" onchange="this.form.submit()">';
 		$storage_pid = $this->ff_data['sDEF']['lDEF']['storage_pid']['vDEF'];
 
 		$q_id = t3lib_div::GPvar('question');

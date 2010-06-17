@@ -13,6 +13,7 @@
 
 			<label index="basic_charts">Basic Charts</label>
 			<label index="question_charts">Question Charts</label>
+			<label index="question_result_charts">Singel Result and Question Charts</label>
 
 			<label index="result_count">Amount of all results</label>
 			<label index="finished_count">Amount of finished results</label>
@@ -46,6 +47,7 @@
 
 			<label index="basic_charts">Basis Auswertungen</label>
 			<label index="question_charts">Auswertungen der Fragen</label>
+			<label index="question_result_charts">Auswertungen der Einzelergebnisse und Fragen</label>
 
 			<label index="result_count">Gesamtanzahl der Ergebnisse</label>
 			<label index="finished_count">Anzahl vollständiger Teilnahmen</label>
