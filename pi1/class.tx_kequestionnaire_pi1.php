@@ -1423,6 +1423,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 					$question_obj->init($uid,$this,$answer);
 					break;
 				default:
+				/*Hook*/
 					if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$this->extKey]['getDifferentQuestionTypeObject'])){
 						foreach($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$this->extKey]['getDifferentQuestionTypeObject'] as $_classRef){
 							$_procObj = & t3lib_div::getUserObj($_classRef);
