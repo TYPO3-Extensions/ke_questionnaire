@@ -475,6 +475,14 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 				$this->saveArray = $_procObj->pi1_setResultsSaveArray($this);
 			}
 		}
+		//Hook to manipulate the saveFields
+		if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$this->extKey]['pi1_setResultsSaveFields'])){
+			foreach($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$this->extKey]['pi1_setResultsSaveFields'] as $_classRef){
+				$_procObj = & t3lib_div::getUserObj($_classRef);
+				$saveFields = $_procObj->pi1_setResultsSaveFields($this,$saveFields);
+			}
+		}
+		
 		if (is_array($this->saveArray)) $saveFields['xmldata'] = t3lib_div::array2xml($this->saveArray);
 
 		//$saveFields['ip'] = $_SERVER['REMOTE_ADDR'];
