@@ -27,6 +27,7 @@
 
 			<label index="CSV_download_type">Select the type of Export you want to make:</label>
 			<label index="CSV_download_simple">Simple Data-Download</label>
+			<label index="CSV_download_simple2">Simple Data-Download (one result=one row !limited in q-types!)</label>
 			<label index="CSV_download_results">Result based Download</label>
 			<label index="CSV_download_questions">Question based Download</label>
 			<label index="CSV_question">Question</label>
@@ -57,6 +58,7 @@
 
 			<label index="CSV_download_type">Bitte wählen Sie den Typ des Exports:</label>
 			<label index="CSV_download_simple">Einfacher Daten-Download</label>
+			<label index="CSV_download_simple2">Einfacher Daten-Download (ein Ergebnis = eine Zeile !nur bestimmte Fragetypen werden Exportiert!)</label>
 			<label index="CSV_download_results">Teilnahmen basierter Download</label>
 			<label index="CSV_download_questions">Fragen basierter Download</label>
 			<label index="CSV_question">Frage</label>

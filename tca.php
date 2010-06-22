@@ -588,7 +588,7 @@ $TCA["tx_kequestionnaire_questions"] = array (
 				"foreign_table" => "tx_kequestionnaire_answers",
                                 "foreign_field" => "question_uid",
 				"foreign_sortby" => "sorting",
-				"maxitems" => 20,
+				"maxitems" => 75,
 				"behaviour" => Array(
                                     "localizationMode" => "select",
                                 ),
@@ -1171,7 +1171,7 @@ $TCA["tx_kequestionnaire_answers"] = array (
 		),
 	),
 	"types" => array (
-		"0" => array("showitem" => "question_uid, title;;;;2-2-2, value;;;;3-3-3, correct_answer, text;;;richtext[paste|bold|italic|underline|formatblock|class|left|center|right|orderedlist|unorderedlist|outdent|indent|link|image]:rte_transform[mode=ts], helptext;;;richtext[paste|bold|italic|underline|formatblock|class|left|center|right|orderedlist|unorderedlist|outdent|indent|link|image]:rte_transform[mode=ts], image, image_position,finish_page_uid")
+		"0" => array("showitem" => "sys_language_uid;;;;1-1-1, l18n_parent,question_uid, title;;;;2-2-2, value;;;;3-3-3, correct_answer, text;;;richtext[paste|bold|italic|underline|formatblock|class|left|center|right|orderedlist|unorderedlist|outdent|indent|link|image]:rte_transform[mode=ts], helptext;;;richtext[paste|bold|italic|underline|formatblock|class|left|center|right|orderedlist|unorderedlist|outdent|indent|link|image]:rte_transform[mode=ts], image, image_position,finish_page_uid")
                 //"0" => array("showitem" => "sys_language_uid;;;;1-1-1, l18n_parent, l18n_diffsource, hidden;;1, question_uid, title;;;;2-2-2, value;;;;3-3-3, correct_answer, text;;;richtext[paste|bold|italic|underline|formatblock|class|left|center|right|orderedlist|unorderedlist|outdent|indent|link|image]:rte_transform[mode=ts], helptext;;;richtext[paste|bold|italic|underline|formatblock|class|left|center|right|orderedlist|unorderedlist|outdent|indent|link|image]:rte_transform[mode=ts], image")
 	),
 	"palettes" => array (
@@ -1316,7 +1316,7 @@ $TCA["tx_kequestionnaire_columns"] = array (
 		),
 	),
 	"types" => array (
-		"0" => array("showitem" => "question_uid, title;;;;2-2-2, different_type, image;;;;3-3-3, image_position")
+		"0" => array("showitem" => "sys_language_uid;;;;1-1-1, l18n_parent,question_uid, title;;;;2-2-2, different_type, image;;;;3-3-3, image_position")
                 //"0" => array("showitem" => "sys_language_uid;;;;1-1-1, l18n_parent, l18n_diffsource, hidden;;1, question_uid, title;;;;2-2-2, image;;;;3-3-3")
 	),
 	"palettes" => array (
@@ -1460,7 +1460,7 @@ $TCA["tx_kequestionnaire_subquestions"] = array (
 		),
 	),
 	"types" => array (
-		"0" => array("showitem" => "question_uid, title;;;;2-2-2, title_line, text;;;richtext[paste|bold|italic|underline|formatblock|class|left|center|right|orderedlist|unorderedlist|outdent|indent|link|image]:rte_transform[mode=ts];3-3-3, image, image_position")
+		"0" => array("showitem" => "sys_language_uid;;;;1-1-1, l18n_parent,question_uid, title;;;;2-2-2, title_line, text;;;richtext[paste|bold|italic|underline|formatblock|class|left|center|right|orderedlist|unorderedlist|outdent|indent|link|image]:rte_transform[mode=ts];3-3-3, image, image_position")
                 //"0" => array("showitem" => "sys_language_uid;;;;1-1-1, l18n_parent, l18n_diffsource, hidden;;1, question_uid, title;;;;2-2-2, text;;;richtext[paste|bold|italic|underline|formatblock|class|left|center|right|orderedlist|unorderedlist|outdent|indent|link|image]:rte_transform[mode=ts];3-3-3, image")
 	),
 	"palettes" => array (
@@ -1676,7 +1676,7 @@ $TCA["tx_kequestionnaire_sublines"] = array (
 		),
 	),
 	"types" => array (
-		"0" => array("showitem" => "question_uid, start, end")
+		"0" => array("showitem" => "sys_language_uid;;;;1-1-1, l18n_parent,question_uid, start, end")
                 //"0" => array("showitem" => "sys_language_uid;;;;1-1-1, l18n_parent, l18n_diffsource, hidden;;1, question_uid, start, end")
 	),
 	"palettes" => array (

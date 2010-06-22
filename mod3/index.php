@@ -273,7 +273,8 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 		$content .= '<p>'.$LANG->getLL('CSV_download_type');
 		$content .= ' <select name="download_type">';
 		$content .= '<option value="questions">'.$LANG->getLL('CSV_download_questions').'</option>';
-		$content .= '<option value="simple">'.$LANG->getLL('CSV_download_simple').'</option>';
+		//$content .= '<option value="simple">'.$LANG->getLL('CSV_download_simple').'</option>';
+		$content .= '<option value="simple2">'.$LANG->getLL('CSV_download_simple2').'</option>';
 		//$content .= '<option value="results">'.$LANG->getLL('CSV_download_results').'</option>';
 		$content .= '</select></p>';
 		//$content .= '<input type="hidden" name="download_type" value="simple" />';
@@ -393,6 +394,9 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 		switch (t3lib_div::_GP('download_type')){
 			case 'simple':
 				$csvdata = $this->getCSVSimple();
+				break;
+			case 'simple2':
+				$csvdata = $this->getCSVSimple2();
 				break;
 			case 'questions':
 				$csvdata = $this->getCSVQBased();
@@ -981,6 +985,89 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 		}
 		return $delimeter.implode($parter,$line).$delimeter;
 	}
+	
+	function getCSVSimple2(){
+		global $LANG;
+
+		$csvdata = '';
+		$csvheader = '';
+		$delimeter = $this->extConf['CSV_qualifier'];
+		$parter = $delimeter.$this->extConf['CSV_parter'].$delimeter;
+		
+		$csvheader = $this->q_data['header']."\n\n";
+		$this->simplifyResults();
+		//t3lib_div::devLog('getCSVSimple simpleResults', 'ke_questionnaire Export Mod', 0, $this->simpleResults);
+		
+		if (is_array($this->simpleResults)){
+			$headline = array();
+			foreach ($this->simpleResults as $question_id => $values){
+				if ($values['title'] != ''){
+					switch ($values['type']){
+						case 'closed':
+							foreach ($values['answers'] as $a_id => $a_values){
+								$answer = t3lib_BEfunc::getRecord('tx_kequestionnaire_answers',$a_id);
+								$headline[] = $values['title'].'_'.$answer['title'];
+							}
+						break;
+						case 'matrix':
+							foreach ($values['subquestions'] as $sub_id => $sub_values){
+								$subl = t3lib_BEfunc::getRecord('tx_kequestionnaire_subquestions',$sub_id);
+								foreach ($sub_values['columns'] as $col_id => $col_values){
+									$col = t3lib_BEfunc::getRecord('tx_kequestionnaire_columns',$col_id);
+									$headline[] = $values['title'].'_'.$subl['title'].'_'.$col['title'];
+								}
+							}
+						break;
+						case 'semantic':
+							foreach ($values['subquestions'] as $sub_id => $sub_values){
+								$subl = t3lib_BEfunc::getRecord('tx_kequestionnaire_sublines',$sub_id);
+								foreach ($sub_values['columns'] as $col_id => $col_values){
+									$col = t3lib_BEfunc::getRecord('tx_kequestionnaire_columns',$col_id);
+									$headline[] = $values['title'].'_'.$subl['title'].'_'.$col['title'];
+								}
+							}
+						break;
+						default:
+							$headline[] = $values['title'];
+						break;
+					}
+				}
+			}
+		}
+		$csvheader .= $delimeter.implode($parter,$headline).$delimeter."\n";
+		if (is_array($this->simpleResults['result_nrs'])){
+			foreach ($this->simpleResults['result_nrs'] as $nr){
+				$result_line = array();
+				foreach ($this->simpleResults as $question_id => $values){
+					if ($values['title'] != ''){
+						switch ($values['type']){
+							case 'closed':
+								foreach ($values['answers'] as $a_id => $a_values){
+									if ($values['answers'][$a_id]['results'][$nr]) $result_line[] = 'x';
+									else $result_line[] = '';
+								}
+							break;
+							case 'matrix':
+							case 'sematic':
+								foreach ($values['subquestions'] as $sub_id => $sub_values){
+									foreach ($sub_values['columns'] as $col_id => $col_values){
+										if ($values['subquestions'][$sub_id]['columns'][$col_id]['results'][$nr]) $result_line[] = $values['subquestions'][$sub_id]['columns'][$col_id]['results'][$nr];
+										else $result_line[] = '';
+									}
+								}
+							break;
+							default:
+								$result_line[] = $values['results'][$nr];
+							break;
+						}
+					}	
+				}
+				$csvdata .= $delimeter.implode($parter,$result_line).$delimeter."\n";
+			}
+		}
+	
+		return $csvheader.$csvdata;
+	}
 
 	function getCSVSimple(){
 		global $LANG;
@@ -1010,156 +1097,158 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 			$lineset .= $delimeter.implode($parter,$line).$delimeter."\n";
 			if (is_array($result)){
 				foreach ($result as $question_id => $values){
-					//t3lib_div::devLog('getCSVSimple values '.$question_id, 'ke_questionnaire Export Mod', 0, $values);
-					//make a line with the question name and id
-					$line = array();
-					$line[] = $LANG->getLL('CSV_question').' ('.$values['type'].')';
-					$line[] = $values['question_id'];
-
-					$quest_text = $this->stripString($values['question']);
-
-					$line[] = $quest_text;
-					$lineset .= $delimeter.implode($parter,$line).$delimeter."\n";
-					switch ($values['type']){
-						case 'open':
-							$line = array();
-							$line[] = $LANG->getLL('CSV_answer');
-							$line[] = '';
-							$line[] = $values['answer'];
-							$lineset .= $delimeter.implode($parter,$line).$delimeter."\n";
-							break;
-						case 'closed':
-							if (is_array($values['answer']['options'])){
-								foreach ($values['answer']['options'] as $option => $value){
-									$line = array();
-									$line[] = '';
-									$line[] = $value;
-									if ($values['answer']['text'][$value]){
-										$temp_text = '';
-										$temp_text = $this->stripString($values['answer']['text'][$value]);
-										$line[] = $temp_text;
-									} elseif ($values['possible_answers'][$value]){
-										$temp_text = '';
-										$temp_text = $this->stripString($values['possible_answers'][$value]);
-										$line[] = $temp_text;
-									} else {
-										$line[] = $this->getPossibleAnswersData($values['type'],$value);
-									}
-									$lineset .= $delimeter.implode($parter,$line).$delimeter."\n";
-								}
-							}
-							break;
-						case 'matrix':
-							//t3lib_div::devLog('getCSVSimple matrix '.$question_id, 'ke_questionnaire Export Mod', 0, $values);
-							if (is_array($values['answer']['options'])){
-								foreach ($values['answer']['options'] as $option => $value){
-									$line = array();
-									$line[] = '';
-									$line[] = $option;
-									$temp = '';
-									$temp_text = '';
-									$temp_text = $this->stripString($values['possible_answers']['lines'][$option]);
-									$temp = $temp_text;
-									if ($temp == '') $temp = $this->getPossibleAnswersData($values['type'].'_line',$option);
-									$line[] = $temp;
-									//t3lib_div::devLog('getCSVSimple matrix '.$question_id, 'ke_questionnaire Export Mod', 0, $line);
-									$lineset .= $delimeter.implode($parter,$line).$delimeter."\n";
-									if (is_array($value)){
-										foreach($value as $c_option => $c_value){
-											$line = array();
-											$line[] = '';
-											$line[] = '';
-											$temp = '';
-											$temp_text = '';
-											$temp_text = $this->stripString($values['possible_answers'][$c_option]);
-											$temp = $temp_text;
-											if ($temp == '') $temp = $this->getPossibleAnswersData($values['type'].'_column',$c_option);
-											$line[] = $temp;
-											$line[] = $c_value;
-											$lineset .= $delimeter.implode($parter,$line).$delimeter."\n";
-										}
-									} else {
+					if ($values['type'] != ''){
+						//t3lib_div::devLog('getCSVSimple values '.$question_id, 'ke_questionnaire Export Mod', 0, $values);
+						//make a line with the question name and id
+						$line = array();
+						$line[] = $LANG->getLL('CSV_question').' ('.$values['type'].')';
+						$line[] = $values['question_id'];
+	
+						$quest_text = $this->stripString($values['question']);
+	
+						$line[] = $quest_text;
+						$lineset .= $delimeter.implode($parter,$line).$delimeter."\n";
+						switch ($values['type']){
+							case 'open':
+								$line = array();
+								$line[] = $LANG->getLL('CSV_answer');
+								$line[] = '';
+								$line[] = $values['answer'];
+								$lineset .= $delimeter.implode($parter,$line).$delimeter."\n";
+								break;
+							case 'closed':
+								if (is_array($values['answer']['options'])){
+									foreach ($values['answer']['options'] as $option => $value){
 										$line = array();
 										$line[] = '';
-										$line[] = '';
-										$line[] = $c_value;
-										$temp = '';
-										$temp = $values['possible_answers'][$value];
-										if ($temp == '') $temp = $this->getPossibleAnswersData($values['type'].'_column',$c_option);
-										$line[] = $temp;
+										$line[] = $value;
+										if ($values['answer']['text'][$value]){
+											$temp_text = '';
+											$temp_text = $this->stripString($values['answer']['text'][$value]);
+											$line[] = $temp_text;
+										} elseif ($values['possible_answers'][$value]){
+											$temp_text = '';
+											$temp_text = $this->stripString($values['possible_answers'][$value]);
+											$line[] = $temp_text;
+										} else {
+											$line[] = $this->getPossibleAnswersData($values['type'],$value);
+										}
 										$lineset .= $delimeter.implode($parter,$line).$delimeter."\n";
 									}
 								}
-							}
-							break;
-						case 'demographic':
-							if (is_array($values['answer']['fe_users'])){
-								foreach ($values['answer']['fe_users'] as $field => $value){
-									$line = array();
-									$line[] = '';
-									$line[] = $field;
-									$line[] = $value;
-									$lineset .= $delimeter.implode($parter,$line).$delimeter."\n";
-								}
-							}
-							if (is_array($values['answer']['tt_address'])){
-								foreach ($values['answer']['tt_address'] as $field => $value){
-									$line = array();
-									$line[] = '';
-									$line[] = $field;
-									$line[] = $value;
-									$lineset .= $delimeter.implode($parter,$line).$delimeter."\n";
-								}
-							}
-							break;
-						case 'sematic':
-							//t3lib_div::devLog('getCSVSimple semantic '.$question_id, 'ke_questionnaire Export Mod', 0, $values);
-							//Muss auf Basis der "Possible Answers" gerendert werden.
-							if (is_array($values['answer']['options'])){
-								foreach ($values['answer']['options'] as $option => $value){
-									$line = array();
-									$line[] = '';
-									$line[] = $option;
-									$temp = '';
-									$temp = $values['possible_answers']['lines'][$value]['start'].'...'.$values['possible_answers']['lines'][$value]['end'];
-									if ($temp == '') $temp = $this->getPossibleAnswersData($values['type'].'_line',$option);
-									$line[] = $temp;
-									$lineset .= $delimeter.implode($parter,$line).$delimeter."\n";
-									if (is_array($value)){
-										foreach($value as $c_option => $c_value){
+								break;
+							case 'matrix':
+								//t3lib_div::devLog('getCSVSimple matrix '.$question_id, 'ke_questionnaire Export Mod', 0, $values);
+								if (is_array($values['answer']['options'])){
+									foreach ($values['answer']['options'] as $option => $value){
+										$line = array();
+										$line[] = '';
+										$line[] = $option;
+										$temp = '';
+										$temp_text = '';
+										$temp_text = $this->stripString($values['possible_answers']['lines'][$option]);
+										$temp = $temp_text;
+										if ($temp == '') $temp = $this->getPossibleAnswersData($values['type'].'_line',$option);
+										$line[] = $temp;
+										//t3lib_div::devLog('getCSVSimple matrix '.$question_id, 'ke_questionnaire Export Mod', 0, $line);
+										$lineset .= $delimeter.implode($parter,$line).$delimeter."\n";
+										if (is_array($value)){
+											foreach($value as $c_option => $c_value){
+												$line = array();
+												$line[] = '';
+												$line[] = '';
+												$temp = '';
+												$temp_text = '';
+												$temp_text = $this->stripString($values['possible_answers'][$c_option]);
+												$temp = $temp_text;
+												if ($temp == '') $temp = $this->getPossibleAnswersData($values['type'].'_column',$c_option);
+												$line[] = $temp;
+												$line[] = $c_value;
+												$lineset .= $delimeter.implode($parter,$line).$delimeter."\n";
+											}
+										} else {
 											$line = array();
 											$line[] = '';
 											$line[] = '';
+											$line[] = $c_value;
 											$temp = '';
 											$temp = $values['possible_answers'][$value];
 											if ($temp == '') $temp = $this->getPossibleAnswersData($values['type'].'_column',$c_option);
 											$line[] = $temp;
-											$line[] = $c_value;
 											$lineset .= $delimeter.implode($parter,$line).$delimeter."\n";
 										}
-									} else {
+									}
+								}
+								break;
+							case 'demographic':
+								if (is_array($values['answer']['fe_users'])){
+									foreach ($values['answer']['fe_users'] as $field => $value){
 										$line = array();
 										$line[] = '';
-										$line[] = '';
-										$line[] = $c_value;
-										$temp = '';
-										$temp = $values['possible_answers'][$value];
-										if ($temp == '') $temp = $this->getPossibleAnswersData($values['type'].'_column',$c_option);
-										$line[] = $temp;
+										$line[] = $field;
+										$line[] = $value;
 										$lineset .= $delimeter.implode($parter,$line).$delimeter."\n";
 									}
 								}
-							}
-							break;
-						default:
-							// Hook to make other types available for export
-							if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['ke_questionnaire']['CSVExportSimple'])){
-								foreach($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['ke_questionnaire']['CSVExportSimple'] as $_classRef){
-									$_procObj = & t3lib_div::getUserObj($_classRef);
-									$lineset .= $_procObj->CSVSimpleExport($values,$delimeter);
+								if (is_array($values['answer']['tt_address'])){
+									foreach ($values['answer']['tt_address'] as $field => $value){
+										$line = array();
+										$line[] = '';
+										$line[] = $field;
+										$line[] = $value;
+										$lineset .= $delimeter.implode($parter,$line).$delimeter."\n";
+									}
 								}
-							}
-							break;
+								break;
+							case 'sematic':
+								//t3lib_div::devLog('getCSVSimple semantic '.$question_id, 'ke_questionnaire Export Mod', 0, $values);
+								//Muss auf Basis der "Possible Answers" gerendert werden.
+								if (is_array($values['answer']['options'])){
+									foreach ($values['answer']['options'] as $option => $value){
+										$line = array();
+										$line[] = '';
+										$line[] = $option;
+										$temp = '';
+										$temp = $values['possible_answers']['lines'][$value]['start'].'...'.$values['possible_answers']['lines'][$value]['end'];
+										if ($temp == '') $temp = $this->getPossibleAnswersData($values['type'].'_line',$option);
+										$line[] = $temp;
+										$lineset .= $delimeter.implode($parter,$line).$delimeter."\n";
+										if (is_array($value)){
+											foreach($value as $c_option => $c_value){
+												$line = array();
+												$line[] = '';
+												$line[] = '';
+												$temp = '';
+												$temp = $values['possible_answers'][$value];
+												if ($temp == '') $temp = $this->getPossibleAnswersData($values['type'].'_column',$c_option);
+												$line[] = $temp;
+												$line[] = $c_value;
+												$lineset .= $delimeter.implode($parter,$line).$delimeter."\n";
+											}
+										} else {
+											$line = array();
+											$line[] = '';
+											$line[] = '';
+											$line[] = $c_value;
+											$temp = '';
+											$temp = $values['possible_answers'][$value];
+											if ($temp == '') $temp = $this->getPossibleAnswersData($values['type'].'_column',$c_option);
+											$line[] = $temp;
+											$lineset .= $delimeter.implode($parter,$line).$delimeter."\n";
+										}
+									}
+								}
+								break;
+							default:
+								// Hook to make other types available for export
+								if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['ke_questionnaire']['CSVExportSimple'])){
+									foreach($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['ke_questionnaire']['CSVExportSimple'] as $_classRef){
+										$_procObj = & t3lib_div::getUserObj($_classRef);
+										$lineset .= $_procObj->CSVSimpleExport($values,$delimeter);
+									}
+								}
+								break;
+						}
 					}
 				}
 			}

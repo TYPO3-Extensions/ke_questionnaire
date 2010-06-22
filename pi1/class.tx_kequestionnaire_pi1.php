@@ -1538,8 +1538,10 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 							$subs_key = htmlspecialchars($subs_key);
 							if (is_array($subs_value)){
 								foreach ($subs_value as $ssubs_key => $ssubs_value){
-									$ssubs_key = htmlspecialchars($ssubs_key);
-									$piVars[$key][$s_key][$subs_key][$ssubs_key] = htmlspecialchars($ssubs_value);
+									if (!is_array($ssubs_value)){
+										$ssubs_key = htmlspecialchars($ssubs_key);
+										$piVars[$key][$s_key][$subs_key][$ssubs_key] = htmlspecialchars($ssubs_value);
+									}
 								}
 							} else {
 								$piVars[$key][$s_key][$subs_key] = htmlspecialchars($subs_value);
