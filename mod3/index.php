@@ -432,16 +432,20 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 
 		$lineset = ''; //stores the CSV-data
 		$line = array(); //single line, will be imploded
-		$free_cells = 2;
-		$result_line = $this->getQBaseResultLine($free_cells-1);
+		$free_cells = 0;
+		$result_line = $this->getQBaseResultLine($free_cells);
 		
+		$lineset .= $pure_parter.$pure_parter.$pure_parter.$result_line."\n";
 		foreach ($this->simpleResults as $q_id => $question){
 			$line = array();
 			$line[] = $question['uid'];
 			$line[] = $this->stripString($question['title']);
-			$lineset .= $delimeter.implode($parter,$line).$delimeter;
-			$lineset .= $pure_parter.$result_line."\n";
-			//t3lib_div::devLog('getCSVQBase '.$question['type'], 'ke_questionnaire Export Mod', 0, $question);
+			if ($question['type']){
+				$lineset .= $delimeter.implode($parter,$line).$delimeter;
+				//$lineset .= $pure_parter.$result_line."\n";
+				$lineset .= $pure_parter;
+				//t3lib_div::devLog('getCSVQBase '.$question['type'], 'ke_questionnaire Export Mod', 0, $question);
+				//t3lib_div::devLog('lineset '.$question['type'], 'ke_questionnaire Export Mod', 0, array($lineset));
 		/*if ($res){
 			while($question = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)){
 				$line = array();
@@ -460,9 +464,10 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 					case 'open':	$lineset .= $this->getQBaseLine($free_cells,$question['uid'],$question['type']);
 						break;
 					case 'closed':
+							$lineset .= "\n";
 							foreach ($question['answers'] as $a_id => $a_values){
 								$answer = t3lib_BEfunc::getRecord('tx_kequestionnaire_answers',$a_id);
-								$lineset .= $this->getQBaseLine($free_cells,$question['uid'],$question['type'],$answer);
+								$lineset .= $this->getQBaseLine($free_cells+2,$question['uid'],$question['type'],$answer);
 							}
 							/*$where = 'question_uid='.$question['uid'].' and hidden=0 and deleted=0';
 							$res_answers = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*','tx_kequestionnaire_answers',$where,'','sorting');
@@ -474,9 +479,10 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 							}*/
 						break;
 					case 'matrix':
+							$lineset .= "\n";
 							foreach ($question['subquestions'] as $sub_id => $sub_values){
 								$line = array();
-								for ($i = 0;$i < ($free_cells-1);$i ++){
+								for ($i = 0;$i < ($free_cells+1);$i ++){
 									$line[] = '';
 								}
 								$subquestion = t3lib_BEfunc::getRecord('tx_kequestionnaire_subquestions',$sub_id);
@@ -485,7 +491,7 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 								$lineset .= $delimeter.implode($parter,$line).$delimeter."\n";
 								foreach ($sub_values['columns'] as $c_id => $c_values){
 									$column = t3lib_BEfunc::getRecord('tx_kequestionnaire_columns',$c_id);
-									$lineset .= $this->getQBaseLine($free_cells,$question['uid'],$question['type'],array(),$subquestion['uid'],$column);
+									$lineset .= $this->getQBaseLine($free_cells+2,$question['uid'],$question['type'],array(),$subquestion['uid'],$column);
 								}
 							}
 							/*$columns = array();
@@ -515,10 +521,11 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 							}*/
 						break;
 					case 'semantic':
+							$lineset .= "\n";
 							//t3lib_div::devLog('getCSVQBase '.$question['type'], 'ke_questionnaire Export Mod', 0, $question);
 							foreach ($question['subquestions'] as $sub_id => $sub_values){
 								$line = array();
-								for ($i = 0;$i < ($free_cells-1);$i ++){
+								for ($i = 0;$i < ($free_cells+1);$i ++){
 									$line[] = '';
 								}
 								$subquestion = t3lib_BEfunc::getRecord('tx_kequestionnaire_sublines',$sub_id);
@@ -526,7 +533,7 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 								$lineset .= $delimeter.implode($parter,$line).$delimeter."\n";
 								foreach ($sub_values['columns'] as $c_id => $c_values){
 									$column = t3lib_BEfunc::getRecord('tx_kequestionnaire_columns',$c_id);
-									$lineset .= $this->getQBaseLine($free_cells,$question['uid'],$question['type'],array(),$subquestion['uid'],$column);
+									$lineset .= $this->getQBaseLine($free_cells+2,$question['uid'],$question['type'],array(),$subquestion['uid'],$column);
 								}
 							}
 							/*$columns = array();
@@ -590,7 +597,7 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 						break;
 					
 				}
-			//}
+			}
 		}
 		$csvdata .= $lineset."\n";
 
