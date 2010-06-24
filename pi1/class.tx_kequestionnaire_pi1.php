@@ -659,10 +659,10 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 		$page_questions = $this->getQuestionsOfPage($page_nr,$page_count);
 		$shown = $this->shown;
 		foreach ($page_questions as $quest){
+			t3lib_div::devLog('renderPage', $this->prefixId, 0, $quest);
 			$questions .= $this->getQuestionTypeRender($quest);
 		}
-		//t3lib_div::devLog('questions', $this->prefixId, 0, array($questions,$this->getQuestionsOfPage($page_nr,$page_count)));
-
+		
 		$nav_markerArray = array();
 		
 		if (($page_nr - 1) > 0 AND $this->ffdata['linear'] != 1 AND $this->ffdata['type'] != 'QUIZ'){
@@ -1355,89 +1355,89 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 		$saveArray = array();
 
 		switch ($question['type']){
-				case 'open':
-					$question_obj = new question_open();
-					$answer = array();
-					if (is_array($this->saveArray[$question['uid']]) AND !$this->piVars[$question['uid']] AND $this->saveArray[$question['uid']]){
-						$this->piVars[$question['uid']]['text'] = $this->saveArray[$question['uid']]['answer'];
-					}
-					$answer['text'] = $this->piVars[$question['uid']]['text'];
-					if ($answer['text'] == '') $answer['text'] = $question["open_in_text"];
-					$question_obj->init($uid,$this,$answer,$validate,"error","d.m.y",",");
-					break;
-				case 'closed':
-					$question_obj = new question_closed();
-					if (is_array($this->saveArray[$question['uid']]) AND !$this->piVars[$question['uid']] AND $this->saveArray[$question['uid']]){
-						if (stristr($this->saveArray[$question['uid']]['answer'],'<phparray>')){
-							$this->piVars[$question['uid']]['options'] = $this->saveArray[$question['uid']]['answer'];
-						} else {
-							$this->piVars[$question['uid']] = $this->saveArray[$question['uid']]['answer'];
-						}
-					}
-					$answer = $this->piVars[$question['uid']];
-					$question_obj->init($uid,$this,$answer,$validate);
+			case 'open':
+				$question_obj = new question_open();
+				$answer = array();
+				if (is_array($this->saveArray[$question['uid']]) AND !$this->piVars[$question['uid']] AND $this->saveArray[$question['uid']]){
+					$this->piVars[$question['uid']]['text'] = $this->saveArray[$question['uid']]['answer'];
+				}
+				$answer['text'] = $this->piVars[$question['uid']]['text'];
+				if ($answer['text'] == '') $answer['text'] = $question["open_in_text"];
+				$question_obj->init($uid,$this,$answer,$validate,"error","d.m.y",",");
 				break;
-				case 'matrix':
-					$question_obj = new question_matrix();
-					if (is_array($this->saveArray[$question['uid']]) AND !$this->piVars[$question['uid']] AND $this->saveArray[$question['uid']]){
+			case 'closed':
+				$question_obj = new question_closed();
+				if (is_array($this->saveArray[$question['uid']]) AND !$this->piVars[$question['uid']] AND $this->saveArray[$question['uid']]){
+					if (stristr($this->saveArray[$question['uid']]['answer'],'<phparray>')){
+						$this->piVars[$question['uid']]['options'] = $this->saveArray[$question['uid']]['answer'];
+					} else {
 						$this->piVars[$question['uid']] = $this->saveArray[$question['uid']]['answer'];
 					}
-					$answer=$this->piVars[$question['uid']];
-					$question_obj->init($uid,$this,$answer,$validate,'error',"d.m.y",",");
-					break;
-				case 'semantic':
-					$question_obj = new question_semantic();
+				}
+				$answer = $this->piVars[$question['uid']];
+				$question_obj->init($uid,$this,$answer,$validate);
+			break;
+			case 'matrix':
+				$question_obj = new question_matrix();
+				if (is_array($this->saveArray[$question['uid']]) AND !$this->piVars[$question['uid']] AND $this->saveArray[$question['uid']]){
+					$this->piVars[$question['uid']] = $this->saveArray[$question['uid']]['answer'];
+				}
+				$answer=$this->piVars[$question['uid']];
+				$question_obj->init($uid,$this,$answer,$validate,'error',"d.m.y",",");
+				break;
+			case 'semantic':
+				$question_obj = new question_semantic();
 
-					if (is_array($this->saveArray[$question['uid']]) AND !$this->piVars[$question['uid']] AND $this->saveArray[$question['uid']]){
-						$this->piVars[$question['uid']] = $this->saveArray[$question['uid']]['answer'];
-					}
-					$answer = $this->piVars[$question['uid']];
-					$question_obj->init($uid,$this,$answer,$validate);
-					break;
-				case 'demographic':
-					$question_obj = new question_demographic();
+				if (is_array($this->saveArray[$question['uid']]) AND !$this->piVars[$question['uid']] AND $this->saveArray[$question['uid']]){
+					$this->piVars[$question['uid']] = $this->saveArray[$question['uid']]['answer'];
+				}
+				$answer = $this->piVars[$question['uid']];
+				$question_obj->init($uid,$this,$answer,$validate);
+				break;
+			case 'demographic':
+				$question_obj = new question_demographic();
 
-					if (is_array($this->saveArray[$question['uid']]) AND !$this->piVars[$question['uid']] AND $this->saveArray[$question['uid']]){
-						$this->piVars[$question['uid']] = $this->saveArray[$question['uid']]['answer'];
-					}
-					$answer=$this->piVars[$question['uid']];
+				if (is_array($this->saveArray[$question['uid']]) AND !$this->piVars[$question['uid']] AND $this->saveArray[$question['uid']]){
+					$this->piVars[$question['uid']] = $this->saveArray[$question['uid']]['answer'];
+				}
+				$answer=$this->piVars[$question['uid']];
 
-					if (is_array($answer['fe_users'])){
-						foreach ($answer['fe_users'] as $field => $value){
-							//t3lib_div::devLog('demographic answer field '.$question['uid'], $this->prefixId, 0, array($field,$value));
-							if ($value == ''){
-								$answer['fe_users'][$field] = $GLOBALS['TSFE']->fe_user->user[$field];
-							}
+				if (is_array($answer['fe_users'])){
+					foreach ($answer['fe_users'] as $field => $value){
+						//t3lib_div::devLog('demographic answer field '.$question['uid'], $this->prefixId, 0, array($field,$value));
+						if ($value == ''){
+							$answer['fe_users'][$field] = $GLOBALS['TSFE']->fe_user->user[$field];
 						}
 					}
-					if (is_array($options['fields'])){
-						foreach ($options['fields'] as $field => $type){
-							//t3lib_div::devLog('demographic answer field '.$question['uid'], $this->prefixId, 0, array($field,$type));
-							if ($answer['fe_users'][$field] == ''){
-								$answer['fe_users'][$field] = $GLOBALS['TSFE']->fe_user->user[$field];
-							}
+				}
+				if (is_array($options['fields'])){
+					foreach ($options['fields'] as $field => $type){
+						//t3lib_div::devLog('demographic answer field '.$question['uid'], $this->prefixId, 0, array($field,$type));
+						if ($answer['fe_users'][$field] == ''){
+							$answer['fe_users'][$field] = $GLOBALS['TSFE']->fe_user->user[$field];
 						}
 					}
-					$question_obj->init($uid,$this,$answer,$validate,"error","","");
-					break;
-				case 'privacy':
-					$question_obj = new question_privacy();
-					$answer = $this->piVars[$question['uid']];
-					$question_obj->init($uid,$this,$answer,$validate);
-					break;
-				case 'blind':
-					$question_obj = new question_blind();
-					$answer = array();
-					$question_obj->init($uid,$this,$answer);
-					break;
-				default:
-				/*Hook*/
-					if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$this->extKey]['getDifferentQuestionTypeObject'])){
-						foreach($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$this->extKey]['getDifferentQuestionTypeObject'] as $_classRef){
-							$_procObj = & t3lib_div::getUserObj($_classRef);
-							$question_obj = $_procObj->getDifferentQuestionType($this,$question,$this->piVars);
-						}
+				}
+				$question_obj->init($uid,$this,$answer,$validate,"error","","");
+				break;
+			case 'privacy':
+				$question_obj = new question_privacy();
+				$answer = $this->piVars[$question['uid']];
+				$question_obj->init($uid,$this,$answer,$validate);
+				break;
+			case 'blind':
+				$question_obj = new question_blind();
+				$answer = array();
+				$question_obj->init($uid,$this,$answer);
+				break;
+			default:
+			/*Hook*/
+				if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$this->extKey]['getDifferentQuestionTypeObject'])){
+					foreach($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$this->extKey]['getDifferentQuestionTypeObject'] as $_classRef){
+						$_procObj = & t3lib_div::getUserObj($_classRef);
+						if (!is_object($question_obj)) $question_obj = $_procObj->getDifferentQuestionType($this,$question,$this->piVars);
 					}
+				}
 		}
 		return $question_obj;
 	}
@@ -1459,7 +1459,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 			
 			$saveArray = $question_obj->getSaveArray();
 			$content = $question_obj->render();
-			
+				
 			if (is_array($saveArray[$question['uid']])){
 				$this->saveArray[$question['uid']] = $saveArray[$question['uid']];
 			}
@@ -1647,6 +1647,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 		$this->questionCount['only_questions'] = count($this->questions);
 		$this->questionCount['total'] = count($this->allQuestions);
 		//t3lib_div::devLog('questionCount', $this->prefixId, 0, $this->questionCount);
+		//t3lib_div::devLog('questions', $this->prefixId, 0, $this->questions);
 	}
 	
 	function checkQuestionIfActivated($question){
