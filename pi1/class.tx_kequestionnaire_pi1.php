@@ -1612,42 +1612,43 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 			// t3lib_div::debug($res,"$where");
 		}
 
-		
-		foreach ($questions as $row){
-			$question_obj = $this->getQuestionTypeObject($row);
-			//$where = "dependant_question=".$row['uid'] .$this->cObj->enableFields('tx_kequestionnaire_dependancies');
-			//$res_dep = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*','tx_kequestionnaire_dependancies',$where);
-			//if ($res_dep){
-				//if ($GLOBALS['TYPO3_DB']->sql_num_rows($res_dep) > 0){
-				if (count($question_obj->dependancies) > 0){
-					if ($this->ffdata['render_count_withoutdependant'] == 1) $row['is_dependant'] = 1;
-					else {
-						if ($row['dependant_show'] == 0){
-							if ($question_obj->checkDependancies()) $row['no_show'] = 0;
-							else $row['no_show'] = 1;	
-							//$row['no_show'] = $this->checkQuestionIfActivated($row);
+		if (is_array($questions)){
+			foreach ($questions as $row){
+				$question_obj = $this->getQuestionTypeObject($row);
+				//$where = "dependant_question=".$row['uid'] .$this->cObj->enableFields('tx_kequestionnaire_dependancies');
+				//$res_dep = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*','tx_kequestionnaire_dependancies',$where);
+				//if ($res_dep){
+					//if ($GLOBALS['TYPO3_DB']->sql_num_rows($res_dep) > 0){
+					if (count($question_obj->dependancies) > 0){
+						if ($this->ffdata['render_count_withoutdependant'] == 1) $row['is_dependant'] = 1;
+						else {
+							if ($row['dependant_show'] == 0){
+								if ($question_obj->checkDependancies()) $row['no_show'] = 0;
+								else $row['no_show'] = 1;	
+								//$row['no_show'] = $this->checkQuestionIfActivated($row);
+							}
+						}
+					} else {
+						if ($this->ffdata['render_count_withoutdependant'] == 1 AND $row['type'] != 'refusal'){
+							if ($this->ffdata['record_count_withblind'] == 0 AND $row['type'] != 'blind') $temp_count ++;
+							elseif ($this->ffdata['record_count_withblind'] == 1) $temp_count ++;
 						}
 					}
-				} else {
-					if ($this->ffdata['render_count_withoutdependant'] == 1 AND $row['type'] != 'refusal'){
-						if ($this->ffdata['record_count_withblind'] == 0 AND $row['type'] != 'blind') $temp_count ++;
-						elseif ($this->ffdata['record_count_withblind'] == 1) $temp_count ++;
-					}
+				//}
+				if ($row['no_show'] == 1) {
+					$temp_count_hidden ++;
 				}
-			//}
-			if ($row['no_show'] == 1) {
-				$temp_count_hidden ++;
+				if ($row['type'] != 'blind' AND $row['type'] != 'refusal') $this->questions[] = $row;
+				$this->allQuestions[] = $row;
+				$this->questionsByID[$row['uid']] = $row;
 			}
-			if ($row['type'] != 'blind' AND $row['type'] != 'refusal') $this->questions[] = $row;
-			$this->allQuestions[] = $row;
-			$this->questionsByID[$row['uid']] = $row;
+			$this->questionCount['no_dependants'] = $temp_count;
+			$this->questionCount['notshown_dependants'] = $temp_count_hidden;
+			$this->questionCount['only_questions'] = count($this->questions);
+			$this->questionCount['total'] = count($this->allQuestions);
+			//t3lib_div::devLog('questionCount', $this->prefixId, 0, $this->questionCount);
+			//t3lib_div::devLog('questions', $this->prefixId, 0, $this->questions);
 		}
-		$this->questionCount['no_dependants'] = $temp_count;
-		$this->questionCount['notshown_dependants'] = $temp_count_hidden;
-		$this->questionCount['only_questions'] = count($this->questions);
-		$this->questionCount['total'] = count($this->allQuestions);
-		//t3lib_div::devLog('questionCount', $this->prefixId, 0, $this->questionCount);
-		//t3lib_div::devLog('questions', $this->prefixId, 0, $this->questions);
 	}
 	
 	function checkQuestionIfActivated($question){
