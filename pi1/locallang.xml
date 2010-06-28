@@ -16,6 +16,8 @@
 			<label index="format_email">follow this format: name@domain.land</label>
 			
 			<label index="error_maxAnswers">You're only allowed to select ###MAX### answers.</label>
+			<label index="error_maxAnswersMatrix">Sie dürfen maximal ###MAX### Antworten aus der Matrix auswählen.</label>
+			<label index="error_maxAnswersColumn">Sie dürfen maximal ###MAX### Antworten aus der Spalte auswählen.</label>
 
 			<label index="error_numeric">Please insert Numeric</label>
 			<label index="error_date">Please insert Date</label>
@@ -99,6 +101,8 @@
 			<label index="format_email">Format beachten: name@domain.land</label>
 
 			<label index="error_maxAnswers">Sie dürfen maximal ###MAX### Antworten auswählen.</label>
+			<label index="error_maxAnswersMatrix">Sie dürfen maximal ###MAX### Antworten aus der Matrix auswählen.</label>
+			<label index="error_maxAnswersColumn">Sie dürfen maximal ###MAX### Antworten aus der Spalte auswählen.</label>
 
 			<label index="error_numeric">Bitte Zahl eingeben</label>
 			<label index="error_date">Bitte Datum eingeben</label>

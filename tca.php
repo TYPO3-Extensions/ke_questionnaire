@@ -378,6 +378,7 @@ $TCA["tx_kequestionnaire_questions"] = array (
 			)
 		),
 		"matrix_validation" => Array (
+                        "displayCond" => "FIELD:matrix_type:=:input",
 			"exclude" => 1,
 			"label" => "LLL:EXT:ke_questionnaire/locallang_db.xml:tx_kequestionnaire_questions.matrix_validation",
 			"config" => Array (
@@ -396,6 +397,23 @@ $TCA["tx_kequestionnaire_questions"] = array (
                 "matrix_inputfield" => Array (
 			"exclude" => 1,
 			"label" => "LLL:EXT:ke_questionnaire/locallang_db.xml:tx_kequestionnaire_questions.matrix_inputfield",
+			"config" => Array (
+				"type"     => "input",
+				"size"     => "4",
+				"max"      => "3",
+				"eval"     => "int",
+				"checkbox" => "0",
+				"range"    => Array (
+					"upper" => "100",
+					"lower" => "0"
+				),
+				"default" => 0
+			)
+		),
+                "matrix_maxanswers" => Array (
+                        "displayCond" => "FIELD:matrix_type:=:check",
+			"exclude" => 1,
+			"label" => "LLL:EXT:ke_questionnaire/locallang_db.xml:tx_kequestionnaire_questions.matrix_maxanswers",
 			"config" => Array (
 				"type"     => "input",
 				"size"     => "4",
@@ -820,6 +838,7 @@ $TCA["tx_kequestionnaire_questions"] = array (
                                 --div--;LLL:EXT:ke_questionnaire/locallang.xml:tx_kequestionnaire.type_based,
                                 matrix_type,
                                 matrix_validation,
+                                matrix_maxanswers,
                                 --div--;LLL:EXT:ke_questionnaire/locallang.xml:tx_kequestionnaire.sub_types,
                                 matrix_inputfield,
                                 columns,
@@ -1314,9 +1333,26 @@ $TCA["tx_kequestionnaire_columns"] = array (
 				"maxitems" => 1,
 			)
 		),
+                "maxanswers" => Array (
+                        "exclude" => 1,
+			"label" => "LLL:EXT:ke_questionnaire/locallang_db.xml:tx_kequestionnaire_columns.maxanswers",
+			"config" => Array (
+				"type"     => "input",
+				"size"     => "4",
+				"max"      => "3",
+				"eval"     => "int",
+				"checkbox" => "0",
+				"range"    => Array (
+					"upper" => "100",
+					"lower" => "0"
+				),
+				"default" => 0
+			)
+		),
+		
 	),
 	"types" => array (
-		"0" => array("showitem" => "sys_language_uid;;;;1-1-1, l18n_parent,question_uid, title;;;;2-2-2, different_type, image;;;;3-3-3, image_position")
+		"0" => array("showitem" => "sys_language_uid;;;;1-1-1, l18n_parent,question_uid, title;;;;2-2-2, different_type, maxanswers, image;;;;3-3-3, image_position")
                 //"0" => array("showitem" => "sys_language_uid;;;;1-1-1, l18n_parent, l18n_diffsource, hidden;;1, question_uid, title;;;;2-2-2, image;;;;3-3-3")
 	),
 	"palettes" => array (

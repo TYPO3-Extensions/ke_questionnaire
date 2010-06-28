@@ -1,7 +1,7 @@
 <?php
 define(KEQUESTIONAIRE_EMPTY,-1);
 class kequestionnaire_input_matrix extends kequestionnaire_input{
-        function kequestionnaire_input_matrix($fieldName,$type,$value,$subpart,$obj,$subquestions=array(),$columns=array(),$label="",$dependants=array()){
+        function kequestionnaire_input_matrix($fieldName,$type,$value,$subpart,$obj,$subquestions=array(),$columns=array(),$maxAnswers = 0){
                 $this->type=$type;
                 $this->value=$value;
                 $this->subquestions=$subquestions;
@@ -10,9 +10,8 @@ class kequestionnaire_input_matrix extends kequestionnaire_input{
                 $this->subpart=$subpart;
                 $this->obj=$obj;
                 $this->cObj=$obj->cObj;
-                $this->dependants = $dependants;
-                $this->label=$label;
                 $this->odd=0;
+                $this->maxAnswers = $maxAnswers;
         
                 $arr=explode("__",$fieldName);
                 if(count($arr)>1){
@@ -115,7 +114,7 @@ class kequestionnaire_input_matrix extends kequestionnaire_input{
         
         function renderMatrixElement($type,$input=0){
                 $tmplInput=$this->cObj->getSubpart($this->tmpl,"###INPUT###");
-        
+                
                 $question=$type=="semantic"?$this->sublines[$this->fieldName]:$this->subquestions[$this->fieldName];
         
                 $markerArrayInput=array(
@@ -180,6 +179,8 @@ class kequestionnaire_input_matrix extends kequestionnaire_input{
                                         $markerArraySub["###CHECKED###"]=$value['single']==$column["uid"]?"checked='checked'":"";
                                 break;
                                 case "matrix_checkbox":
+                                        $markerArraySub['###ONCHANGE###'] = $this->checkOnchange($question['uid'],$column);
+                                        $markerArraySub["###CHECKED###"]= '';
                                         if (is_array($value)){
                                                 //t3lib_div::devLog('matrix_checkbox '.$fieldName, 'kequestionnaire_input', 0, array($value[$column['uid']]));
                                                 if (is_array($value[$column['uid']])){
@@ -299,6 +300,82 @@ class kequestionnaire_input_matrix extends kequestionnaire_input{
                 //t3lib_div::devLog('markerArraySub tpl', 'input->MatrixElement', 0, array($this->html));
         
                 return $this->html;
+        }
+        
+        function checkOnchange ($act_subq_id,$act_col) {
+                $onchange = '';
+                
+                //If there are max Answers for the whole matrix
+                if ($this->maxAnswers > 0){
+                        $maxAnswers_error = $this->obj->pi_getLL('error_maxAnswersMatrix');
+        		$maxAnswers_error = str_replace('###MAX###',$this->maxAnswers,$maxAnswers_error);
+
+                        $js_maxAnswers_matrix = "
+function keq_checkMaxMatrix(qid,subqs,cols,idy,max) {
+  var amount = 0;
+  var subqs = subqs.split(',');
+  var cols = cols.split(',');
+  
+  for (var sc=0;sc<subqs.length;sc++){
+        for (var cc=0;cc<cols.length;cc++){
+                if (document.getElementById('keq_'+qid+'_'+subqs[sc]+'_'+cols[cc])){
+                        if (document.getElementById('keq_'+qid+'_'+subqs[sc]+'_'+cols[cc]).checked==true) amount ++;
+                }                
+        }
+        if (amount>max){
+                document.getElementById('keq_'+idy).checked=false;
+                alert ('".$maxAnswers_error."');
+                break;
+        }
+  }
+}";
+                        $GLOBALS['TSFE']->setJS('ke_questionnaire_checkMaxMatrix',$js_maxAnswers_matrix);
+                        $sub_qs = array();
+                        foreach ($this->subquestions as $nr => $subq){
+                                $sub_qs[] = $subq['uid'];
+                        }
+                        $subq_ids = implode(',',$sub_qs);
+                        $cols = array();
+                        foreach ($this->columns as $nr => $col){
+                                $cols[] = $col['uid'];
+                        }
+                        $col_ids = implode(',',$cols);
+                        $onchange .= 'keq_checkMaxMatrix(###NAME###,"'.$subq_ids.'","'.$col_ids.'","###NAME###_'.$act_subq_id.'_'.$act_col['uid'].'",'.$this->maxAnswers.');';
+                }
+                
+                //if there are max answers for the columns
+                if ($act_col['maxanswers'] > 0){
+                        $maxAnswers_error = $this->obj->pi_getLL('error_maxAnswersColumn');
+        		$maxAnswers_error = str_replace('###MAX###',$act_col['maxanswers'],$maxAnswers_error);
+
+                        $js_maxAnswers_column = "
+function keq_checkMaxColumn(qid,subqs,colid,idy,max,title) {
+  var amount = 0;
+  var subqs = subqs.split(',');
+  
+  for (var sc=0;sc<subqs.length;sc++){
+        //alert('keq_'+qid+'_'+subqs[sc]+'_'+colid);
+        if (document.getElementById('keq_'+qid+'_'+subqs[sc]+'_'+colid)){
+                if (document.getElementById('keq_'+qid+'_'+subqs[sc]+'_'+colid).checked==true) amount ++;
+        }                
+        if (amount>max){
+                document.getElementById('keq_'+idy).checked=false;
+                alert ('".$maxAnswers_error. "'+' ('+title+')');
+                break;
+        }
+  }
+}";
+                        $GLOBALS['TSFE']->setJS('ke_questionnaire_checkMaxColumn',$js_maxAnswers_column);
+                        $sub_qs = array();
+                        foreach ($this->subquestions as $nr => $subq){
+                                $sub_qs[] = $subq['uid'];
+                        }
+                        $subq_ids = implode(',',$sub_qs);
+                        $onchange .= 'keq_checkMaxColumn(###NAME###,"'.$subq_ids.'","'.$act_col['uid'].'","###NAME###_'.$act_subq_id.'_'.$act_col['uid'].'",'.$act_col['maxanswers'].',"'.$act_col['title'].'");';
+                }
+                
+                if ($onchange != '') $onchange = "onchange='".$onchange."'";
+                return $onchange;
         }
 }
 ?>

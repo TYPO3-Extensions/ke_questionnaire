@@ -62,6 +62,7 @@
 			<label index="tx_kequestionnaire_questions.matrix_validation.I.1">date</label>
 			<label index="tx_kequestionnaire_questions.matrix_validation.I.2">percent</label>
 			<label index="tx_kequestionnaire_questions.matrix_validation">matrix validation types</label>
+			<label index="tx_kequestionnaire_questions.matrix_maxanswers">max answers allowed for user in whole matrix</label>
 			<label index="tx_kequestionnaire_questions.demographic_type.I.0">demographic data</label>
 			<label index="tx_kequestionnaire_questions.demographic_type.I.1">address Data</label>
 			<label index="tx_kequestionnaire_questions.demographic_type.I.2">both sets of Data</label>
@@ -95,6 +96,7 @@
 			<label index="tx_kequestionnaire_columns.different_type.I.1">Checkboxen (Multiple)</label>
 			<label index="tx_kequestionnaire_columns.different_type.I.2">Input type</label>
 			<label index="tx_kequestionnaire_columns.different_type">Different input type for subquestion</label>
+			<label index="tx_kequestionnaire_columns.maxanswers">max amount of answers given to the user in this column</label>
 			
 			<label index="tx_kequestionnaire_subquestions">Subquestion (matrix)</label>
 			<label index="tx_kequestionnaire_subquestions.title_line">is title line (no input fields rendered)</label>
@@ -211,6 +213,7 @@
 			<label index="tx_kequestionnaire_questions.matrix_validation.I.2">Prozent</label>
 			<label index="tx_kequestionnaire_questions.matrix_validation">Überprüfung</label>
 			<label index="tx_kequestionnaire_questions.matrix_inputfield">Position des Eingabefeldes</label>
+			<label index="tx_kequestionnaire_questions.matrix_maxanswers">max. Anzahl an Antworten, die dem Nutzer in der gesamten Matrix erlaubt sind</label>
 			<label index="tx_kequestionnaire_questions.demographic_type.I.0">demografische Daten</label>
 			<label index="tx_kequestionnaire_questions.demographic_type.I.1">Adress-Daten</label>
 			<label index="tx_kequestionnaire_questions.demographic_type.I.2">beide Datenfelder</label>
@@ -247,6 +250,7 @@
 			<label index="tx_kequestionnaire_columns.different_type.I.1">Checkboxen (Mehrfachauswahl)</label>
 			<label index="tx_kequestionnaire_columns.different_type.I.2">Eingabefelder</label>
 			<label index="tx_kequestionnaire_columns.different_type">Abweichender Typ der Unterfrage</label>
+			<label index="tx_kequestionnaire_columns.maxanswers">maximale Anzahl an Antworten, die dem Nutzer in der Spalte erlaubt sind (nur bei Matrix vom Typ Checkbox)</label>
 			
 			<label index="tx_kequestionnaire_subquestions">Unterfrage (Matrixfragen)</label>
 			<label index="tx_kequestionnaire_subquestions.title">Titel</label>

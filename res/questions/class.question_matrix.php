@@ -117,7 +117,7 @@ class question_matrix  extends question{
 	function buildFieldArrayForElement($type){
 		$typeHead= "matrix_head";
 		$marker="###HEAD###";
-		$this->fields["head"]=new kequestionnaire_input_matrix("head",$typeHead,$this->answer,$marker,$this->obj,$this->subquestions,$this->columns);
+		$this->fields["head"]=new kequestionnaire_input_matrix("head",$typeHead,$this->answer,$marker,$this->obj,$this->subquestions,$this->columns, $this->question['matrix_maxanswers']);
 		$marker="###SUBQUESTION###";
 		$this->countInput=$this->question["matrix_inputfield"]>0?$this->question["matrix_inputfield"]:0;
 		$i=0;$this->lastOptionKeys=array();
@@ -133,10 +133,10 @@ class question_matrix  extends question{
 			// Anpassung Title-Line
 			if ($val['title_line'] == 1) $typeField = 'matrix_title_line';
 			//#############################################
-			$this->fields[$key]=new kequestionnaire_input_matrix($key,$typeField,$this->answer,$marker,$this->obj,$this->subquestions,$this->columns);
+			$this->fields[$key]=new kequestionnaire_input_matrix($key,$typeField,$this->answer,$marker,$this->obj,$this->subquestions,$this->columns, $this->question['matrix_maxanswers']);
 			$i++;
 		}
-		if($type=="matrix_input_percent") $this->fields["sum"]=new kequestionnaire_input_matrix($key,"matrix_input_percent_sum",$this->answer["options"],"###SUM###",$this->obj,$this->options,$this->subquestions,$this->columns);
+		if($type=="matrix_input_percent") $this->fields["sum"]=new kequestionnaire_input_matrix($key,"matrix_input_percent_sum",$this->answer["options"],"###SUM###",$this->obj,$this->options,$this->subquestions,$this->columns, $this->question['matrix_maxanswers']);
 	}
 
 
