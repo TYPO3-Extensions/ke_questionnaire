@@ -8,6 +8,7 @@
 		var $errors    		= array();     	// Errortext to display
 		var $table="";
 		var $maxAnswers 	= 0;
+		
 		function kequestionnaire_input($fieldName,$type,$value,$subpart,$obj,$options=array(),$subquestions=array(),$columns=array(),$sublines=array(),$label="",$dependants=array()){
 			$this->type=$type;
 			$this->value=$value;
@@ -29,9 +30,8 @@
 				$this->fieldName=$arr[1];
 			}
 			//t3lib_div::devLog('fieldname '.$fieldName, 'kequestionnaire_input', 0, $arr);
-
-
 		}
+		
 		/**
 		 * Select rendering method depending on type
 		 */
@@ -61,27 +61,12 @@
 				case "matrix_head":
 					$out=$this->renderMatrixHead();
 				break;
-				case "matrix_radio":
-				case "matrix_checkbox":
-				case "matrix_input":
-				case "matrix_input_numeric":
-				case "matrix_input_date":
-				case "matrix_input_percent":
 				case "semantic":
 					$out=$this->renderMatrixElement($this->type);
 				break;
-				case "matrix_radio_with_input":
-				case "matrix_checkbox_with_input":
-				case "matrix_input_with_input":
-				case "matrix_input_numeric_with_input":
-				case "matrix_input_date_with_input":
-				case "matrix_input_percent_with_input":
 				case "semantic_with_input":
 					$type=substr($this->type,0,strlen($this->type)-strlen("_with_input"));
 					$out=$this->renderMatrixElement($type,1);
-				break;
-				case "matrix_input_percent_sum":
-					$out=$this->renderMatrixSum();
 				break;
 				case "matrix_title_line":
 					$out=$this->renderMatrixTitleLine();
@@ -144,6 +129,7 @@
 			$this->html=$out;
 			return $out;
 		}
+		
 		/**
 		 * Rendering of an Input Field
 		 */
@@ -662,7 +648,7 @@
 		}
 
 		function checkDependant($fieldName, $value = '\'\'', $withText = false, $maxAnswers = 0){
-			//t3lib_div::devLog('checkDependant', 'input', 0, array('fieldName'=>$fieldName,'value'=>$value,'maxAnswers'=>$maxAnswers,'type'=>$this->type));
+			t3lib_div::devLog('checkDependant', 'input', 0, array('fieldName'=>$fieldName,'value'=>$value,'maxAnswers'=>$maxAnswers,'type'=>$this->type));
 			//t3lib_div::devLog('dependants '.$fieldName, 'input', 0, $this->dependants);
 			$dependant_id = 0;
 			$dependant_ids = array();

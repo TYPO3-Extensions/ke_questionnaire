@@ -23,6 +23,7 @@
 ***************************************************************/
 
 require_once(PATH_tslib.'class.tslib_pibase.php');
+require_once(t3lib_extMgm::extPath('ke_questionnaire').'res/questions/class.kequestionnaire_input_matrix.php');
 
 
 /**
@@ -116,7 +117,7 @@ class question_matrix  extends question{
 	function buildFieldArrayForElement($type){
 		$typeHead= "matrix_head";
 		$marker="###HEAD###";
-		$this->fields["head"]=new kequestionnaire_input("head",$typeHead,$this->answer,$marker,$this->obj,$this->options,$this->subquestions,$this->columns);
+		$this->fields["head"]=new kequestionnaire_input_matrix("head",$typeHead,$this->answer,$marker,$this->obj,$this->subquestions,$this->columns);
 		$marker="###SUBQUESTION###";
 		$this->countInput=$this->question["matrix_inputfield"]>0?$this->question["matrix_inputfield"]:0;
 		$i=0;$this->lastOptionKeys=array();
@@ -132,10 +133,10 @@ class question_matrix  extends question{
 			// Anpassung Title-Line
 			if ($val['title_line'] == 1) $typeField = 'matrix_title_line';
 			//#############################################
-			$this->fields[$key]=new kequestionnaire_input($key,$typeField,$this->answer,$marker,$this->obj,$this->options,$this->subquestions,$this->columns);
+			$this->fields[$key]=new kequestionnaire_input_matrix($key,$typeField,$this->answer,$marker,$this->obj,$this->subquestions,$this->columns);
 			$i++;
 		}
-		if($type=="matrix_input_percent") $this->fields["sum"]=new kequestionnaire_input($key,"matrix_input_percent_sum",$this->answer["options"],"###SUM###",$this->obj,$this->options,$this->subquestions,$this->columns);
+		if($type=="matrix_input_percent") $this->fields["sum"]=new kequestionnaire_input_matrix($key,"matrix_input_percent_sum",$this->answer["options"],"###SUM###",$this->obj,$this->options,$this->subquestions,$this->columns);
 	}
 
 
@@ -148,44 +149,6 @@ class question_matrix  extends question{
 	function getTemplateName(){
 		$this->type=$this->question["matrix_type"];
 
-		/*switch($this->type){
-			case "radio":
-				$out= "QUESTION_MATRIX_RADIO";
-			break;
-			case "check":
-				$out= "QUESTION_MATRIX_CHECKBOX";
-			break;
-			case "input":
-				switch($this->question["matrix_validation"]){
-					case "":
-						$out="QUESTION_MATRIX_INPUT_TEXT";
-					break;
-					case "numeric":
-						$out="QUESTION_MATRIX_INPUT_NUMERIC";
-					break;
-					case "date":
-						$out="QUESTION_MATRIX_INPUT_DATE";
-					break;
-					case "percent":
-						$out="QUESTION_MATRIX_INPUT_PERCENT";
-					break;
-					default:
-						$out= "Matrixtype ".$this->question["matrix_validation"]." not defined!";
-						//t3lib_div::debug($out,"out");
-				}
-			break;
-			// case "select_single":
-			// 	$out= "QUESTION_SELECTFIELD";
-			// break;
-			// case "select_multi":
-			// 	$out= "QUESTION_SELECTFIELD_MULTI";
-			// break;
-			default:
-				//$out = 'QUESTION_MATRIX_GENERAL';
-				$out= "Templatetype ".$this->question["matrix_type"]." not defined!";
-				//t3lib_div::debug($out,"getTemplateName");
-			break;
-		}*/
 		$out = 'QUESTION_MATRIX_GENERAL';
 		return $out;
 	}
