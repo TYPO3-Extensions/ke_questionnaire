@@ -25,7 +25,7 @@
 	    <div class="###ODD_EVEN###">
 	    <input ###STYLE### ###DEPENDANT### type="radio" name="###PI###[###NAME###][options]" id="keq_###NAME###_###VALUE###" value="###VALUE###" ###CHECKED### ###DEPENDANT_AJAX### ###ONCHANGE_JS###>
 	    ###LABEL###
-	    <!-- ###HELP### begin--><a class="keq_tooltip" href="#">
+	    <!-- ###HELP### begin--><a class="keq_tooltip" href="#" onClick="return false;">
 		<img src="###HELPIMAGE###" />
 		<span class="keq_tip">
 		    ###HELPTEXT###
@@ -77,7 +77,7 @@
 	    <div class="###ODD_EVEN###">
 		<input class="checkbox" ###STYLE### ###DEPENDANT### type="checkbox" name="###PI###[###NAME###][options][]" id="keq_###NAME###_###VALUE###" value="###VALUE###" ###CHECKED### ###DEPENDANT_AJAX###/>
 		<div class="checkbox_label">###LABEL###</div>
-		<!-- ###HELP### begin--><a class="keq_tooltip" href="#">
+		<!-- ###HELP### begin--><a class="keq_tooltip" href="#" onClick="return false;">
 		    <img src="###HELPIMAGE###" />
 		    <span class="keq_tip">
 		        ###HELPTEXT###
@@ -96,7 +96,7 @@
 		    <input ###DEPENDANT_TEXT### type="text" name="###PI###[###NAME###][text][###VALUE_OPTION###]" id="keq_###NAME###_###VALUE###_text" value="###VALUE_TEXT###" class="keq_inp_large" />
 		</div>
 		<div class="clearer">&nbsp;</div>
-		<!-- ###HELP### begin--><a class="keq_tooltip" href="#">
+		<!-- ###HELP### begin--><a class="keq_tooltip" href="#" onClick="return false;">
 		    <img src="###HELPIMAGE###" />
 		    <span class="keq_tip">
 		        ###HELPTEXT###
@@ -191,7 +191,7 @@
 	<!-- ###ERROR_MESSAGE### begin--><div class="keq_error">###ERROR###</div><!-- ###ERROR_MESSAGE### end-->
 	<input onclick="javascript: document.getElementById('keq_###NAME###').value=###ANSWERVALUE###;document.ke_questionnaire.submit();" class="type_submit_button" type="button" name="###PI###[###NAME###][options]" ###CLOSED_SIZE###  ###DEPENDANT_AJAX### value="###VALUE###" />
 	<!-- ###HELPTT### begin-->
-	<a class="keq_tooltip" href="#">
+	<a class="keq_tooltip" href="#" onClick="return false;">
 		    <img src="###HELPIMAGETT###" />
 		    <span class="keq_tip">
 		        ###HELPTEXTTT###
