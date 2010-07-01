@@ -606,7 +606,7 @@ $TCA["tx_kequestionnaire_questions"] = array (
 				"foreign_table" => "tx_kequestionnaire_answers",
                                 "foreign_field" => "question_uid",
 				"foreign_sortby" => "sorting",
-				"maxitems" => 75,
+				"maxitems" => 1000,
 				"behaviour" => Array(
                                     "localizationMode" => "select",
                                 ),
@@ -628,7 +628,7 @@ $TCA["tx_kequestionnaire_questions"] = array (
 				"foreign_table" => "tx_kequestionnaire_columns",
                                 "foreign_field" => "question_uid",
 				"foreign_sortby" => "sorting",
-				"maxitems" => 20,
+				"maxitems" => 100,
 				"behaviour" => Array(
                                     "localizationMode" => "select",
                                 ),
@@ -678,7 +678,7 @@ $TCA["tx_kequestionnaire_questions"] = array (
 				"type" => "inline",
 				"foreign_table" => "tx_kequestionnaire_subquestions",
                                 "foreign_field" => "question_uid",
-				"maxitems" => 50,
+				"maxitems" => 1000,
 				"behaviour" => Array(
                                     "localizationMode" => "select",
                                 ),
@@ -700,7 +700,7 @@ $TCA["tx_kequestionnaire_questions"] = array (
 				"type" => "inline",
 				"foreign_table" => "tx_kequestionnaire_sublines",
                                 "foreign_field" => "question_uid",
-				"maxitems" => 50,
+				"maxitems" => 1000,
 				"behaviour" => Array(
                                     "localizationMode" => "select",
                                 ),
