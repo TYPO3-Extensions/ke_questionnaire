@@ -1,5 +1,13 @@
 (add new changes on top of this file)
 
+10-07-06 Nadine Schwingler  <schwingler@kennziffer.com>
+	
+	* Added validation to open text questions, that they need to be answered correctly.
+
+10-07-01 Nadine Schwingler  <schwingler@kennziffer.com>
+	
+	* The max-answer-Option is now also available for checkbox-type Matrix questions
+
 10-06-22 Nadine Schwingler  <schwingler@kennziffer.com>
 	
 	* Changed the outfit of both csv-Export so it's not so blown up

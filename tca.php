@@ -289,10 +289,20 @@ $TCA["tx_kequestionnaire_questions"] = array (
 					Array("LLL:EXT:ke_questionnaire/locallang_db.xml:tx_kequestionnaire_questions.open_validation.I.1", "numeric"),
 					Array("LLL:EXT:ke_questionnaire/locallang_db.xml:tx_kequestionnaire_questions.open_validation.I.2", "date"),
 					Array("LLL:EXT:ke_questionnaire/locallang_db.xml:tx_kequestionnaire_questions.open_validation.I.3", "email"),
+                                        Array("LLL:EXT:ke_questionnaire/locallang_db.xml:tx_kequestionnaire_questions.open_validation.I.4", "text"),
 				),
 				//"itemsProcFunc" => "res/tx_kequestionnaire_tx_kequestionnaire_questions_open_validation->main",
 				"size" => 1,
 				"maxitems" => 1,
+			)
+		),
+                "open_validation_text" => Array (
+                        'displayCond' => 'FIELD:open_validation:=:text',
+			"exclude" => 1,
+			"label" => "LLL:EXT:ke_questionnaire/locallang_db.xml:tx_kequestionnaire_questions.open_validation_text",
+			"config" => Array (
+				"type" => "input",
+				"size" => "30",
 			)
 		),
 		"closed_type" => Array (
@@ -786,7 +796,8 @@ $TCA["tx_kequestionnaire_questions"] = array (
                                 open_pre_text,
                                 open_in_text,
                                 open_post_text,
-                                open_validation"),
+                                open_validation,
+                                open_validation_text"),
                 "closed" => array(
                              "showitem" => "
                                 --div--;LLL:EXT:ke_questionnaire/locallang.xml:tx_kequestionnaire.base,

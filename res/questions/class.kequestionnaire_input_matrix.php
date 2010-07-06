@@ -377,5 +377,95 @@ function keq_checkMaxColumn(qid,subqs,colid,idy,max,title) {
                 if ($onchange != '') $onchange = "onchange='".$onchange."'";
                 return $onchange;
         }
+        
+        /**
+         * Validation of a single type
+         * @param       string      $formElement: type of formElement
+         * @param       string     	$value: value to validate
+         * @param       string      $type: type of validation to do
+         *
+         * @return	boolean Success of validation
+         *
+         */
+
+        function validateType($value,$validationType,$validationOptions){
+                $out=1;
+                //t3lib_div::devLog('validate '.$value, 'input->MatrixElement', 0, array('type'=>$validationType,'options'=>$validationOptions));
+
+
+                switch ($validationType){
+                        case "required":
+                                $out=$value!="";
+                        break;
+                        case "required_option":
+                                if(is_array($value)){
+                                        $out=count($value)>0;
+                                }else{
+                                        $out=$value!=KEQUESTIONAIRE_EMPTY;
+                                }
+                        break;
+                        case "matrix_required_option":
+                                foreach($this->subquestions as $key=>$subquestion){
+                                        if(isset($value[$key])) continue;
+                                        $out=0;
+                                        $this->subquestions[$key]["error"]=$validationType;
+                                }
+                        break;
+                        case "matrix_required_input":
+                                foreach($this->subquestions as $key=>$subquestion){
+                                        foreach($this->columns as $keyCol => $column){
+                                                if(isset($value[$key][$keyCol]) && $value[$key][$keyCol]!="") continue;
+                                                $out=0;
+                                                $this->subquestions[$key]["error"]=$validationType;
+                                        }
+                                }
+                        break;
+                        case "matrix_numeric":
+                        case "matrix_percent":
+                                foreach($this->subquestions as $key=>$subquestion){
+                                        foreach($this->columns as $keyCol => $column){
+                                                //t3lib_div::devLog('validate '.$value, 'input->MatrixElement', 0, array($valNumeric));
+                                                if(!isset($value[$key][$keyCol][0]) || !isset($validationOptions["numberDivider"]) || $value[$key][$keyCol][0]=="") continue;
+                                                $valNumeric=str_replace(",",".",$value[$key][$keyCol][0]);
+
+                                                if($validationOptions["numberDivider"]=="," && substr_count($value[$key][$keyCol][0],".")>0) $out=0;
+                                                elseif($validationOptions["numberDivider"]=="." && substr_count($value[$key][$keyCol][0],",")>0) $out=0;
+                                                elseif($valNumeric!="") $out=is_numeric($valNumeric);
+                                                if(!$out) $this->subquestions[$key]["error"]=$validationType;
+                                        }
+                                }
+                        break;
+                        case "matrix_date":
+                                foreach($this->subquestions as $key=>$subquestion){
+                                        foreach($this->columns as $keyCol => $column){
+                                                if(!isset($value[$key][$keyCol]) || !isset($validationOptions["dateFormat"]) || $value[$key][$keyCol]=="") continue;
+                                                if($this->is_date($value[$key][$keyCol],$validationOptions["dateFormat"])) continue;
+                                                $this->subquestions[$key]["error"]=$validationType;
+                                                if (count($this->subquestions[$key]["error"]) >0 ) $out = 0;
+                                                //t3lib_div::devLog('validate', 'input->MatrixElement', 0, array('value'=>$value,'type'=>$validationType,'options'=>$validationOptions,'errors'=>$this->subquestions[$key]["error"]));
+                                        }
+                                }
+                        break;
+                        case "matrix_sum":
+                                $sum=array();
+
+                                foreach($this->columns as $column){
+                                        $sum=0;
+                                        foreach($this->subquestions as $subquestion){
+                                                $sumValue=isset($value[$subquestion["uid"]][$column["uid"]][0])?$value[$subquestion["uid"]][$column["uid"]][0]:0;
+                                                //t3lib_div::devLog('validate', 'input->MatrixElement', 0, $this->value[$subquestion["uid"]][$column["uid"]]);
+                                                //$sumValue=isset($value[$subquestion["uid"]][$column["uid"]])?$value[$subquestion["uid"]][$column["uid"]]:0;
+                                                $sum+=$sumValue;
+                                        }
+                                        if($sum==100 OR $sum==0) continue;
+                                        $out=0;
+                                }
+
+                        break;
+                }
+
+
+                return $out;
+        }
 }
 ?>

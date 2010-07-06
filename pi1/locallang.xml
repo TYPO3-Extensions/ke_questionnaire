@@ -22,6 +22,7 @@
 			<label index="error_numeric">Please insert Numeric</label>
 			<label index="error_date">Please insert Date</label>
 			<label index="error_email">Please insert Email</label>
+			<label index="error_text">You must answer according to the question</label>
 			<label index="error_required">required</label>
 			<label index="error_semantic_required">required</label>
 			<label index="error_required_option">required</label>
@@ -107,6 +108,7 @@
 			<label index="error_numeric">Bitte Zahl eingeben</label>
 			<label index="error_date">Bitte Datum eingeben</label>
 			<label index="error_email">Bitte Email eingeben</label>
+			<label index="error_text">Sie müssen der Fragestellung entsprechend antworten</label>
 			<label index="error_required">Dies ist eine Pflichtfrage.</label>
 			<label index="error_semantic_required">Pflichtfeld</label>
 			<label index="error_required_option">Pflichtfeld</label>

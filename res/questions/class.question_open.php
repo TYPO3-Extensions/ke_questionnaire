@@ -94,13 +94,15 @@ class question_open extends question{
 	 *
 	 */
     function validate(){
-		//t3lib_div::devLog('validate', 'question_open', 0, array('answer'=>$this->answer['text']));
+		//t3lib_div::devLog('validate', 'question_open', 0, array('question'=>$this->question,'answer'=>$this->answer['text']));
+		//t3lib_div::devLog('extConf', 'question_open', 0, $this->obj->extConf);
 		$value=$this->answer['text'];
 
 		// Collect all types of required validation
 		$validationTypes=array();
 		$validationOptions["dateFormat"]=$this->dateFormat;
 		$validationOptions["numberDivider"]=$this->numberDivider;
+		$validationOptions["textOptions"]=explode($this->obj->extConf['oq_validation_parter'],$this->question['open_validation_text']);
 
 		if($this->question['open_validation']) $validationTypes[]=$this->question['open_validation']; // validation for special type?
 		if($this->question['mandatory']) $validationTypes[]="required"; // required?

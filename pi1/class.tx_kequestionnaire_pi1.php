@@ -52,6 +52,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 	var $extKey        = 'ke_questionnaire';	// The extension key.
 
 	var $ffdata	   = array();			//FlexForm data array
+	var $extConf	   = array();			//ext_conf_template.txt
 	var $template	   = '';			//template Filename
 	var $tmpl	   = '';			//template
 	var $pid 	   = 0;				//Pid where all the data is stored
@@ -659,7 +660,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 		$page_questions = $this->getQuestionsOfPage($page_nr,$page_count);
 		$shown = $this->shown;
 		foreach ($page_questions as $quest){
-			t3lib_div::devLog('renderPage', $this->prefixId, 0, $quest);
+			//t3lib_div::devLog('renderPage', $this->prefixId, 0, $quest);
 			$questions .= $this->getQuestionTypeRender($quest);
 		}
 		
@@ -1504,6 +1505,8 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 
 		// if $this->ffdata['render_count'] is null, set it to one
 		if ($this->ffdata['render_count'] == 0) $this->ffdata['render_count'] = 1;
+		
+		$this->extConf = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['ke_questionnaire']);
 
 		//get the user id
 		$this->user_id = $GLOBALS['TSFE']->fe_user->user['uid'];

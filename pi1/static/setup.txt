@@ -451,5 +451,7 @@ plugin.tx_kequestionnaire_pi1 {
 	
 		.keq_img_left { float: left }
 		.keq_img_right { float: right }
+		
+		.keq_input_error { display: block;}
 	)
 }
