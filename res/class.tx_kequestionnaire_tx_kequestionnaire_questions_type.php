@@ -53,7 +53,7 @@ class tx_kequestionnaire_tx_kequestionnaire_questions_type {
 		$path = t3lib_extMgm::extPath('ke_questionnaire').'res/questions/';
 		if ($dir = opendir($path)){
 			while($file=readdir($dir)){
-				if (!is_dir($file) && $file != "." && $file != ".."){
+				if (!$this->check_dir($file) && $file != "." && $file != ".."){
 					$file = stristr($file,'question_');
 					//t3lib_div::devLog('file', 'type', 0, array($file));
 					$f_pos = strpos($file,'_');
@@ -75,7 +75,7 @@ class tx_kequestionnaire_tx_kequestionnaire_questions_type {
 			//$path = '.';
 			if ($dir = opendir($path)){
 				while($file=readdir($dir)){
-					if (!is_dir($file) && $file != "." && $file != ".."){
+					if (!$this->check_dir($file) && $file != "." && $file != ".."){
 						$file = stristr($file,'question_');
 						//t3lib_div::devLog('file', 'type', 0, array($file));
 						$f_pos = strpos($file,'_');
@@ -101,6 +101,18 @@ class tx_kequestionnaire_tx_kequestionnaire_questions_type {
 		//t3lib_div::devLog('params', 'type', 0, $params);
 		
 		// No return - the $params and $pObj variables are passed by reference, so just change content in then and it is passed back automatically...
+	}
+	
+	function check_dir($dir){
+		// bypasses open_basedir restrictions of is_dir and fileperms
+		$tmp_cmd = `ls -dl $dir`;
+		$dir_flag = $tmp_cmd[0];
+		if($dir_flag!="d")
+		{
+		    // not d; use next char (first char might be 's' and is still directory)
+		    $dir_flag = $tmp_cmd[1];
+		}
+		return ($dir_flag=="d");
 	}
 }
 
