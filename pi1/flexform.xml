@@ -154,6 +154,7 @@
 			<ROOT>
 				<TCEforms>
 					<sheetTitle>LLL:EXT:ke_questionnaire/locallang.xml:tt_content.pi_flexform.sheet_texts</sheetTitle>
+					<cshFile>LLL:EXT:ke_questionnaire/locallang_csh_flexform.xml</cshFile>
 				</TCEforms>
 				<el>
 				<description>
@@ -185,6 +186,7 @@
 			<ROOT>
 				<TCEforms>
 					<sheetTitle>LLL:EXT:ke_questionnaire/locallang.xml:tt_content.pi_flexform.sheet_design</sheetTitle>
+					<cshFile>LLL:EXT:ke_questionnaire/locallang_csh_flexform.xml</cshFile>
 				</TCEforms>
 				<el>
 				<template_dir>
@@ -311,6 +313,7 @@
 			<ROOT>
 				<TCEforms>
 					<sheetTitle>LLL:EXT:ke_questionnaire/locallang.xml:tt_content.pi_flexform.sheet_mailing</sheetTitle>
+					<cshFile>LLL:EXT:ke_questionnaire/locallang_csh_flexform.xml</cshFile>
 				</TCEforms>
 				<el>
 				<mailing>
@@ -384,6 +387,7 @@
 			<ROOT>
 				<TCEforms>
 					<sheetTitle>LLL:EXT:ke_questionnaire/locallang.xml:tt_content.pi_flexform.sheet_invite</sheetTitle>
+					<cshFile>LLL:EXT:ke_questionnaire/locallang_csh_flexform.xml</cshFile>
 				</TCEforms>
 				<el>
 				<mail_from>
