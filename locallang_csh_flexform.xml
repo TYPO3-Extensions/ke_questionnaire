@@ -9,16 +9,66 @@
 	</meta>
 	<data type="array">
 		<languageKey index="default" type="array">
-			<label index="type.alttitle">alternative title</label>
-			<label index="type.description">description</label>
-			<label index="type.details">details</label>
-			<label index="type.syntax">syntax</label>
-			<label index="type.image_descr">image caption</label>
-			<label index="type.image">gfx/i/pages.gif</label>
-			<label index="type.seeAlso">pages:starttime</label>
+			<label index="type.alttitle">Questionnaire Type</label>
+			<label index="type.description">There are different types of questionnaires</label>
+			<label index="type.details"></label>
+			<label index="type.syntax"></label>
+			<label index="type.image_descr"></label>
+			<label index="type.image"></label>
+			<label index="type.seeAlso"></label>
 		</languageKey>
 		<languageKey index="de" type="array">
+			<label index="type.alttitle">Typ des Fragebogens</label>
+			<label index="type.description">Die Art des Fragebogens beeinflusst die Auswertungsmöglichkeiten, die für den Nutzer im FE ausgegeben werden können. Derzeit stehen die Typen „Fragebogen“, „Quiz/eLearning“ und „Punktewertung“ zur Verfügung.
+Die Premiumversion ermöglicht zusätzlich den Fragebogentyp „Zufallsfragen“.</label>
+			<label index="type.details">Folgende Fragebogentypen existieren:
+
+-Fragebogen
+    Standard-Befragungen
+-Quiz/eLearning
+    Befragungen mit erweiterten Möglichkeiten:
+    zeitliche Beschränkungen
+    Zertifikate ausstellen (Zertifikatserstellung nur in der Premiumversion möglich).
+-Punktewertung
+-Zufallsfragen (nur in der Premiumversion möglich)
+			</label>
+			<label index="type.syntax"></label>
+			<label index="type.image_descr"></label>
+			<label index="type.image"></label>
+			<label index="type.seeAlso"></label>
 			
+			<label index="user_reports.alttitle">Frontend-Auswertungen für Nutzer anzeigen</label>
+			<label index="user_reports.description">Die Option aktiviert die Anzeige der Fragebogenauswertungen für das FE auf der Abschlussseite des Fragebogens.</label>
+			<label index="user_reports.details">folgende Frontend-Auswertungen sind möglich für:
+
+Typ „Quiz/eLearning“ => grafische Auswertung im Vergleich zu anderen Teilnehmern 	(nur Premiumversion)
+
+Typ „Punketwertung“ => Anzeige des erreichten Ergebnisbereichs. (z.B.: „Sie haben 	54/70 Punkten erreicht, ...“)</label>
+			<label index="user_reports.syntax"></label>
+			<label index="user_reports.image_descr"></label>
+			<label index="user_reports.image"></label>
+			<label index="user_reports.seeAlso"></label>
+			
+			<label index="q_report_graph.alttitle">Premium-Funktion! Grafische Auswertung anzeigen</label>
+			<label index="q_report_graph.description">Wenn die Option "Frontend-Auswertungen für Nutzer anzeigen" aktiviert wurde, können zusätzlich noch graphische Auswertungen angezeigt werden.</label>
+			<label index="q_report_graph.details"></label>
+			<label index="q_report_graph.syntax"></label>
+			<label index="q_report_graph.image_descr"></label>
+			<label index="q_report_graph.image"></label>
+			<label index="q_report_graph.seeAlso"></label>
+			
+			<label index="storage_pid.alttitle">Speicherungsort der Fragebogen-Datensätze</label>
+			<label index="storage_pid.description">Sysfolder in dem die Daten des Fragebogens abgelegt sind. 
+
+Wichtig: Alle Datensätze des Fragebogens, bis auf das PlugIn selbst, müssen in diesem Ordner abgelegt werden.
+			
+Für jeden Fragebogen wird ein eigener SysFolder benötigt!
+			</label>
+			<label index="storage_pid.details"></label>
+			<label index="storage_pid.syntax"></label>
+			<label index="storage_pid.image_descr"></label>
+			<label index="storage_pid.image"></label>
+			<label index="storage_pid.seeAlso"></label>
 		</languageKey>
 	</data>
 </T3locallang>

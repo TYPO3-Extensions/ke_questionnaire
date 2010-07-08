@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<T3locallang>
+	<meta type="array">
+		<description>CSH labels for FlexForm fields</description>
+		<type>CSH</type>
+		<csh_table></csh_table>
+		<fileId>EXT:ke_questionnaire/locallang_csh_flexform.xml</fileId>
+		<labelContext type="array"></labelContext>
+	</meta>
+	<data type="array">
+		<languageKey index="default" type="array">
+			<label index="type.alttitle">type</label>
+			<label index="type.description"></label>
+			<label index="type.details"></label>
+			<label index="type.syntax"></label>
+			<label index="type.image_descr"></label>
+			<label index="type.image"></label>
+			<label index="type.seeAlso"></label>
+		</languageKey>
+		<languageKey index="de" type="array">
+			<label index="type.alttitle">Fragentyp</label>
+			<label index="type.description">Questionnaire bietet verschiedene Fragetypen.</label>
+			<label index="type.details">kequestionnaire bietet folgende Fragetypen an:
+1.Textelemente (reine Textangaben, keine Fragen)
+2.Offene Fragen (Antworten sind als Freitext einzugeben)
+3.Geschlossene Fragen (Antworten sind auszuwählen)
+4.Matrix Fragen (Antworten sind aus vers. Möglichkeiten auszuwählen)
+5.erweiterte Matrix Fragen => Nur Premiumversion (Kombination aus Text und Auswahl)
+6.Semantisches Differential (Auswahl einer Beurteilung, z.B. "groß - klein")
+sowie folgende weitere Informationstypen
+7.Demografische Daten/Adressdaten (Eingabe von Adressdaten)
+8.Verstecktes Feld => Nur Premiumversion (Bündelung von Matrixf Fagen)
+9.Datenschutzerklärung</label>
+			<label index="type.syntax"></label>
+			<label index="type.image_descr"></label>
+			<label index="type.image"></label>
+			<label index="type.seeAlso"></label>
+			
+			<label index="title.alttitle">Titel der Frage</label>
+			<label index="title.description">Wenn das Feld „Fragetext“ leer ist, wird das Feld „Titel“ angezeigt. Der Titel wird in den Datenexporten zur Bezeichnung der Frage verwendet, daher sollte er selbstsprechend sein. Das Feld „Titel“ kann nicht formatiert werden und ist auf 160 Zeichen beschränkt.</label>
+			<label index="title.details"></label>
+			<label index="title.syntax"></label>
+			<label index="title.image_descr">Eingabefeld für kurze Titel.</label>
+			<label index="title.image">EXT:ke_questionnaire/doc/img/question_title.jpg</label>
+			<label index="title.seeAlso"></label>
+			
+			<label index="show_title.alttitle">Titel anzeigen?</label>
+			<label index="show_title.description">Sofern im Fragetext ebenfalls Text steht, kann hiermit verhindert werden, dass der Fragetext den Titel überschreibt. Durch Wahl dieser Option wird die Frage mit Titel + Fragetext dargestellt.</label>
+			<label index="show_title.details"></label>
+			<label index="show_title.syntax"></label>
+			<label index="show_title.image_descr"></label>
+			<label index="show_title.image"></label>
+			<label index="show_title.seeAlso"></label>
+			
+			<label index="text.alttitle">Fragetext</label>
+			<label index="text.description">Freitextfeld, in das Ihr Fragentext geschrieben werden kann. Umfang und Formatierung des Fragetextes kann im Editor frei bestimmt werden.</label>
+			<label index="text.details"></label>
+			<label index="text.syntax"></label>
+			<label index="text.image_descr"></label>
+			<label index="text.image"></label>
+			<label index="text.seeAlso"></label>
+			
+			<label index="helptext.alttitle">Hilfetext</label>
+			<label index="helptext.description">Wenn hier etwas hinterlegt ist, wird das Hilfe-Icon hinter der Frage im Frontend dargestellt. Der Hilfetext erscheint bei MouseOver.</label>
+			<label index="helptext.details"></label>
+			<label index="helptext.syntax"></label>
+			<label index="helptext.image_descr">Beispiel eines Hilfetextes im Frontend</label>
+			<label index="helptext.image">EXT:ke_questionnaire/doc/img/question_helptext.jpg</label>
+			<label index="helptext.seeAlso"></label>
+			
+			<label index="image.alttitle">Bild</label>
+			<label index="image.description">Der Frage kann ein Bild zugewiesen werden.</label>
+			<label index="image.details"></label>
+			<label index="image.syntax"></label>
+			<label index="image.image_descr"></label>
+			<label index="image.image"></label>
+			<label index="image.seeAlso"></label>
+			
+			<label index="image_position.alttitle">Bild-Position</label>
+			<label index="image_position.description">Die Positionieren des Bildes im Bezug zum Fragetext.</label>
+			<label index="image_position.details"></label>
+			<label index="image_position.syntax"></label>
+			<label index="image_position.image_position_descr"></label>
+			<label index="image_position.image_position"></label>
+			<label index="image_position.seeAlso"></label>
+		</languageKey>
+	</data>
+</T3locallang>

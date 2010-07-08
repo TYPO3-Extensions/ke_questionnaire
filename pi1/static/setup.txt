@@ -379,25 +379,26 @@ plugin.tx_kequestionnaire_pi1 {
 			color: #fff;
 		}
 	     
-	        .tx-kequestionnaire-pi1 .odd {
+	    .tx-kequestionnaire-pi1 .odd {
 			background-color: transparent;
 			line-height:1.5em;
 			padding:3px;
-	        }
-	     
-	        .tx-kequestionnaire-pi1 .title_line {
+	    }
+		
+		.tx-kequestionnaire-pi1 .title_line {
 		 	background-color: #d9d9d9;
 			line-height:1.5em;
 			padding:3px;
 			border: 0;
-	        }
+	    }
 	     
-	        .keq_navigation {
+	    .keq_navigation {
 			margin:20px auto 0 auto;
 			padding: 0 0 10px 0;
 			width: 425px;
-	        }
-	        .keq_navigation a {
+	    }
+
+		.keq_navigation a {
 			background-color:#0098A1;
 			border:0;
 			color:#000;
@@ -409,45 +410,58 @@ plugin.tx_kequestionnaire_pi1 {
 			text-decoration:none;
 			width:200px;
 			font-weight: bold;
-	        }
-	        .keq_navigation a:hover {
+        }
+
+		.keq_navigation a:hover {
 			background-color:#0098A1;
 			color:#fff;
-	        }
-	        .keq_cleaner {
+        }
+
+		.keq_cleaner {
 			clear: both;
 			line-height: 1px;
 			font-size: 1px;
 			height: 1px;
 			overflow: hidden;
-	        }
-	        .keq_selection table {
+        }
+
+		.keq_selection table {
 			border: 0;
 			margin: 0;
 			width: 100%;
-	        }
-	        .keq_selection thead th {
+        }
+
+		.keq_selection thead th {
 			background:#d9d9d9;
 			border: 0;
 			font-weight: normal;
 			font-style: italic;
 			color:#333;
-	        }
-	        .keq_selection, .keq_input {
+        }
+		
+		.keq_selection .semantic_td {
+			text-align: center;
+		}
+
+		.keq_selection, .keq_input {
 			margin: 0 0 0 19px;
 			padding:3px 0 3px 4px;
 			border-left: 1px solid #0098A1;
 			border-right: 0;
 			border-top: 0;
 			border-bottom: 0;
-	        }
-	        .keq_selection tbody td { border-bottom:1px solid #d9d9d9; }
-	        .keq_input { padding:0.45em; }
-	        .keq_question_blind {
+        }
+
+		.keq_selection tbody td { border-bottom:1px solid #d9d9d9; }
+
+		.keq_input { padding:0.45em; }
+
+		.keq_question_blind {
 			width:auto;
 			padding:0.45em;
-	        }
-	        .keq_other{ padding:0.45em; }
+        }
+
+		.keq_other{ padding:0.45em; }
 	
 		.keq_img_left { float: left }
 		.keq_img_right { float: right }
