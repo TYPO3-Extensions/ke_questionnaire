@@ -356,6 +356,14 @@ $TCA["tx_kequestionnaire_questions"] = array (
 				"default" => 0
 			)
 		),
+                "closed_randomanswers" => Array (
+                        "displayCond" => "EXT:ke_questionnaire_premium:LOADED:true",
+			"exclude" => 1,
+			"label" => "LLL:EXT:ke_questionnaire/locallang_db.xml:tx_kequestionnaire_questions.closed_randomanswers",
+			"config" => Array (
+				"type" => "check",
+                        )
+		),
 		"closed_inputfield" => Array (
 			"exclude" => 1,
 			"label" => "LLL:EXT:ke_questionnaire/locallang_db.xml:tx_kequestionnaire_questions.closed_inputfield",
@@ -742,35 +750,9 @@ $TCA["tx_kequestionnaire_questions"] = array (
                                 image,
                                 image_position,
                                 --div--;LLL:EXT:ke_questionnaire/locallang.xml:tx_kequestionnaire.flow,
-                                mandatory,
-                                mandatory_correct,".
-                                //"time,".
-                                "dependant_show,
+                                dependant_show,
                                 dependancy_simple,
-                                dependancy,
-                                --div--;LLL:EXT:ke_questionnaire/locallang.xml:tx_kequestionnaire.type_based,
-                                open_type,
-                                open_pre_text,
-                                open_in_text,
-                                open_post_text,
-                                open_validation,
-                                closed_type,
-                                closed_selectsize,
-                                matrix_type,
-                                matrix_validation,
-                                demographic_type,
-                                demographic_fields,
-                                demographic_addressfields,
-                                privacy_post,
-                                privacy_link,
-                                privacy_file,
-                                --div--;SubTypes,
-                                closed_inputfield,
-                                matrix_inputfield,
-                                answers,
-                                columns,
-                                subquestions,
-                                sublines"),
+                                dependancy"),
 		"open" => array(
                              "showitem" => "
                                 --div--;LLL:EXT:ke_questionnaire/locallang.xml:tx_kequestionnaire.base,
@@ -823,9 +805,10 @@ $TCA["tx_kequestionnaire_questions"] = array (
                                 closed_type,
                                 closed_selectsize,
                                 closed_maxanswers,
-                                --div--;LLL:EXT:ke_questionnaire/locallang.xml:tx_kequestionnaire.answers,
-                                closed_inputfield,
-                                answers"),
+                                closed_randomanswers,
+                                --div--;LLL:EXT:ke_questionnaire/locallang.xml:tx_kequestionnaire.answers,"
+                                //closed_inputfield,
+                                ."answers"),
                 "matrix" => array(
                              "showitem" => "
                                 --div--;LLL:EXT:ke_questionnaire/locallang.xml:tx_kequestionnaire.base,
@@ -950,7 +933,7 @@ $TCA["tx_kequestionnaire_questions"] = array (
                                 privacy_link,
                                 privacy_file"),
                 "blind" => array(
-                             "showitem" => "
+                            "showitem" => "
                                 --div--;LLL:EXT:ke_questionnaire/locallang.xml:tx_kequestionnaire.base,
                                 sys_language_uid;;;;1-1-1,
                                 l18n_parent,
@@ -1094,6 +1077,13 @@ $TCA["tx_kequestionnaire_answers"] = array (
 				"eval" => "required",
 			)
 		),
+                "show_input" => Array (
+                        "exclude" => 1,
+			"label" => "LLL:EXT:ke_questionnaire/locallang_db.xml:tx_kequestionnaire_answers.show_input",
+			"config" => Array (
+				"type" => "check",
+                        )
+		),
 		"value" => Array (
 			"exclude" => 1,
 			"label" => "LLL:EXT:ke_questionnaire/locallang_db.xml:tx_kequestionnaire_answers.value",
@@ -1201,7 +1191,7 @@ $TCA["tx_kequestionnaire_answers"] = array (
 		),
 	),
 	"types" => array (
-		"0" => array("showitem" => "sys_language_uid;;;;1-1-1, l18n_parent,question_uid, title;;;;2-2-2, value;;;;3-3-3, correct_answer, text;;;richtext[paste|bold|italic|underline|formatblock|class|left|center|right|orderedlist|unorderedlist|outdent|indent|link|image]:rte_transform[mode=ts], helptext;;;richtext[paste|bold|italic|underline|formatblock|class|left|center|right|orderedlist|unorderedlist|outdent|indent|link|image]:rte_transform[mode=ts], image, image_position,finish_page_uid")
+		"0" => array("showitem" => "sys_language_uid;;;;1-1-1, l18n_parent,question_uid, title;;;;2-2-2, show_input, value;;;;3-3-3, correct_answer, text;;;richtext[paste|bold|italic|underline|formatblock|class|left|center|right|orderedlist|unorderedlist|outdent|indent|link|image]:rte_transform[mode=ts];4-4-4, helptext;;;richtext[paste|bold|italic|underline|formatblock|class|left|center|right|orderedlist|unorderedlist|outdent|indent|link|image]:rte_transform[mode=ts], image;;;;5-5-5, image_position,finish_page_uid")
                 //"0" => array("showitem" => "sys_language_uid;;;;1-1-1, l18n_parent, l18n_diffsource, hidden;;1, question_uid, title;;;;2-2-2, value;;;;3-3-3, correct_answer, text;;;richtext[paste|bold|italic|underline|formatblock|class|left|center|right|orderedlist|unorderedlist|outdent|indent|link|image]:rte_transform[mode=ts], helptext;;;richtext[paste|bold|italic|underline|formatblock|class|left|center|right|orderedlist|unorderedlist|outdent|indent|link|image]:rte_transform[mode=ts], image")
 	),
 	"palettes" => array (

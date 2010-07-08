@@ -1,5 +1,11 @@
 (add new changes on top of this file)
 
+10-07-08 Nadine Schwingler  <schwingler@kennziffer.com>
+	
+	* Changed the input-field option for answers in closed questions to meet the requirements for randomized answers. Old version still works, but will not be shown anymore.
+	* Added first CSH to plugin and questions
+	* Added another Hook for the closed answer manipulation
+
 10-07-06 Nadine Schwingler  <schwingler@kennziffer.com>
 	
 	* Added validation to open text questions, that they need to be answered correctly.

@@ -55,6 +55,7 @@
 			<label index="tx_kequestionnaire_questions.closed_type">closed question type</label>
 			<label index="tx_kequestionnaire_questions.closed_selectsize">size of select-box</label>
 			<label index="tx_kequestionnaire_questions.closed_maxanswers">max answers allowed for user</label>
+			<label index="tx_kequestionnaire_questions.closed_randomanswers">show answers in random order</label>
 			<label index="tx_kequestionnaire_questions.closed_inputfield">input field for last answer-option</label>
 			<label index="tx_kequestionnaire_questions.matrix_type.I.0">radiobuttons (single)</label>
 			<label index="tx_kequestionnaire_questions.matrix_type.I.1">checkboxes (multiple)</label>
@@ -90,6 +91,7 @@
 			<label index="tx_kequestionnaire_answers.helptext">helptext</label>
 			<label index="tx_kequestionnaire_answers.image">image</label>
 			<label index="tx_kequestionnaire_answers.finish_page_uid">Page shown after finishing the questionnaire</label>
+			<label index="tx_kequestionnaire_answers.show_input">Show input field after answer (only with radio and checkbox type question)</label>
 			
 			<label index="tx_kequestionnaire_columns">Column (for matrix or semantic differential)</label>
 			<label index="tx_kequestionnaire_columns.title">title</label>
@@ -207,6 +209,7 @@
 			<label index="tx_kequestionnaire_questions.closed_type">Einfach- oder Mehrfachauswahl</label>
 			<label index="tx_kequestionnaire_questions.closed_selectsize">Höhe der Select-Box (Anzahl an Antworten)</label>
 			<label index="tx_kequestionnaire_questions.closed_maxanswers">max. Anzahl an Antworten, die dem Nutzer erlaubt sind</label>
+			<label index="tx_kequestionnaire_questions.closed_randomanswers">Antworten in zufälliger Reihenfolge ausgeben</label>
 			<label index="tx_kequestionnaire_questions.closed_inputfield">Eingabefeld definieren</label>
 			<label index="tx_kequestionnaire_questions.matrix_type.I.0">Radiobuttons (Einfachauswahl)</label>
 			<label index="tx_kequestionnaire_questions.matrix_type.I.1">Checkboxen (Mehrfachauswahl)</label>
@@ -241,11 +244,12 @@
 			<label index="tx_kequestionnaire_answers">Antwort</label>
 			<label index="tx_kequestionnaire_answers.title">Titel</label>
 			<label index="tx_kequestionnaire_answers.value">Wert</label>
-			<label index="tx_kequestionnaire_answers.correct_answer">Ist dies die richtige Antwort?</label>
+			<label index="tx_kequestionnaire_answers.correct_answer">korrekte Antwort</label>
 			<label index="tx_kequestionnaire_answers.text">Text</label>
 			<label index="tx_kequestionnaire_answers.helptext">Hilfetext / Hinweistext</label>
 			<label index="tx_kequestionnaire_answers.image">Bild</label>
 			<label index="tx_kequestionnaire_answers.finish_page_uid">Abschlussseite bei Beendigung</label>
+			<label index="tx_kequestionnaire_answers.show_input">Eingabefeld hinter Antwort anzeigen (Nur bei Radioboxen oder Checkboxen)</label>
 			
 			<label index="tx_kequestionnaire_columns">Fragenspalte (für Matrix oder semantisches Differential)</label>
 			<label index="tx_kequestionnaire_columns.title">Titel</label>

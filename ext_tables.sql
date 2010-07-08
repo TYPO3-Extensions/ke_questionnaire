@@ -45,6 +45,7 @@ CREATE TABLE tx_kequestionnaire_questions (
         closed_type varchar(13) DEFAULT '' NOT NULL,
 	closed_selectsize int(11) DEFAULT '0' NOT NULL,
         closed_maxanswers int(11) DEFAULT '0' NOT NULL,
+        closed_randomanswers tinyint(3) DEFAULT '0' NOT NULL,
 	closed_inputfield int(11) DEFAULT '0' NOT NULL,
         matrix_type varchar(5) DEFAULT '' NOT NULL,
 	matrix_validation varchar(7) DEFAULT '' NOT NULL,
@@ -98,6 +99,7 @@ CREATE TABLE tx_kequestionnaire_answers (
         image_position varchar(11) DEFAULT '' NOT NULL,
         question_uid int(11) DEFAULT '0' NOT NULL,
         finish_page_uid int(11) DEFAULT '0' NOT NULL,
+        show_input tinyint(3) DEFAULT '0' NOT NULL,
     
 	PRIMARY KEY (uid),
 	KEY parent (pid)

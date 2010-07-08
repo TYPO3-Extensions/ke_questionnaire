@@ -1043,7 +1043,7 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 						switch ($values['type']){
 							case 'closed':
 								foreach ($values['answers'] as $a_id => $a_values){
-									if ($values['answers'][$a_id]['results'][$nr]) $result_line[] = 'x';
+									if ($values['answers'][$a_id]['results'][$nr]) $result_line[] = $values['answers'][$a_id]['results'][$nr];
 									else $result_line[] = '';
 								}
 							break;

@@ -111,6 +111,14 @@ class question_closed extends question {
 				//t3lib_div::debug($out,"buildFieldArray");
 			break;
 		}
+		
+		//Hook to manipulate the answers
+		if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$this->extKey]['closed_answers'])){
+			foreach($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$this->extKey]['closed_answers'] as $_classRef){
+				$_procObj = & t3lib_div::getUserObj($_classRef);
+				$this->fields = $_procObj->closed_answers($this->question, $this->fields);
+			}
+		}
 	}
 
 	function buildFieldArrayForRadioAndCheckbox($type,$typeInput,$marker,$markerInput){
@@ -119,8 +127,8 @@ class question_closed extends question {
 		$i=0;	$this->lastOptionKeys=array();
 		//t3lib_div::devLog('this->options', 'question closed', 0, $this->options);
 		foreach($this->options as $key=>$val){
-		    //t3lib_div::devLog('answer '.$key, 'question closed', 0, array($val));
-			if($this->countInput && $i>=count($this->options)-$this->countInput){
+			//t3lib_div::devLog('answer '.$key, 'question closed', 0, array($val));
+			if($val['show_input'] OR ($this->countInput && $i>=count($this->options)-$this->countInput)){
 				$this->fields[$key]=new kequestionnaire_input($key,$typeInput,array("text"=>$this->answer["text"],"options"=>$this->answer["options"]),$markerInput,$this->obj,$this->options,array(),array(),array(),'',$this->dependants);
 				$this->lastOptionKeys[]=$key;
 			}else{
@@ -129,6 +137,7 @@ class question_closed extends question {
 			if ($this->question['closed_maxanswers'] > 0) $this->fields[$key]->maxAnswers = $this->question['closed_maxanswers'];
 			$i++;
 		}
+		
 		//t3lib_div::devLog('fields', 'question closed', 0, $this->fields);
 	}
 	
@@ -248,4 +257,5 @@ class question_closed extends question {
 		$this->errorMsg=$this->obj->pi_getLL("error_required");
 	}
 }
+
 ?>
