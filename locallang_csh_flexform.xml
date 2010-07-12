@@ -69,6 +69,171 @@ Für jeden Fragebogen wird ein eigener SysFolder benötigt!
 			<label index="storage_pid.image_descr"></label>
 			<label index="storage_pid.image"></label>
 			<label index="storage_pid.seeAlso"></label>
+			
+			<label index="access.alttitle">Zugriff</label>
+			<label index="access.description">Steuert den erlaubten optionalen Zugriff auf den Fragebogen</label>
+			<label index="access.details">Es gibt folgende Auswahlmöglichkeiten:
+			
+			- Freier Zugriff
+			allgemeiner Zugang für alle, die Zugriff auf die Seite haben. Eine Wiederaufnahme von vorangegangenen Bearbeitungen ist nicht möglich.
+			
+			- FE-Nutzer
+			Es können nur eingeloggte FE-Nutzer teilnehmen. Wenn die Seite nicht zugriffsgeschützt ist, wird ein Hinweis eingeblendet, dass man eingeloggt sein muss. 
+			
+			- AuthCode Einladung
+			Die Teilnahme ist nur mit einem gültigen Authentifizierungsode möglich. Dieser kann durch das entsprechende Backendmodul...
+			Einladen generiert und per E-Mail versendet oder in einer CSV-Datei herunter geladen werden.</label>
+			<label index="access.syntax"></label>
+			<label index="access.image_descr"></label>
+			<label index="access.image"></label>
+			<label index="access.seeAlso"></label>
+			
+			<label index="timer_type.alttitle">Typ der zur Verfügung stehenden Bearbeitungszeit</label>
+			<label index="timer_type.description">Einstellungsmöglichkeit über die Bearbeitungszeit, die dem Nutzer zur Verfügung gestellt wird. </label>
+			<label index="timer_type.details">Zur Auswahl stehen folgende Optionen:
+			- Freie Bearbeitung
+			es wird keine Zeitbegrenzung gesetzt.
+
+			- Bearbeitungszeit für den gesamten Fragebogen / Beantwortungszeit pro Seite
+			Um eine zeitliche Komponente für z.B. eLearning zu bieten, kann die Beantwortungszeit des Fragebogens beschränkt werden, so dass der Nutzer die eingetragene Anzahl an Sekunden Zeit hat den gesamten Fragebogen oder die aktuelle Seite komplett auszufüllen. Schafft er es nicht in der eingetragenen Zahl an Sekunden, wird die Bearbeitung abgebrochen, der Fragebogen als „abgeschlossen“ gespeichert bzw. zur nächsten Seite gesprungen. 
+			Fragen, die bis dahin nicht bearbeitet wurden, gelten als nicht beantwortet.
+			</label>
+			<label index="timer_type.syntax"></label>
+			<label index="timer_type.image_descr"></label>
+			<label index="timer_type.image"></label>
+			<label index="timer_type.seeAlso"></label>
+			
+			<label index="description.alttitle">Beschreibung des Fragebogens</label>
+			<label index="description.description">Wenn ein Text eingegeben wurde, wird dieser vor dem eigentlichen Fragebogen dargestellt. Unter dem Text wird ein Link angezeigt, der dann zum Fragebogen führt.</label>
+			<label index="description.details"></label>
+			<label index="description.syntax"></label>
+			<label index="description.image_descr"></label>
+			<label index="description.image"></label>
+			<label index="description.seeAlso"></label>
+			
+			<label index="end_text.alttitle">Abschlusstext des Fragebogens</label>
+			<label index="end_text.description">Text, der angezeigt wird, nachdem der Fragebogen durch den Nutzer abgeschlossen wurde.</label>
+			<label index="end_text.details"></label>
+			<label index="end_text.syntax"></label>
+			<label index="end_text.image_descr"></label>
+			<label index="end_text.image"></label>
+			<label index="end_text.seeAlso"></label>
+			
+			<label index="template_dir.alttitle">Verzeichnis der Templates</label>
+			<label index="template_dir.description">Aufgrund der Komplexität sind die Templates der einzelnen Komponenten der Extension in mehrere Template-Dateien aufgeteilt. Hier muss ein Verzeichnis angegeben werden, dass alle benötigten Template-Dateien enthält (siehe res/templates innerhalb der Extension).</label>
+			<label index="template_dir.details"></label>
+			<label index="template_dir.syntax"></label>
+			<label index="template_dir.image_descr"></label>
+			<label index="template_dir.image"></label>
+			<label index="template_dir.seeAlso"></label>
+			
+			<label index="render_type.alttitle">Darstellungsart des Fragebogens</label>
+			<label index="render_type.description">Mit den Auswahloptionen kann bestimmt werden, wie viele Fragen pro Seite angezeigt werden sollen.</label>
+			<label index="render_type.details">Es gibt folgende Auswahlmöglichkeiten:
+			
+			- Auf einer Seite
+			Alle Fragen werden auf einer Seite angezeigt. Der Button am Ende führt zum endgültigen Absenden des Fragebogens. 
+			
+			- Auf Basis der Fragenanzahl/Seite
+			Anhand des im folgenden Feld angegebenen Wertes wird die Anzahl der Seiten berechnet und der Fragebogen dementsprechend dargestellt. 
+
+			- Auf Basis der Seitenzahl
+			Anhand des im folgenden Feld angegebenen Wertes wird die Anzahl der Fragen pro Seite berechnet und der Fragebogen dementsprechend dargestellt
+			
+			</label>
+			<label index="render_type.syntax"></label>
+			<label index="render_type.image_descr"></label>
+			<label index="render_type.image"></label>
+			<label index="render_type.seeAlso"></label>
+			
+			<label index="show_captcha.alttitle">Captcha auf der letzten Seite anzeigen (sr_freecap muss installiert sein)</label>
+			<label index="show_captcha.description">Die Option blendet auf der letzten Seite des Fragebogens, vor dem Button „Absenden“ ein Captcha-Feld ein (sofern sr_freecap installiert ist). Ein Absenden des Fragebogens ohne korrektes Ausfüllen des Captcha ist somit nicht mehr möglich.</label>
+			<label index="show_captcha.details"></label>
+			<label index="show_captcha.syntax"></label>
+			<label index="show_captcha.image_descr"></label>
+			<label index="show_captcha.image"></label>
+			<label index="show_captcha.seeAlso"></label>
+			
+			<label index="redirect_on_finish_uid.alttitle">Frage, welche die Umleitung nach Abschluss bestimmt</label>
+			<label index="redirect_on_finish_uid.description">Sind für den Fragebogen geschlossene Fragen mit Einfachauswahl definiert, so können diese Fragen genutzt werden um den Anwender je nach Beantwortung der hier gewählten Frage auf verschiedene Seiten weiter zu leiten.
+			Das Ziel der Weiterleitung (die gewünschte TYPO3-Seite) wird in den Antworten der entsprechenden Frage hinterlegt.</label>
+			<label index="redirect_on_finish_uid.details"></label>
+			<label index="redirect_on_finish_uid.syntax"></label>
+			<label index="redirect_on_finish_uid.image_descr"></label>
+			<label index="redirect_on_finish_uid.image"></label>
+			<label index="redirect_on_finish_uid.seeAlso"></label>
+			
+			<label index="mail_turn.alttitle">Häufigkeit des Versands.</label>
+			<label index="mail_turn.description">Der Versand kann auf zwei Arten erfolgen:
+				- Direkt
+				bei jedem fertig ausgefüllten Fragebogen erfolgt der Versand
+			
+				- Per TYPO3 Scheduler
+				der Scheduler Task versendet eine Liste von Teilnahmen zum Zeitpunkt seiner Ausführung. Die Häufigkeit der Benachrichtigung hängt also von der Einstellung des Schedulers ab.</label>
+			<label index="mail_turn.details"></label>
+			<label index="mail_turn.syntax"></label>
+			<label index="mail_turn.image_descr"></label>
+			<label index="mail_turn.image"></label>
+			<label index="mail_turn.seeAlso"></label>
+			
+			<label index="inform_mail_subject.alttitle">Titel der Informationsmail </label>
+			<label index="inform_mail_subject.description">Betreffzeile der E-Mail.</label>
+			<label index="inform_mail_subject.details"></label>
+			<label index="inform_mail_subject.syntax"></label>
+			<label index="inform_mail_subject.image_descr"></label>
+			<label index="inform_mail_subject.image"></label>
+			<label index="inform_mail_subject.seeAlso"></label>
+			
+			<label index="inform_mail_text.alttitle">Informationstext über die Teilnahme an diesem Fragebogen</label>
+			<label index="inform_mail_text.description">Text der versendeten E-Mail</label>
+			<label index="inform_mail_text.details"></label>
+			<label index="inform_mail_text.syntax"></label>
+			<label index="inform_mail_text.image_descr"></label>
+			<label index="inform_mail_text.image"></label>
+			<label index="inform_mail_text.seeAlso"></label>
+			
+			<label index="mail_from.alttitle">Absenderbezeichnung</label>
+			<label index="mail_from.description">Name des Absenders der Einladungs-/Erinnerungsmails</label>
+			<label index="mail_from.details"></label>
+			<label index="mail_from.syntax"></label>
+			<label index="mail_from.image_descr"></label>
+			<label index="mail_from.image"></label>
+			<label index="mail_from.seeAlso"></label>
+			
+			<label index="invite_mail_subject.alttitle">Titel der Einladungsmail</label>
+			<label index="invite_mail_subject.description">Text der Betreffzeile</label>
+			<label index="invite_mail_subject.details"></label>
+			<label index="invite_mail_subject.syntax"></label>
+			<label index="invite_mail_subject.image_descr"></label>
+			<label index="invite_mail_subject.image"></label>
+			<label index="invite_mail_subject.seeAlso"></label>
+			
+			<label index="remind_mail_subject.alttitle">Titel der Erinnerungsmail</label>
+			<label index="remind_mail_subject.description">Das Einladungsmodul bietet die Möglichkeit eine Erinnerungsmail an die noch
+			nicht genutzten, aber per E-Mail versendeten AuthCodes zu senden. Hier steht der Titel der E-Mail zu Erinnerung.
+			Das Versenden der Erinnerungsmail kann jederzeit manuell gestartet werden.
+			</label>
+			
+			<label index="remind_mail_subject.details"></label>
+			<label index="remind_mail_subject.syntax"></label>
+			<label index="remind_mail_subject.image_descr"></label>
+			<label index="remind_mail_subject.image"></label>
+			<label index="remind_mail_subject.seeAlso"></label>
+			
+			<label index="invite_mail_text.alttitle">Einladungstext der E-Mail für das BE Modul Einladen</label>
+			<label index="invite_mail_text.description">Text mit dem der Teilnehmer eingeladen wird. Folgender Marker ist innerhalb des Mailtextes notwendig: ###LINK### oder ###AUTHCODE###. In diesen Marker wird der AuthCode bzw. der Link zum Fragebogen inklusive AuthCode (in der URL enthalten) gesendet.</label>
+			<label index="invite_mail_text.details"></label>
+			<label index="invite_mail_text.syntax"></label>
+			<label index="invite_mail_text.image_descr"></label>
+			<label index="invite_mail_text.image"></label>
+			<label index="invite_mail_text.seeAlso"></label>
+			
+			
+			
+			 
+
+			
+			
 		</languageKey>
 	</data>
 </T3locallang>

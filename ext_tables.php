@@ -17,6 +17,11 @@ if (TYPO3_MODE=="BE")	include_once(t3lib_extMgm::extPath("ke_questionnaire")."re
 
 // CSH Definitions
 t3lib_extMgm::addLLrefForTCAdescr('tx_kequestionnaire_questions','EXT:ke_questionnaire/locallang_csh_question.xml');
+t3lib_extMgm::addLLrefForTCAdescr('tx_kequestionnaire_answers','EXT:ke_questionnaire/locallang_csh_answer.xml');
+t3lib_extMgm::addLLrefForTCAdescr('tx_kequestionnaire_columns','EXT:ke_questionnaire/locallang_csh_column.xml');
+t3lib_extMgm::addLLrefForTCAdescr('tx_kequestionnaire_dependancies','EXT:ke_questionnaire/locallang_csh_dependancy.xml');
+t3lib_extMgm::addLLrefForTCAdescr('tx_kequestionnaire_sublines','EXT:ke_questionnaire/locallang_csh_subline.xml');
+t3lib_extMgm::addLLrefForTCAdescr('tx_kequestionnaire_subquestions','EXT:ke_questionnaire/locallang_csh_subquestions.xml');
 
 $TCA["tx_kequestionnaire_questions"] = array (
 	"ctrl" => array (

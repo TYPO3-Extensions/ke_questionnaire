@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<T3locallang>
+	<meta type="array">
+		<description>CSH labels for FlexForm fields</description>
+		<type>CSH</type>
+		<csh_table></csh_table>
+		<fileId>EXT:ke_questionnaire/locallang_csh_flexform.xml</fileId>
+		<labelContext type="array"></labelContext>
+	</meta>
+	<data type="array">
+		<languageKey index="default" type="array">
+			<label index="type.alttitle">type</label>
+			<label index="type.description"></label>
+			<label index="type.details"></label>
+			<label index="type.syntax"></label>
+			<label index="type.image_descr"></label>
+			<label index="type.image"></label>
+			<label index="type.seeAlso"></label>
+		</languageKey>
+		<languageKey index="de" type="array">
+			<label index="type.alttitle">type</label>
+			<label index="type.description"></label>
+			<label index="type.details"></label>
+			<label index="type.syntax"></label>
+			<label index="type.image_descr"></label>
+			<label index="type.image"></label>
+			<label index="type.seeAlso"></label>
+		</languageKey>
+	</data>
+</T3locallang>
