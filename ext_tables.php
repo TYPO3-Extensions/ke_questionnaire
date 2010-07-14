@@ -21,7 +21,7 @@ t3lib_extMgm::addLLrefForTCAdescr('tx_kequestionnaire_answers','EXT:ke_questionn
 t3lib_extMgm::addLLrefForTCAdescr('tx_kequestionnaire_columns','EXT:ke_questionnaire/locallang_csh_column.xml');
 t3lib_extMgm::addLLrefForTCAdescr('tx_kequestionnaire_dependancies','EXT:ke_questionnaire/locallang_csh_dependancy.xml');
 t3lib_extMgm::addLLrefForTCAdescr('tx_kequestionnaire_sublines','EXT:ke_questionnaire/locallang_csh_subline.xml');
-t3lib_extMgm::addLLrefForTCAdescr('tx_kequestionnaire_subquestions','EXT:ke_questionnaire/locallang_csh_subquestions.xml');
+t3lib_extMgm::addLLrefForTCAdescr('tx_kequestionnaire_subquestions','EXT:ke_questionnaire/locallang_csh_subquestion.xml');
 
 $TCA["tx_kequestionnaire_questions"] = array (
 	"ctrl" => array (
