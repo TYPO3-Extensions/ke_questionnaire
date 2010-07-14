@@ -25,6 +25,7 @@
 			<label index="type.image_descr"></label>
 			<label index="type.image"></label>
 			<label index="type.seeAlso"></label>
+			
 		</languageKey>
 	</data>
 </T3locallang>

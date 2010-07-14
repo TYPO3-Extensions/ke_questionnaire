@@ -25,6 +25,18 @@
 			<label index="type.image_descr"></label>
 			<label index="type.image"></label>
 			<label index="type.seeAlso"></label>
+			
+			<label index="different_type.alttitle">Abweichender Typ der Unterfrage</label>
+			<label index="different_type.description">Es ist möglich eine Spalte von einem abweichenden Typ der Hauptmatrix zu konfigurieren.
+			Hierbei wird diese Spalte in einem anderen Typ als der Rest der Matrix dargestellt. (Beispielsweise: Die erste Spalte der Matrix weist ein Textfeld auf, der Rest der Matrix besteht aus Radiobuttons).</label>
+			<label index="different_type.details"></label>
+			<label index="different_type.syntax"></label>
+			<label index="different_type.image_descr">Beispiel für den abweichenden Typ der Unterfrage</label>
+			<label index="different_type.image">EXT:ke_questionnaire/doc/img/column_different_type.jpg</label>
+			<label index="different_type.seeAlso"></label>
+			
+			
+			
 		</languageKey>
 	</data>
 </T3locallang>

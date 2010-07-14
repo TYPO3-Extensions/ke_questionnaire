@@ -25,6 +25,40 @@
 			<label index="type.image_descr"></label>
 			<label index="type.image"></label>
 			<label index="type.seeAlso"></label>
+			
+			<label index="closed_type.alttitle">Abhängigkeiten</label>
+			<label index="closed_type.description">Anlegen von Frage-Abhängigkeiten</label>
+			<label index="closed_type.details"></label>
+			<label index="closed_type.syntax"></label>
+			<label index="closed_type.image_descr">Beispiel zu einer Bestimmung von Frage-Abhängigkeiten</label>
+			<label index="closed_type.image">EXT:ke_questionnaire/doc/img/question_dependancy.jpg</label>
+			<label index="closed_type.seeAlso"></label>
+			
+			<label index="activating_question.alttitle">Auslösende Frage (Bei Änderung bitte speichern, damit die zugehörigen Antworten geladen werden) </label>
+			<label index="activating_question.description">Hier werden alle Fragen des Fragebogens angeboten, welche eine Abhängigkeit auslösen können (geschlossene Fragen und offene Fragen mit Validierung auf Zahlen).</label>
+			<label index="activating_question.details"></label>
+			<label index="activating_question.syntax"></label>
+			<label index="activating_question.image_descr"></label>
+			<label index="activating_question.image"></label>
+			<label index="activating_question.seeAlso"></label>
+			
+			<label index="activating_value.alttitle">Auslösender Wert (Wenn die auslösende Frage eine geschlossene Frage ist)</label>
+			<label index="activating_value.description">Wenn die Frage ausgewählt wurde, muss der gesamte Datensatz einmal gespeichert werden, damit die Antworten der Frage angezeigt werden können.</label>
+			<label index="activating_value.details"></label>
+			<label index="activating_value.syntax"></label>
+			<label index="activating_value.image_descr"></label>
+			<label index="activating_value.image"></label>
+			<label index="activating_value.seeAlso"></label>
+			
+			<label index="activating_formula.alttitle">Auslösende Klausel (Vergleichsart,Wert) (Wenn die auslösende Frage eine offene Frage ist)</label>
+			<label index="activating_formula.description">Es ist möglich eine Vergleichsklausel anzugeben, wenn z.B. die Frage nur dann zu beantworten ist, wenn der Nutzer einen Wert über 100 angegeben hat, dann wäre die Angabe: „&gt;,100“ oder wenn der Wert unter 100 sein muss, dann wäre die Angabe  „(&lt;,100)“ oder bei gleich 100, dann wäre der Wert „=,100“. </label>
+			<label index="activating_formula.details"></label>
+			<label index="activating_formula.syntax"></label>
+			<label index="activating_formula.image_descr"></label>
+			<label index="activating_formula.image"></label>
+			<label index="activating_formula.seeAlso"></label>
+			
+			
 		</languageKey>
 	</data>
 </T3locallang>

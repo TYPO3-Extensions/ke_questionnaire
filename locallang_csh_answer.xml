@@ -25,6 +25,75 @@
 			<label index="type.image_descr"></label>
 			<label index="type.image"></label>
 			<label index="type.seeAlso"></label>
+			
+			<label index="title.alttitle">Titel</label>
+			<label index="title.description">Titel der Antwort</label>
+			<label index="title.details"></label>
+			<label index="title.syntax"></label>
+			<label index="title.image_descr"></label>
+			<label index="title.image"></label>
+			<label index="title.seeAlso"></label>
+			
+			<label index="value.alttitle">Wert</label>
+			<label index="value.description">Relevant für Punktewertung und eLearning (Zertifikatserstellung => Nur Premiumversion).
+			Hier kann ein Zahlenwert eingegeben werden. Diese Werte werden summiert, um ein Gesamtergebnis zu ermitteln.
+			Es können auch negative Werte genutzt werden, z.B: um für eine falsche Antwort Punktabzüge zu geben.</label>
+			<label index="value.details"></label>
+			<label index="value.syntax"></label>
+			<label index="value.image_descr"></label>
+			<label index="value.image"></label>
+			<label index="value.seeAlso"></label>
+			
+			<label index="correct_answer.alttitle">Ist dies die richtige Antwort?</label>
+			<label index="correct_answer.description">Falls eine richtige Antwort für das Fortfahren im Fragebogen benötigt wird, kann diese hier markiert werden.</label>
+			<label index="correct_answer.details"></label>
+			<label index="correct_answer.syntax"></label>
+			<label index="correct_answer.image_descr"></label>
+			<label index="correct_answer.image"></label>
+			<label index="correct_answer.seeAlso"></label>
+			
+			<label index="text.alttitle">Text</label>
+			<label index="text.description">Sofern ausgefüllt überschreibt der hier angegebene Text den Titel in der Ausgabe der Antwort. Dies ist sinnvoll bei längeren Texten und bei gewünschten Formatierungen.</label>
+			<label index="text.details"></label>
+			<label index="text.syntax"></label>
+			<label index="text.image_descr"></label>
+			<label index="text.image"></label>
+			<label index="text.seeAlso"></label>
+			
+			<label index="helptext.alttitle">Hilfetext</label>
+			<label index="helptext.description">Der Hilfetext wird über ein "?"-Symbol im Frontend eingeblendet.</label>
+			<label index="helptext.details"></label>
+			<label index="helptext.syntax"></label>
+			<label index="helptext.image_descr"></label>
+			<label index="helptext.image"></label>
+			<label index="helptext.seeAlso"></label>
+			
+			<label index="image.alttitle">Bild</label>
+			<label index="image.description">Zu jeder Antwort kann ein Bild eingefügt werden</label>
+			<label index="image.details"></label>
+			<label index="image.syntax"></label>
+			<label index="image.image_descr"></label>
+			<label index="image.image"></label>
+			<label index="image.seeAlso"></label>
+			
+			<label index="image_position.alttitle">Bild-Position</label>
+			<label index="image_position.description">Die Positionieren des Bildes im Bezug zum Fragetext.</label>
+			<label index="image_position.details"></label>
+			<label index="image_position.syntax"></label>
+			<label index="image_position.image_descr"></label>
+			<label index="image_position.image"></label>
+			<label index="image_position.seeAlso"></label>
+			
+			<label index="finish_page_uid.alttitle">Abschlussseite nach Beendigung</label>
+			<label index="finish_page_uid.description">Es ist möglich eine Frage zu definieren, die je nach Antwort den Nutzer auf unterschiedliche Seiten leiten, nachdem er den Fragebogen abgeschlossen hat. An dieser Stelle wird die Zielseite
+			bestimmt. Die Auswahl der Frage erfolgt im PlugIn.</label>
+			<label index="finish_page_uid.details"></label>
+			<label index="finish_page_uid.syntax"></label>
+			<label index="finish_page_uid.image_descr"></label>
+			<label index="finish_page_uid.image"></label>
+			<label index="finish_page_uid.seeAlso"></label>
+			
+						
 		</languageKey>
 	</data>
 </T3locallang>

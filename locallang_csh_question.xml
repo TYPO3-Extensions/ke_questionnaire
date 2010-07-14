@@ -36,6 +36,22 @@ sowie folgende weitere Informationstypen
 			<label index="type.image"></label>
 			<label index="type.seeAlso"></label>
 			
+			<label index="sys_language_uid.alttitle">Sprache</label>
+			<label index="sys_language_uid.description">Wählen Sie, wenn vorhanden, die Sprachversion der zu erstellenden Frage aus. Setzen Sie ein Start und/oder Enddatum, um die Sichtbarkeit der Frage zu terminieren.</label>
+			<label index="sys_language_uid.details"></label>
+			<label index="sys_language_uid.syntax"></label>
+			<label index="sys_language_uid.image_descr"></label>
+			<label index="sys_language_uid.image"></label>
+			<label index="sys_language_uid.seeAlso"></label>
+			
+			<label index="hidden.alttitle">Verbergen</label>
+			<label index="hidden.description">Ist das Häkchen gesetzt, ist die Frage auf der Webseite nicht sichtbar.</label>
+			<label index="hidden.details"></label>
+			<label index="hidden.syntax"></label>
+			<label index="hidden.image_descr"></label>
+			<label index="hidden.image"></label>
+			<label index="hidden.seeAlso"></label>
+						
 			<label index="title.alttitle">Titel der Frage</label>
 			<label index="title.description">Wenn das Feld „Fragetext“ leer ist, wird das Feld „Titel“ angezeigt. Der Titel wird in den Datenexporten zur Bezeichnung der Frage verwendet, daher sollte er selbstsprechend sein. Das Feld „Titel“ kann nicht formatiert werden und ist auf 160 Zeichen beschränkt.</label>
 			<label index="title.details"></label>
@@ -83,6 +99,237 @@ sowie folgende weitere Informationstypen
 			<label index="image_position.image_position_descr"></label>
 			<label index="image_position.image_position"></label>
 			<label index="image_position.seeAlso"></label>
+			
+			<label index="mandatory.alttitle">Pflichtfrage?</label>
+			<label index="mandatory.description">Wenn diese Option gewählt ist, kann der Nutzer den Fragebogen nicht absenden oder auf die 
+			nächste Seite wechseln, bevor die Frage beantwortet wurde.</label>
+			<label index="mandatory.details"></label>
+			<label index="mandatory.syntax"></label>
+			<label index="mandatory.image_position_descr"></label>
+			<label index="mandatory.image_position"></label>
+			<label index="mandatory.seeAlso"></label>
+			
+			<label index="mandatory_correct.alttitle">Muss die Frage korrekt beantwortet sein um fort zu fahren?</label>
+			<label index="mandatory_correct.description">Der Nutzer soll nur dann mit dem Fragebogen fortfahren können, wenn er die Frage richtig 
+			beantwortet hat. Dies ist nur bei geschlossenen Fragen möglich.</label>
+			<label index="mandatory_correct.details"></label>
+			<label index="mandatory_correct.syntax"></label>
+			<label index="mandatory_correct.image_position_descr"></label>
+			<label index="mandatory_correct.image_position"></label>
+			<label index="mandatory_correct.seeAlso"></label>
+			
+			<label index="open_type.alttitle">Platz für die Beantwortung</label>
+			<label index="open_type.description">Folgende Auswahlmöglichkeiten stehen zur Verfügung:
+			&#8226; Einzeilig
+			ein einfaches Eingabefeld wird dargestellt
+			
+			&#8226; Mehrzeilig
+			ein mehrzeiliges Eingabefeld wird dargestellt
+			
+			&#8226; Text vor dem Eingabefeld
+			Es kann ein Text eingegeben werden, der vor dem Eingabefeld angezeigt wird.</label>
+			<label index="open_type.details"></label>
+			<label index="open_type.syntax"></label>
+			<label index="open_type.image_position_descr"></label>
+			<label index="open_type.image_position"></label>
+			<label index="open_type.seeAlso"></label>
+			
+			<label index="open_post_text.alttitle">Text hinter dem Eingabefeld</label>
+			<label index="open_post_text.description">Es kann ein Text eingegeben werden, der nach dem Eingabefeld angezeigt wird.</label>
+			<label index="open_post_text.details"></label>
+			<label index="open_post_text.syntax"></label>
+			<label index="open_post_text.image_position_descr"></label>
+			<label index="open_post_text.image_position"></label>
+			<label index="open_post_text.seeAlso"></label>
+			
+			<label index="open_in_text.alttitle">Text im Eingabefeld</label>
+			<label index="open_in_text.description">Es kann ein Text eingegeben werden, der im Eingabefeld angezeigt wird. Sobald man mit der Maus in das Eingabefeld klickt, verschwindet dieser.</label>
+			<label index="open_in_text.details"></label>
+			<label index="open_in_text.syntax"></label>
+			<label index="open_in_text.image_position_descr"></label>
+			<label index="open_in_text.image_position"></label>
+			<label index="open_in_text.seeAlso"></label>
+			
+			<label index="open_validation.alttitle">Überprüfung</label>
+			<label index="open_validation.description">Die Validierung erfolgt immer beim Absenden des Fragebogens oder bei Seitenwechsel auf die nächste Seite (nicht beim Wechsel auf eine vorangehende Seite). Bei Validierung wird ein Hinweis 
+			auf das korrekte Format angezeigt</label>
+			<label index="open_validation.details">&#8226; keine
+			die Frage wird bei Absenden oder Seitenwechsel nicht validiert
+			
+			&#8226; Zahlen
+			es wird geprüft, ob tatsächlich nur Zahlenwerte eingetragen wurden
+			
+			&#8226; Datum
+			es wird geprüft, ob ein korrektes Datum eingetragen wurde (gültige Formate können bestimmt werden)
+			
+			&#8226; E-Mail
+			es wird geprüft, ob eine korrekte E-Mail eingetragen wurde.</label>
+			<label index="open_validation.syntax"></label>
+			<label index="open_validation.image_position_descr"></label>
+			<label index="open_validation.image_position"></label>
+			<label index="open_validation.seeAlso"></label>
+			
+			<label index="dependant_show.alttitle">Anzeigen bei Abhängigkeit?</label>
+			<label index="dependant_show.description">Wenn diese Option gewählt ist, wird die Frage, falls sie von einer anderen Frage abhängig ist, 
+			innerhalb des Fragebogens angezeigt, auch wenn die Bedingung der Abhängigkeit noch nicht erfüllt ist. </label>
+			<label index="dependant_show.details">Die Frage wird dann ausgegraut und kann nicht beantwortet werden, bis die 
+			Bedingung erfüllt ist. Wenn die Option nicht gewählt ist, sind die abhängigen Fragen nicht 
+			sichtbar, bis die Bedingungen erfüllt sind.</label>
+			<label index="dependant_show.syntax"></label>
+			<label index="dependant_show.image_position_descr"></label>
+			<label index="dependant_show.image_position"></label>
+			<label index="dependant_show.seeAlso"></label>
+			
+			<label index="dependancy_simple.alttitle">Einfache Abhängigkeit</label>
+			<label index="dependancy_simple.description">Normalerweise müssen alle Bedingungen der Abhängigkeit erfüllt sein (und-Verknüpfung der 
+			Abhängigkeiten). Wenn die Option gewählt ist, muss nur eine der Bedingungen erfüllt sein (oder-Verknüpfung der Abhängigkeiten).</label>
+			<label index="dependancy_simple.details"></label>
+			<label index="dependancy_simple.syntax"></label>
+			<label index="dependancy_simple.image_position_descr"></label>
+			<label index="dependancy_simple.image_position"></label>
+			<label index="dependancy_simple.seeAlso"></label>
+			
+			<label index="dependancy.alttitle">Abhängigkeiten</label>
+			<label index="dependancy.description">Anlegen von Frage-Abhängigkeiten</label>
+			<label index="dependancy.details"></label>
+			<label index="dependancy.syntax"></label>
+			<label index="dependancy.image_descr">Beispiel zu einer Bestimmung von Frage-Abhängigkeiten</label>
+			<label index="dependancy.image">EXT:ke_questionnaire/doc/img/question_dependancy.jpg</label>
+			<label index="dependancy.seeAlso"></label>
+			
+			<label index="closed_type.alttitle">Einfach- oder Mehrfachauswahl:</label>
+			<label index="closed_type.description">Zur Verfügung stehen fünf Auswahlmöglichkeiten</label>
+			<label index="closed_type.details">&#8226; Einfachauswahl mit Radiobuttons
+			Der Nutzer kann nur eine Antwort auswählen, die möglichen Antworten werden mit Radiobuttons dargestellt.
+
+			&#8226; Mehrfachauswahl mit Checkboxen
+			Der Nutzer kann mehrere Antworten auswählen, die möglichen Antworten werden mit Checkboxen dargestellt.
+			
+			&#8226; Einfachauswahl mit Selectbox
+			Der Nutzer kann nur eine Antwort auswählen, die möglichen Antworten werden in einer einfachen Selectbox dargestellt.
+
+			&#8226; Mehrfachauswahl mit Selectbox
+			Der Nutzer kann mehrere Antworten auswählen, die möglichen Antworten werden in einer großen Selectbox dargestellt.
+
+			&#8226; Einfachauswahl mit Buttons
+			Der Nutzer kann nur eine Antwort auswählen. Die Auswahl führt den Nutzer direkt auf die nächste Seite des Fragebogens. 
+			Hinweis: Diese Option ist nur bei der Ausgabe von einer Frage/Seite möglich. Ist eine andere Darstellung für den Fragebogen gewählt, wird die Frage als Einfachauswahl mit Radiobuttons dargestellt.</label>
+			<label index="closed_type.syntax"></label>
+			<label index="closed_type.image_descr"></label>
+			<label index="closed_type.image"></label>
+			<label index="closed_type.seeAlso"></label>
+			
+			<label index="closed_selectsize.alttitle">Höhe der Select-Box (Einträge):</label>
+			<label index="closed_selectsize.description">Bezieht sich nur auf die „Mehrfachauswahl mit Selectbox“ und beeinflusst die Höhe der dargestellten Selectbox.</label>
+			<label index="closed_selectsize.details"></label>
+			<label index="closed_selectsize.syntax"></label>
+			<label index="closed_selectsize.image_descr"></label>
+			<label index="closed_selectsize.image"></label>
+			<label index="closed_selectsize.seeAlso"></label>
+			
+			<label index="closed_inputfield.alttitle">Eingabefeld definieren</label>
+			<label index="closed_inputfield.description">Es besteht die Möglichkeit hinter den Antwortoptionen Eingabefelder anzuzeigen. Bitte geben Sie an dieser Stelle die Anzahl der Antworten an, die ein Eingabefeld aufweisen sollen. Diese werden dann von unten nach oben an die Antwortmöglichkeiten angehängt.</label>
+			<label index="closed_inputfield.details"></label>
+			<label index="closed_inputfield.syntax"></label>
+			<label index="closed_inputfield.image_descr"></label>
+			<label index="closed_inputfield.image"></label>
+			<label index="closed_inputfield.seeAlso"></label>
+			
+			<label index="answers.alttitle">Antworten</label>
+			<label index="answers.description">Auflistung aller Antworten.</label>
+			<label index="answers.details"></label>
+			<label index="answers.syntax"></label>
+			<label index="answers.image_descr">Beispiel für die Eingabe von Antworten</label>
+			<label index="answers.image">EXT:ke_questionnaire/doc/img/question_input.jpg</label>
+			<label index="answers.seeAlso"></label>
+			
+			<label index="columns.alttitle">Angaben Spalten</label>
+			<label index="columns.description">Die Spalten werden mit Inhalt gefüllt.</label>
+			<label index="columns.details">Dazu klicken Sie zunächst auf „Neu anlegen“ für ein Spaltenelement.
+			Im nächsten Schritt klicken Sie auf „[Kein Titel]“, um weitere Einstellungen vorzunehmen.</label>
+			<label index="columns.syntax"></label>
+			<label index="columns.image_descr"></label>
+			<label index="columns.image"></label>
+			<label index="columns.seeAlso"></label>
+			
+			<label index="submatrix.alttitle">Erweiterte Matrix => Nur Premiumversion</label>
+			<label index="submatrix.description">Die erweiterte Matrix ermöglicht es Fragestellungen in Matrix-Fragen zu bündeln.
+			Es ist so möglich Matrix-Fragen, die sich auf die gleichen Unterfragen (Zeilen der Matrix) beziehen nebeneinander dar zu stellen.</label>
+			<label index="submatrix.details"></label>
+			<label index="submatrix.syntax"></label>
+			<label index="submatrix.image_descr"></label>
+			<label index="submatrix.image">EXT:ke_questionnaire/doc/img/question_submatrix.jpg</label>
+			<label index="submatrix.seeAlso"></label>
+			
+			<label index="demographic_type.alttitle">Datentypen</label>
+			<label index="demographic_type.description">&#8226; Demografische Daten
+			Es wird nur der Fragenblock der Datenfelder von fe_users angezeigt.
+			&#8226; Adress-Daten
+			Es wird nur der Fragenblock der Datenfelder von tt_address angezeigt
+			&#8226; Beide Datenfelder
+			Es werden die ausgewählten Felder beider Tabellen angezeigt.</label>
+			<label index="demographic_type.details"></label>
+			<label index="demographic_type.syntax"></label>
+			<label index="demographic_type.image_descr"></label>
+			<label index="demographic_type.image"></label>
+			<label index="demographic_type.seeAlso"></label>
+			
+			<label index="demographic_fields.alttitle">Demographische Datenfelder (fe_users)</label>
+			<label index="demographic_fields.description">Hier werden die möglichen Felder der Tabelle fe_users (für demographische Daten) aufgelistet.</label>
+			<label index="demographic_fields.details">- Eine Auswahl im Reiter „Anzuzeigende Datenfelder“ führt zur Darstellung der entsprechenden Felder im Fragenblock.
+			- Eine Auswahl im Reiter „Pflicht-Datenfelder“ führt dazu, dass die ausgewählten Felder als Pflichtfelder behandelt werden.
+			- Eine Auswahl als Pflichtfeld führt NICHT automatisch zur Darstellung im Fragenblock.</label>
+			<label index="demographic_fields.syntax"></label>
+			<label index="demographic_fields.image_descr"></label>
+			<label index="demographic_fields.image">EXT:ke_questionnaire/doc/img/demographic_fields.jpg</label>
+			<label index="demographic_fields.seeAlso"></label>
+			
+			<label index="demographic_addressfields.alttitle">Adress Datenfelder (tt_address)</label>
+			<label index="demographic_addressfields.description">Hier werden die möglichen Felder der Tabelle tt_address (für Adress-Daten) aufgelistet.</label>
+			<label index="demographic_addressfields.details">- Eine Auswahl im Reiter „Anzuzeigende Datenfelder“ führt zur Darstellung der entsprechenden Felder im Fragenblock.
+			- Eine Auswahl im Reiter „Pflicht-Datenfelder“ führt dazu, dass die ausgewählten Felder als Pflichtfelder behandelt werden.
+			- Eine Auswahl als Pflichtfeld führt NICHT automatisch zur Darstellung im Fragenblock.</label>
+			<label index="demographic_addressfields.syntax"></label>
+			<label index="demographic_addressfields.image_descr"></label>
+			<label index="demographic_addressfields.image"></label>
+			<label index="demographic_addressfields.seeAlso"></label>
+			
+			<label index="privacy_post.alttitle">Datenschutzerklärung, Text nach der Checkbox</label>
+			<label index="privacy_post.description">Text der nach der „Pflicht Checkbox“ dargestellt wird.</label>
+			<label index="privacy_post.details"></label>
+			<label index="privacy_post.syntax"></label>
+			<label index="privacy_post.image_descr"></label>
+			<label index="privacy_post.image"></label>
+			<label index="privacy_post.seeAlso"></label>
+			
+			<label index="privacy_link.alttitle">Datenschutzerklärung, Link zu einer Seite</label>
+			<label index="privacy_link.description">Es wird ein Link zu einer Seite generiert, auf dem die Datenschutzerklärung notiert ist.</label>
+			<label index="privacy_link.details"></label>
+			<label index="privacy_link.syntax"></label>
+			<label index="privacy_link.image_descr"></label>
+			<label index="privacy_link.image"></label>
+			<label index="privacy_link.seeAlso"></label>
+			
+			<label index="privacy_file.alttitle">Datenschutzerklärung, Dateianhang </label>
+			<label index="privacy_file.description">Es wird ein Link zum Download einer Datei mit der Datenschutzerklärung generiert.</label>
+			<label index="privacy_file.details"></label>
+			<label index="privacy_file.syntax"></label>
+			<label index="privacy_file.image_descr"></label>
+			<label index="privacy_file.image"></label>
+			<label index="privacy_file.seeAlso"></label>
+			
+			<label index="sublines.alttitle">Angaben Zeilen</label>
+			<label index="sublines.description">Die Zeilen des semantischen Differentials unterscheiden sich von der Zeile der Matrix, durch die Angabe eines Start- und End-Wertes für die Bewertungsskala.
+			Der Startwert wird in jeder Zeile vor den Spalten, der Endwert nach den Spalten dargestellt.
+			So können Bewertungen durchgeführt werden, die lediglich einen Punktebereich abdecken.</label>
+			<label index="sublines.details"></label>
+			<label index="sublines.syntax"></label>
+			<label index="sublines.image_descr"></label>
+			<label index="sublines.image">EXT:ke_questionnaire/doc/img/subtypes.jpg</label>
+			<label index="sublines.seeAlso"></label>
+			
+			
+			
 		</languageKey>
 	</data>
 </T3locallang>
