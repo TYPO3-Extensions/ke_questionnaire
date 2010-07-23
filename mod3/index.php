@@ -59,7 +59,7 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 		$this->pid = intval(t3lib_div::_GP('id'));
 		
 		$this->extConf = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['ke_questionnaire']);
-		if (t3lib_extMgm::isLoaded('ke_questionnaire_premium')) $this->pr_extConf = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['ke_questionnaire']);
+		if (t3lib_extMgm::isLoaded('ke_questionnaire_premium')) $this->pr_extConf = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['ke_questionnaire_premium']);
 
 		if ($this->q_id > 0){
 			$this->q_data = t3lib_BEfunc::getRecord('tt_content',$this->q_id);
