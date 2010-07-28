@@ -661,9 +661,9 @@ function keq_disable(idy,par_id) {
   par = document.getElementById(par_id);
 
   if(par.checked == true) {
-    input.disabled = '';
+    input.disabled = false;
   } else {
-    input.disabled = disabled;
+    input.disabled = true;
   }
 }";
 			$maxAnswers_error = $this->obj->pi_getLL('error_maxAnswers');
