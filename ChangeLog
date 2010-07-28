@@ -1,5 +1,10 @@
 (add new changes on top of this file)
 
+10-07-28 Nadine Schwingler  <schwingler@kennziffer.com>
+	
+	* Cleaned some HTML-Syntax Errors
+	* Added more CSH for plugin and questions
+
 10-07-08 Nadine Schwingler  <schwingler@kennziffer.com>
 	
 	* Changed the input-field option for answers in closed questions to meet the requirements for randomized answers. Old version still works, but will not be shown anymore.
@@ -20,7 +25,7 @@
 
 10-06-15 Nadine Schwingler  <schwingler@kennziffer.com>
 	
-	* Added the possibility to give multiple choise closed questions a max amount of answers
+	* Added the possibility to give multiple choice closed questions a max amount of answers
 
 10-06-08 Nadine Schwingler  <schwingler@kennziffer.com>
 
