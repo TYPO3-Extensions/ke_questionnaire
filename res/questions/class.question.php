@@ -293,7 +293,7 @@ class question{
 			    -khtml-opacity:.50;
 			    -moz-opacity:.50;
 			    "';
-			    $out['###DEPENDANT###'] = 'disabled="true"';
+			    $out['###DEPENDANT###'] = 'disabled="disabled"';
 			}
 		    }
 		}
