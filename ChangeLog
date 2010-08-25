@@ -1,5 +1,9 @@
 (add new changes on top of this file)
 
+10-08-25 Nadine Schwingler  <schwingler@kennziffer.com>
+	
+	* Bugfix for ke_questionnaire-installations on non utf-8 databases. BE-Analysis is now working.
+
 10-07-28 Nadine Schwingler  <schwingler@kennziffer.com>
 	
 	* Cleaned some HTML-Syntax Errors

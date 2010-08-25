@@ -302,7 +302,14 @@ class  tx_kequestionnaire_module2 extends t3lib_SCbase {
 		if ($res){
 			while($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)){
 				if ($row['xmldata'] != '') {
-					$results[$row['uid']] = t3lib_div::xml2array($row['xmldata']);
+					$encoding = "UTF-8";
+					$temp_array = '';
+					if ( true === mb_check_encoding ($row['xmldata'], $encoding ) ){
+						$temp_array = t3lib_div::xml2array($row['xmldata']);
+					} else {
+						$temp_array = t3lib_div::xml2array(utf8_encode($row['xmldata']));
+					}
+					$results[$row['uid']] = $temp_array;
 					if ($row['finished_tstamp'] > 0) $finished ++;
 					$counting ++;
 				}
@@ -770,7 +777,13 @@ class  tx_kequestionnaire_module2 extends t3lib_SCbase {
 		if ($res){
 			while($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)){
 				if ($row['xmldata'] != '') {
-					$results[$row['uid']] = t3lib_div::xml2array($row['xmldata']);
+					$temp_array = '';
+					if ( true === mb_check_encoding ($row['xmldata'], $encoding ) ){
+						$temp_array = t3lib_div::xml2array($row['xmldata']);
+					} else {
+						$temp_array = t3lib_div::xml2array(utf8_encode($row['xmldata']));
+					}
+					$results[$row['uid']] = $temp_array;
 					if ($row['finished_tstamp'] > 0) $finished ++;
 					$counting ++;
 				}
@@ -790,22 +803,26 @@ class  tx_kequestionnaire_module2 extends t3lib_SCbase {
 					$list = '';
 					if (is_array($results)){
 						$alternate = false;
-						foreach ($results as $r_id => $r){
-							if ($r[$q_id]['answer'] != ''){
-								$list .= '<div style="display:block;';
-								if ($alternate){
-									$list .= 'background-color: #FAFAFA;';
-									$alternate = false;
-								} else {
-									$list .= 'background-color: #FFF6CC;';
-									$alternate = true;
+						if (is_array($results)){
+							foreach ($results as $r_id => $r){
+								if(is_array($r)){
+									if ($r[$q_id]['answer'] != ''){
+										$list .= '<div style="display:block;';
+										if ($alternate){
+											$list .= 'background-color: #FAFAFA;';
+											$alternate = false;
+										} else {
+											$list .= 'background-color: #FFF6CC;';
+											$alternate = true;
+										}
+										$list .= 'margin: 4px;
+											border: 1px solid #D7DBE2;
+											width: 500px;
+											padding: 2px;">';
+										$list .= $r[$q_id]['answer'];
+										$list .= '</div>';
+									}
 								}
-								$list .= 'margin: 4px;
-									border: 1px solid #D7DBE2;
-									width: 500px;
-									padding: 2px;">';
-								$list .= $r[$q_id]['answer'];
-								$list .= '</div>';
 							}
 						}
 					}
@@ -899,7 +916,7 @@ class  tx_kequestionnaire_module2 extends t3lib_SCbase {
 						$values[$bar['uid']] = 0;
 						if (is_array($results)){
 							foreach ($results as $result){
-								if ((string)$result[$q_id]['answer']['options'][$sub['uid']] == (string)$bar['uid']) $values[$bar['uid']] ++;
+								if (is_array($result)) if ((string)$result[$q_id]['answer']['options'][$sub['uid']] == (string)$bar['uid']) $values[$bar['uid']] ++;
 								//elseif (is_array($result[$q_id]['answer']['options']) AND in_array($bar['uid'],$result[$q_id]['answer']['options'])) $values[$bar['uid']] ++;
 								//t3lib_div::devLog('result '.$bar['uid'].'/'.$sub['uid'], 'ke_questionnaire auswert Mod', 0, array($result[$q_id]['answer']));
 							}
@@ -1132,7 +1149,7 @@ class  tx_kequestionnaire_module2 extends t3lib_SCbase {
 		}
 		if (is_array($results)){
 			foreach ($results as $result){
-				if (is_array($values)){
+				if (is_array($values) AND is_array($result)){
 					foreach ($values as $nr => $value){
 						if ($result[$q_id]['answer']['options'] == $nr) $values[$nr] ++;
 						elseif (is_array($result[$q_id]['answer']['options']) AND in_array($nr,$result[$q_id]['answer']['options'])) $values[$nr] ++;
