@@ -306,6 +306,7 @@ class  tx_kequestionnaire_module2 extends t3lib_SCbase {
 					$temp_array = '';
 					if ( true === mb_check_encoding ($row['xmldata'], $encoding ) ){
 						$temp_array = t3lib_div::xml2array($row['xmldata']);
+						if (count($temp_array) == 1) $temp_array = t3lib_div::xml2array(utf8_encode($row['xmldata']));
 					} else {
 						$temp_array = t3lib_div::xml2array(utf8_encode($row['xmldata']));
 					}
@@ -778,8 +779,10 @@ class  tx_kequestionnaire_module2 extends t3lib_SCbase {
 			while($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)){
 				if ($row['xmldata'] != '') {
 					$temp_array = '';
+					$encoding = "UTF-8";
 					if ( true === mb_check_encoding ($row['xmldata'], $encoding ) ){
 						$temp_array = t3lib_div::xml2array($row['xmldata']);
+						if (count($temp_array) == 1) $temp_array = t3lib_div::xml2array(utf8_encode($row['xmldata']));
 					} else {
 						$temp_array = t3lib_div::xml2array(utf8_encode($row['xmldata']));
 					}

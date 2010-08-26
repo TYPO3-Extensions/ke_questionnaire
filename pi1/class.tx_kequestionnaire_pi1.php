@@ -364,8 +364,10 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 			if ($row['xmldata'] != ''){
 				//$temp_array = t3lib_div::xml2array($row['xmldata']);
 				$encoding = "UTF-8";
+				$temp_array = '';
 				if ( true === mb_check_encoding ($row['xmldata'], $encoding ) ){
 					$temp_array = t3lib_div::xml2array($row['xmldata']);
+					if (count($temp_array) == 1) $temp_array = t3lib_div::xml2array(utf8_encode($row['xmldata']));
 				} else {
 					$temp_array = t3lib_div::xml2array(utf8_encode($row['xmldata']));
 				}
