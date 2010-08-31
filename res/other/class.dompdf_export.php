@@ -34,11 +34,6 @@ class dompdf_export {
                 $this->pdf = new DOMPDF();
                 
                 $this->getQuestions();
-                
-                // Set the template
-                if ($this->conf['template']){
-                  
-                }
         }
       
         /**

@@ -1061,6 +1061,38 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 			$GLOBALS['TYPO3_DB']->exec_UPDATEquery('tx_kequestionnaire_results','uid='.$resultId,$saveField);
 		}
 		
+		$content = '';
+		$markerArray = array();
+
+		$markerArray['###TEXT###'] = $this->pi_RTEcssText($this->ffdata['end_text']);
+		if ($markerArray['###TEXT###'] == '') $markerArray['###TEXT###'] = $this->pi_getLL('standard_endtext');
+		
+		$add_info = '';
+		switch ($this->type){
+			case 'QUIZ':
+					if ($this->ffdata['user_reports'] == 1){
+						$add_info = $this->getQuizReport();
+					}
+				break;
+			case 'POINTS':
+					if ($this->ffdata['user_reports'] == 1){
+						$add_info = $this->getPointsReport();
+					}
+				break;
+		}
+		$markerArray['###TEXT###'] .= $add_info;
+
+		$markerArray['###NAV###'] = '';
+		$markerArray['###HIDDEN_FIELDS###'] = '';
+		
+		//Hook to do something after the questionnaire is finished
+		if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$this->extKey]['pi1_renderLastPage'])){
+			foreach($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$this->extKey]['pi1_renderLastPage'] as $_classRef){
+				$_procObj = & t3lib_div::getUserObj($_classRef);
+				$markerArray = $_procObj->pi1_renderLastPage($this,$resultId,$markerArray);
+			}
+		}
+		
 		//if finish page differs by answer, check this here
 		if(intval($this->ffdata['redirect_on_finish_uid'] != 0)) {
 			$res_answers = $GLOBALS['TYPO3_DB']->exec_SELECTquery('tx_kequestionnaire_answers.uid,tx_kequestionnaire_answers.finish_page_uid','tx_kequestionnaire_questions,tx_kequestionnaire_answers','tx_kequestionnaire_questions.uid = tx_kequestionnaire_answers.question_uid AND tx_kequestionnaire_questions.uid = '.$this->ffdata['redirect_on_finish_uid']);
@@ -1092,30 +1124,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 			$link = $this->pi_getPageLink($this->ffdata['end_page']);
 			header('Location:'.$link);
 		}
-
-		$content = '';
-		$markerArray = array();
-
-		$markerArray['###TEXT###'] = $this->pi_RTEcssText($this->ffdata['end_text']);
-		if ($markerArray['###TEXT###'] == '') $markerArray['###TEXT###'] = $this->pi_getLL('standard_endtext');
 		
-		$add_info = '';
-		switch ($this->type){
-			case 'QUIZ':
-					if ($this->ffdata['user_reports'] == 1){
-						$add_info = $this->getQuizReport();
-					}
-				break;
-			case 'POINTS':
-					if ($this->ffdata['user_reports'] == 1){
-						$add_info = $this->getPointsReport();
-					}
-				break;
-		}
-		$markerArray['###TEXT###'] .= $add_info;
-
-		$markerArray['###NAV###'] = '';
-		$markerArray['###HIDDEN_FIELDS###'] = '';
 		$this->renderHiddenFields();
 		$content = $this->renderContent('###OTHER_PAGE###',$markerArray);
 

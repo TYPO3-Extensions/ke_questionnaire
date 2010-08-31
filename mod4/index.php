@@ -306,7 +306,7 @@ class  tx_kequestionnaire_module4 extends t3lib_SCbase {
 				function sendMail($email,$authcode,$mailTexts,$markerArray=array()){
 					$link="http://".$_SERVER["HTTP_HOST"]."/index.php?id=".$this->pid."&tx_kequestionnaire_pi1[auth_code]=".$authcode;
 
-					$markerArray["###AUTHCODE###"]=$user["authcode"];
+					$markerArray["###AUTHCODE###"]=$authcode;
 					$markerArray["###LINK###"]=$link;
 
 					$body=$mailTexts["body"];
