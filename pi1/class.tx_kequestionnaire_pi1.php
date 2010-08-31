@@ -167,6 +167,8 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 							$subPart = '###RESUME_LAST###';
 							$markerArray['###FORM_ACTION###'] = $this->pi_getPageLink($GLOBALS['TSFE']->id,'',array($this->prefixId.'[result_id]'=>($check_result['last_result'])));
 							$markerArray['###TEXT###'] = $this->pi_getLL('resume_last');
+							$markerArray['###AUTHCODE###'] = '';
+							if ($this->piVars['auth_code']) $markerArray['###AUTHCODE###'] = '<input type="hidden" name="'.$this->prefixId.'[auth_code]" value="'.$this->piVars['auth_code'].'" />';
 							$markerArray['###RESUME_LABEL###'] = $this->pi_getLL('resume_label');
 							$markerArray['###RESTART_LABEL###'] = $this->pi_getLL('restart_label');
 						}
@@ -296,6 +298,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 				break;
 		}
 		$where .= ' AND pid='.$this->pid;
+		$where .= $this->cObj->enableFields('tx_kequestionnaire_authcodes');
 
 		$res_authCode = $GLOBALS['TYPO3_DB']->exec_SELECTquery('uid','tx_kequestionnaire_authcodes',$where,'',$orderBy);
 		//t3lib_div::devLog('getAuthCodeId res', $this->prefixId, 0, array($GLOBALS['TYPO3_DB']->SELECTquery('uid','tx_kequestionnaire_authcodes',$where,'',$orderBy)));
@@ -1193,6 +1196,83 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 	}
 	
 	/**
+	 * Calculate the points
+	 */
+	function calculatePoints($results){
+		$returner = array();
+		
+		foreach ($this->questionsByID as $qid => $question){
+			$temp .= $qid;
+			$titles[] = $question['title'];
+			$bars['total'][$qid] = 0;
+			$bars['own'][$qid] = 0;
+			switch ($question['type']){
+				case 'closed':
+					$answers = array();
+					$where = 'question_uid='.$qid.$this->cObj->enableFields('tx_kequestionnaire_answers');
+					$res_answers = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*','tx_kequestionnaire_answers',$where);
+					$answer_max_points = 0;
+					if ($res_answers){
+						while ($answer = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res_answers)){
+							$answers[$answer['uid']]['points'] = $answer['value'];
+							if ($answer['value']>$answer_max_points)$answer_max_points=$answer['value'];
+						}
+					}
+					$total_points = 0;
+					foreach ($results as $rid => $result){
+						switch ($question['closed_type']){
+							case 'radio_single':
+								case 'sbm_button':
+							case 'select_single':
+								$total_points += $answers[$result[$qid]['answer']['options']]['points'];
+								//t3lib_div::devLog('total_points', $this->prefixId, 0, array($total_points,$answers[$result[$qid]['answer']['options']],$answers,$result[$qid]['answer']['options'],$result[$qid]['answer']));
+								break;
+							case 'check_multi':
+							case 'select_multi':
+								//t3lib_div::devLog('result', $this->prefixId, 0, array($result[$qid]));
+								//t3lib_div::devLog('answer', $this->prefixId, 0, array($answers));
+								if (is_array($result[$qid]['answer']['options'])){
+									foreach ($result[$qid]['answer']['options'] as $item){
+										$total_points += $answers[$item]['points'];
+									}
+								}
+								break;
+						}
+					}
+					$bars['total'][$qid] = $total_points/count($results);
+					
+					switch ($question['closed_type']){
+						case 'sbm_button':
+						case 'radio_single':
+						case 'select_single':
+							$bars['own'][$qid] = intval($answers[$this->piVars[$qid]['options']]['points']);
+							break;
+						case 'check_multi':
+						case 'select_multi':
+							//t3lib_div::devLog('piVar', $this->prefixId, 0, array($this->piVars[$qid]['options']));
+							if (is_array($this->piVars[$qid]['options'])){
+								foreach ($this->piVars[$qid]['options'] as $item){
+									$bars['own'][$qid] += $answers[$item]['points'];
+								}
+							}
+							break;
+					}
+					
+					$own_total += $bars['own'][$qid];
+					$max_points += $answer_max_points;
+					break;
+			}
+		}
+		
+		$returner['percent'] = ($own_total/$max_points)*100;
+		$returner['own'] = $own_total;
+		$returner['max'] = $max_points;
+		$returner['bars'] = $bars;
+		
+		return $returner;
+	}
+	
+	/**
 	 * get the Report for Quiz/eLearning Questionnaire Type
 	 */
 	function getQuizReport(){
@@ -1213,75 +1293,23 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 			while ($result = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res_results)){
 				if ($result['xmldata'] != ''){
 					$results[$result['uid']] = t3lib_div::xml2array($result['xmldata']);
+					if (count($results[$result['uid']]) == 1) $results[$result['uid']] = t3lib_div::xml2array(utf8_encode($result['xmldata']));
 				}				
 			}
 		}
 		//t3lib_div::devLog('results', $this->prefixId, 0, $results);
 		
 		if (is_array($results)){
-			foreach ($this->questionsByID as $qid => $question){
-				$temp .= $qid;
-				$titles[] = $question['title'];
-				$bars['total'][$qid] = 0;
-				$bars['own'][$qid] = 0;
-				switch ($question['type']){
-					case 'closed':
-						$answers = array();
-						$where = 'question_uid='.$qid.$this->cObj->enableFields('tx_kequestionnaire_answers');
-						$res_answers = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*','tx_kequestionnaire_answers',$where);
-						$answer_max_points = 0;
-						if ($res_answers){
-							while ($answer = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res_answers)){
-								$answers[$answer['uid']]['points'] = $answer['value'];
-								if ($answer['value']>$answer_max_points)$answer_max_points=$answer['value'];
-							}
-						}
-						$total_points = 0;
-						foreach ($results as $rid => $result){
-							switch ($question['closed_type']){
-								case 'radio_single':
-									case 'sbm_button':
-								case 'select_single':
-									$total_points += $answers[$result[$qid]['answer']['options']]['points'];
-									//t3lib_div::devLog('total_points', $this->prefixId, 0, array($total_points,$answers[$result[$qid]['answer']['options']],$answers,$result[$qid]['answer']['options'],$result[$qid]['answer']));
-									break;
-								case 'check_multi':
-								case 'select_multi':
-									//t3lib_div::devLog('result', $this->prefixId, 0, array($result[$qid]));
-									//t3lib_div::devLog('answer', $this->prefixId, 0, array($answers));
-									if (is_array($result[$qid]['answer']['options'])){
-										foreach ($result[$qid]['answer']['options'] as $item){
-											$total_points += $answers[$item]['points'];
-										}
-									}
-									break;
-							}
-						}
-						$bars['total'][$qid] = $total_points/count($results);
-						
-						switch ($question['closed_type']){
-							case 'sbm_button':
-							case 'radio_single':
-							case 'select_single':
-								$bars['own'][$qid] = intval($answers[$this->piVars[$qid]['options']]['points']);
-								break;
-							case 'check_multi':
-							case 'select_multi':
-								//t3lib_div::devLog('piVar', $this->prefixId, 0, array($this->piVars[$qid]['options']));
-								if (is_array($this->piVars[$qid]['options'])){
-									foreach ($this->piVars[$qid]['options'] as $item){
-										$bars['own'][$qid] += $answers[$item]['points'];
-									}
-								}
-								break;
-						}
-						
-						$own_total += $bars['own'][$qid];
-						$max_points += $answer_max_points;
-						break;
-				}
-			}
+			$calculated = $this->calculatePoints($results);
 		}
+		//t3lib_div::devLog('calculated', $this->prefixId, 0, $calculated);
+		
+		$bars = $calculated['bars'];
+		$max_points = $calculated['max'];
+		$own_total = $calculated['own'];
+		$own_percent = $calculated['percent'];
+		$own_percent = number_format($own_percent,2,',','.');
+		
 		//replace the Marker in the Info-Text
 		// ###TOTAL### max points to be achieved
 		$markerArray['###TEXT###'] = str_replace('###TOTAL###',$max_points,$markerArray['###TEXT###']);

@@ -426,6 +426,8 @@ class  tx_kequestionnaire_module4 extends t3lib_SCbase {
 					$where="email='$email' AND qpid=".$this->storagePid;
 
 					if($feuser) $GLOBALS["TYPO3_DB"]->exec_UPDATEquery("tx_kequestionnaire_authcodes", $where, array("feuser"=>$feuser));
+					
+					$where .= ' AND deleted=0';
 
 					// Check if authcode already exists
 					$res=$GLOBALS["TYPO3_DB"]->exec_SELECTgetRows("*", "tx_kequestionnaire_authcodes", $where, "", "", "", "");
