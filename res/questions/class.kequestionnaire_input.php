@@ -333,7 +333,16 @@
 					$selected=($row["uid"]==$this->value)?"selected='selected'":"";
 				}
 				//t3lib_div::devLog('$this->value', 'input', 0, array($this->value));
-				$options.="<option value='".$row["uid"]."' $selected>".$row["title"]."</option>";
+				$options.="<option value='".$row["uid"]."' $selected>";
+				$option_title = $row["title"];
+				if ($row['text'] != '') {
+					$temp_val = str_replace('&nbsp;','',$row['text']);
+					$temp_val = str_replace('<br />','',$temp_val);
+					if (trim($temp_val) != '') $option_title = $temp_val;
+				}
+				$options .= $option_title;
+				//$options .= $row["title"];
+				$options .= "</option>";
 			}
 			$subpartArray["###OPTIONS###"]=$options;
 			$markerArray['###DEPENDANT_AJAX###'] = $this->checkDependant($this->fieldName,$row["uid"],false,$this->maxAnswers);
