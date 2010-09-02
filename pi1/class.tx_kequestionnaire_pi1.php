@@ -1154,7 +1154,17 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 					if ($res_answers){
 						while ($answer = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res_answers)){
 							$answers[$answer['uid']]['points'] = $answer['value'];
-							if ($answer['value'] > $answer_max_points)$answer_max_points = $answer['value'];
+							switch ($question['closed_type']){
+								case 'radio_single':
+								case 'sbm_button':
+								case 'select_single':
+									if ($answer['value']>$answer_max_points) $answer_max_points = $answer['value'];
+									break;
+								case 'check_multi':
+								case 'select_multi':
+									$answer_max_points += $answer['value'];
+									break;
+							}
 						}
 					}
 					
@@ -1215,6 +1225,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 			$titles[] = $question['title'];
 			$bars['total'][$qid] = 0;
 			$bars['own'][$qid] = 0;
+			$bars['titles'][$qid] = $question['title'];
 			switch ($question['type']){
 				case 'closed':
 					$answers = array();
@@ -1224,14 +1235,24 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 					if ($res_answers){
 						while ($answer = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res_answers)){
 							$answers[$answer['uid']]['points'] = $answer['value'];
-							if ($answer['value']>$answer_max_points)$answer_max_points=$answer['value'];
+							switch ($question['closed_type']){
+								case 'radio_single':
+								case 'sbm_button':
+								case 'select_single':
+									if ($answer['value']>$answer_max_points) $answer_max_points = $answer['value'];
+									break;
+								case 'check_multi':
+								case 'select_multi':
+									$answer_max_points += $answer['value'];
+									break;
+							}
 						}
 					}
 					$total_points = 0;
 					foreach ($results as $rid => $result){
 						switch ($question['closed_type']){
 							case 'radio_single':
-								case 'sbm_button':
+							case 'sbm_button':
 							case 'select_single':
 								$total_points += $answers[$result[$qid]['answer']['options']]['points'];
 								//t3lib_div::devLog('total_points', $this->prefixId, 0, array($total_points,$answers[$result[$qid]['answer']['options']],$answers,$result[$qid]['answer']['options'],$result[$qid]['answer']));
@@ -1314,6 +1335,10 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 		//t3lib_div::devLog('calculated', $this->prefixId, 0, $calculated);
 		
 		$bars = $calculated['bars'];
+		foreach ($bars['titles'] as $temp_title){
+			$titles[] = $temp_title;
+		}
+		unset($bars['titles']);	
 		$max_points = $calculated['max'];
 		$own_total = $calculated['own'];
 		$own_percent = $calculated['percent'];
@@ -1347,6 +1372,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 						if ($value < $y_scale['min']) $y_scale['min'] = $value;
 					}
 				}
+				//t3lib_div::devLog('bars', $this->prefixId, 0, array($titles,$bars));
 				$temp = array();
 				$temp = $bars;
 				$bars = array();
