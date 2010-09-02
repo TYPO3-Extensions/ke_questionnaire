@@ -290,8 +290,8 @@ class  tx_kequestionnaire_module4 extends t3lib_SCbase {
 
 					$out["body"] = trim($this->ff_data['mDEF']['lDEF'][$fieldBody]['vDEF']);
 					$out["subject"]= trim($this->ff_data['mDEF']['lDEF'][$fieldSubject]['vDEF']);
-					$out["fromName"]= trim($this->ff_data['mDEF']['lDEF']["mail_sender"]['vDEF']);
-					$out["fromEmail"]= trim($this->ff_data['mDEF']['lDEF']["mail_from"]['vDEF']);
+					$out["fromName"]= trim($this->ff_data['mDEF']['lDEF']["mail_from"]['vDEF']);
+					$out["fromEmail"]= trim($this->ff_data['mDEF']['lDEF']["mail_sender"]['vDEF']);
 
 
 					$this->error=0;
