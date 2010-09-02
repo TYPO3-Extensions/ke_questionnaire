@@ -1044,6 +1044,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 		$this->finished = true;
 		//save the Results when showing the last page, regardless of access-type
 		$resultId = $this->setResults($this->piVars['result_id']);
+		if (!$this->piVars['result_id']) $this->piVars['result_id'] = $resultId;
 		//t3lib_div::devLog('renderLastPage '.$resultId, $this->prefixId, 0, array($this->saveArray));
 
 		//if the mailing is active and set to direct, send the information mail
@@ -1218,6 +1219,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 	 * Calculate the points
 	 */
 	function calculatePoints($results){
+		//t3lib_div::devLog('PIVars', $this->prefixId, 0, $this->piVars);
 		$returner = array();
 		
 		foreach ($this->questionsByID as $qid => $question){
