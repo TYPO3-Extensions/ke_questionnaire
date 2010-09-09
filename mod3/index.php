@@ -229,7 +229,7 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 	}
 
 	function getCSVInfos(){
-		//t3lib_div::devLog('getCSVInfos POST', 'ke_questionnaire Export Mod', 0, $_POST);
+		t3lib_div::devLog('getCSVInfos POST', 'ke_questionnaire Export Mod', 0, $_POST);
 		global $LANG;
 
 		$content = '';
@@ -265,6 +265,7 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 						$temp_array = t3lib_div::xml2array(utf8_encode($row['xmldata']));
 					}
 					//$temp .= t3lib_div::view_array($row);
+					$temp_array['uid'] = $row['uid'];
 					$this->results[] = $temp_array;
 					$langs[$row['sys_language_uid']] = 1;
 					if ($row['finished_tstamp'] > 0) $finished ++;
@@ -347,6 +348,7 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 						$temp_array = t3lib_div::xml2array(utf8_encode($row['xmldata']));
 					}
 					//$temp .= t3lib_div::view_array($row);
+					$temp_array['uid'] = $row['uid'];
 					$this->results[] = $temp_array;
 					$langs[$row['sys_language_uid']] = 1;
 					$value_array = t3lib_div::xml2array($row['xmldata']);
@@ -449,6 +451,7 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 		//t3lib_div::devLog('getCSVQBase res', 'ke_questionnaire Export Mod', 0, array($GLOBALS['TYPO3_DB']->SELECTquery('*'.'tx_kequestionnaire_questions',$where,'','sorting')));
 		//simplify the results for better export
 		$this->simplifyResults();
+		t3lib_div::devLog('Simple Results ', 'ke_questionnaire Export Mod', 0, $this->simpleResults);
 
 		$lineset = ''; //stores the CSV-data
 		$line = array(); //single line, will be imploded
@@ -746,7 +749,9 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 			}
 		}
 		$value_arrays = array();
+		t3lib_div::devLog('simplify results results', 'ke_questionnaire Export Mod', 0, $results);
 		foreach ($results as $result){
+			t3lib_div::devLog('simplify results result', 'ke_questionnaire Export Mod', 0, $result);
 			$value_arrays[$result['uid']] = $result;//t3lib_div::xml2array($result['xmldata']);
 			$value_arrays[$result['uid']]['start_tstamp'] = $result['start_tstamp'];
 			$value_arrays[$result['uid']]['finished_tstamp'] = $result['finished_tstamp'];
@@ -995,9 +1000,9 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 		for ($i = 0;$i < $free_cells;$i ++){
 			$line[] = '';
 		}
-		foreach ($this->results as $nr => $values){
-			//t3lib_div::devLog('getQbaseResultLine values', 'ke_questionnaire Export Mod', 0, $values);
-			$line[] = $values['uid'];
+		foreach ($this->simpleResults['result_nrs'] as $nr => $values){
+			t3lib_div::devLog('getQbaseResultLine values', 'ke_questionnaire Export Mod', 0, $values);
+			$line[] = $values;
 		}
 		return $delimeter.implode($parter,$line).$delimeter;
 	}
