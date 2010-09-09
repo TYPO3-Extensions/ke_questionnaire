@@ -229,7 +229,7 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 	}
 
 	function getCSVInfos(){
-		t3lib_div::devLog('getCSVInfos POST', 'ke_questionnaire Export Mod', 0, $_POST);
+		//t3lib_div::devLog('getCSVInfos POST', 'ke_questionnaire Export Mod', 0, $_POST);
 		global $LANG;
 
 		$content = '';
@@ -451,7 +451,7 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 		//t3lib_div::devLog('getCSVQBase res', 'ke_questionnaire Export Mod', 0, array($GLOBALS['TYPO3_DB']->SELECTquery('*'.'tx_kequestionnaire_questions',$where,'','sorting')));
 		//simplify the results for better export
 		$this->simplifyResults();
-		t3lib_div::devLog('Simple Results ', 'ke_questionnaire Export Mod', 0, $this->simpleResults);
+		//t3lib_div::devLog('Simple Results ', 'ke_questionnaire Export Mod', 0, $this->simpleResults);
 
 		$lineset = ''; //stores the CSV-data
 		$line = array(); //single line, will be imploded
@@ -749,9 +749,9 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 			}
 		}
 		$value_arrays = array();
-		t3lib_div::devLog('simplify results results', 'ke_questionnaire Export Mod', 0, $results);
+		//t3lib_div::devLog('simplify results results', 'ke_questionnaire Export Mod', 0, $results);
 		foreach ($results as $result){
-			t3lib_div::devLog('simplify results result', 'ke_questionnaire Export Mod', 0, $result);
+			//t3lib_div::devLog('simplify results result', 'ke_questionnaire Export Mod', 0, $result);
 			$value_arrays[$result['uid']] = $result;//t3lib_div::xml2array($result['xmldata']);
 			$value_arrays[$result['uid']]['start_tstamp'] = $result['start_tstamp'];
 			$value_arrays[$result['uid']]['finished_tstamp'] = $result['finished_tstamp'];
@@ -892,7 +892,7 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 						$take['results'][$result_id] = str_replace($delimeter,$delimeter.$delimeter,$take['results'][$result_id]);
 						$line[] = $take['results'][$result_id];
 					}
-					t3lib_div::devLog('simplify results value_arrays '.$q_nr, 'ke_questionnaire Export Mod', 0, $line);
+					//t3lib_div::devLog('simplify results value_arrays '.$q_nr, 'ke_questionnaire Export Mod', 0, $line);
 				break;
 			case 'start_tstamp': $line[] = '';
 					foreach ($results as $nr => $result_id){
@@ -1001,7 +1001,7 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 			$line[] = '';
 		}
 		foreach ($this->simpleResults['result_nrs'] as $nr => $values){
-			t3lib_div::devLog('getQbaseResultLine values', 'ke_questionnaire Export Mod', 0, $values);
+			//t3lib_div::devLog('getQbaseResultLine values', 'ke_questionnaire Export Mod', 0, $values);
 			$line[] = $values;
 		}
 		return $delimeter.implode($parter,$line).$delimeter;
