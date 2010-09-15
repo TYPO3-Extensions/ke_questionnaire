@@ -1,5 +1,11 @@
 (add new changes on top of this file)
 
+10-09-15 Nadine Schwingler  <schwingler@kennziffer.com>
+	
+	* Bugfix for BE-CSV-Exports
+	* Bugfix for Calculation of the point of multiple-choice answers
+	* Bugfix for Page-Calculation with Multipages and Premium installed
+
 10-08-25 Nadine Schwingler  <schwingler@kennziffer.com>
 	
 	* Bugfix for ke_questionnaire-installations on non utf-8 databases. BE-Analysis is now working.
