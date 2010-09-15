@@ -90,6 +90,8 @@
 			</label>
 
 			<label index="standard_endtext">Vielen Dank für ihre Teilnahme</label>
+			
+			<label index="privacy_link_label">Link Datenschutzerklärung</label>
 		</languageKey>
 		<languageKey index="de" type="array">
 			<label index="test">Test</label>

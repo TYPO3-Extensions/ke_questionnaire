@@ -310,7 +310,11 @@ class question{
 		$out['###CLOSED_SIZE###'] = $this->question['closed_selectsize']>0?"size='".$this->question['closed_selectsize']."'":"";
 		
 		// Privacy
-		if($this->question['privacy_link']!="") $out['###PRIVACY_LINK###'] = $this->obj->pi_getPageLink($this->question['privacy_link']);
+		$out['###PRIVACY_LINK_LABEL###'] = '';
+		if($this->question['privacy_link']!="") {
+		    $out['###PRIVACY_LINK###'] = $this->obj->pi_getPageLink($this->question['privacy_link']);
+		    $out['###PRIVACY_LINK_LABEL###'] = $this->obj->pi_getLL('privacy_link_label');
+		}
 		if($this->question['privacy_file']!="") $out['###PRIVACY_LINK###'] = $this->obj->pi_getPageLink("uploads/tx_kequestionnaire/".$this->question['privacy_file']);
 		$out['###PRIVACY_TEXT###'] =$this->question['privacy_post'];
 

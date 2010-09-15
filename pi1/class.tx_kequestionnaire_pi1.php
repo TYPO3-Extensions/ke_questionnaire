@@ -359,6 +359,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 	 * Get the last results of the user or authCode
 	 */
 	function getResults($result_id, $makeHistory = false){
+		if (intval($result_id) == 0) return false;
 		$where = 'uid='.$result_id;
 		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*','tx_kequestionnaire_results',$where);
 		//t3lib_div::devLog('getResults', $this->prefixId, 0, array($GLOBALS['TYPO3_DB']->SELECTquery('*','tx_kequestionnaire_results',$where)));
@@ -1586,7 +1587,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 		
 		//get the questions of the questionnaire
 		$this->getQuestions();
-		//t3lib_div::devLog('questions', $this->prefixId, 0, $this->questions);
+		//t3lib_div::devLog('questions  0', $this->prefixId, 0, $this->questions);
 		//t3lib_div::devLog('allQuestions', $this->prefixId, 0, $this->allQuestions);
 
 		//centralize the pagecount
@@ -1649,6 +1650,10 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 	 *
 	 */
 	function getQuestions(){
+		$this->allQuestions = array();
+		$this->questions = array();
+		$this->questionCount = array();
+		$this->questionsByID = array();
 		$this->questionCount['total'] = 0; //total of questions
 		$this->questionCount['notshown_dependants'] = 0; //don't count dependants when not shown if not activated
 		$this->questionCount['only_questions'] = 0; //no blind-texts counting
