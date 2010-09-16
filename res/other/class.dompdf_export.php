@@ -16,24 +16,34 @@ class dompdf_export {
         var $conf = array();      //Basis PDF Conf
         var $pdf = '';            //PDF-Objekt
         var $pid = 0;             //Pid of data Storage
-        var $description = '';
+        var $ffdata = '';
+        var $templateFolder = '';
         var $title = '';
+        var $templates = array();
+        var $result = array();
         
         var $cellHeight = 0;      //Base-Definition Cell Height
         var $cellWidth = array(); //Base-Definition Cell Width
       
         var $questions = array();  //Question-array
         
-        function dompdf_export($conf, $pid, $title, $description){
+        function dompdf_export($conf, $pid, $title, $ffdata){
                 spl_autoload_register('DOMPDF_autoload');
                 $this->title = $title;
-                $this->description = $description;
+                $this->ffdata = $ffdata;
                 $this->pid = $pid;
                 $this->conf = $conf;
-                // Get a new instance of the FPDF library
+                
+                $this->templateFolder = $this->ffdata['dDEF']['lDEF']['template_dir']['vDEF'];
+                if ($this->templateFolder == '') '../../../../'.trim($this->templateFolder);
+                
+                t3lib_div::devLog('conf', 'pdf_export', 0, $conf);
+                t3lib_div::devLog('ffdata', 'pdf_export', 0, $ffdata);
+                
                 $this->pdf = new DOMPDF();
                 
                 $this->getQuestions();
+                t3lib_div::devLog('questions', 'pdf_export', 0, $this->questions);
         }
       
         /**
@@ -60,7 +70,7 @@ class dompdf_export {
             
                 $this->questionCount['only_questions'] = count($this->questions);
                 $this->questionCount['total'] = count($this->allQuestions);
-                //t3lib_div::devLog('questionCount', $this->prefixId, 0, $this->questionCount);
+                t3lib_div::devLog('questionCount', $this->prefixId, 0, $this->questionCount);
         }
         
         function getOptions($uid){
@@ -118,19 +128,19 @@ class dompdf_export {
                 $where = 'question_uid='.$uid.' AND hidden=0 AND deleted=0';
                 $orderBy = 'sorting';
                 $res = $GLOBALS['TYPO3_DB']->exec_SELECTquery($selectFields,'tx_kequestionnaire_columns',$where,'',$orderBy);
-                t3lib_div::devLog('columns', $this->prefixId, 0, array($GLOBALS['TYPO3_DB']->SELECTquery($selectFields,'tx_kequestionnaire_columns',$where,'',$orderBy)));
+                //t3lib_div::devLog('columns', $this->prefixId, 0, array($GLOBALS['TYPO3_DB']->SELECTquery($selectFields,'tx_kequestionnaire_columns',$where,'',$orderBy)));
                 if ($res){
                         while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)){
                                 $lines[] = $row;
                         }
                 }
-                t3lib_div::devLog('columns', $this->prefixId, 0, $lines);
-                
+                                
                 return $lines;
         }
       
         function getPDFBlank(){
-                $html = $this->getHTML();
+                $html = $this->getHTML('blank');
+                t3lib_div::devLog('html', 'pdf_export', 0, array($html));
                 
                 $this->pdf->load_html($html);
                 
@@ -140,17 +150,44 @@ class dompdf_export {
                 //return $html;
         }
         
-        function getHTML(){
+        function getPDFFilled($result){
+                $this->result = $result;
+                t3lib_div::devLog('result', 'pdf_export', 0, $result);
+                
+                $html = $this->getHTML('filled');
+                
+                $this->pdf->load_html($html);
+                
+                $this->pdf->render();
+                $this->pdf->stream("questionnaire_".$this->pid.".pdf");
+            
+                //return $html;
+        }
+        
+        function getHTML($type){
                 $content = '';
                 
-                $content .= $this->renderFirstPage();
-                foreach ($this->questions as $nr => $question){
-                    $content .= $this->renderQuestion($question);
+                $this->getTemplates();
+                switch ($type){
+                        case 'blank':
+                                $content .= $this->renderFirstPage();
+                                t3lib_div::devLog('getHTML '.$type, 'pdf_export', 0,array($content));
+                                foreach ($this->questions as $nr => $question){
+                                        $content .= $this->renderQuestion($question);
+                                }
+                                //$content = mb_convert_encoding($content, "Windows-1252", "UTF-8");
+                        break;
+                        case 'filled':
+                                $content .= $this->renderFirstPage();
+                                foreach ($this->questions as $nr => $question){
+                                        t3lib_div::devLog('columns', $this->prefixId, 0, $question);
+                                        $content .= $this->renderQuestion($question,$result[$question['uid']]);
+                                }
+                        break;
                 }
-                //$content = mb_convert_encoding($content, "Windows-1252", "UTF-8");
                 
-                $html = file_get_contents('../res/other/dompdf_template.html');
-                $html = str_replace('###CONTENT###',$content,$html);
+                $html = str_replace('###CONTENT###',$content,$this->templates['base']);
+                t3lib_div::devLog('getHTML html '.$type, 'pdf_export', 0,array($html,$content,$this->templates['base']));
                 
                 $css = $this->getCSS();
                 $html = str_replace('###CSS###',$css,$html);
@@ -158,125 +195,219 @@ class dompdf_export {
                 return $html;
         }
         
+        function getTemplates(){
+                $templateFolder = $this->templateFolder;
+                
+                //open questions
+                $templateName = 'question_open.html';
+                $temp = file_get_contents($templateFolder.$templateName);
+                //t3lib_div::devLog('open', 'pdf', 0, array($templateFolder.$templateName,$open));
+                if ($temp == ''){
+                        $templateFolder = t3lib_extMgm::extPath('ke_questionnaire').'res/templates/';
+                        $temp = file_get_contents($templateFolder.$templateName);
+                }
+                $open_template = t3lib_parsehtml::getSubpart($temp, '###DOMPDF_SINGLE###');
+                $this->templates['open_single'] = $open_template;
+                $open_template = t3lib_parsehtml::getSubpart($temp, '###DOMPDF_MULTI###');
+                $this->templates['open_multi'] = $open_template;
+                
+                //closed questions
+                $templateName = 'question_closed.html';
+                $temp = file_get_contents($templateFolder.$templateName);
+                $this->templates['closed'] = t3lib_parsehtml::getSubpart($temp, '###DOMPDF###');
+                $this->templates['closed_options'] = t3lib_parsehtml::getSubpart($temp, '###DOMPDF_OPTION###');
+                
+                //semantic questions
+                $templateName = 'question_semantic.html';
+                $temp = file_get_contents($templateFolder.$templateName);
+                $this->templates['semantic'] = t3lib_parsehtml::getSubpart($temp, '###DOMPDF###');
+                $this->templates['semantic_line'] = t3lib_parsehtml::getSubpart($temp, '###DOMPDF_LINE###');
+                $this->templates['semantic_column'] = t3lib_parsehtml::getSubpart($temp, '###DOMPDF_COLUMN###');
+                
+                //matrix questions
+                $templateName = 'question_matrix.html';
+                $temp = file_get_contents($templateFolder.$templateName);
+                $this->templates['matrix'] = t3lib_parsehtml::getSubpart($temp, '###DOMPDF###');
+                $this->templates['matrix_line'] = t3lib_parsehtml::getSubpart($temp, '###DOMPDF_LINE###');
+                $this->templates['matrix_column'] = t3lib_parsehtml::getSubpart($temp, '###DOMPDF_COLUMN###');
+                
+                //blind questions
+                $templateName = 'question_blind.html';
+                $temp = file_get_contents($templateFolder.$templateName);
+                $this->templates['blind'] = t3lib_parsehtml::getSubpart($temp, '###DOMPDF###');
+                
+                t3lib_div::devLog('templates', 'pdf', 0, $this->templates);
+                
+                $templateName = 'questionnaire.html';
+                $temp = file_get_contents($templateFolder.$templateName);
+                $this->templates['base'] = t3lib_parsehtml::getSubpart($temp, '###DOMPDF###');
+                
+        }
+        
         function getCSS(){
                 $css = '';
                 
-                $css = file_get_contents('../res/other/dompdf_template.css');
+                $templateFolder = $this->templateFolder;
+                $templateName = 'dompdf_template.css';
+                $temp = file_get_contents($templateFolder.$templateName);
+                //t3lib_div::devLog('open', 'pdf', 0, array($templateFolder.$templateName,$open));
+                if ($temp == ''){
+                        $templateFolder = t3lib_extMgm::extPath('ke_questionnaire').'res/templates/';
+                        $temp = file_get_contents($templateFolder.$templateName);
+                }
+                $css = $temp;
                 
                 return $css;
         }
         
         function renderQuestion($question){
-                //todo: Question-Rendering in Template verlagern... oder sogar das Template der Klassen nehmen?
-                $html = '<div class="question">';
+                $markerArray = array();
+                $markerArray['###QUESTION_TITLE###'] = '';
+                $markerArray['###QUESTION###'] = '';
+                $markerArray['###HELPTEXT###'] = $question['helptext'];
+                
                 if ($question['text'] == '') {
-                        $html .= '<div class="question_title">'.$question['title'].'</div>';
+                        $markerArray['###QUESTION_TITLE###'] = $question['title'];
                 } else {
-                        $html .= '<div class="question_title">';
-                        if ($question['show_title'] == 1) $html .= $question['title'];
-                        $html .= $question['text'];
-                        $html .= '</div>';
+                        if ($question['show_title'] == 1) {
+                                $markerArray['###QUESTION_TITLE###'] = $question['title'];
+                        }
+                        $markerArray['###QUESTION###'] = $question['text'];
                 }
                 $value = '&nbsp;';
+                $markerArray['###VALUE###'] = $value;
+                if (is_array($this->result)) {
+                        if (is_array ($this->result[$question['uid']])){
+                                $answered = $this->result[$question['uid']]['answer'];
+                        }
+                }
+                t3lib_div::devLog('answered', 'pdf_export', 0, $answered);
                 switch ($question['type']){
+                        case 'blind':
+                                $html = $this->renderContent($this->templates['blind'],$markerArray);
+                                break;
                         case 'open':
+                                if ($answered) $markerArray['###VALUE###'] = $answered;
                                 if ($question['open_type'] == 1){
-                                        $html .= '<div class="open_question_multi">'.$value.'</div>';        
+                                        $html = $this->renderContent($this->templates['open_multi'],$markerArray);
                                 } else {
-                                        $html .= '<div class="open_question">'.$value.'</div>';        
+                                        $html = $this->renderContent($this->templates['open_single'],$markerArray);
                                 }
                                 break;
                         case 'closed':
                                 $options = $this->getOptions($question['uid']);
                                 foreach ($options as $option){
-                                        $html .= '<div class="closed_question_option">';
-                                        $html .= $value;
-                                        $html .= '</div>';
+                                        $o_markerArray = array();
+                                        $o_markerArray['###VALUE###'] = $value;
+                                        if (is_array($answered['options'])){
+                                                if (in_array($option['uid'],$answered['options'])){
+                                                        $o_markerArray['###VALUE###'] = 'X';
+                                                }
+                                        } else {
+                                                if ($answered['options'] == $option['uid']) {
+                                                        $o_markerArray['###VALUE###'] = 'X';
+                                                }
+                                        }
                                         $text = $option['title'];
                                         if ($option['text'] != '') $text = $option['text'];
-                                        $html .= $text;
+                                        $o_markerArray['###TEXT###'] = $text;
+                                        $markerArray['###OPTIONS###'] .= $this->renderContent($this->templates['closed_options'],$o_markerArray);
                                 }
+                                $html = $this->renderContent($this->templates['closed'],$markerArray);
                                 break;
                         case 'matrix':
-                                $html .= $this->renderMatrixQuestion($question);
+                                $html = $this->renderMatrixQuestion($question,$markerArray);
                                 break;
                         case 'semantic':
-                                $html .= $this->renderSemanticQuestion($question);
+                                $html = $this->renderSemanticQuestion($question,$markerArray);
                                 break;
                         default:
                                 if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$this->extKey]['dompdf_export_renderQuestion'])){
                                         foreach($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$this->extKey]['dompdf_export_renderQuestion'] as $_classRef){
                                                 $_procObj = & t3lib_div::getUserObj($_classRef);
-                                                $html .= $_procObj->dompdf_export_renderQuestion($this,$question);
+                                                $html = $_procObj->dompdf_export_renderQuestion($this,$question);
                                         }
                                 }
                 }
-                $html .= '</div>';
+                //$html .= '</div>';
                 return $html;
         }
         
-        function renderSemanticQuestion($question){
+        function renderSemanticQuestion($question,$markerArray,$value=''){
                 $html = '';
-                
-                $html .= '<table class="semantic_question">';
                 
                 $sublines = $this->getSemanticLines($question['uid']);
                 $columns = $this->getColumns($question['uid']);
                 //t3lib_div::devLog('columns', $this->prefixId, 0, $columns);
                 
                 if (is_array($columns)){
-                        $html .= '<tr>';
-                        $html .= '<td>&nbsp;</td>';
+                        $l_markerArray = array();
+                        $l_markerArray['###COLUMNS###'] = '<td>&nbsp;</td>';
                         foreach ($columns as $column){
-                                $html .= '<td class="column">';
-                                $html .= $column['title'];
-                                $html .= '</td>';
+                                $c_markerArray = array();
+                                $c_markerArray['###CLASS###'] = 'column';
+                                $c_markerArray['###VALUE###'] = $column['title'];
+                                $l_markerArray['###COLUMNS###'] .= $this->renderContent($this->templates['semantic_column'],$c_markerArray);
                         }
-                        $html .= '<td class="semantic_end">&nbsp;</td>';
-                        $html .= '</tr>';
+                        $l_markerArray['###COLUMNS###'] .= '<td class="semantic_end">&nbsp;</td>';
+                        $markerArray['###ROWS###'] = $this->renderContent($this->templates['semantic_line'],$l_markerArray);
                 }
                 
                 foreach ($sublines as $subline){
-                        $html .= '<tr>';
-                        $html .= '<td>'.$subline['start'].'</td>';
+                        $l_markerArray = array();
+                        $c_markerArray = array();
+                        $c_markerArray['###CLASS###'] = '';
+                        $c_markerArray['###VALUE###'] = $subline['start'];
+                        $l_markerArray['###COLUMNS###'] = $this->renderContent($this->templates['semantic_column'],$c_markerArray);
                         foreach ($columns as $column){
-                                $html .= '<td class="column">';
-                                $html .= '<div class="semantic_check">'.$value.'</div>';
-                                $html .= '</td>';
+                                $c_markerArray = array();
+                                $c_markerArray['###CLASS###'] = 'column';
+                                $c_markerArray['###VALUE###'] = '<div class="semantic_check">'.$value.'</div>';
+                                $l_markerArray['###COLUMNS###'] .= $this->renderContent($this->templates['semantic_column'],$c_markerArray);
                         }
-                        $html .= '<td class="semantic_end">'.$subline['end'].'</td>';
-                        $html .= '</tr>';
-                }                
-                $html .= '</table>';
+                        $c_markerArray = array();
+                        $c_markerArray['###CLASS###'] = 'semantic_end';
+                        $c_markerArray['###VALUE###'] = $subline['end'];
+                        $l_markerArray['###COLUMNS###'] .= $this->renderContent($this->templates['semantic_column'],$c_markerArray);
+                        $markerArray['###ROWS###'] .= $this->renderContent($this->templates['semantic_line'],$l_markerArray);
+                }
+                $html = $this->renderContent($this->templates['semantic'],$markerArray);
                 
                 return $html;
         }
         
-        function renderMatrixQuestion($question){
+        function renderMatrixQuestion($question,$markerArray,$value){
                 $html = '';
-                
-                $html .= '<table class="matrix_question">';
                 
                 $subquestions = $this->getMatrixLines($question['uid']);
                 $columns = $this->getColumns($question['uid']);
                 //t3lib_div::devLog('columns', $this->prefixId, 0, $columns);
+                
                 if (is_array($columns)){
-                        $html .= '<tr>';
-                        $html .= '<td>&nbsp;</td>';
+                        $l_markerArray = array();
+                        $l_markerArray['###COLUMNS###'] = '<td>&nbsp;</td>';
                         foreach ($columns as $column){
-                                $html .= '<td class="column">';
-                                $html .= $column['title'];
-                                $html .= '</td>';
+                                $c_markerArray = array();
+                                $c_markerArray['###CLASS###'] = 'column';
+                                $c_markerArray['###VALUE###'] = $column['title'];
+                                $l_markerArray['###COLUMNS###'] .= $this->renderContent($this->templates['matrix_column'],$c_markerArray);
                         }
-                        $html .= '</tr>';
+                        $markerArray['###ROWS###'] = $this->renderContent($this->templates['matrix_line'],$l_markerArray);
                 }
+                
                 foreach ($subquestions as $subquestion){
-                        $html .= '<tr>';
+                        $l_markerArray = array();
+                        $c_markerArray = array();
+                        $c_markerArray['###CLASS###'] = '';
                         $text = $subquestion['title'];
                         if ($subquestion['text'] != '') $text = $subquestion['text'];
-                        $html .= '<td>'.$text.'</td>';
+                        $c_markerArray['###VALUE###'] = $text;
+                        
+                        $l_markerArray['###COLUMNS###'] = $this->renderContent($this->templates['semantic_column'],$c_markerArray);
                         foreach ($columns as $column){
-                                $html .= '<td class="column">';
+                                $c_markerArray = array();
+                                $c_markerArray['###CLASS###'] = 'column';
+                                
                                 if ($column['different_type'] != ''){
                                         $m_type = $column['different_type'];
                                 } else {
@@ -285,18 +416,23 @@ class dompdf_export {
                                 switch ($m_type){
                                         case 'check':
                                         case 'radio':
-                                                $html .= '<div class="matrix_check">'.$value.'</div>';
+                                                $c_markerArray['###VALUE###'] = '<div class="matrix_check">'.$value.'</div>';
                                                 break;
                                         default:
-                                                $html .= '<div class="matrix_input">'.$value.'</div>';
+                                                $c_markerArray['###VALUE###'] = '<div class="matrix_input">'.$value.'</div>';
+                                                break;
                                 }
-                                $html .= $value;
-                                $html .= '</td>';
+                                
+                                $l_markerArray['###COLUMNS###'] .= $this->renderContent($this->templates['semantic_column'],$c_markerArray);
                         }
-                        $html .= '</tr>';
+                        $c_markerArray = array();
+                        $c_markerArray['###CLASS###'] = 'semantic_end';
+                        $c_markerArray['###VALUE###'] = $subline['end'];
+                        $l_markerArray['###COLUMNS###'] .= $this->renderContent($this->templates['semantic_column'],$c_markerArray);
+                        $markerArray['###ROWS###'] .= $this->renderContent($this->templates['semantic_line'],$l_markerArray);
                 }
                 
-                $html .= '</table>';
+                $html = $this->renderContent($this->templates['matrix'],$markerArray);
                 
                 return $html;
         }
@@ -307,10 +443,20 @@ class dompdf_export {
         function renderFirstPage(){
                 $content = '';
                 
-                if ($this->description != '') $content .= '<div class="questionnaire_description">'.$this->description.'</div>';
+                if ($this->ffdata['tDEF']['lDEF']['description']['vDEF'] != '') $content .= '<div class="questionnaire_description">'.$this->ffdata['tDEF']['lDEF']['description']['vDEF'].'</div>';
                  
                 return $content;
-        }  
+        }
+        
+        function renderContent($content,$markerArray){
+                //t3lib_div::devLog('renderContent', 'pdf', 0, array($content,$markerArray));
+                if (is_array($markerArray)){
+                        foreach($markerArray as $key => $value){
+                                $content = str_replace($key,$value,$content);
+                        }
+                }
+                return $content;
+        }
         
         function buildTSFE() {
                 #needed for TSFE

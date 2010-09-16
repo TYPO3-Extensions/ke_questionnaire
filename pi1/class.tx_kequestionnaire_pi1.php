@@ -95,6 +95,20 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 		$this->pi_USER_INT_obj=1;	// Configuring so caching is not expected. This value means that no cHash params are ever set. We do this, because it's a USER_INT object!
 		//Initialize the Plugin
 		$this->init();
+		
+		t3lib_div::devLog('PIVars', $this->prefixId, 0, $this->piVars);
+		//t3lib_div::devLog('Flex Form Array pi1', $this->prefixId, 0, $this->ffdata);
+		//t3lib_div::devLog('conf', $this->prefixId, 0, $this->conf);
+		//t3lib_div::devLog('questions', $this->prefixId, 0, $this->questions);
+		//t3lib_div::devLog('_POST', $this->prefixId, 0, $_POST);
+		//t3lib_div::devLog('_GET', $this->prefixId, 0, $_GET);
+		//t3lib_div::devLog('_SESSION', $this->prefixId, 0, $_SESSION);
+				
+		//get the PDF-Version of the Questionnaire
+		if ($this->piVars['pdf'] == 1){
+			$this->getPDF($this->piVars['type']);
+			exit;
+		}
 
 		//if there are no questions made for the questionnaire
 		if (count($this->questions) == 0){
@@ -108,13 +122,6 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 			}
 			return $this->pi_wrapInBaseClass($content);
 		}
-		//t3lib_div::devLog('Flex Form Array pi1', $this->prefixId, 0, $this->ffdata);
-		//t3lib_div::devLog('PIVars', $this->prefixId, 0, $this->piVars);
-		//t3lib_div::devLog('conf', $this->prefixId, 0, $this->conf);
-		//t3lib_div::devLog('questions', $this->prefixId, 0, $this->questions);
-		//t3lib_div::devLog('_POST', $this->prefixId, 0, $_POST);
-		//t3lib_div::devLog('_GET', $this->prefixId, 0, $_GET);
-		//t3lib_div::devLog('_SESSION', $this->prefixId, 0, $_SESSION);
 		//t3lib_div::devLog('checkValidation', $this->prefixId, 0, array($this->checkValidation()));
 		if (!$this->checkValidation()) $this->piVars['page'] --;
 
@@ -1069,6 +1076,22 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 		$markerArray['###TEXT###'] = $this->pi_RTEcssText($this->ffdata['end_text']);
 		if ($markerArray['###TEXT###'] == '') $markerArray['###TEXT###'] = $this->pi_getLL('standard_endtext');
 		
+		//PDF-Output
+		$markerArray['###PDF###'] = '';
+		$link_title = 'test';
+		$add_params = array();
+		$add_params[$this->prefixId.'[pdf]'] = 1;
+		$add_params[$this->prefixId.'[q_id]'] = $q_id;
+		$add_params[$this->prefixId.'[p_id]'] = $this->piVars['result_id'];
+		$add_params[$this->prefixId.'[type]'] = 'filled';
+		$add_params['no_cache'] = 1;
+		$pdf_link = $this->pi_linkToPage($link_title,
+			$GLOBALS['TSFE']->id,
+			'',
+			$add_params
+		);
+		$markerArray['###PDF###'] = $pdf_link;
+		
 		$add_info = '';
 		switch ($this->type){
 			case 'QUIZ':
@@ -1130,7 +1153,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 		$this->renderHiddenFields();
 		$content = $this->renderContent('###OTHER_PAGE###',$markerArray);
 
-		//t3lib_div::devLog('renderLastPage', $this->prefixId, 0, $markerArray);
+		t3lib_div::devLog('renderLastPage', $this->prefixId, 0, $markerArray);
 
 		return $content;
 	}
@@ -1412,6 +1435,33 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 		$content = $this->renderContent('###QUIZ_REPORT###',$markerArray);
 		
 		return $content;
+	}
+	
+	/**
+	 * Render the PDF
+	 */
+	function getPDF($type = 'blank'){
+		if (t3lib_extMgm::isLoaded('ke_dompdf')){
+			require_once(t3lib_extMgm::extPath('ke_questionnaire').'res/other/class.dompdf_export.php');
+			$pdfdata = '';
+	
+			$pdf_conf = $this->conf;
+			$storage_pid = $this->ffdata['storage_pid'];
+	
+			$pdf = new dompdf_export($pdf_conf,$storage_pid, 'test',$this->cObj->data['pi_flexform']['data']);
+	
+			switch ($type){
+				case 'blank':
+					$pdfdata = $pdf->getPDFBlank();
+					break;
+				case 'filled':
+					$this->getResults($this->piVars['p_id'],false);
+					$pdfdata = $pdf->getPDFFilled($this->saveArray);
+					break;
+				default:
+					break;
+			}
+		}
 	}
 	
 	/**

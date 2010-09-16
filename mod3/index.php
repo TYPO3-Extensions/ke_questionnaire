@@ -1453,7 +1453,7 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 			$pdf_conf = $conf['pdf.'];
 			$storage_pid = $this->ff_data['sDEF']['lDEF']['storage_pid']['vDEF'];
 	
-			$pdf = new dompdf_export($pdf_conf,$storage_pid, $this->q_data['header'],$this->ff_data['tDEF']['lDEF']['description']['vDEF']);
+			$pdf = new dompdf_export($pdf_conf,$storage_pid, $this->q_data['header'],$this->ff_data);
 	
 			switch ($type){
 				case 'blank':
