@@ -305,12 +305,16 @@ class  tx_kequestionnaire_module4 extends t3lib_SCbase {
 				}
 				function sendMail($email,$authcode,$mailTexts,$markerArray=array()){
 					$link="http://".$_SERVER["HTTP_HOST"]."/index.php?id=".$this->pid."&tx_kequestionnaire_pi1[auth_code]=".$authcode;
+					$html_link = "<a href=\"http://".$_SERVER["HTTP_HOST"]."/index.php?id=".$this->pid."&tx_kequestionnaire_pi1[auth_code]=".$authcode.'">'.$link.'</a>';
 
 					$markerArray["###AUTHCODE###"]=$authcode;
-					$markerArray["###LINK###"]=$link;
+					$markerArray["###LINK###"]='<'.$link.'>';
 
 					$body=$mailTexts["body"];
+					$html_body=$mailTexts["body"];
 					foreach($markerArray as $key=>$val) $body=str_replace($key,$val,$body);
+					$markerArray["###LINK###"]=$html_link;
+					foreach($markerArray as $key=>$val) $html_body=str_replace($key,$val,$html_body);					
 
 					$html_start="<html><head><title>".$mailTexts["subject"]."</title></head><body>";
 					$html_end="</body></html>";
@@ -324,8 +328,8 @@ class  tx_kequestionnaire_module4 extends t3lib_SCbase {
 					$this->htmlMail->replyto_name = $mailTexts['fromName'];
 					$this->htmlMail->organisation = $mailTexts['fromName'];
 					$this->htmlMail->returnPath = $mailTexts['fromEmail'];
-					$this->htmlMail->addPlain($body);
-					// $this->htmlMail->setHTML($this->htmlMail->encodeMsg($html_start.$body.$html_end));
+					//$this->htmlMail->addPlain($body);
+					$this->htmlMail->setHTML($this->htmlMail->encodeMsg($html_start.$html_body.$html_end));
 					$out=$this->htmlMail->send($email);
 
 					return $out;
@@ -333,10 +337,13 @@ class  tx_kequestionnaire_module4 extends t3lib_SCbase {
 				}
 				function getUsersToInvite(){
 					$out=array();
-					$res=$GLOBALS["TYPO3_DB"]->exec_SELECTgetRows("uid,email,feuser,authcode", "tx_kequestionnaire_authcodes", "qpid=".$this->storagePid." AND deleted=0 AND email<>''", "", "", "", "");
-					foreach($res as $row){
-						$res=$GLOBALS["TYPO3_DB"]->exec_SELECTgetRows("*", "tx_kequestionnaire_results", "uíd=".$row["uid"], "", "", "", "");
-						if($res) continue;
+					$res_auth=$GLOBALS["TYPO3_DB"]->exec_SELECTgetRows("uid,email,feuser,authcode", "tx_kequestionnaire_authcodes", "qpid=".$this->storagePid." AND deleted=0 AND email<>''", "", "", "", "");
+					//t3lib_div::devLog('getUsersToInvite res_auth', 'Einlade-Mod', 0, $res_auth);
+					foreach($res_auth as $row){
+						$res_result=$GLOBALS["TYPO3_DB"]->exec_SELECTgetRows("*", "tx_kequestionnaire_results", "auth=".$row["uid"], "", "", "", "");
+						//t3lib_div::devLog('getUsersToInvite res', 'Einlade-Mod', 0, array("*", "tx_kequestionnaire_results", "auth=".$row["uid"], "", "", "", ""));
+						//t3lib_div::devLog('getUsersToInvite res_result', 'Einlade-Mod', 0, $res_result);
+						if($res_result) continue;
 						$out[]=$row;
 					}
 					return $out;
@@ -392,9 +399,10 @@ class  tx_kequestionnaire_module4 extends t3lib_SCbase {
 					$out.="<table border=0>";
 
 					foreach ($users as $key => $value) {
-						$email=$value["email"];
+						$email=trim($value["email"]);
 						$feuser=$value["feUserUid"];
 						$authCode=$this->generateSingleCode($email,$feuser);
+						//t3lib_div::devLog('test', 'Einlade-Mod', 0, array($email, $authCode));
 						if(!$authCode) continue;
 						$success=$this->sendMail($email,$authCode,$mailTexts);
 						if(!$success) return $this->LL("error_send");
@@ -426,12 +434,15 @@ class  tx_kequestionnaire_module4 extends t3lib_SCbase {
 					$where="email='$email' AND qpid=".$this->storagePid;
 
 					if($feuser) $GLOBALS["TYPO3_DB"]->exec_UPDATEquery("tx_kequestionnaire_authcodes", $where, array("feuser"=>$feuser));
-					
 					$where .= ' AND deleted=0';
 
 					// Check if authcode already exists
 					$res=$GLOBALS["TYPO3_DB"]->exec_SELECTgetRows("*", "tx_kequestionnaire_authcodes", $where, "", "", "", "");
-					if($res && $email) return false;
+					if($res && $email) {
+						//t3lib_div::devLog('res', 'Einlade-Mod', 0, $res);
+						//return $res[0]['authcode'];
+						return false;
+					}
 
 					$insertArr=array(
 						"qpid"=>$this->storagePid,
@@ -442,8 +453,6 @@ class  tx_kequestionnaire_module4 extends t3lib_SCbase {
 
 					$GLOBALS["TYPO3_DB"]->exec_INSERTquery("tx_kequestionnaire_authcodes", $insertArr);
 					$uid=$GLOBALS["TYPO3_DB"]->sql_insert_id();
-
-
 
 					// Generate authcode and write it to database
 					$loop=1;

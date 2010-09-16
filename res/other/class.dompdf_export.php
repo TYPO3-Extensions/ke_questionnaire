@@ -167,6 +167,7 @@ class dompdf_export {
         }
         
         function renderQuestion($question){
+                //todo: Question-Rendering in Template verlagern... oder sogar das Template der Klassen nehmen?
                 $html = '<div class="question">';
                 if ($question['text'] == '') {
                         $html .= '<div class="question_title">'.$question['title'].'</div>';
