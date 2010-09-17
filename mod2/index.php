@@ -352,7 +352,7 @@ class  tx_kequestionnaire_module2 extends t3lib_SCbase {
 				case 'closed':
 					$markerArray['###DIV###'] = '<h2 style="width:600px;">'.$question['title'].'</h2>';
 					$markerArray['###DIV###'] .= '<div id="pie"> </div>';
-					$res_answers = $GLOBALS['TYPO3_DB']->exec_SELECTquery('uid,title','tx_kequestionnaire_answers','question_uid='.$q_id,'','sorting');
+					$res_answers = $GLOBALS['TYPO3_DB']->exec_SELECTquery('uid,title','tx_kequestionnaire_answers','question_uid='.$q_id.' and hidden=0 and deleted=0','','sorting');
 					$answers = array();
 					if ($res_answers){
 						while ($answer = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res_answers)){
@@ -362,7 +362,7 @@ class  tx_kequestionnaire_module2 extends t3lib_SCbase {
 					};
 					break;
 				case 'matrix':
-					$res_cols = $GLOBALS['TYPO3_DB']->exec_SELECTquery('uid,title,different_type','tx_kequestionnaire_columns','question_uid='.$q_id,'','sorting');
+					$res_cols = $GLOBALS['TYPO3_DB']->exec_SELECTquery('uid,title,different_type','tx_kequestionnaire_columns','question_uid='.$q_id.' and hidden=0 and deleted=0','','sorting');
 					$divs = '';
 					$columns = array();
 					if ($res_cols){
@@ -373,7 +373,7 @@ class  tx_kequestionnaire_module2 extends t3lib_SCbase {
 					}
 					break;
 				case 'semantic':
-					$res_cols = $GLOBALS['TYPO3_DB']->exec_SELECTquery('uid,title','tx_kequestionnaire_columns','question_uid='.$q_id,'','sorting');
+					$res_cols = $GLOBALS['TYPO3_DB']->exec_SELECTquery('uid,title','tx_kequestionnaire_columns','question_uid='.$q_id.' and hidden=0 and deleted=0','','sorting');
 					$columns = array();
 					if ($res_cols){
 						while($column = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res_cols)){
@@ -423,27 +423,29 @@ class  tx_kequestionnaire_module2 extends t3lib_SCbase {
 				$markerArray['###DIV###'] = '<div id="pie_'.$sub['uid'].'"> </div>';
 				if (is_array($columns)){
 					foreach ($columns as $bar){
-						t3lib_div::devLog('bar '.$sub['uid'], 'ke_questionnaire auswert Mod', 0, $bar);
+						//t3lib_div::devLog('bar '.$sub['uid'], 'ke_questionnaire auswert Mod', 0, $bar);
 						if ($bar['different_type'] == 'input'){
 							if (is_array($results)){
 								$list = '<b>'.$bar['title'].'</b>';
 								foreach ($results as $result){
 									if (is_array($result)){
-										t3lib_div::devLog('result', 'ke_questionnaire auswert Mod', 0, $result);
-										$list .= '<div style="display:block;';
-										if ($alternate){
-											$list .= 'background-color: #FAFAFA;';
-											$alternate = false;
-										} else {
-											$list .= 'background-color: #FFF6CC;';
-											$alternate = true;
+										if ($result[$q_id]['answer']['options'][$sub['uid']][$bar['uid']][0] != ''){
+												//t3lib_div::devLog('result', 'ke_questionnaire auswert Mod', 0, $result);
+												$list .= '<div style="display:block;';
+												if ($alternate){
+													$list .= 'background-color: #FAFAFA;';
+													$alternate = false;
+												} else {
+													$list .= 'background-color: #FFF6CC;';
+													$alternate = true;
+												}
+												$list .= 'margin: 4px;
+													border: 1px solid #D7DBE2;
+													width: 500px;
+													padding: 2px;">';
+												$list .= $result[$q_id]['answer']['options'][$sub['uid']][$bar['uid']][0];
+												$list .= '</div>';
 										}
-										$list .= 'margin: 4px;
-											border: 1px solid #D7DBE2;
-											width: 500px;
-											padding: 2px;">';
-										$list .= $result[$q_id]['answer']['options'][$sub['uid']][$bar['uid']][0];
-										$list .= '</div>';
 									}
 								}								
 							}

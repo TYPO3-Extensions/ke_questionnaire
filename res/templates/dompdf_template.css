@@ -22,9 +22,10 @@
 
 .open_question{
     width: 400px;
-    height: 10px;
+    height: 15px;
     border: 1px solid black;
     background-color: #fff;
+    padding: 2px;
 }
 
 .open_question_multi{
@@ -32,20 +33,29 @@
     height: 100px;
     border: 1px solid black;
     background-color: #fff;
+    padding: 2px;
 }
 
 .closed_question_option {
     margin-top: 3px;
     margin-right: 10px;
     width: 10px;
-    height: 10px;
+    height: 12px;
     border: 1px solid black;
     background-color: #fff;
+    padding-left: 3px;
+    padding-top: 1px;
+    font-size: 10px;
+    font-weight: bold;
 }
 
 .matrix_question{
     width: 700px;
     border-collapse: collapse;
+}
+
+.matrix_question tr{
+    vertical-align: middle;
 }
 
 .matrix_question td{
@@ -54,29 +64,41 @@
 
 .matrix_question td.column{
     border-left: 1px solid #555;
-    text-align: center;
 }
 
 .matrix_input {
+    text-align: center;
     width: 90%;
     height: 15px;
     margin-top: 3px;
+    margin-left: 4%;
     border: 1px solid black;
     background-color: #fff;
+    padding: 1px;
+    margin-bottom: 1px;
 }
 
 .matrix_check {
     margin-top: 3px;
-    margin-right: 10px;
     width: 10px;
     height: 10px;
     border: 1px solid black;
     background-color: #fff;
+    font-size: 10px;
+    font-weight: bold;
+    padding: 1px;
+    padding-left: 3px;
+    padding-top: 3px;
+    margin-left: 48%;
 }
 
 .semantic_question{
     width: 700px;
     border-collapse: collapse;
+}
+
+.semantic_question tr{
+    vertical-align: middle;
 }
 
 .semantic_question td{
@@ -98,6 +120,10 @@
     margin-top: 3px;
     width: 10px;
     height: 10px;
-    border: 1px solid black;
     background-color: #fff;
+    font-size: 10px;
+    font-weight: bold;
+    padding: 1px;
+    margin-left: 40%;
+    vertical-align: middle;
 }

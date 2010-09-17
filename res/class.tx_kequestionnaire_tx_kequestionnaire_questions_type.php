@@ -104,15 +104,19 @@ class tx_kequestionnaire_tx_kequestionnaire_questions_type {
 	}
 	
 	function check_dir($dir){
-		// bypasses open_basedir restrictions of is_dir and fileperms
-		$tmp_cmd = `ls -dl $dir`;
-		$dir_flag = $tmp_cmd[0];
-		if($dir_flag!="d")
-		{
-		    // not d; use next char (first char might be 's' and is still directory)
-		    $dir_flag = $tmp_cmd[1];
+		if (function_exists('shell_exec')){
+			// bypasses open_basedir restrictions of is_dir and fileperms
+			$tmp_cmd = `ls -dl $dir`;
+			$dir_flag = $tmp_cmd[0];
+			if($dir_flag!="d")
+			{
+				// not d; use next char (first char might be 's' and is still directory)
+				$dir_flag = $tmp_cmd[1];
+			}
+			return ($dir_flag=="d");
+		} else {
+			return is_dir($dir);
 		}
-		return ($dir_flag=="d");
 	}
 }
 

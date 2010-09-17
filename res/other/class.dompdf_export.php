@@ -160,6 +160,7 @@ class dompdf_export {
                 
                 $this->pdf->render();
                 $this->pdf->stream("questionnaire_".$this->pid.".pdf");
+                t3lib_div::devLog('html', 'pdf_export', 0, array($html));
             
                 //return $html;
         }
@@ -187,7 +188,7 @@ class dompdf_export {
                 }
                 
                 $html = str_replace('###CONTENT###',$content,$this->templates['base']);
-                t3lib_div::devLog('getHTML html '.$type, 'pdf_export', 0,array($html,$content,$this->templates['base']));
+                //t3lib_div::devLog('getHTML html '.$type, 'pdf_export', 0,array($html,$content,$this->templates['base']));
                 
                 $css = $this->getCSS();
                 $html = str_replace('###CSS###',$css,$html);
@@ -276,12 +277,13 @@ class dompdf_export {
                 }
                 $value = '&nbsp;';
                 $markerArray['###VALUE###'] = $value;
+                $answered = array();
                 if (is_array($this->result)) {
                         if (is_array ($this->result[$question['uid']])){
                                 $answered = $this->result[$question['uid']]['answer'];
                         }
                 }
-                t3lib_div::devLog('answered', 'pdf_export', 0, $answered);
+                //t3lib_div::devLog('answered', 'pdf_export', 0, $answered);
                 switch ($question['type']){
                         case 'blind':
                                 $html = $this->renderContent($this->templates['blind'],$markerArray);
@@ -289,16 +291,20 @@ class dompdf_export {
                         case 'open':
                                 if ($answered) $markerArray['###VALUE###'] = $answered;
                                 if ($question['open_type'] == 1){
+                                        if ($answered) $markerArray['###VALUE###'] = nl2br($answered);
                                         $html = $this->renderContent($this->templates['open_multi'],$markerArray);
                                 } else {
+                                        if ($answered) $markerArray['###VALUE###'] = $answered;
                                         $html = $this->renderContent($this->templates['open_single'],$markerArray);
                                 }
                                 break;
                         case 'closed':
                                 $options = $this->getOptions($question['uid']);
+                                $markerArray['###OPTIONS###'] = '';
                                 foreach ($options as $option){
                                         $o_markerArray = array();
                                         $o_markerArray['###VALUE###'] = $value;
+                                        $o_markerArray['###INPUT_TEXT###'] = '';
                                         if (is_array($answered['options'])){
                                                 if (in_array($option['uid'],$answered['options'])){
                                                         $o_markerArray['###VALUE###'] = 'X';
@@ -308,6 +314,9 @@ class dompdf_export {
                                                         $o_markerArray['###VALUE###'] = 'X';
                                                 }
                                         }
+                                        if (is_array($answered['text'])){
+                                                if ($answered['text'][$option['uid']] != '') $o_markerArray['###INPUT_TEXT###'] = '['.$answered['text'][$option['uid']].']';
+                                        }
                                         $text = $option['title'];
                                         if ($option['text'] != '') $text = $option['text'];
                                         $o_markerArray['###TEXT###'] = $text;
@@ -316,10 +325,13 @@ class dompdf_export {
                                 $html = $this->renderContent($this->templates['closed'],$markerArray);
                                 break;
                         case 'matrix':
-                                $html = $this->renderMatrixQuestion($question,$markerArray);
+                                $html = $this->renderMatrixQuestion($question,$markerArray,$answered);
                                 break;
                         case 'semantic':
-                                $html = $this->renderSemanticQuestion($question,$markerArray);
+                                $html = $this->renderSemanticQuestion($question,$markerArray,$answered);
+                                break;
+                        case 'demographic':
+                                //$html = $this->render
                                 break;
                         default:
                                 if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$this->extKey]['dompdf_export_renderQuestion'])){
@@ -333,8 +345,10 @@ class dompdf_export {
                 return $html;
         }
         
-        function renderSemanticQuestion($question,$markerArray,$value=''){
+        function renderSemanticQuestion($question,$markerArray,$answered){
+                //t3lib_div::devLog('answered', 'pdf_export', 0, $answered);
                 $html = '';
+                $value = '&nbsp;';
                 
                 $sublines = $this->getSemanticLines($question['uid']);
                 $columns = $this->getColumns($question['uid']);
@@ -360,6 +374,10 @@ class dompdf_export {
                         $c_markerArray['###VALUE###'] = $subline['start'];
                         $l_markerArray['###COLUMNS###'] = $this->renderContent($this->templates['semantic_column'],$c_markerArray);
                         foreach ($columns as $column){
+                                $value = '&nbsp;';
+                                if (is_array($answered['options'])){
+                                        if ($answered['options'][$subline['uid']] == $column['uid']) $value = 'X';
+                                }
                                 $c_markerArray = array();
                                 $c_markerArray['###CLASS###'] = 'column';
                                 $c_markerArray['###VALUE###'] = '<div class="semantic_check">'.$value.'</div>';
@@ -376,8 +394,10 @@ class dompdf_export {
                 return $html;
         }
         
-        function renderMatrixQuestion($question,$markerArray,$value){
+        function renderMatrixQuestion($question,$markerArray,$answered){
+                //t3lib_div::devLog('answered', 'pdf_export', 0, $answered);
                 $html = '';
+                $value = '&nbsp;';
                 
                 $subquestions = $this->getMatrixLines($question['uid']);
                 $columns = $this->getColumns($question['uid']);
@@ -396,6 +416,7 @@ class dompdf_export {
                 }
                 
                 foreach ($subquestions as $subquestion){
+                        //t3lib_div::devLog('sub', 'DomPDF', 0, $subquestion);
                         $l_markerArray = array();
                         $c_markerArray = array();
                         $c_markerArray['###CLASS###'] = '';
@@ -405,6 +426,8 @@ class dompdf_export {
                         
                         $l_markerArray['###COLUMNS###'] = $this->renderContent($this->templates['semantic_column'],$c_markerArray);
                         foreach ($columns as $column){
+                                //t3lib_div::devLog('column', 'DomPDF', 0, $column);
+                                $value = '&nbsp;';
                                 $c_markerArray = array();
                                 $c_markerArray['###CLASS###'] = 'column';
                                 
@@ -415,13 +438,23 @@ class dompdf_export {
                                 }
                                 switch ($m_type){
                                         case 'check':
+                                                if (is_array($answered['options'])){
+                                                        if ($answered['options'][$subquestion['uid']][$column['uid']]) $value = 'X';
+                                                }
                                         case 'radio':
+                                                if (is_array($answered['options'])){
+                                                        if ($answered['options'][$subquestion['uid']]['single'] == $column['uid']) $value = 'X';
+                                                }
                                                 $c_markerArray['###VALUE###'] = '<div class="matrix_check">'.$value.'</div>';
                                                 break;
                                         default:
+                                                if (is_array($answered['options'])){
+                                                        $value = $answered['options'][$subquestion['uid']][$column['uid']][0];
+                                                }
                                                 $c_markerArray['###VALUE###'] = '<div class="matrix_input">'.$value.'</div>';
                                                 break;
                                 }
+                                if ($subquestion['title_line'] == 1) $c_markerArray['###VALUE###'] = $value;
                                 
                                 $l_markerArray['###COLUMNS###'] .= $this->renderContent($this->templates['semantic_column'],$c_markerArray);
                         }
