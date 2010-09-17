@@ -237,6 +237,12 @@ class dompdf_export {
                 $temp = file_get_contents($templateFolder.$templateName);
                 $this->templates['blind'] = t3lib_parsehtml::getSubpart($temp, '###DOMPDF###');
                 
+                //dempgrahic questions
+                $templateName = 'question_demographic.html';
+                $temp = file_get_contents($templateFolder.$templateName);
+                $this->templates['demographic'] = t3lib_parsehtml::getSubpart($temp, '###DOMPDF###');
+                $this->templates['demographic_line'] = t3lib_parsehtml::getSubpart($temp, '###DOMPDF_LINE###');
+                
                 t3lib_div::devLog('templates', 'pdf', 0, $this->templates);
                 
                 $templateName = 'questionnaire.html';
@@ -331,8 +337,10 @@ class dompdf_export {
                                 $html = $this->renderSemanticQuestion($question,$markerArray,$answered);
                                 break;
                         case 'demographic':
-                                //$html = $this->render
+                                $html = $this->renderDemographicQuestion($question,$markerArray,$answered);
                                 break;
+                        //privacy
+                        //extendet matrix for premium
                         default:
                                 if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$this->extKey]['dompdf_export_renderQuestion'])){
                                         foreach($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$this->extKey]['dompdf_export_renderQuestion'] as $_classRef){
@@ -342,6 +350,36 @@ class dompdf_export {
                                 }
                 }
                 //$html .= '</div>';
+                return $html;
+        }
+        
+        function renderDemographicQuestion($question,$markerArray,$answered){
+                //t3lib_div::devLog('answered', 'pdf_export', 0, $answered);
+                $html = '';
+                $value = '&nbsp;';
+                
+                $markerArray['###LINES###'] = '';
+                if (is_array($answered['fe_users'])){
+                        foreach ($answered['fe_users'] as $key => $value){
+                                $l_markerArray = array();
+                                //todo: get Label out of locallang
+                                $l_markerArray['###TITLE###'] = $key;
+                                $l_markerArray['###VALUE###'] = $value;
+                                $markerArray['###LINES###'] .= $this->renderContent($this->templates['demographic_line'],$l_markerArray);
+                        }
+                }
+                if (is_array($answered['tt_address'])){
+                        foreach ($answered['tt_address'] as $key => $value){
+                                $l_markerArray = array();
+                                //todo: get Label out of locallang
+                                $l_markerArray['###TITLE###'] = $key;
+                                $l_markerArray['###VALUE###'] = $value;
+                                $markerArray['###LINES###'] .= $this->renderContent($this->templates['demographic_line'],$l_markerArray);
+                        }
+                }
+                
+                $html = $this->renderContent($this->templates['demographic'],$markerArray);
+                
                 return $html;
         }
         

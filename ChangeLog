@@ -1,5 +1,9 @@
 (add new changes on top of this file)
 
+10-09-17 Nadine Schwingler  <schwingler@kennziffer.com>
+
+    * Bugfix for BE-Analyses
+
 10-09-15 Nadine Schwingler  <schwingler@kennziffer.com>
 	
 	* Bugfix for BE-CSV-Exports
