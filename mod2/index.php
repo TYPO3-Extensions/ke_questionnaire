@@ -412,7 +412,7 @@ class  tx_kequestionnaire_module2 extends t3lib_SCbase {
 		
 		$q_id = $question['uid'];
 
-		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('uid,title','tx_kequestionnaire_subquestions','title_line != 1 AND question_uid='.$question['uid'],'','sorting');
+		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('uid,title','tx_kequestionnaire_subquestions','title_line != 1 AND question_uid='.$question['uid'].' and hidden=0 and deleted=0','','sorting');
 		if ($res){
 			while ($sub = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)){
 				$values = array();
