@@ -140,7 +140,7 @@ class dompdf_export {
       
         function getPDFBlank(){
                 $html = $this->getHTML('blank');
-                t3lib_div::devLog('html', 'pdf_export', 0, array($html));
+                //t3lib_div::devLog('html', 'pdf_export', 0, array($html));
                 
                 $this->pdf->load_html($html);
                 
@@ -152,7 +152,7 @@ class dompdf_export {
         
         function getPDFFilled($result){
                 $this->result = $result;
-                t3lib_div::devLog('result', 'pdf_export', 0, $result);
+                //t3lib_div::devLog('result', 'pdf_export', 0, $result);
                 
                 $html = $this->getHTML('filled');
                 
@@ -160,7 +160,7 @@ class dompdf_export {
                 
                 $this->pdf->render();
                 $this->pdf->stream("questionnaire_".$this->pid.".pdf");
-                t3lib_div::devLog('html', 'pdf_export', 0, array($html));
+                //t3lib_div::devLog('html', 'pdf_export', 0, array($html));
             
                 //return $html;
         }

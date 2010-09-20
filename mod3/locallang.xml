@@ -21,6 +21,7 @@
 			<label index="download_button_spss_base">Download SPSS Base-File</label>
 			<label index="download_button_spss_data">Download SPSS Data-File</label>
 			<label index="download_button_pdf_blank">Download the empty PDF-Questionnaire</label>
+			<label index="download_button_pdf_filled">Download a result as PDF-Questionnaire</label>			
 			<label index="download_only_finished">download only finished results</label>
 			<label index="download_with_authcode">download with the AuthCode of participant</label>
 			<label index="download_only_this_lang">download only this language results</label>
@@ -52,6 +53,7 @@
 			<label index="download_button_spss_base">Download der SPSS Basis-Datei</label>
 			<label index="download_button_spss_data">Download der SPSS Daten-File</label>
 			<label index="download_button_pdf_blank">Download des leeren PDF-Fragebogens</label>
+			<label index="download_button_pdf_filled">Download eines Ergebnisses als PDF-Fragebogens</label>			
 			<label index="download_only_finished">nur abgeschlossene Teilnahmen herunterladen</label>
 			<label index="download_with_authcode">mit dem zugehörigen AuthCode herunterladen</label>
 			<label index="download_only_this_lang">nur die Ergebnisse der ausgewählten Sprache herunterladen</label>
