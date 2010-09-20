@@ -135,3 +135,9 @@
     background-color: #fff;
     padding: 2px;
 }
+
+.compare {
+    margin-top: 5px;
+    background-color: #ddd;
+    padding: 0 5px 5px 5px;
+}

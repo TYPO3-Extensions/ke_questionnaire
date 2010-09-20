@@ -63,6 +63,33 @@
 						</config>
 					</TCEforms>
 				</q_report_graph>
+				<pdf_type>
+					<TCEforms>
+						<exclude>1</exclude>
+						<label>LLL:EXT:ke_questionnaire/locallang.xml:tt_content.pi_flexform.pdf_type</label>
+						<!--<displayCond>FIELD:type:=:QUIZ</displayCond>!-->
+						<displayCond>EXT:ke_dompdf:LOADED:true</displayCond>
+						<config>
+							<type>select</type>
+							<items type="array">
+								<numIndex index="1" type="array">
+									<numIndex index="0">LLL:EXT:ke_questionnaire/locallang.xml:tt_content.pi_flexform.pdf_type.empty</numIndex>
+									<numIndex index="1">EMPTY</numIndex>
+								</numIndex>
+								<numIndex index="2" type="array">
+									<numIndex index="0">LLL:EXT:ke_questionnaire/locallang.xml:tt_content.pi_flexform.pdf_type.filled</numIndex>
+									<numIndex index="1">FILLED</numIndex>
+								</numIndex>
+								<numIndex index="3" type="array">
+									<numIndex index="0">LLL:EXT:ke_questionnaire/locallang.xml:tt_content.pi_flexform.pdf_type.compare</numIndex>
+									<numIndex index="1">COMPARE</numIndex>
+								</numIndex>         
+							</items>         
+							<maxitems>5</maxitems>
+							<size>5</size>
+						</config>
+					</TCEforms>
+				</pdf_type>
 				<storage_pid>
 					<TCEforms>
 						<exclude>1</exclude>

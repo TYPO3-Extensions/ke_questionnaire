@@ -66,7 +66,7 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 			$ff_data = t3lib_div::xml2array($this->q_data['pi_flexform']);
 			$this->ff_data = $ff_data['data'];
 		}
-		t3lib_div::devLog('getCSVInfos ffdata', 'ke_questionnaire Export Mod', 0, $this->ff_data);
+		//t3lib_div::devLog('getCSVInfos ffdata', 'ke_questionnaire Export Mod', 0, $this->ff_data);
 		/*
 		if (t3lib_div::_GP('clear_all_cache'))	{
 			$this->include_once[] = PATH_t3lib.'class.t3lib_tcemain.php';
@@ -223,6 +223,10 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 					}
 					if (t3lib_div::_GP('get_pdf_filled')){
 						$content .= $this->getPDFDownload('filled');
+						exit;
+					}
+					if (t3lib_div::_GP('get_pdf_compare')){
+						$content .= $this->getPDFDownload('compare');
 						exit;
 					}
 				break;
@@ -402,21 +406,24 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 			$content .= '<br /><hr><br />';
 			$content .= '<p>'.$this->getResultSelect().'</p><br />';
 			$content .= '<p><input type="submit" name="get_pdf_filled" value="'.$LANG->getLL('download_button_pdf_filled').'" /></p>';
+			$content .= '<br /><hr><br />';
+			$content .= '<p>'.$this->getResultSelect('compare').'</p><br />';
+			$content .= '<p><input type="submit" name="get_pdf_compare" value="'.$LANG->getLL('download_button_pdf_compare').'" /></p>';
 		} else {
 			$content .= '<p>'.$LANG->getLL('error_no_fpdf_kedompdf').'</p>';
 		}
 		return $content;
 	}
 	
-	function getResultSelect(){
+	function getResultSelect($type = 'filled'){
 		$content = '';
-		$content .= '<select name="result_id">';
+		$content .= '<select name="result_id_'.$type.'">';
 		
 		$table = 'tx_kequestionnaire_results';
 		$where = 'pid='.$this->ff_data['sDEF']['lDEF']['storage_pid']['vDEF'];
 		$where .= ' AND deleted=0 AND hidden=0';
 		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('uid',$table,$where);
-		t3lib_div::devLog('getResults', 'ke_questionnaire Export Mod', 0, array($GLOBALS['TYPO3_DB']->SELECTquery('uid',$table,$where)));
+		//t3lib_div::devLog('getResults', 'ke_questionnaire Export Mod', 0, array($GLOBALS['TYPO3_DB']->SELECTquery('uid',$table,$where)));
 		if ($res){
 			while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)){
 				$content .= '<option value="'.$row['uid'].'">'.$row['uid'].'</option>';
@@ -1485,7 +1492,7 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 					$pdfdata = $pdf->getPDFBlank();
 					break;
 				case 'filled':
-					$row = t3lib_BEfunc::getRecord('tx_kequestionnaire_results',t3lib_div::_GP('result_id'));
+					$row = t3lib_BEfunc::getRecord('tx_kequestionnaire_results',t3lib_div::_GP('result_id_filled'));
 					//t3lib_div::devLog('result_row', 'ke_questionnaire Export Mod', 0, $row);
 					$temp_array = '';
 					$encoding = "UTF-8";
@@ -1496,6 +1503,20 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 						$temp_array = t3lib_div::xml2array(utf8_encode($row['xmldata']));
 					}
 					$pdfdata = $pdf->getPDFFilled($temp_array);
+					break;
+				case 'compare':
+					$row = t3lib_BEfunc::getRecord('tx_kequestionnaire_results',t3lib_div::_GP('result_id_compare'));
+					t3lib_div::devLog('result_row', 'ke_questionnaire Export Mod', 0, $row);
+					$temp_array = '';
+					$encoding = "UTF-8";
+					if ( true === mb_check_encoding ($row['xmldata'], $encoding ) ){
+						$temp_array = t3lib_div::xml2array($row['xmldata']);
+						if (count($temp_array) == 1) $temp_array = t3lib_div::xml2array(utf8_encode($row['xmldata']));
+					} else {
+						$temp_array = t3lib_div::xml2array(utf8_encode($row['xmldata']));
+					}
+					$pdfdata = $pdf->getPDFCompare($temp_array);
+					break;
 				default:
 					break;
 			}

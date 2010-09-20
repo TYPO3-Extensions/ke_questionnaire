@@ -32,6 +32,12 @@
 			<label index="tt_content.pi_flexform.q_report_graph">show graphical analysis</label>
 			<label index="tt_content.redirect_on_finish_uid">Question used for redirect on finish</label>
 			
+			<label index="tt_content.pi_flexform.pdf_type">PDF-Export after finishing</label>
+			<label index="tt_content.pi_flexform.pdf_type.none">none</label>
+			<label index="tt_content.pi_flexform.pdf_type.empty">empty Questionnaire</label>
+			<label index="tt_content.pi_flexform.pdf_type.filled">filled with own result</label>
+			<label index="tt_content.pi_flexform.pdf_type.compare">result compared with correct answers</label>
+			
 			<label index="tt_content.pi_flexform.access">Access</label>
 			<label index="tt_content.pi_flexform.access.free">free</label>
 			<label index="tt_content.pi_flexform.access.fe_users">FE-User</label>
@@ -128,6 +134,12 @@
 			<label index="tt_content.pi_flexform.user_reports">Frontend-Auswertungen für Nutzer anzeigen</label>
 			<label index="tt_content.pi_flexform.q_report_graph">graphische Auswertung anzeigen</label>
 			<label index="tt_content.redirect_on_finish_uid">Frage, welche die Umleitung nach Abschluss bestimmt</label>
+			
+			<label index="tt_content.pi_flexform.pdf_type">PDF-Export nach Beendigung</label>
+			<label index="tt_content.pi_flexform.pdf_type.none">keiner</label>
+			<label index="tt_content.pi_flexform.pdf_type.empty">leerer Fragebogen</label>
+			<label index="tt_content.pi_flexform.pdf_type.filled">gefüllt mit dem eigenene Ergebnis</label>
+			<label index="tt_content.pi_flexform.pdf_type.compare">als Vergleich mit den richtigen Antworten</label>
 
 			<label index="tt_content.pi_flexform.access">Zugriff</label>
 			<label index="tt_content.pi_flexform.access.free">Freier Zugriff</label>

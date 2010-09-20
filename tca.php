@@ -296,13 +296,22 @@ $TCA["tx_kequestionnaire_questions"] = array (
 				"maxitems" => 1,
 			)
 		),
-                "open_validation_text" => Array (
-                        'displayCond' => 'FIELD:open_validation:=:text',
+        "open_validation_text" => Array (
+            'displayCond' => 'FIELD:open_validation:=:text',
 			"exclude" => 1,
 			"label" => "LLL:EXT:ke_questionnaire/locallang_db.xml:tx_kequestionnaire_questions.open_validation_text",
 			"config" => Array (
 				"type" => "input",
 				"size" => "30",
+			)
+		),
+		"open_compare_text" => Array (
+			"exclude" => 1,
+			"label" => "LLL:EXT:ke_questionnaire/locallang_db.xml:tx_kequestionnaire_questions.open_compare_text",
+			"config" => Array (
+				"type" => "text",
+				"cols" => "30",
+				"rows" => "5",
 			)
 		),
 		"closed_type" => Array (
@@ -753,7 +762,7 @@ $TCA["tx_kequestionnaire_questions"] = array (
                                 dependant_show,
                                 dependancy_simple,
                                 dependancy"),
-		"open" => array(
+				"open" => array(
                              "showitem" => "
                                 --div--;LLL:EXT:ke_questionnaire/locallang.xml:tx_kequestionnaire.base,
                                 sys_language_uid;;;;1-1-1,
@@ -779,7 +788,8 @@ $TCA["tx_kequestionnaire_questions"] = array (
                                 open_in_text,
                                 open_post_text,
                                 open_validation,
-                                open_validation_text"),
+                                open_validation_text,
+								open_compare_text"),
                 "closed" => array(
                              "showitem" => "
                                 --div--;LLL:EXT:ke_questionnaire/locallang.xml:tx_kequestionnaire.base,

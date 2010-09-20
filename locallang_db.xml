@@ -47,6 +47,7 @@
 			<label index="tx_kequestionnaire_questions.open_validation.I.4">text</label>
 			<label index="tx_kequestionnaire_questions.open_validation">open question validation</label>
 			<label index="tx_kequestionnaire_questions.open_validation_text">text to validate the answers against</label>
+			<label index="tx_kequestionnaire_questions.open_compare_text">text for result comparition</label>
 			<label index="tx_kequestionnaire_questions.closed_type.I.0">single with radiobuttons</label>
 			<label index="tx_kequestionnaire_questions.closed_type.I.1">multiple with checkboxes</label>
 			<label index="tx_kequestionnaire_questions.closed_type.I.2">single selectbox</label>
@@ -201,6 +202,7 @@
 			<label index="tx_kequestionnaire_questions.open_validation.I.4">Text</label>
 			<label index="tx_kequestionnaire_questions.open_validation">Überprüfung</label>
 			<label index="tx_kequestionnaire_questions.open_validation_text">Vergleichs-Text für die Text-Überprüfung</label>
+			<label index="tx_kequestionnaire_questions.open_compare_text">Text für den Ergebnis-Vergleich durch den Teilnehmer</label>
 			<label index="tx_kequestionnaire_questions.closed_type.I.0">Einfachauswahl mit Radiobuttons</label>
 			<label index="tx_kequestionnaire_questions.closed_type.I.1">Mehrfachauswahl mit Checkboxen</label>
 			<label index="tx_kequestionnaire_questions.closed_type.I.2">Einfachauswahl mit Select-Box</label>

@@ -92,6 +92,11 @@
 			<label index="standard_endtext">Vielen Dank für ihre Teilnahme</label>
 			
 			<label index="privacy_link_label">Link Datenschutzerklärung</label>
+			<label index="pdf_empty">leeren Fragebogen herunterladen</label>
+			<label index="pdf_filled">ausgefüllten Fragebogen herunterladen</label>
+			<label index="pdf_compare">Vergleich herunterladen</label>
+			
+			<label index="pdf_compare_title">korrekte Antwort</label>
 		</languageKey>
 		<languageKey index="de" type="array">
 			<label index="test">Test</label>
@@ -179,6 +184,11 @@
 
 			<label index="standard_endtext">Vielen Dank für ihre Teilnahme</label>
 			<label index="privacy_link_label">Link Datenschutzerklärung</label>
+			<label index="pdf_empty">leeren Fragebogen herunterladen</label>
+			<label index="pdf_filled">ausgefüllten Fragebogen herunterladen</label>
+			<label index="pdf_compare">Vergleich herunterladen</label>
+			
+			<label index="pdf_compare_title">korrekte Antwort</label>
 		</languageKey>
 	</data>
 </T3locallang>

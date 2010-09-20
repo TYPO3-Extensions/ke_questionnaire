@@ -42,10 +42,13 @@ class dompdf_export {
                 
                 $this->pdf = new DOMPDF();
                 
-                $this->getQuestions();
-                t3lib_div::devLog('questions', 'pdf_export', 0, $this->questions);
+                $basePath = t3lib_extMgm::extPath('ke_questionnaire').'pi1/locallang.php';
+                $tempLOCAL_LANG = t3lib_div::readLLfile($basePath,'default');
+                //array_merge with new array first, so a value in locallang (or typoscript) can overwrite values from ../locallang_db
+                $this->LOCAL_LANG = array_merge_recursive($tempLOCAL_LANG,is_array($this->LOCAL_LANG) ? $this->LOCAL_LANG : array());
+                $this->LOCAL_LANG = $this->LOCAL_LANG['default'];
         }
-      
+              
         /**
          * Gather all the questions of this questionnaire ready for showing
          *
@@ -70,7 +73,17 @@ class dompdf_export {
             
                 $this->questionCount['only_questions'] = count($this->questions);
                 $this->questionCount['total'] = count($this->allQuestions);
-                t3lib_div::devLog('questionCount', $this->prefixId, 0, $this->questionCount);
+                
+                if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['ke_questionnaire']['dompdf_export_getQuestions'])){
+                        foreach($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['ke_questionnaire']['dompdf_export_getQuestions'] as $_classRef){
+                                $_procObj = & t3lib_div::getUserObj($_classRef);
+                                $hook_questions = $_procObj->dompdf_export_getQuestions($this);
+                                if (is_array($hook_questions)) $this->questions = $hook_questions;
+                        }
+                }
+                
+                
+                t3lib_div::devLog('questions', 'DOMPDF Export', 0, $this->questions);
         }
         
         function getOptions($uid){
@@ -139,6 +152,7 @@ class dompdf_export {
         }
       
         function getPDFBlank(){
+                $this->getQuestions();
                 $html = $this->getHTML('blank');
                 //t3lib_div::devLog('html', 'pdf_export', 0, array($html));
                 
@@ -152,9 +166,26 @@ class dompdf_export {
         
         function getPDFFilled($result){
                 $this->result = $result;
-                //t3lib_div::devLog('result', 'pdf_export', 0, $result);
+                $this->getQuestions();
+                t3lib_div::devLog('result', 'pdf_export', 0, $result);
                 
                 $html = $this->getHTML('filled');
+                
+                $this->pdf->load_html($html);
+                
+                $this->pdf->render();
+                $this->pdf->stream("questionnaire_".$this->pid.".pdf");
+                //t3lib_div::devLog('html', 'pdf_export', 0, array($html));
+            
+                //return $html;
+        }
+        
+        function getPDFCompare($result){
+                $this->result = $result;
+                $this->getQuestions();
+                //t3lib_div::devLog('result', 'pdf_export', 0, $result);
+                
+                $html = $this->getHTML('compare');
                 
                 $this->pdf->load_html($html);
                 
@@ -172,7 +203,7 @@ class dompdf_export {
                 switch ($type){
                         case 'blank':
                                 $content .= $this->renderFirstPage();
-                                t3lib_div::devLog('getHTML '.$type, 'pdf_export', 0,array($content));
+                                //t3lib_div::devLog('getHTML '.$type, 'pdf_export', 0,array($content));
                                 foreach ($this->questions as $nr => $question){
                                         $content .= $this->renderQuestion($question);
                                 }
@@ -181,8 +212,14 @@ class dompdf_export {
                         case 'filled':
                                 $content .= $this->renderFirstPage();
                                 foreach ($this->questions as $nr => $question){
-                                        t3lib_div::devLog('columns', $this->prefixId, 0, $question);
-                                        $content .= $this->renderQuestion($question,$result[$question['uid']]);
+                                        //t3lib_div::devLog('columns', $this->prefixId, 0, $question);
+                                        $content .= $this->renderQuestion($question,false);
+                                }
+                        break;
+                        case 'compare':
+                                $content .= $this->renderFirstPage();
+                                foreach ($this->questions as $nr => $question){
+                                        $content .= $this->renderQuestion($question,true);
                                 }
                         break;
                 }
@@ -211,12 +248,15 @@ class dompdf_export {
                 $this->templates['open_single'] = $open_template;
                 $open_template = t3lib_parsehtml::getSubpart($temp, '###DOMPDF_MULTI###');
                 $this->templates['open_multi'] = $open_template;
+                $open_template = t3lib_parsehtml::getSubpart($temp, '###DOMPDF_COMPARE###');
+                $this->templates['open_compare'] = $open_template;
                 
                 //closed questions
                 $templateName = 'question_closed.html';
                 $temp = file_get_contents($templateFolder.$templateName);
                 $this->templates['closed'] = t3lib_parsehtml::getSubpart($temp, '###DOMPDF###');
                 $this->templates['closed_options'] = t3lib_parsehtml::getSubpart($temp, '###DOMPDF_OPTION###');
+                $this->templates['closed_compare'] = t3lib_parsehtml::getSubpart($temp, '###DOMPDF_COMPARE###');
                 
                 //semantic questions
                 $templateName = 'question_semantic.html';
@@ -224,6 +264,7 @@ class dompdf_export {
                 $this->templates['semantic'] = t3lib_parsehtml::getSubpart($temp, '###DOMPDF###');
                 $this->templates['semantic_line'] = t3lib_parsehtml::getSubpart($temp, '###DOMPDF_LINE###');
                 $this->templates['semantic_column'] = t3lib_parsehtml::getSubpart($temp, '###DOMPDF_COLUMN###');
+                $this->templates['semantic_compare'] = t3lib_parsehtml::getSubpart($temp, '###DOMPDF_COMPARE###');
                 
                 //matrix questions
                 $templateName = 'question_matrix.html';
@@ -231,6 +272,7 @@ class dompdf_export {
                 $this->templates['matrix'] = t3lib_parsehtml::getSubpart($temp, '###DOMPDF###');
                 $this->templates['matrix_line'] = t3lib_parsehtml::getSubpart($temp, '###DOMPDF_LINE###');
                 $this->templates['matrix_column'] = t3lib_parsehtml::getSubpart($temp, '###DOMPDF_COLUMN###');
+                $this->templates['matrix_compare'] = t3lib_parsehtml::getSubpart($temp, '###DOMPDF_COMPARE###');
                 
                 //blind questions
                 $templateName = 'question_blind.html';
@@ -243,11 +285,11 @@ class dompdf_export {
                 $this->templates['demographic'] = t3lib_parsehtml::getSubpart($temp, '###DOMPDF###');
                 $this->templates['demographic_line'] = t3lib_parsehtml::getSubpart($temp, '###DOMPDF_LINE###');
                 
-                //blind questions
+                //privacy questions
                 $templateName = 'question_privacy.html';
                 $temp = file_get_contents($templateFolder.$templateName);
                 $this->templates['privacy'] = t3lib_parsehtml::getSubpart($temp, '###DOMPDF###');
-                
+
                 if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['ke_questionnaire']['dompdf_export_getTemplates'])){
                         foreach($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['ke_questionnaire']['dompdf_export_getTemplates'] as $_classRef){
                                 $_procObj = & t3lib_div::getUserObj($_classRef);
@@ -279,10 +321,12 @@ class dompdf_export {
                 return $css;
         }
         
-        function renderQuestion($question){
+        function renderQuestion($question, $compare = false){
                 $markerArray = array();
                 $markerArray['###QUESTION_TITLE###'] = '';
                 $markerArray['###QUESTION###'] = '';
+                $markerArray['###COMPARE###'] = '';
+                if ($compare) $markerArray['###COMPARE###'] = $this->renderCompare($question);
                 $markerArray['###HELPTEXT###'] = $question['helptext'];
                 
                 if ($question['text'] == '') {
@@ -367,6 +411,40 @@ class dompdf_export {
                 }
                 //$html .= '</div>';
                 return $html;
+        }
+        
+        function renderCompare($question){
+                $content = '';
+                $markerArray = array();
+                
+                $markerArray['###COMPARE_TITLE###'] = $this->LOCAL_LANG['pdf_compare_title'];
+                switch ($question['type']){
+                        case 'open':
+                                if ($question['open_compare_text']){
+                                        $markerArray['###VALUE###'] = nl2br($question['open_compare_text']);
+                                        $content .= $this->renderContent($this->templates['open_compare'],$markerArray);
+                                }
+                                break;
+                        case 'closed':
+                                $options = $this->getOptions($question['uid']);
+                                $markerArray['###OPTIONS###'] = '';
+                                foreach ($options as $option){
+                                        $o_markerArray = array();
+                                        $o_markerArray['###VALUE###'] = $value;
+                                        $o_markerArray['###INPUT_TEXT###'] = '';
+                                        if ($option['correct_answer']){
+                                                $o_markerArray['###VALUE###'] = 'X';
+                                        }
+                                        $text = $option['title'];
+                                        if ($option['text'] != '') $text = $option['text'];
+                                        $o_markerArray['###TEXT###'] = $text;
+                                        $markerArray['###OPTIONS###'] .= $this->renderContent($this->templates['closed_options'],$o_markerArray);
+                                }
+                                if ($markerArray['###OPTIONS###'] != '') $content .= $this->renderContent($this->templates['closed_compare'],$markerArray);
+                                break;
+                }
+                
+                return $content;
         }
         
         function renderDemographicQuestion($question,$markerArray,$answered){

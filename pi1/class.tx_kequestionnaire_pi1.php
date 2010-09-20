@@ -96,8 +96,8 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 		//Initialize the Plugin
 		$this->init();
 		
-		t3lib_div::devLog('PIVars', $this->prefixId, 0, $this->piVars);
-		//t3lib_div::devLog('Flex Form Array pi1', $this->prefixId, 0, $this->ffdata);
+		//t3lib_div::devLog('PIVars', $this->prefixId, 0, $this->piVars);
+		t3lib_div::devLog('Flex Form Array pi1', $this->prefixId, 0, $this->ffdata);
 		//t3lib_div::devLog('conf', $this->prefixId, 0, $this->conf);
 		//t3lib_div::devLog('questions', $this->prefixId, 0, $this->questions);
 		//t3lib_div::devLog('_POST', $this->prefixId, 0, $_POST);
@@ -207,7 +207,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 		//t3lib_div::devLog('lastanswered: '.$this->lastAnswered, $this->prefixId, 0, $this->saveArray[$this->lastAnswered]);
 
 		$content = $this->renderContent($subPart,$markerArray);
-		t3lib_div::devLog('to be saved saveArray '.$this->piVars['result_id'].'-'.$save, $this->prefixId, 0, array($this->saveArray));
+		//t3lib_div::devLog('to be saved saveArray '.$this->piVars['result_id'].'-'.$save, $this->prefixId, 0, array($this->saveArray));
 		if ($save){
 			$this->setResults($this->piVars['result_id']);
 			//t3lib_div::devLog('saved saveArray '.$this->piVars['result_id'], $this->prefixId, 0, array($this->saveArray));
@@ -1079,19 +1079,67 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 		
 		//PDF-Output
 		$markerArray['###PDF###'] = '';
-		$link_title = 'test';
-		$add_params = array();
-		$add_params[$this->prefixId.'[pdf]'] = 1;
-		$add_params[$this->prefixId.'[q_id]'] = $q_id;
-		$add_params[$this->prefixId.'[p_id]'] = $this->piVars['result_id'];
-		$add_params[$this->prefixId.'[type]'] = 'filled';
-		$add_params['no_cache'] = 1;
-		$pdf_link = $this->pi_linkToPage($link_title,
-			$GLOBALS['TSFE']->id,
-			'',
-			$add_params
-		);
-		$markerArray['###PDF###'] = $pdf_link;
+		if ($this->ffdata['pdf_type']){
+			$pdf_types = explode(',',$this->ffdata['pdf_type']);
+			$pdf_links = '';
+			foreach ($pdf_types as $pdf_type){
+				$temp_markerArray = array();
+				$pdf_type = strtolower($pdf_type);
+				$temp_markerArray['###TYPE###'] = $pdf_type;
+				switch ($pdf_type){
+					case 'empty':
+							$link_title = $this->pi_getLL('pdf_empty');
+							$add_params = array();
+							$add_params[$this->prefixId.'[pdf]'] = 1;
+							$add_params[$this->prefixId.'[q_id]'] = $q_id;
+							$add_params[$this->prefixId.'[p_id]'] = $this->piVars['result_id'];
+							$add_params[$this->prefixId.'[type]'] = 'empty';
+							$add_params['no_cache'] = 1;
+							$pdf_link = $this->pi_linkToPage($link_title,
+								$GLOBALS['TSFE']->id,
+								'',
+								$add_params
+							);
+							$temp_markerArray['###LINK###'] = $pdf_link;
+							$pdf_links .= $this->renderContent('###PDF_LINK_LINE###',$temp_markerArray);
+						break;
+					case 'filled':
+							$link_title = $this->pi_getLL('pdf_filled');
+							$add_params = array();
+							$add_params[$this->prefixId.'[pdf]'] = 1;
+							$add_params[$this->prefixId.'[q_id]'] = $q_id;
+							$add_params[$this->prefixId.'[p_id]'] = $this->piVars['result_id'];
+							$add_params[$this->prefixId.'[type]'] = 'filled';
+							$add_params['no_cache'] = 1;
+							$pdf_link = $this->pi_linkToPage($link_title,
+								$GLOBALS['TSFE']->id,
+								'',
+								$add_params
+							);
+							$temp_markerArray['###LINK###'] = $pdf_link;
+							$pdf_links .= $this->renderContent('###PDF_LINK_LINE###',$temp_markerArray);
+						break;
+					case 'compare':
+							$link_title = $this->pi_getLL('pdf_compare');
+							$add_params = array();
+							$add_params[$this->prefixId.'[pdf]'] = 1;
+							$add_params[$this->prefixId.'[q_id]'] = $q_id;
+							$add_params[$this->prefixId.'[p_id]'] = $this->piVars['result_id'];
+							$add_params[$this->prefixId.'[type]'] = 'compare';
+							$add_params['no_cache'] = 1;
+							$pdf_link = $this->pi_linkToPage($link_title,
+								$GLOBALS['TSFE']->id,
+								'',
+								$add_params
+							);
+							$temp_markerArray['###LINK###'] = $pdf_link;
+							$pdf_links .= $this->renderContent('###PDF_LINK_LINE###',$temp_markerArray);
+						break;
+				}
+			}
+			$markerArray['###PDF###'] = $pdf_links;	
+		}
+		
 		
 		$add_info = '';
 		switch ($this->type){
@@ -1441,7 +1489,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 	/**
 	 * Render the PDF
 	 */
-	function getPDF($type = 'blank'){
+	function getPDF($type = 'empty'){
 		if (t3lib_extMgm::isLoaded('ke_dompdf')){
 			require_once(t3lib_extMgm::extPath('ke_questionnaire').'res/other/class.dompdf_export.php');
 			$pdfdata = '';
@@ -1452,12 +1500,16 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 			$pdf = new dompdf_export($pdf_conf,$storage_pid, 'test',$this->cObj->data['pi_flexform']['data']);
 	
 			switch ($type){
-				case 'blank':
+				case 'empty':
 					$pdfdata = $pdf->getPDFBlank();
 					break;
 				case 'filled':
 					$this->getResults($this->piVars['p_id'],false);
 					$pdfdata = $pdf->getPDFFilled($this->saveArray);
+					break;
+				case 'compare':
+					$this->getResults($this->piVars['p_id'],false);
+					$pdfdata = $pdf->getPDFCompare($this->saveArray);
 					break;
 				default:
 					break;
