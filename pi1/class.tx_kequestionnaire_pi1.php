@@ -207,7 +207,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 		//t3lib_div::devLog('lastanswered: '.$this->lastAnswered, $this->prefixId, 0, $this->saveArray[$this->lastAnswered]);
 
 		$content = $this->renderContent($subPart,$markerArray);
-		//t3lib_div::devLog('to be saved saveArray '.$this->piVars['result_id'].'-'.$save, $this->prefixId, 0, array($this->saveArray));
+		t3lib_div::devLog('to be saved saveArray '.$this->piVars['result_id'].'-'.$save, $this->prefixId, 0, array($this->saveArray));
 		if ($save){
 			$this->setResults($this->piVars['result_id']);
 			//t3lib_div::devLog('saved saveArray '.$this->piVars['result_id'], $this->prefixId, 0, array($this->saveArray));
@@ -427,7 +427,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 			$this->piVars['result_id'] = $GLOBALS['TYPO3_DB']->sql_insert_id();
 		}
 
-		if (is_array($this->saveArray)){
+		if (is_array($this->saveArray) AND !($this->piVars['pdf'])){
 			//t3lib_div::devLog('getResults saveArray', $this->prefixId, 0, array($this->saveArray));
 			foreach ($this->saveArray as $idy => $values){
 				$this->getLastAnsweredId($idy,$values);
@@ -437,6 +437,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 				}
 			}
 		}
+		//t3lib_div::devLog('getResults saveArray', $this->prefixId, 0, array($this->saveArray));
 	}
 
 	/**
@@ -1577,7 +1578,9 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 			}
 			
 			$saveArray = $question_obj->getSaveArray();
+			//t3lib_div::debug($saveArray,"getQuestionTypeRender");
 			$content = $question_obj->render();
+			//t3lib_div::debug($content,"getQuestionTypeRender");
 				
 			if (is_array($saveArray[$question['uid']])){
 				$this->saveArray[$question['uid']] = $saveArray[$question['uid']];

@@ -125,7 +125,7 @@ class question{
 		     $this->template = t3lib_extMgm::siteRelPath('ke_questionnaire_premium').'/res/templates/'.$this->templateName;
 		     $this->tmpl = $this->cObj->fileResource($this->template);
 		}
-		
+			
 		$mainSubpartName=$this->getTemplateName();
 		$this->tmplMain=$this->cObj->getSubpart($this->tmpl,$mainSubpartName);
 		$this->tmplFields=$this->cObj->getSubpart($this->tmplMain,"###FIELDS###");
@@ -473,6 +473,7 @@ class question{
 
 		$this->htmlFields=$this->renderFields();
 		$out = $this->renderQuestion();
+		
 		return $out;
     }
     /**
@@ -485,7 +486,6 @@ class question{
 		$out=array();
 		$odd=0;
 		foreach($this->fields as $key=>$field){
-
 			if (!$this->checkDependancies()) {
 			    $this->fields[$key]->value = FALSE;
 			}

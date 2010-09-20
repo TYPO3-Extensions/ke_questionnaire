@@ -237,11 +237,23 @@ class dompdf_export {
                 $temp = file_get_contents($templateFolder.$templateName);
                 $this->templates['blind'] = t3lib_parsehtml::getSubpart($temp, '###DOMPDF###');
                 
-                //dempgrahic questions
+                //demograhic questions
                 $templateName = 'question_demographic.html';
                 $temp = file_get_contents($templateFolder.$templateName);
                 $this->templates['demographic'] = t3lib_parsehtml::getSubpart($temp, '###DOMPDF###');
                 $this->templates['demographic_line'] = t3lib_parsehtml::getSubpart($temp, '###DOMPDF_LINE###');
+                
+                //blind questions
+                $templateName = 'question_privacy.html';
+                $temp = file_get_contents($templateFolder.$templateName);
+                $this->templates['privacy'] = t3lib_parsehtml::getSubpart($temp, '###DOMPDF###');
+                
+                if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['ke_questionnaire']['dompdf_export_getTemplates'])){
+                        foreach($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['ke_questionnaire']['dompdf_export_getTemplates'] as $_classRef){
+                                $_procObj = & t3lib_div::getUserObj($_classRef);
+                                $this->templates = $_procObj->dompdf_export_getTemplates($this,$templateFolder,$this->templates);
+                        }
+                }
                 
                 t3lib_div::devLog('templates', 'pdf', 0, $this->templates);
                 
@@ -290,6 +302,7 @@ class dompdf_export {
                         }
                 }
                 //t3lib_div::devLog('answered', 'pdf_export', 0, $answered);
+                //t3lib_div::devLog('question', 'pdf_export', 0, $question);
                 switch ($question['type']){
                         case 'blind':
                                 $html = $this->renderContent($this->templates['blind'],$markerArray);
@@ -339,13 +352,16 @@ class dompdf_export {
                         case 'demographic':
                                 $html = $this->renderDemographicQuestion($question,$markerArray,$answered);
                                 break;
-                        //privacy
-                        //extendet matrix for premium
+                        case 'privacy':
+                                $markerArray['###PRIVACY_TEXT###'] = $question['privacy_post'];
+                                $markerArray['###VALUE###'] = 'X';
+                                $html = $this->renderContent($this->templates['privacy'],$markerArray);
+                                break;
                         default:
-                                if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$this->extKey]['dompdf_export_renderQuestion'])){
-                                        foreach($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$this->extKey]['dompdf_export_renderQuestion'] as $_classRef){
+                                if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['ke_questionnaire']['dompdf_export_renderQuestion'])){
+                                        foreach($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['ke_questionnaire']['dompdf_export_renderQuestion'] as $_classRef){
                                                 $_procObj = & t3lib_div::getUserObj($_classRef);
-                                                $html = $_procObj->dompdf_export_renderQuestion($this,$question);
+                                                $html = $_procObj->dompdf_export_renderQuestion($this,$markerArray,$question, $answered);
                                         }
                                 }
                 }
@@ -462,7 +478,7 @@ class dompdf_export {
                         if ($subquestion['text'] != '') $text = $subquestion['text'];
                         $c_markerArray['###VALUE###'] = $text;
                         
-                        $l_markerArray['###COLUMNS###'] = $this->renderContent($this->templates['semantic_column'],$c_markerArray);
+                        $l_markerArray['###COLUMNS###'] = $this->renderContent($this->templates['matrix_column'],$c_markerArray);
                         foreach ($columns as $column){
                                 //t3lib_div::devLog('column', 'DomPDF', 0, $column);
                                 $value = '&nbsp;';
@@ -494,13 +510,9 @@ class dompdf_export {
                                 }
                                 if ($subquestion['title_line'] == 1) $c_markerArray['###VALUE###'] = $value;
                                 
-                                $l_markerArray['###COLUMNS###'] .= $this->renderContent($this->templates['semantic_column'],$c_markerArray);
+                                $l_markerArray['###COLUMNS###'] .= $this->renderContent($this->templates['matrix_column'],$c_markerArray);
                         }
-                        $c_markerArray = array();
-                        $c_markerArray['###CLASS###'] = 'semantic_end';
-                        $c_markerArray['###VALUE###'] = $subline['end'];
-                        $l_markerArray['###COLUMNS###'] .= $this->renderContent($this->templates['semantic_column'],$c_markerArray);
-                        $markerArray['###ROWS###'] .= $this->renderContent($this->templates['semantic_line'],$l_markerArray);
+                        $markerArray['###ROWS###'] .= $this->renderContent($this->templates['matrix_line'],$l_markerArray);
                 }
                 
                 $html = $this->renderContent($this->templates['matrix'],$markerArray);
