@@ -83,6 +83,10 @@
 								<numIndex index="3" type="array">
 									<numIndex index="0">LLL:EXT:ke_questionnaire/locallang.xml:tt_content.pi_flexform.pdf_type.compare</numIndex>
 									<numIndex index="1">COMPARE</numIndex>
+								</numIndex>
+								<numIndex index="4" type="array">
+									<numIndex index="0">LLL:EXT:ke_questionnaire/locallang.xml:tt_content.pi_flexform.pdf_type.outcome</numIndex>
+									<numIndex index="1">OUTCOMES</numIndex>
 								</numIndex>         
 							</items>         
 							<maxitems>5</maxitems>

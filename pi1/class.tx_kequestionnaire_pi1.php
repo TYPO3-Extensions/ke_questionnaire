@@ -97,7 +97,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 		$this->init();
 		
 		//t3lib_div::devLog('PIVars', $this->prefixId, 0, $this->piVars);
-		t3lib_div::devLog('Flex Form Array pi1', $this->prefixId, 0, $this->ffdata);
+		//t3lib_div::devLog('Flex Form Array pi1', $this->prefixId, 0, $this->ffdata);
 		//t3lib_div::devLog('conf', $this->prefixId, 0, $this->conf);
 		//t3lib_div::devLog('questions', $this->prefixId, 0, $this->questions);
 		//t3lib_div::devLog('_POST', $this->prefixId, 0, $_POST);
@@ -1086,56 +1086,36 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 				$temp_markerArray = array();
 				$pdf_type = strtolower($pdf_type);
 				$temp_markerArray['###TYPE###'] = $pdf_type;
+				
+				$add_params = array();
+				$add_params[$this->prefixId.'[pdf]'] = 1;
+				$add_params[$this->prefixId.'[p_id]'] = $this->piVars['result_id'];
+				$add_params['no_cache'] = 1;
 				switch ($pdf_type){
 					case 'empty':
 							$link_title = $this->pi_getLL('pdf_empty');
-							$add_params = array();
-							$add_params[$this->prefixId.'[pdf]'] = 1;
-							$add_params[$this->prefixId.'[q_id]'] = $q_id;
-							$add_params[$this->prefixId.'[p_id]'] = $this->piVars['result_id'];
 							$add_params[$this->prefixId.'[type]'] = 'empty';
-							$add_params['no_cache'] = 1;
-							$pdf_link = $this->pi_linkToPage($link_title,
-								$GLOBALS['TSFE']->id,
-								'',
-								$add_params
-							);
-							$temp_markerArray['###LINK###'] = $pdf_link;
-							$pdf_links .= $this->renderContent('###PDF_LINK_LINE###',$temp_markerArray);
 						break;
 					case 'filled':
 							$link_title = $this->pi_getLL('pdf_filled');
-							$add_params = array();
-							$add_params[$this->prefixId.'[pdf]'] = 1;
-							$add_params[$this->prefixId.'[q_id]'] = $q_id;
-							$add_params[$this->prefixId.'[p_id]'] = $this->piVars['result_id'];
 							$add_params[$this->prefixId.'[type]'] = 'filled';
-							$add_params['no_cache'] = 1;
-							$pdf_link = $this->pi_linkToPage($link_title,
-								$GLOBALS['TSFE']->id,
-								'',
-								$add_params
-							);
-							$temp_markerArray['###LINK###'] = $pdf_link;
-							$pdf_links .= $this->renderContent('###PDF_LINK_LINE###',$temp_markerArray);
 						break;
 					case 'compare':
 							$link_title = $this->pi_getLL('pdf_compare');
-							$add_params = array();
-							$add_params[$this->prefixId.'[pdf]'] = 1;
-							$add_params[$this->prefixId.'[q_id]'] = $q_id;
-							$add_params[$this->prefixId.'[p_id]'] = $this->piVars['result_id'];
 							$add_params[$this->prefixId.'[type]'] = 'compare';
-							$add_params['no_cache'] = 1;
-							$pdf_link = $this->pi_linkToPage($link_title,
-								$GLOBALS['TSFE']->id,
-								'',
-								$add_params
-							);
-							$temp_markerArray['###LINK###'] = $pdf_link;
-							$pdf_links .= $this->renderContent('###PDF_LINK_LINE###',$temp_markerArray);
+						break;
+					case 'outcomes':
+							$link_title = $this->pi_getLL('pdf_outcomes');
+							$add_params[$this->prefixId.'[type]'] = 'outcomes';
 						break;
 				}
+				$pdf_link = $this->pi_linkToPage($link_title,
+					$GLOBALS['TSFE']->id,
+					'',
+					$add_params
+				);
+				$temp_markerArray['###LINK###'] = $pdf_link;
+				$pdf_links .= $this->renderContent('###PDF_LINK_LINE###',$temp_markerArray);
 			}
 			$markerArray['###PDF###'] = $pdf_links;	
 		}
@@ -1273,17 +1253,53 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 		$markerArray['###TEXT###'] = str_replace('###PERCENT###',$own_percent,$markerArray['###TEXT###']);
 		
 		$markerArray['###REPORT###'] = '';
+		//Render outcomes
+		$markerArray['###REPORT###'] = $this->renderOutcome($points,$this->piVars);
+		
+				
+		$content = $this->renderContent('###POINTS_REPORT###',$markerArray);
+		
+		return $content;
+	}
+	
+	function renderOutcome($points = 0, $answers = array()) {
+		$content = '';
+		//t3lib_div::devLog('answers', $this->prefixId, 0, $answers);
 		
 		$where = 'pid='.$this->pid;
-		$res_outcomes = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*','tx_kequestionnaire_outcomes',$where);
+		$res_outcomes = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*','tx_kequestionnaire_outcomes',$where,'','sorting');
 		if ($res_outcomes){
 			while ($outcome = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res_outcomes)){
 				//t3lib_div::devLog('outcome', $this->prefixId, 0, $outcome);
-				if ($points >= $outcome['value_start'] AND $points <= $outcome['value_end']) $markerArray['###REPORT###'] .= $this->pi_RTEcssText($outcome['text']);
+				if ($outcome['type'] == 'dependancy'){
+					foreach ($this->questions as $question){
+						$test_it = $this->getQuestionTypeObject($question);
+						$dependants = $test_it->dependants;
+						foreach ($dependants as $dep){
+							if ($outcome['uid'] == $dep['dependant_outcome']){
+								switch ($question['closed_type']){
+									case 'radio_single':
+										if ($answers[$dep['activating_question']]['options'] == $dep['activating_value']){
+											$content .= $this->pi_RTEcssText($outcome['text']);
+										}
+										break;
+									case 'check_multi':
+										if (in_array($dep['activating_value'],$answers[$dep['activating_question']]['options'])){
+											$content .= $this->pi_RTEcssText($outcome['text']);
+										}
+										break;
+								}
+							}
+						}
+					}
+				} else {
+					//t3lib_div::devLog('outcome', $this->prefixId, 0, $outcome);
+					if ($points >= $outcome['value_start'] AND $points <= $outcome['value_end']) {
+						$content .= $this->pi_RTEcssText($outcome['text']);
+					}
+				} 
 			}
 		}
-		
-		$content = $this->renderContent('###POINTS_REPORT###',$markerArray);
 		
 		return $content;
 	}
@@ -1510,6 +1526,10 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 				case 'compare':
 					$this->getResults($this->piVars['p_id'],false);
 					$pdfdata = $pdf->getPDFCompare($this->saveArray);
+					break;
+				case 'outcomes':
+					$this->getResults($this->piVars['p_id'],false);
+					$pdfdata = $pdf->getPDFOutcomes($this->saveArray);
 					break;
 				default:
 					break;

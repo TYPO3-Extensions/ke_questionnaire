@@ -37,8 +37,8 @@ class dompdf_export {
                 $this->templateFolder = $this->ffdata['dDEF']['lDEF']['template_dir']['vDEF'];
                 if ($this->templateFolder == '') '../../../../'.trim($this->templateFolder);
                 
-                t3lib_div::devLog('conf', 'pdf_export', 0, $conf);
-                t3lib_div::devLog('ffdata', 'pdf_export', 0, $ffdata);
+                //t3lib_div::devLog('conf', 'pdf_export', 0, $conf);
+                //t3lib_div::devLog('ffdata', 'pdf_export', 0, $ffdata);
                 
                 $this->pdf = new DOMPDF();
                 
@@ -82,8 +82,27 @@ class dompdf_export {
                         }
                 }
                 
+                //t3lib_div::devLog('questions', 'DOMPDF Export', 0, $this->questions);
+        }
+        
+        function getOutcomes(){
+                $selectFields = '*';
+                $where = 'pid='.$this->pid.' AND hidden = 0 AND deleted = 0';
+                $orderBy = 'sorting';
+                $res = $GLOBALS['TYPO3_DB']->exec_SELECTquery($selectFields,'tx_kequestionnaire_outcomes',$where,'',$orderBy);
+                while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)){
+                        $this->outcomes[] = $row;
+                }
                 
-                t3lib_div::devLog('questions', 'DOMPDF Export', 0, $this->questions);
+                if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['ke_questionnaire']['dompdf_export_getOutcomes'])){
+                        foreach($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['ke_questionnaire']['dompdf_export_getOutcomes'] as $_classRef){
+                                $_procObj = & t3lib_div::getUserObj($_classRef);
+                                $hook_outcomes = $_procObj->dompdf_export_getOutcomes($this);
+                                if (is_array($hook_outcomes)) $this->outcomes = $hook_outcomes;
+                        }
+                }
+                
+                //t3lib_div::devLog('outcomes', 'DOMPDF Export', 0, $this->outcomes);
         }
         
         function getOptions($uid){
@@ -133,6 +152,24 @@ class dompdf_export {
                 
                 return $lines;
         }
+        
+        /**
+	 * Find the Questions type and get the question-Object
+	 */
+	function getDependants($question){
+                $dependants = array();
+		$uid = $question['uid'];
+                if ($uid != 0){
+                    $where = "activating_question=".$uid .' AND hidden=0 AND deleted=0';
+                    $res=$GLOBALS["TYPO3_DB"]->exec_SELECTgetRows("*", "tx_kequestionnaire_dependancies", $where,'','sorting');
+                    //t3lib_div::devLog('where', 'input', 0, array($where));
+                    foreach($res as $row){
+                        $dependants[$row["uid"]]=$row;
+                    }
+                }
+                
+                return $dependants;
+	}
         
         function getColumns($uid){
                 $lines = array();
@@ -196,6 +233,23 @@ class dompdf_export {
                 //return $html;
         }
         
+        function getPDFOutcomes($result){
+                $this->result = $result;
+                $this->getQuestions();
+                $this->getOutcomes();
+                //t3lib_div::devLog('result', 'pdf_export', 0, $result);
+                
+                $html = $this->getHTML('outcomes');
+                
+                $this->pdf->load_html($html);
+                
+                $this->pdf->render();
+                $this->pdf->stream("questionnaire_".$this->pid.".pdf");
+                //t3lib_div::devLog('html', 'pdf_export', 0, array($html));
+            
+                //return $html;
+        }
+        
         function getHTML($type){
                 $content = '';
                 
@@ -221,6 +275,10 @@ class dompdf_export {
                                 foreach ($this->questions as $nr => $question){
                                         $content .= $this->renderQuestion($question,true);
                                 }
+                        break;
+                        case 'outcomes':
+                                $content .= $this->renderFirstPage();
+                                $content .= $this->renderOutcomes();
                         break;
                 }
                 
@@ -289,6 +347,12 @@ class dompdf_export {
                 $templateName = 'question_privacy.html';
                 $temp = file_get_contents($templateFolder.$templateName);
                 $this->templates['privacy'] = t3lib_parsehtml::getSubpart($temp, '###DOMPDF###');
+                
+                //base
+                $templateName = 'questionnaire.html';
+                $temp = file_get_contents($templateFolder.$templateName);
+                $this->templates['base'] = t3lib_parsehtml::getSubpart($temp, '###DOMPDF###');
+                $this->templates['outcomes'] = t3lib_parsehtml::getSubpart($temp, '###DOMPDF_OUTCOMES###');
 
                 if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['ke_questionnaire']['dompdf_export_getTemplates'])){
                         foreach($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['ke_questionnaire']['dompdf_export_getTemplates'] as $_classRef){
@@ -297,11 +361,7 @@ class dompdf_export {
                         }
                 }
                 
-                t3lib_div::devLog('templates', 'pdf', 0, $this->templates);
-                
-                $templateName = 'questionnaire.html';
-                $temp = file_get_contents($templateFolder.$templateName);
-                $this->templates['base'] = t3lib_parsehtml::getSubpart($temp, '###DOMPDF###');
+                //t3lib_div::devLog('templates', 'pdf', 0, $this->templates);
                 
         }
         
@@ -319,6 +379,108 @@ class dompdf_export {
                 $css = $temp;
                 
                 return $css;
+        }
+        
+        /**
+	 * Calculate the points
+	 */
+	function calculatePoints($result){
+		$returner = array();
+                //t3lib_div::devLog('result', 'pdf_export', 0, $result);
+		
+		foreach ($this->questionsByID as $qid => $question){
+			$temp .= $qid;
+			$titles[] = $question['title'];
+			$bars['total'][$qid] = 0;
+			$bars['own'][$qid] = 0;
+			$bars['titles'][$qid] = $question['title'];
+			switch ($question['type']){
+				case 'closed':
+                                        $options = $this->getOptions($qid);
+                                        //t3lib_div::devLog('result answers '.$question['title'], 'pdf_export', 0, $options);
+					$answer_max_points = 0;
+					foreach ($options as $answer){
+                                                $answers[$answer['uid']]['points'] = $answer['value'];
+                                                switch ($question['closed_type']){
+                                                        case 'radio_single':
+                                                        case 'sbm_button':
+                                                        case 'select_single':
+                                                                if ($answer['value']>$answer_max_points) $answer_max_points = $answer['value'];
+                                                                break;
+                                                        case 'check_multi':
+                                                        case 'select_multi':
+                                                                $answer_max_points += $answer['value'];
+                                                                break;
+                                                }
+                                        }
+										
+                                        //t3lib_div::devLog('result answers '.$question['title'], 'pdf_export', 0, $answers);
+					switch ($question['closed_type']){
+						case 'sbm_button':
+						case 'radio_single':
+						case 'select_single':
+							$bars['own'][$qid] = intval($answers[$result[$qid]['answer']['options']]['points']);
+							break;
+						case 'check_multi':
+						case 'select_multi':
+							if (is_array($result[$qid]['answer']['options'])){
+								foreach ($result[$qid]['answer']['options'] as $item){
+									$bars['own'][$qid] += $answers[$item]['points'];
+								}
+							}
+							break;
+					}
+					
+					$own_total += $bars['own'][$qid];
+					$max_points += $answer_max_points;
+					break;
+			}
+		}
+		//t3lib_div::devLog('points bars', 'pdf_export', 0, $bars);
+		$returner['percent'] = ($own_total/$max_points)*100;
+		$returner['own'] = $own_total;
+		$returner['max'] = $max_points;
+		
+                return $returner;
+	}
+        
+        function renderOutcomes(){
+                $content = '';
+                $answers = $this->result;
+                //t3lib_div::devLog('result', 'pdf_export', 0, $this->result);
+                //t3lib_div::devLog('outcomes', 'pdf_export', 0, $this->outcomes);
+                $points = $this->calculatePoints($this->result);
+                //t3lib_div::devLog('points', 'pdf_export', 0, $points);
+                foreach ($this->outcomes as $outcome){
+                        if ($outcome['type'] == 'dependancy'){
+                                foreach ($this->questions as $question){
+                                        $dependants = $this->getDependants($question);
+                                        //t3lib_div::devLog('dependants', 'pdf_export', 0, $dependants);
+                                        foreach ($dependants as $dep){
+                                                if ($outcome['uid'] == $dep['dependant_outcome']){
+                                                        switch ($question['closed_type']){
+                                                                case 'radio_single':
+                                                                        if ($answers[$dep['activating_question']]['answer']['options'] == $dep['activating_value']){
+                                                                                $content .= '<p>'.nl2br($outcome['text']).'<(p>';
+                                                                        }
+                                                                        break;
+                                                                case 'check_multi':
+                                                                        if (in_array($dep['activating_value'],$answers[$dep['activating_question']]['answer']['options'])){
+                                                                                $content .= '<p>'.nl2br($outcome['text']).'<(p>';
+                                                                        }
+                                                                        break;
+                                                        }
+                                                }
+                                        }
+                                }
+                        } else {
+                                if ($points['own'] >= $outcome['value_start'] AND $points['own'] < $outcome['value_end']) {
+                                        $content .= '<p>'.nl2br($outcome['text']).'<(p>';
+                                }
+                        }
+                }
+                
+                return $content;
         }
         
         function renderQuestion($question, $compare = false){

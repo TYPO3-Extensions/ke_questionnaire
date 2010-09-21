@@ -174,10 +174,11 @@ class question{
 	    if ($uid == 0) $uid = $this->question['uid'];
 	    if ($l18n_parent == 0) $l18n_parent = $this->question['l18n_parent'];
 	    if ($uid != 0){
-		$where = "dependant_question=".$uid .$this->cObj->enableFields('tx_kequestionnaire_dependancies');
+		$where = "dependant_question=".$uid.$this->cObj->enableFields('tx_kequestionnaire_dependancies');
 		$res = $GLOBALS["TYPO3_DB"]->exec_SELECTgetRows("*", "tx_kequestionnaire_dependancies", $where,'','sorting');
 		foreach($res as $row){
-		    $this->dependancies[$row["uid"]]=$row;
+		    //t3lib_div::devLog('row '.$this->question['title'], 'question class', 0, $row);
+		    if ($row['dependant_outcome'] == 0 AND $row['dependant_question'] != 0) $this->dependancies[$row["uid"]]=$row;
 		}
 		
 		if (count($this->dependancies) == 0){
@@ -185,7 +186,7 @@ class question{
 		    $res = $GLOBALS["TYPO3_DB"]->exec_SELECTgetRows("*", "tx_kequestionnaire_dependancies", $where,'','sorting');
 		    //t3lib_div::devLog('res', 'question class', 0, array($GLOBALS["TYPO3_DB"]->SELECTquery("*", "tx_kequestionnaire_dependancies", $where,'','sorting')));
 		    foreach($res as $row){
-			$this->dependancies[$row['uid']] = $row;
+			if ($row['dependant_outcome'] == 0 AND $row['dependant_question'] != 0) $this->dependancies[$row['uid']] = $row;
 		    }
 		}
 	    }
@@ -280,6 +281,7 @@ class question{
 		$out['###DEPENDANT###'] = '';
 		$out['###DEPENDANT_STYLE###'] = '';
 		if ($this->dependancies){
+		    //t3lib_div::devLog('generate MarkerArray '.$this->question['uid'], 'question base class', 0, $this->dependancies);
 		    if (!$this->checkDependancies()){
 			if ($this->question['dependant_show'] != 1){
 			    $out['###DEPENDANT_STYLE###'] = 'style="display:none"';

@@ -1589,6 +1589,18 @@ $TCA["tx_kequestionnaire_dependancies"] = array (
 				"maxitems" => 1,
 			)
 		),
+                "dependant_outcome" => Array (
+			"exclude" => 1,
+			"label" => "LLL:EXT:ke_questionnaire/locallang_db.xml:tx_kequestionnaire_dependancies.dependant_outcome",
+			"config" => Array (
+				"type" => "group",
+				"internal_type" => "db",
+				"allowed" => "tx_kequestionnaire_questions",
+				"size" => 1,
+				"minitems" => 0,
+				"maxitems" => 1,
+			)
+		),
 		/*"activating_question" => Array (
 			"exclude" => 1,
 			"label" => "LLL:EXT:ke_questionnaire/locallang_db.xml:tx_kequestionnaire_dependancies.activating_question",
@@ -1827,6 +1839,19 @@ $TCA["tx_kequestionnaire_outcomes"] = array (
 				"size" => "30",
 			)
 		),
+                "type" => Array (
+			"exclude" => 1,
+			"label" => "LLL:EXT:ke_questionnaire/locallang_db.xml:tx_kequestionnaire_outcomes.type",
+			"config" => Array (
+				"type" => "select",
+				"items" => Array (
+					Array("LLL:EXT:ke_questionnaire/locallang_db.xml:tx_kequestionnaire_outcomes.type.value", "value"),
+					Array("LLL:EXT:ke_questionnaire/locallang_db.xml:tx_kequestionnaire_outcomes.type.dependancy", "dependancy"),
+				),
+				"size" => 1,
+				"maxitems" => 1,
+			)
+		),
 		"value_start" => Array (
 			"exclude" => 1,
 			"label" => "LLL:EXT:ke_questionnaire/locallang_db.xml:tx_kequestionnaire_outcomes.value_start",
@@ -1909,9 +1934,30 @@ $TCA["tx_kequestionnaire_outcomes"] = array (
 				"maxitems" => 1,
 			)
 		),
+                "dependancy" => Array (
+			"exclude" => 1,
+			"label" => "LLL:EXT:ke_questionnaire/locallang_db.xml:tx_kequestionnaire_questions.dependancy",
+			"config" => Array (
+				"type" => "inline",
+				"foreign_table" => "tx_kequestionnaire_dependancies",
+                                "foreign_field" => "dependant_outcome",
+				"maxitems" => 20,
+				"behaviour" => Array(
+                                    "localizationMode" => "select",
+                                ),
+                                "appearance" => Array(
+                                    'collapseAll' => 1,
+                                    'expandSingle' => 1,
+                                    "showSynchronizationLink" => 1,
+                                    "showAllLocalizationLink" => 1,
+                                    "showPossibleLocalizationRecords" => 1,
+                                    "showRemovedLocalizationRecords" => 1,
+                                ),
+			)
+		),
 	),
 	"types" => array (
-		"0" => array("showitem" => "title;;;;2-2-2, value_start;;;;3-3-3, value_end, text;;;richtext[cut|copy|paste|formatblock|textcolor|bold|italic|underline|left|center|right|orderedlist|unorderedlist|outdent|indent|link|table|image|line|chMode]:rte_transform[mode=ts_css|imgpath=uploads/tx_kequestionnaire/rte/], image, image_position")
+		"0" => array("showitem" => "title;;;;2-2-2,type, value_start;;;;3-3-3, value_end, text;;;richtext[cut|copy|paste|formatblock|textcolor|bold|italic|underline|left|center|right|orderedlist|unorderedlist|outdent|indent|link|table|image|line|chMode]:rte_transform[mode=ts_css|imgpath=uploads/tx_kequestionnaire/rte/], image, image_position, dependancy")
                 //"0" => array("showitem" => "sys_language_uid;;;;1-1-1, l18n_parent, l18n_diffsource, hidden;;1, title;;;;2-2-2, value_start;;;;3-3-3, value_end, text;;;richtext[cut|copy|paste|formatblock|textcolor|bold|italic|underline|left|center|right|orderedlist|unorderedlist|outdent|indent|link|table|image|line|chMode]:rte_transform[mode=ts_css|imgpath=uploads/tx_kequestionnaire/rte/], image")
 	),
 	"palettes" => array (

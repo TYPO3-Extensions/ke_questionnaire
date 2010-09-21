@@ -111,6 +111,7 @@
 			
 			<label index="tx_kequestionnaire_dependancies">Dependancy (of questions)</label>
 			<label index="tx_kequestionnaire_dependancies.dependant_question">dependant question</label>
+			<label index="tx_kequestionnaire_dependancies.dependant_outcome">dependant outcome</label>
 			<label index="tx_kequestionnaire_dependancies.activating_question">activating question</label>
 			<label index="tx_kequestionnaire_dependancies.activating_value.I.0">value1</label>
 			<label index="tx_kequestionnaire_dependancies.activating_value">activating value</label>
@@ -129,6 +130,8 @@
 			<label index="tx_kequestionnaire_outcomes.value_end">value range end</label>
 			<label index="tx_kequestionnaire_outcomes.text">text</label>
 			<label index="tx_kequestionnaire_outcomes.image">image</label>
+			<label index="tx_kequestionnaire_outcomes.type.value">value</label>
+			<label index="tx_kequestionnaire_outcomes.type.dependancy">dependancy</label>
 			
 			<label index="tx_kequestionnaire_authcodes">Auth-Code</label>
 			<label index="tx_kequestionnaire_authcodes.qpid">questionnaire data Pid</label>
@@ -270,6 +273,7 @@
 			
 			<label index="tx_kequestionnaire_dependancies">Abhängigkeit (von Fragen)</label>
 			<label index="tx_kequestionnaire_dependancies.dependant_question">abhängige Frage</label>
+			<label index="tx_kequestionnaire_dependancies.dependant_outcome">abhängiges Ergebnis</label>
 			<label index="tx_kequestionnaire_dependancies.activating_question">auslösende Frage (Bei Änderung bitte speichern, damit die zugehörigen Antworten geladen werden)</label>
 			<label index="tx_kequestionnaire_dependancies.activating_value.I.0">wert1</label>
 			<label index="tx_kequestionnaire_dependancies.activating_value">auslösender Wert (Wenn die auslösende Frage eine geschlossene Frage ist)</label>
@@ -285,6 +289,8 @@
 			<label index="tx_kequestionnaire_outcomes.value_end">Punktebereich Ende</label>
 			<label index="tx_kequestionnaire_outcomes.text">Text</label>
 			<label index="tx_kequestionnaire_outcomes.image">Bild</label>
+			<label index="tx_kequestionnaire_outcomes.type.value">Wert</label>
+			<label index="tx_kequestionnaire_outcomes.type.dependancy">Abhängigkeit</label>
 			
 			<label index="tx_kequestionnaire_authcodes">Auth-Code</label>
 			<label index="tx_kequestionnaire_authcodes.qpid">Fragebogen Daten Pid</label>
