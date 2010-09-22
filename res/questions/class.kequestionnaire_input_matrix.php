@@ -102,10 +102,14 @@ class kequestionnaire_input_matrix extends kequestionnaire_input{
         
         function renderMatrixHead(){
                 $tmplCol=$this->cObj->getSubpart($this->tmplHead,"###COLUMN###");
+                //t3lib_div::devLog('markerArraySub head', 'input->MatrixElement', 0, array($tmplCol));
                 $this->html="";
         
                 foreach($this->columns as $column){
-                    $col=str_replace("###VALUE###",$column["title"],$tmplCol);
+                    $markerArray = array();
+                    $markerArray['###VALUE###'] = $column['title'];
+                    $markerArray = $this->renderImage($markerArray,$column);
+                    $col = $this->cObj->substituteMarkerArrayCached($tmplCol, $markerArray);
                     $this->html.=$col;
                 }
         
@@ -235,6 +239,8 @@ class kequestionnaire_input_matrix extends kequestionnaire_input{
                         $subpartArray["###ERROR_MESSAGE###"]=str_replace("###ERROR###",$msg,$this->tmplError);
                 }
         
+                //images
+                $markerArray = $this->renderImage($markerArray,$question);
                 if ($type == 'semantic') $markerArray["###QUESTION###"]=$question["start"];
                 else {
                         $temp_val = str_replace('&nbsp;','',$question["text"]);

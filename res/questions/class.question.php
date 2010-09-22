@@ -257,8 +257,9 @@ class question{
 		foreach($this->fields as $key=>$field){
 			$tmpl = $this->cObj->getSubpart($this->tmplFields,$field->subpart);
 			$this->fields[$key]->tmpl=$tmpl;
-			$this->fields[$key]->tmplHead=$this->cObj->getSubpart($this->tmpl,"###HEAD###");
+			$this->fields[$key]->tmplHead=$this->cObj->getSubpart($this->tmplMain,"###HEAD###");
 			$this->fields[$key]->tmplError=$this->cObj->getSubpart($tmpl,"ERROR_MESSAGE");
+			//t3lib_div::devLog('tmpl '.$key, 'input->MatrixElement', 0, array($tmpl,$this->tmplMain));
 		}
 	}
 

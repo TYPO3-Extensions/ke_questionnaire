@@ -23,25 +23,28 @@
 	<!-- ###FIELDS### begin-->
 	    <!-- ###RADIO### begin-->
 	    <div class="###ODD_EVEN###">
-	    <input ###STYLE### ###DEPENDANT### type="radio" name="###PI###[###NAME###][options]" id="keq_###NAME###_###VALUE###" value="###VALUE###" ###CHECKED### ###DEPENDANT_AJAX### ###ONCHANGE_JS### />
-	    ###LABEL###
-	    <!-- ###HELP### begin-->
-		<div class="keq_tooltip">
-		    <img src="###HELPIMAGE###" alt="helpimage"/>
-		    <div class="keq_tip">
-			###HELPTEXT###
-		    </div>
-		</div><!-- ###HELP### end-->
-	    <div class="clearer">&nbsp;</div>
+		<div class="keq_img_top">###IMG_TOP###</div>
+		<input ###STYLE### ###DEPENDANT### type="radio" name="###PI###[###NAME###][options]" id="keq_###NAME###_###VALUE###" value="###VALUE###" ###CHECKED### ###DEPENDANT_AJAX### ###ONCHANGE_JS### />
+		<span class="keq_img_opt_right">###IMG_LEFT###</span>###LABEL###<span class="keq_img_right">###IMG_RIGHT###</span>
+		<!-- ###HELP### begin-->
+		    <div class="keq_tooltip">
+			<img src="###HELPIMAGE###" alt="helpimage"/>
+			<div class="keq_tip">
+			    ###HELPTEXT###
+			</div>
+		    </div><!-- ###HELP### end-->
+		<div class="keq_img_bottom">###IMG_BOTTOM###</div>
+		<div class="keq_cleaner">&nbsp;</div>
 	    </div>
 	    <!-- ###RADIO### end-->
 	    <input type="radio" name="" value="" /> lorem ipsum<br>
 	    <input type="radio" name="" value="" /> lorem ipsum<br>
 	    <!-- ###RADIO_WITH_INPUT### begin-->
 	    <div class="###ODD_EVEN###">
+		<div class="keq_img_top">###IMG_TOP###</div>
 		<!-- ###ERROR_MESSAGE### begin--><div class="keq_error">###ERROR###</div><!-- ###ERROR_MESSAGE### end-->
 		<input ###STYLE### ###DEPENDANT###  type="radio" name="###PI###[###NAME###][options]" id="keq_###NAME###_###VALUE###" value="###VALUE_OPTION###" ###CHECKED### ###DEPENDANT_AJAX### />
-		###LABEL###
+		<span class="keq_img_opt_right">###IMG_LEFT###</span>###LABEL###<span class="keq_img_right">###IMG_RIGHT###</span>
 		<input ###DEPENDANT_TEXT###  type="text" name="###PI###[###NAME###][text][###VALUE_OPTION###]" id="keq_###NAME###_###VALUE###_text" value="###VALUE_TEXT###" class="keq_inp_large" />
 		<!-- ###HELP### begin-->
 		    <div class="keq_tooltip">
@@ -50,6 +53,7 @@
 			###HELPTEXT###
 			</div>
 		    </div><!-- ###HELP### end-->
+		<div class="keq_img_bottom">###IMG_BOTTOM###</div>
 		<div class="clearer">&nbsp;</div>
 	    </div>
 	    <!-- ###RADIO_WITH_INPUT### end-->
@@ -77,14 +81,17 @@
 	<!-- ###FIELDS### begin-->
 	    <!-- ###CHECKBOX### begin-->
 	    <div class="###ODD_EVEN###">
+		<div class="keq_img_top">###IMG_TOP###</div>
 		<input class="checkbox" ###STYLE### ###DEPENDANT### type="checkbox" name="###PI###[###NAME###][options][]" id="keq_###NAME###_###VALUE###" value="###VALUE###" ###CHECKED### ###DEPENDANT_AJAX### />
-		<div class="checkbox_label">###LABEL###</div>
-		<!-- ###HELP### begin--><a class="keq_tooltip" href="#" onClick="return false;">
-		    <img src="###HELPIMAGE###" />
-		    <span class="keq_tip">
-		        ###HELPTEXT###
-		    </span>
-		</a><!-- ###HELP### end-->
+		<div class="checkbox_label"><span class="keq_img_opt_right">###IMG_LEFT###</span>###LABEL###<span class="keq_img_right">###IMG_RIGHT###</span></div>
+		<!-- ###HELP### begin-->
+		    <div class="keq_tooltip">
+			<img src="###HELPIMAGE###" alt="helpimage"/>
+			<div class="keq_tip">
+			###HELPTEXT###
+			</div>
+		    </div><!-- ###HELP### end-->
+		<div class="keq_img_bottom">###IMG_BOTTOM###</div>
 		<div class="clearer">&nbsp;</div>
 	    </div>
 	    <!-- ###CHECKBOX### end-->
@@ -92,9 +99,10 @@
 	    <input ###DEPENDANT### type="checkbox" name="" value="" /> lorem ipsum<br>
 	    <!-- ###CHECKBOX_WITH_INPUT### begin-->
 	    <div class="###ODD_EVEN###">
+		<div class="keq_img_top">###IMG_TOP###</div>
 		<!-- ###ERROR_MESSAGE### begin--><div class="keq_error">###ERROR###</div><!-- ###ERROR_MESSAGE### end-->
 		<input class="checkbox" ###STYLE### ###DEPENDANT### type="checkbox" name="###PI###[###NAME###][options][]" id="keq_###NAME###_###VALUE###" value="###VALUE_OPTION###" ###CHECKED### ###DEPENDANT_AJAX### />
-		<div class="checkbox_label">###LABEL###
+		<div class="checkbox_label"><span class="keq_img_opt_right">###IMG_LEFT###</span>###LABEL###<span class="keq_img_right">###IMG_RIGHT###</span>
 		    <input ###DEPENDANT_TEXT### type="text" name="###PI###[###NAME###][text][###VALUE_OPTION###]" id="keq_###NAME###_###VALUE###_text" value="###VALUE_TEXT###" class="keq_inp_large" />
 		</div>
 		<div class="clearer">&nbsp;</div>
@@ -104,6 +112,7 @@
 		        ###HELPTEXT###
 		    </span>
 		</a><!-- ###HELP### end-->
+		<div class="keq_img_bottom">###IMG_BOTTOM###</div>
 		<div class="clearer">&nbsp;</div>
 	    </div>
 	    <!-- ###CHECKBOX_WITH_INPUT### end-->
@@ -130,6 +139,9 @@
     <div class="keq_selection">
         <!-- ###FIELDS### begin-->
         <!-- ###SELECT### begin--><span class="###ODD_EVEN###">
+	    <div class="keq_img_left">###IMG_LEFT###</div>
+	    <div class="keq_img_right">###IMG_RIGHT###</div>
+	    <div class="keq_img_top">###IMG_TOP###</div>
 	    <!-- ###ERROR_MESSAGE### begin--><div class="keq_error">###ERROR###</div><!-- ###ERROR_MESSAGE### end-->
 	    <select ###DEPENDANT### name="###PI###[###NAME###][options]" id="keq_###NAME###" ###DEPENDANT_AJAX###>
 	    <!-- ###OPTIONS### begin-->
@@ -137,6 +149,7 @@
 	        <option>lorem ipsum</option>
 	    <!-- ###OPTIONS### end-->
 	    </select></span>
+	    <div class="keq_img_bottom">###IMG_BOTTOM###</div>
 	<!-- ###SELECT### end-->
 	<!-- ###FIELDS### end-->
     </div>
@@ -160,6 +173,9 @@
     <div class="keq_selection">
 	<!-- ###FIELDS### begin-->
 	<!-- ###SELECT### begin--><span class="###ODD_EVEN###">
+	<div class="keq_img_left">###IMG_LEFT###</div>
+	<div class="keq_img_right">###IMG_RIGHT###</div>
+	<div class="keq_img_top">###IMG_TOP###</div>
 	<!-- ###ERROR_MESSAGE### begin--><div class="keq_error">###ERROR###</div><!-- ###ERROR_MESSAGE### end-->
 	<select ###DEPENDANT### name="###PI###[###NAME###][options][]" id="keq_###NAME###" multiple ###CLOSED_SIZE###  ###DEPENDANT_AJAX###>
 	    <!-- ###OPTIONS### begin-->
@@ -167,6 +183,7 @@
 		<option>lorem ipsum</option>
 	    <!-- ###OPTIONS### end-->
 	</select></span>
+	<div class="keq_img_bottom">###IMG_BOTTOM###</div>
 	<!-- ###SELECT### end-->
 	<!-- ###FIELDS### end-->
     </div>
@@ -190,6 +207,9 @@
     <div class="keq_selection">
 	<!-- ###FIELDS### begin-->
 	<!-- ###SUBMIT_BUTTONS### begin--><span class="###ODD_EVEN###">
+	<div class="keq_img_left">###IMG_LEFT###</div>
+	<div class="keq_img_right">###IMG_RIGHT###</div>
+	<div class="keq_img_top">###IMG_TOP###</div>
 	<!-- ###ERROR_MESSAGE### begin--><div class="keq_error">###ERROR###</div><!-- ###ERROR_MESSAGE### end-->
 	<input onclick="javascript: document.getElementById('keq_###NAME###').value=###ANSWERVALUE###;document.ke_questionnaire.submit();" class="type_submit_button" type="button" name="###PI###[###NAME###][options]" ###CLOSED_SIZE###  ###DEPENDANT_AJAX### value="###VALUE###" />
 	<!-- ###HELPTT### begin-->
@@ -202,6 +222,7 @@
 	<!-- ###HELPTT### end-->
 	<br />
 	</span>
+	<div class="keq_img_bottom">###IMG_BOTTOM###</div>
 	<!-- ###SUBMIT_BUTTONS### end-->
 	<!-- ###FIELDS### end-->
 	<input type="hidden" name="###PI###[###NAME###][options]" id="keq_###NAME###" value="" />

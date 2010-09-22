@@ -160,7 +160,7 @@
 
 		function renderRadiobutton(){
 			$markerArray['###STYLE###'] = '';
-			//t3lib_div::devLog('renderRadio Button '.$this->fieldName, 'input', 0, $this->options	);
+			t3lib_div::devLog('renderRadio Button '.$this->fieldName, 'input', 0, $this->options[$this->fieldName]);
 			$markerArray["###LABEL###"]=$this->options[$this->fieldName]["title"];
 			if ($this->options[$this->fieldName]['text'] != '') {
 				$temp_val = str_replace('&nbsp;','',$this->options[$this->fieldName]['text']);
@@ -176,6 +176,9 @@
 			$markerArray["###VALUE###"]=$this->options[$this->fieldName]['uid'];
 			$markerArray['###DEPENDANT_AJAX###'] = $this->checkDependant($this->fieldName,$this->options[$this->fieldName]['uid']);
 			//t3lib_div::devLog('markerArray', 'input', 0, $markerArray);
+			
+			//images
+			$markerArray = $this->renderImage($markerArray,$this->options[$this->fieldName]);
 
 			if(empty($this->errors)){
 				$subpartArray["###ERROR_MESSAGE###"]="";
@@ -219,6 +222,9 @@
 			$markerArray['###DEPENDANT_AJAX###'] = $this->checkDependant($this->fieldName,$this->options[$this->fieldName]['uid'], true);
 
 			//t3lib_div::devLog('markerArray', 'input', 0, $markerArray);
+			
+			//images
+			$markerArray = $this->renderImage($markerArray,$this->options[$this->fieldName]);
 
 			if(empty($this->errors)){
 				$subpartArray["###ERROR_MESSAGE###"]="";
@@ -656,6 +662,22 @@
 			$this->html=$this->value["text"];
 			return $this->html;
 
+		}
+		
+		function renderImage($markerArray,$data=array()){
+			$markerArray['###IMG_LEFT###'] = '';
+			$markerArray['###IMG_TOP###'] = '';
+			$markerArray['###IMG_RIGHT###'] = '';
+			$markerArray['###IMG_BOTTOM###'] = '';
+			if ($data['image']){
+				$img_path = 'uploads/tx_kequestionnaire/';
+				$img_first = '<img alt="'.$data['title'].'" src="';
+				$img_last = '" />';
+				$img = '';
+				$img = $img_first.$img_path.$data['image'].$img_last;
+				$markerArray['###IMG_'.strtoupper($data['image_position']).'###'] = $img;
+			}
+			return $markerArray;
 		}
 
 		function checkDependant($fieldName, $value = '\'\'', $withText = false, $maxAnswers = 0){

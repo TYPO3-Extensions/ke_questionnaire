@@ -432,12 +432,16 @@
     <div class="keq_img_bottom">###IMG_BOTTOM###</div>
     <div class="keq_cleaner">&nbsp;</div>
     <div class="keq_selection">
-	<table>
+	<table class="keq_matrix_table">
 	    <thead>
 		<tr>
 		    <th></th>
 		    <!-- ###HEAD### begin-->
-			    <!-- ###COLUMN### begin--><th class="keq_matrix_th">###VALUE###</th><!-- ###COLUMN### end-->
+			    <!-- ###COLUMN### begin--><th class="keq_matrix_th">
+				<div class="keq_img_top">###IMG_TOP###</div>
+				<span class="keq_img_th_left">###IMG_LEFT###</span>###VALUE###<span class="keq_img_th_right">###IMG_RIGHT###</span>
+				<div class="keq_img_bottom">###IMG_BOTTOM###</div>
+			    </th><!-- ###COLUMN### end-->
 			    <th>2</th>
 			    <th>3</th>
 		    <!-- ###HEAD### end-->
@@ -448,10 +452,13 @@
 		<!-- ###FIELDS### begin-->
 		    <!-- ###SUBQUESTION### begin-->
 		    <tr class="###ODD_EVEN###">
-			<td>###QUESTION###
+			<td>
+			    <div class="keq_img_top">###IMG_TOP###</div>
+			    <span class="keq_img_td_left">###IMG_LEFT###</span>###QUESTION###<span class="keq_img_td_right">###IMG_RIGHT###</span>
 				<!-- ###INPUT### begin--><br />
 					<input ###DEPENDANT### type="text" name="###PI###[###NAME###][text][###SUBQUESTION_ID###][]" id="keq_###NAME###_###SUBQUESTION_ID###" value="###VALUE###" />
 				<!-- ###INPUT### end-->
+			    <div class="keq_img_bottom">###IMG_BOTTOM###</div>
 			</td>
 			<!-- ###COLUMNS### begin-->
 			    <!-- ###RADIO_COLUMN### begin-->
