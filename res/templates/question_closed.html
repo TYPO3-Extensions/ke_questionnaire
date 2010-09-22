@@ -25,12 +25,13 @@
 	    <div class="###ODD_EVEN###">
 	    <input ###STYLE### ###DEPENDANT### type="radio" name="###PI###[###NAME###][options]" id="keq_###NAME###_###VALUE###" value="###VALUE###" ###CHECKED### ###DEPENDANT_AJAX### ###ONCHANGE_JS### />
 	    ###LABEL###
-	    <!-- ###HELP### begin--><a class="keq_tooltip" href="#" onClick="return false;">
-		<img src="###HELPIMAGE###" />
-		<span class="keq_tip">
-		    ###HELPTEXT###
-		</span>
-	    </a><!-- ###HELP### end-->
+	    <!-- ###HELP### begin-->
+		<div class="keq_tooltip">
+		    <img src="###HELPIMAGE###" alt="helpimage"/>
+		    <div class="keq_tip">
+			###HELPTEXT###
+		    </div>
+		</div><!-- ###HELP### end-->
 	    <div class="clearer">&nbsp;</div>
 	    </div>
 	    <!-- ###RADIO### end-->
@@ -42,12 +43,13 @@
 		<input ###STYLE### ###DEPENDANT###  type="radio" name="###PI###[###NAME###][options]" id="keq_###NAME###_###VALUE###" value="###VALUE_OPTION###" ###CHECKED### ###DEPENDANT_AJAX### />
 		###LABEL###
 		<input ###DEPENDANT_TEXT###  type="text" name="###PI###[###NAME###][text][###VALUE_OPTION###]" id="keq_###NAME###_###VALUE###_text" value="###VALUE_TEXT###" class="keq_inp_large" />
-		<!-- ###HELP### begin--><a class="keq_tooltip" href="#">
-		    <img src="###HELPIMAGE###" />
-		    <span class="keq_tip">
-		        ###HELPTEXT###
-		    </span>
-		</a><!-- ###HELP### end-->
+		<!-- ###HELP### begin-->
+		    <div class="keq_tooltip">
+			<img src="###HELPIMAGE###" alt="helpimage"/>
+			<div class="keq_tip">
+			###HELPTEXT###
+			</div>
+		    </div><!-- ###HELP### end-->
 		<div class="clearer">&nbsp;</div>
 	    </div>
 	    <!-- ###RADIO_WITH_INPUT### end-->
