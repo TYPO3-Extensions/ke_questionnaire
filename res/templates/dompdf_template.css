@@ -1,6 +1,8 @@
 #page_margins {
     width:740px;
     padding:10px;
+    margin-left: 20px;
+    font-family: Arial, sans-serif;
 }
 
 .header {
@@ -11,7 +13,7 @@
 
 .header .logo {
     position: absolute;
-    left: 600px;
+    left: 580px;
     top: 10px;
 }
 
