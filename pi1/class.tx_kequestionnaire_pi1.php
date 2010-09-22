@@ -69,7 +69,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 	var $lastAnswered  = 0;				//when an result is loaded, get the id of the last answered question to jum to that page
 
 	var $pageJS        = '';			//set focus for validation
-	var $addHeaderData = array();
+	var $addHeaderData = array();			//due to the fact, that there are more than one point to add headerData, it will be stored in an array and processed at the end of the main func
 	var $validated 	   = false;
 
 	/**
@@ -86,8 +86,6 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 			$dummy_obj->init(0,$this,array());
 			exit;
 		}
-		//t3lib_div::devLog('PIVars', $this->prefixId, 0, $this->piVars);
-
 		$this->conf=$conf;
 		$this->pi_setPiVarDefaults();
 		$this->pi_loadLL();
@@ -104,7 +102,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 		//t3lib_div::devLog('_GET', $this->prefixId, 0, $_GET);
 		//t3lib_div::devLog('_SESSION', $this->prefixId, 0, $_SESSION);
 				
-		//get the PDF-Version of the Questionnaire
+		//get the PDF-Version of the Questionnaire => the response is a pdf
 		if ($this->piVars['pdf'] == 1){
 			$this->getPDF($this->piVars['type']);
 			exit;
@@ -122,7 +120,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 			}
 			return $this->pi_wrapInBaseClass($content);
 		}
-		//t3lib_div::devLog('checkValidation', $this->prefixId, 0, array($this->checkValidation()));
+		//if the validation is not processed correctly the former page will be shown
 		if (!$this->checkValidation()) $this->piVars['page'] --;
 
 		$content = '';
@@ -137,38 +135,50 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 			$make_history = true;
 		}
 		
+		//different handling for different access-types
 		switch ($this->ffdata['access']){
+			//free access, no check needed
 			case 'FREE':
 				//$this->ffdata['render_count_withblind'] = 1;
 				$subPart = '###QUESTIONNAIRE###';
 				$markerArray['###PAGES###'] = $this->getPages();
 				$save = false;
 				break;
+			//acces only for fe_user or authcodes
 			case 'FE_USERS':
 			case 'AUTH_CODE':
+				//if authcode and authcode is not valid
 				if ($this->ffdata['access']=='AUTH_CODE' AND !$this->checkAuthCode()){
+					//show the text for no authcode the input for the authcode
 					$subPart = '###NO_AUTHCODE###';
 					$markerArray['###FORM_ACTION###'] = $this->pi_getPageLink($GLOBALS['TSFE']->id);
 					$markerArray['###TEXT###'] = $this->pi_getLL('no_authcode');
 					$markerArray['###SUBMIT_LABEL###'] = $this->pi_getLL('authcode_submit_label');
 					$save = false;
+				//if fe_user and no user logged in
 				} elseif ($this->ffdata['access']=='FE_USERS' AND $this->user_id == 0){
+					//show the text
 					$subPart = '###ONLY_FEUSER###';
 					$markerArray['###TEXT###'] = $this->pi_getLL('only_feuser');
 					$save = false;
+				//else there is a valid authcode or logged in user
 				} else {
+					//check if the user has already paricipated
 					$last_result = array();
 					if (!$this->piVars['result_id']){
 						$check_result = $this->checkResults();
 						//t3lib_div::devLog('check_result', $this->prefixId, 0, $check_result);
 					}
+					//and select the last one if there is one and not working on one
 					if ($check_result['last_result'] > 0 AND !$this->piVars['result_id']){
+						//if the admin didn't chose the restart possibility show the page
 						if ($this->ffdata['restart_possible'] != 1){
 							$this->getResults($check_result['last_result'],$make_history);
 							if ($this->lastAnswered > 0) $this->getPageNr();
 							//t3lib_div::devLog('loaded saveArray', $this->prefixId, 0, $this->saveArray);
 							$subPart = '###QUESTIONNAIRE###';
 							$markerArray['###PAGES###'] = $this->getPages();
+						//else show the restart page
 						} else {
 							$save = false;
 							$subPart = '###RESUME_LAST###';
@@ -206,13 +216,16 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 		}
 		//t3lib_div::devLog('lastanswered: '.$this->lastAnswered, $this->prefixId, 0, $this->saveArray[$this->lastAnswered]);
 
+		//render the content
 		$content = $this->renderContent($subPart,$markerArray);
-		//t3lib_div::devLog('to be saved saveArray '.$this->piVars['result_id'].'-'.$save, $this->prefixId, 0, array($this->saveArray));
+		//if the save-Flag is set
 		if ($save){
+			//save the results
 			$this->setResults($this->piVars['result_id']);
 			//t3lib_div::devLog('saved saveArray '.$this->piVars['result_id'], $this->prefixId, 0, array($this->saveArray));
 		}
 
+		//if there is additional Header Data in the array
 		if (is_array($this->addHeaderData)){
 			//t3lib_div::devLog('fe js', $this->prefixId, 0, $this->addHeaderData);
 			foreach ($this->addHeaderData as $script){
@@ -231,6 +244,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 		$content = '';
 		$markerArray = array();
 		
+		//check the timer-type
 		if ($time_type == 'minutes') $seconds = ceil($time * 60);
 		else $seconds = ceil($time);
 		
@@ -268,7 +282,9 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 	function checkAuthCode(){
 		$content = false;
 
+		//if there is an auth_code in the piVars
 		if ($this->piVars['auth_code'] != ''){
+			//uses fullQuoteString for SQLInjection and X-Site Scripting prevention
 			$where = 'pid='.$this->pid.' AND authcode='.$GLOBALS['TYPO3_DB']->fullQuoteStr($this->piVars['auth_code'],'tx_kequestionnaire_authcodes');
 			$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*','tx_kequestionnaire_authcodes',$where);
 			//t3lib_div::devLog('authCode res', $this->prefixId, 0, array($GLOBALS['TYPO3_DB']->SELECTquery('*','tx_kequestionnaire_authcodes',$where)));
@@ -287,12 +303,15 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 
 	/**
 	 * Get the Id of the AuthCode Dataset
+	 * The AutCode-Dataset is the bridge between user/authcode and resultset.
+	 * If the acces is fe_user you'll need and authcode-Dataset too
 	 */
 	function getAuthCodeId(){
 		$authCode_id = -1;
 
 		//t3lib_div::devLog('getAuthCodeId '.$this->authCode, $this->prefixId, 0, $this->ffdata);
 		$where = '1=2';
+		//due to the access, create the where clause
 		switch ($this->ffdata['access']){
 			case 'FREE':
 				return 0;
@@ -312,6 +331,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 		if ($res_authCode){
 			$row_authCode = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res_authCode);
 			$authCode_id = $row_authCode['uid'];
+			//if there is no auth-code-id and the acces is fe_user, create the bridge
 			if ($authCode_id == 0 AND $this->ffdata['access'] == 'FE_USERS'){
 				$saveFields = array();
 				$saveFields['tstamp'] = mktime();
@@ -370,10 +390,12 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 		$where = 'uid='.$result_id;
 		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*','tx_kequestionnaire_results',$where);
 		//t3lib_div::devLog('getResults', $this->prefixId, 0, array($GLOBALS['TYPO3_DB']->SELECTquery('*','tx_kequestionnaire_results',$where)));
+		//if there is a result, edit the old one
 		if ($res){
 			$row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
 			if ($row['xmldata'] != ''){
-				//$temp_array = t3lib_div::xml2array($row['xmldata']);
+				######################################
+				//encoding-block for non-utf-8-DBs
 				$encoding = "UTF-8";
 				$temp_array = '';
 				if ( true === mb_check_encoding ($row['xmldata'], $encoding ) ){
@@ -382,9 +404,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 				} else {
 					$temp_array = t3lib_div::xml2array(utf8_encode($row['xmldata']));
 				}
-				//t3lib_div::devLog('getResults temp_array', $this->prefixId, 0, array($row['xmldata'],$temp_array));
-				//t3lib_div::devLog('getResults temp_array', $this->prefixId, 0, $temp_array);
-
+				#########################################
 				$this->saveArray = $temp_array;
 				$this->piVars['result_id'] = $row['uid'];
 				//Hook to manipulate the loaded Array
@@ -394,15 +414,13 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 						$this->saveArray = $_procObj->pi1_getResultsSaveArray($this);
 					}
 				}
-				//t3lib_div::devLog('getResults row', $this->prefixId, 0, $row);
-				//t3lib_div::devLog('getResults row', $this->prefixId, 0, array(t3lib_div::xml2array($row['xmldata'])));
-				//t3lib_div::devLog('getResults questions NR:'.count($this->questions), $this->prefixId, 0, $this->questions);
-
+				
 				$saveFields = array();
 				$saveFields['last_tstamp'] = mktime();
 				$where = 'uid='.$row['uid'];
 				$GLOBALS['TYPO3_DB']->exec_UPDATEquery('tx_kequestionnaire_results',$where,$saveFields);
 
+				//create the history-Dataset if needed
 				if ($makeHistory){
 					$saveFields = array();
 					$saveFields['xmldata'] = $row['xmldata'];
@@ -412,6 +430,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 					$GLOBALS['TYPO3_DB']->exec_INSERTquery('tx_kequestionnaire_history',$saveFields);
 				}
 			}
+		//if there is no result already existing, create a new one
 		} else {
 			//t3lib_div::devLog('getResults insert', $this->prefixId, 0, '');
 			$saveFields = array();
@@ -427,12 +446,15 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 			$this->piVars['result_id'] = $GLOBALS['TYPO3_DB']->sql_insert_id();
 		}
 
+		//Only if you din't want a pdf rendered and the save array is filled
 		if (is_array($this->saveArray) AND !($this->piVars['pdf'])){
 			//t3lib_div::devLog('getResults saveArray', $this->prefixId, 0, array($this->saveArray));
 			foreach ($this->saveArray as $idy => $values){
+				//check the last answered question, so you can direct the user to the last answered question
 				$this->getLastAnsweredId($idy,$values);
 				if (!$this->piVars[$idy]){
 					//t3lib_div::devLog('getResults piVar', $this->prefixId, 0, $this->piVars[$idy]);
+					//fill all variables for the last question
 					$this->getQuestionTypeRender($this->questionsByID[$idy]);
 				}
 			}
