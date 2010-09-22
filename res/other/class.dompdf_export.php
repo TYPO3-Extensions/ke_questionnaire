@@ -287,6 +287,7 @@ class dompdf_export {
                 
                 $css = $this->getCSS();
                 $html = str_replace('###CSS###',$css,$html);
+                $html = str_replace('###BASE_PATH###',PATH_site,$html);
                 
                 return $html;
         }
@@ -702,7 +703,7 @@ class dompdf_export {
                         $l_markerArray['###COLUMNS###'] = '<td>&nbsp;</td>';
                         foreach ($columns as $column){
                                 $c_markerArray = array();
-                                $c_markerArray['###CLASS###'] = 'column';
+                                $c_markerArray['###CLASS###'] = 'header_column';
                                 $c_markerArray['###VALUE###'] = $column['title'];
                                 $l_markerArray['###COLUMNS###'] .= $this->renderContent($this->templates['matrix_column'],$c_markerArray);
                         }
