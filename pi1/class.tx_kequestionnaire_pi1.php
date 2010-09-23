@@ -747,7 +747,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 		$linkconf['useCacheHash'] = false;
 		$link =$this->cObj->typoLink_URL($linkconf);
 		$markerArray['###FORM_ACTION###'] = $link;*/
-		$markerArray['###FORM_ACTION###'] = $this->pi_getPageLink($GLOBALS['TSFE']->id,'',array($this->prefixId.'[page]'=>($page_nr+1)));
+		$markerArray['###FORM_ACTION###'] = $this->pi_getPageLink($GLOBALS['TSFE']->id,'',array($this->prefixId.'[page]'=>($page_nr+1),$this->prefixId.'[next]'=>(1)));
 		
 		$markerArray['###NAV###'] = $this->renderContent('###NAVIGATION###',$nav_markerArray);
 		$markerArray['###QUESTIONS###'] = $questions;
