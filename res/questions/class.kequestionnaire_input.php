@@ -211,7 +211,7 @@
 				$markerArray['###DEPENDANT_TEXT###']= '';
 			} else {
 				$markerArray["###CHECKED###"]= '';
-				$markerArray['###DEPENDANT_TEXT###']= 'disabled';
+				$markerArray['###DEPENDANT_TEXT###']= 'disabled="disabled"';
 			}
 
 			
@@ -295,7 +295,7 @@
 			$markerArray['###HELPIMAGE###'] = t3lib_extMgm::siteRelPath('ke_questionnaire').'/res/images/helpbubble.gif';
 			$markerArray['###HELPTEXT###'] = $this->options[$this->fieldName]['helptext'];
 
-			$markerArray['###DEPENDANT_TEXT###']= 'disabled';
+			$markerArray['###DEPENDANT_TEXT###']= 'disabled="disabled"';
 			$markerArray["###CHECKED###"] = '';
 			if (is_array($this->value['options'])){
 				if (in_array($this->fieldName,$this->value["options"])){
@@ -303,7 +303,7 @@
 					$markerArray['###DEPENDANT_TEXT###']= '';
 				} else {
 					$markerArray["###CHECKED###"]= "";
-					$markerArray['###DEPENDANT_TEXT###']= 'disabled';
+					$markerArray['###DEPENDANT_TEXT###']= 'disabled="disabled"';
 				}
 			}
 			
