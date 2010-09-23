@@ -264,6 +264,9 @@
 
 			$markerArray['###DEPENDANT_AJAX###'] = $this->checkDependant($this->fieldName,$this->options[$this->fieldName]['uid'],false,$this->maxAnswers);
 			//t3lib_div::devLog('markerArray', 'input', 0, $markerArray);
+			
+			//images
+			$markerArray = $this->renderImage($markerArray,$this->options[$this->fieldName]);
 
 			if(empty($this->errors)){
 				$subpartArray["###ERROR_MESSAGE###"]="";
@@ -310,6 +313,9 @@
 			$markerArray["###VALUE###"]=$this->options[$this->fieldName]['uid'];
 			$markerArray['###DEPENDANT_AJAX###'] = $this->checkDependant($this->fieldName,$this->options[$this->fieldName]['uid'],true,$this->maxAnswers);
 			
+			//images
+			$markerArray = $this->renderImage($markerArray,$this->options[$this->fieldName]);
+
 			//t3lib_div::devLog('markerArray', 'input', 0, $markerArray);
 
 			if(empty($this->errors)){
@@ -352,6 +358,9 @@
 			}
 			$subpartArray["###OPTIONS###"]=$options;
 			$markerArray['###DEPENDANT_AJAX###'] = $this->checkDependant($this->fieldName,$row["uid"],false,$this->maxAnswers);
+			//images
+			$markerArray = $this->renderImage($markerArray,$this->options[$this->fieldName]);
+
 
 			if(empty($this->errors)){
 				$subpartArray["###ERROR_MESSAGE###"]="";
@@ -372,7 +381,11 @@
 			$this->html="";
 
 			foreach($this->columns as $column){
-				$col=str_replace("###VALUE###",$column["title"],$tmplCol);
+				$markerArray = arry();
+				//images
+				$markerArray = $this->renderImage($markerArray,$column);
+				$markerArray['###VALUE###'] = $column["title"];
+				$this->cObj->substituteMarkerArrayCached($tmplCol, $markerArray);
 				$this->html.=$col;
 			}
 
@@ -425,7 +438,7 @@
 				$markerArraySub["###SUBQUESTION_ID###"]=$question["uid"];
 				$markerArraySub["###VALUE###"]=$column["uid"];
 				$markerArraySub["###COLUMN_ID###"]=$column["uid"];
-
+				
 				$value=isset($this->value["options"][$question["uid"]])?($this->value["options"][$question["uid"]]):($type=="matrix_checkbox"?array():0);
 				if ($column['different_type'] != ''){
 					$temp_type = $type;
