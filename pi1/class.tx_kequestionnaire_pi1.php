@@ -151,7 +151,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 				if ($this->ffdata['access']=='AUTH_CODE' AND !$this->checkAuthCode()){
 					//show the text for no authcode the input for the authcode
 					$subPart = '###NO_AUTHCODE###';
-					$markerArray['###FORM_ACTION###'] = $this->pi_getPageLink($GLOBALS['TSFE']->id);
+					$markerArray['###FORM_ACTION###'] = htmlspecialchars($this->pi_getPageLink($GLOBALS['TSFE']->id));
 					$markerArray['###TEXT###'] = $this->pi_getLL('no_authcode');
 					$markerArray['###SUBMIT_LABEL###'] = $this->pi_getLL('authcode_submit_label');
 					$save = false;
@@ -182,7 +182,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 						} else {
 							$save = false;
 							$subPart = '###RESUME_LAST###';
-							$markerArray['###FORM_ACTION###'] = $this->pi_getPageLink($GLOBALS['TSFE']->id,'',array($this->prefixId.'[result_id]'=>($check_result['last_result'])));
+							$markerArray['###FORM_ACTION###'] = htmlspecialchars($this->pi_getPageLink($GLOBALS['TSFE']->id,'',array($this->prefixId.'[result_id]'=>($check_result['last_result']))));
 							$markerArray['###TEXT###'] = $this->pi_getLL('resume_last');
 							$markerArray['###AUTHCODE###'] = '';
 							if ($this->piVars['auth_code']) $markerArray['###AUTHCODE###'] = '<input type="hidden" name="'.$this->prefixId.'[auth_code]" value="'.$this->piVars['auth_code'].'" />';
@@ -704,7 +704,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 		
 		if (($page_nr - 1) > 0 AND $this->ffdata['linear'] != 1 AND $this->ffdata['type'] != 'QUIZ'){
 			$nav_markerArray['###HREF###'] = 'javascript:';
-			$nav_markerArray['###HREF###'] .= 'document.ke_questionnaire.action=\''.$this->pi_getPageLink($GLOBALS['TSFE']->id,'',array($this->prefixId.'[page]'=>($page_nr-1))).'\';';
+			$nav_markerArray['###HREF###'] .= 'document.ke_questionnaire.action=\''.htmlspecialchars($this->pi_getPageLink($GLOBALS['TSFE']->id,'',array($this->prefixId.'[page]'=>($page_nr-1)))).'\';';
 			$nav_markerArray['###HREF###'] .= 'document.ke_questionnaire.submit()';
 			$nav_markerArray['###TEXT###'] = htmlspecialchars($this->pi_getLL('to_last'));
 			$nav_markerArray['###PI###'] = $this->prefixId;
@@ -747,7 +747,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 		$linkconf['useCacheHash'] = false;
 		$link =$this->cObj->typoLink_URL($linkconf);
 		$markerArray['###FORM_ACTION###'] = $link;*/
-		$markerArray['###FORM_ACTION###'] = $this->pi_getPageLink($GLOBALS['TSFE']->id,'',array($this->prefixId.'[page]'=>($page_nr+1),$this->prefixId.'[next]'=>(1)));
+		$markerArray['###FORM_ACTION###'] = htmlspecialchars($this->pi_getPageLink($GLOBALS['TSFE']->id,'',array($this->prefixId.'[page]'=>($page_nr+1),$this->prefixId.'[next]'=>(1))));
 		
 		$markerArray['###NAV###'] = $this->renderContent('###NAVIGATION###',$nav_markerArray);
 		$markerArray['###QUESTIONS###'] = $questions;
@@ -1052,14 +1052,14 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 
 		$nav_markerArray = array();
 		$nav_markerArray['###HREF###'] = 'javascript:';
-		$nav_markerArray['###HREF###'] .= 'document.ke_questionnaire.action=\''.$this->pi_getPageLink($GLOBALS['TSFE']->id,'',array($this->prefixId.'[page]'=>1)).'\';';
+		$nav_markerArray['###HREF###'] .= 'document.ke_questionnaire.action=\''.htmlspecialchars($this->pi_getPageLink($GLOBALS['TSFE']->id,'',array($this->prefixId.'[page]'=>1))).'\';';
 		$nav_markerArray['###HREF###'] .= 'document.ke_questionnaire.submit()';
 		$nav_markerArray['###TEXT###'] = $this->pi_getLL('to_questionnaire');
 		$nav_markerArray['###PI###'] = $this->prefixId;
 		$nav_markerArray['###NAME###'] = 'go';
 
 		$markerArray['###NAV###'] = '<div class="keq_q_list_link">'.$this->renderContent('###NAV_BUTTON###',$nav_markerArray).'</div>';
-		$markerArray['###FORM_ACTION###'] = $this->pi_getPageLink($GLOBALS['TSFE']->id,'',array($this->prefixId.'[page]'=>($page_nr+1)));
+		$markerArray['###FORM_ACTION###'] = htmlspecialchars($this->pi_getPageLink($GLOBALS['TSFE']->id,'',array($this->prefixId.'[page]'=>($page_nr+1))));
 
 		$markerArray['###HIDDEN_FIELDS###'] = $this->renderHiddenFields();
 		//t3lib_div::devLog('renderFirstPage', $this->prefixId, 0, $markerArray);
