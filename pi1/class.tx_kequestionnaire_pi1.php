@@ -1060,6 +1060,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 
 		$markerArray['###NAV###'] = '<div class="keq_q_list_link">'.$this->renderContent('###NAV_BUTTON###',$nav_markerArray).'</div>';
 		$markerArray['###FORM_ACTION###'] = htmlspecialchars($this->pi_getPageLink($GLOBALS['TSFE']->id,'',array($this->prefixId.'[page]'=>($page_nr+1))));
+		$markerArray['###PDF###'] = '';
 
 		$markerArray['###HIDDEN_FIELDS###'] = $this->renderHiddenFields();
 		//t3lib_div::devLog('renderFirstPage', $this->prefixId, 0, $markerArray);
