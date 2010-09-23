@@ -160,7 +160,7 @@
 
 		function renderRadiobutton(){
 			$markerArray['###STYLE###'] = '';
-			t3lib_div::devLog('renderRadio Button '.$this->fieldName, 'input', 0, $this->options[$this->fieldName]);
+			//t3lib_div::devLog('renderRadio Button '.$this->fieldName, 'input', 0, $this->options[$this->fieldName]);
 			$markerArray["###LABEL###"]=$this->options[$this->fieldName]["title"];
 			if ($this->options[$this->fieldName]['text'] != '') {
 				$temp_val = str_replace('&nbsp;','',$this->options[$this->fieldName]['text']);

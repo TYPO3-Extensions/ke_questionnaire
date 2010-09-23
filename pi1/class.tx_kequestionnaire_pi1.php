@@ -722,7 +722,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 			$nav_markerArray['###TEXT###'] = htmlspecialchars($this->pi_getLL('to_next'));
 		}
 		$add_js = '
-				<script language="JavaScript">
+				<script type="text/javascript">
 					window.history.forward();
 				</script>';	
 		if ($add_js != '') $this->addHeaderData[] = $add_js;
