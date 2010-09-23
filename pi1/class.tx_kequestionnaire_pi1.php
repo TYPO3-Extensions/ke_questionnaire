@@ -960,6 +960,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 
 		if (is_array($this->piVars)){
 			foreach ($this->piVars as $name => $arry){
+				$markerArray['###ID###'] = $name;
 				//t3lib_div::devLog('renderHiddenFields name '.$name, $this->prefixId, 0, array('arry'=>$arry));
 				if (is_array($arry) AND $name != 'page' AND !in_array($name,$shown)){
 					$this->getQuestionTypeRender($this->questionsByID[$name]);
@@ -1008,6 +1009,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 			$timestamp_start = 1;
 			if ($this->conf['timestamp_startpage']) $timestamp_start = $this->conf['timestamp_startpage'];
 			if ($timestamp_start > 0 AND ($this->piVars['page'] > $timestamp_start OR $this->piVars['start_tstamp'] > 0) OR ($this->ffdata['timer_type'] AND $this->piVars['page'] > 0)){
+				$markerArray['###ID###'] = 'start_tstamp';
 				if (!$this->piVars['start_tstamp']) $started = mktime();
 				else $started = $this->piVars['start_tstamp'];
 				$markerArray['###NAME###'] = $this->prefixId.'[start_tstamp]';
@@ -1017,6 +1019,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 			}
 			if ($this->ffdata['timer_type'] AND $this->piVars['page'] > 0){
 				$started = mktime();
+				$markerArray['###ID###'] = 'page_tstamp';
 				$markerArray['###NAME###'] = $this->prefixId.'[page_tstamp]['.$this->piVars['page'].']';
 				$markerArray['###VALUE###'] = $started;
 				$this->piVars['page_tstamp'][$this->piVars['page']] = $started;
