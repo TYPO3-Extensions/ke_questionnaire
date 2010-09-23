@@ -454,25 +454,32 @@ class dompdf_export {
                 //t3lib_div::devLog('points', 'pdf_export', 0, $points);
                 foreach ($this->outcomes as $outcome){
                         if ($outcome['type'] == 'dependancy'){
+                                $own_counter = 0;
                                 foreach ($this->questions as $question){
                                         $dependants = $this->getDependants($question);
+                                        $dep_counter += count($dependants);
                                         //t3lib_div::devLog('dependants', 'pdf_export', 0, $dependants);
                                         foreach ($dependants as $dep){
                                                 if ($outcome['uid'] == $dep['dependant_outcome']){
                                                         switch ($question['closed_type']){
                                                                 case 'radio_single':
                                                                         if ($answers[$dep['activating_question']]['answer']['options'] == $dep['activating_value']){
+                                                                                $own_counter ++;
                                                                                 $content .= '<p>'.nl2br($outcome['text']).'<(p>';
                                                                         }
                                                                         break;
                                                                 case 'check_multi':
                                                                         if (in_array($dep['activating_value'],$answers[$dep['activating_question']]['answer']['options'])){
+                                                                                $own_counter ++;
                                                                                 $content .= '<p>'.nl2br($outcome['text']).'<(p>';
                                                                         }
                                                                         break;
                                                         }
                                                 }
                                         }
+                                }
+                                if ($dep_counter == $own_counter){
+                                        $content .= $temp;
                                 }
                         } else {
                                 if ($points['own'] >= $outcome['value_start'] AND $points['own'] < $outcome['value_end']) {

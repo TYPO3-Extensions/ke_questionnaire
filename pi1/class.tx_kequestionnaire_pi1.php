@@ -1293,31 +1293,41 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 		$content = '';
 		//t3lib_div::devLog('answers', $this->prefixId, 0, $answers);
 		
-		$where = 'pid='.$this->pid;
+		$where = 'pid='.$this->pid.' AND hidden=0 AND deleted=0';
 		$res_outcomes = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*','tx_kequestionnaire_outcomes',$where,'','sorting');
 		if ($res_outcomes){
 			while ($outcome = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res_outcomes)){
 				//t3lib_div::devLog('outcome', $this->prefixId, 0, $outcome);
 				if ($outcome['type'] == 'dependancy'){
+					$own_counter = 0;
 					foreach ($this->questions as $question){
 						$test_it = $this->getQuestionTypeObject($question);
 						$dependants = $test_it->dependants;
+						//t3lib_div::devLog('questions '.$question['title'], $this->prefixId, 0, $dependants);
+						$dep_counter += count($dependants);
+						$temp = '';
 						foreach ($dependants as $dep){
 							if ($outcome['uid'] == $dep['dependant_outcome']){
 								switch ($question['closed_type']){
 									case 'radio_single':
 										if ($answers[$dep['activating_question']]['options'] == $dep['activating_value']){
-											$content .= $this->pi_RTEcssText($outcome['text']);
+											$own_counter ++;
+											$temp .= $this->pi_RTEcssText($outcome['text']);
 										}
 										break;
 									case 'check_multi':
 										if (in_array($dep['activating_value'],$answers[$dep['activating_question']]['options'])){
-											$content .= $this->pi_RTEcssText($outcome['text']);
+											$own_counter ++;
+											$temp .= $this->pi_RTEcssText($outcome['text']);
 										}
 										break;
 								}
 							}
 						}
+						//t3lib_div::devLog('outcome '.$outcome['title'], $this->prefixId, 0, array($dep_counter,$own_counter));
+					}
+					if ($dep_counter == $own_counter){
+						$content .= $temp;
 					}
 				} else {
 					//t3lib_div::devLog('outcome', $this->prefixId, 0, $outcome);
