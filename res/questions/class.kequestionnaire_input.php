@@ -381,7 +381,7 @@
 			$this->html="";
 
 			foreach($this->columns as $column){
-				$markerArray = arry();
+				$markerArray = array();
 				//images
 				$markerArray = $this->renderImage($markerArray,$column);
 				$markerArray['###VALUE###'] = $column["title"];
