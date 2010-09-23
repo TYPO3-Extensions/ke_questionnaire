@@ -955,6 +955,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 	function renderHiddenFields($shown=array()){
 		$content = '';
 		$markerArray = array();
+		$markerArray['###ID###'] = '';
 		//t3lib_div::devLog('renderHiddenFields', $this->prefixId, 0, $shown);
 
 		if (is_array($this->piVars)){
