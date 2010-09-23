@@ -450,28 +450,36 @@ class dompdf_export {
                 $answers = $this->result;
                 //t3lib_div::devLog('result', 'pdf_export', 0, $this->result);
                 //t3lib_div::devLog('outcomes', 'pdf_export', 0, $this->outcomes);
-                $points = $this->calculatePoints($this->result);
+                //$points = $this->calculatePoints($this->result);
                 //t3lib_div::devLog('points', 'pdf_export', 0, $points);
                 foreach ($this->outcomes as $outcome){
-                        if ($outcome['type'] == 'dependancy'){
+                        if ($outcome['type'] == 'dependancy' AND $outcome['uid'] != 0){
+                                //get the dependancies
+                                $dependancies = array();
+                                $dep_where = 'dependant_outcome='.$outcome['uid'].' AND hidden=0 AND deleted=0';
+                                $dep_res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*','tx_kequestionnaire_dependancies',$dep_where,'','sorting');
+                                if ($dep_res){
+                                    while ($dep_row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($dep_res)){
+                                        $dependancies[] = $dep_row;
+                                    }
+                                }
+                                $dep_counter = count($dependancies);
                                 $own_counter = 0;
-                                foreach ($this->questions as $question){
-                                        $dependants = $this->getDependants($question);
-                                        $dep_counter += count($dependants);
-                                        //t3lib_div::devLog('dependants', 'pdf_export', 0, $dependants);
-                                        foreach ($dependants as $dep){
-                                                if ($outcome['uid'] == $dep['dependant_outcome']){
+                                foreach ($dependancies as $dep){
+                                        $temp = '';
+                                        foreach ($this->questions as $question){
+                                                if ($question['uid'] == $dep['activating_question']){
                                                         switch ($question['closed_type']){
                                                                 case 'radio_single':
                                                                         if ($answers[$dep['activating_question']]['answer']['options'] == $dep['activating_value']){
                                                                                 $own_counter ++;
-                                                                                $content .= '<p>'.nl2br($outcome['text']).'<(p>';
+                                                                                $temp = '<p>'.nl2br($outcome['text']).'<(p>';
                                                                         }
                                                                         break;
                                                                 case 'check_multi':
                                                                         if (in_array($dep['activating_value'],$answers[$dep['activating_question']]['answer']['options'])){
                                                                                 $own_counter ++;
-                                                                                $content .= '<p>'.nl2br($outcome['text']).'<(p>';
+                                                                                $temp = '<p>'.nl2br($outcome['text']).'<(p>';
                                                                         }
                                                                         break;
                                                         }

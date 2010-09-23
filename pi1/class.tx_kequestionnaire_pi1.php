@@ -1156,9 +1156,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 					}
 				break;
 			case 'POINTS':
-					if ($this->ffdata['user_reports'] == 1){
-						$add_info = $this->getPointsReport();
-					}
+					$add_info = $this->getPointsReport();
 				break;
 		}
 		$markerArray['###TEXT###'] .= $add_info;
@@ -1220,7 +1218,11 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 	function getPointsReport(){
 		$content = '';
 		$markerArray = array();
-		$markerArray['###TEXT###'] = $this->pi_getll('points_report_text');
+		if ($this->ffdata['user_reports'] == 1){
+			$markerArray['###TEXT###'] = $this->pi_getll('points_report_text');
+		} else {
+			$markerArray['###TEXT###'] = '';
+		}
 		
 		$points = 0;
 		$max_points = 0;
@@ -1299,32 +1301,43 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 			while ($outcome = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res_outcomes)){
 				//t3lib_div::devLog('outcome', $this->prefixId, 0, $outcome);
 				if ($outcome['type'] == 'dependancy'){
+					//get the dependancies
+					$dependancies = array();
+					$dep_where = 'dependant_outcome='.$outcome['uid'].' AND hidden=0 AND deleted=0';
+					$dep_res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*','tx_kequestionnaire_dependancies',$dep_where,'','sorting');
+					if ($dep_res){
+						while ($dep_row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($dep_res)){
+							$dependancies[] = $dep_row;
+						}
+					}
+					$dep_counter = count($dependancies);
 					$own_counter = 0;
-					foreach ($this->questions as $question){
-						$test_it = $this->getQuestionTypeObject($question);
-						$dependants = $test_it->dependants;
-						//t3lib_div::devLog('questions '.$question['title'], $this->prefixId, 0, $dependants);
-						$dep_counter += count($dependants);
+					//t3lib_div::devLog('deps', $this->prefixId, 0, $dependancies);
+					foreach ($dependancies as $dep){
+						//t3lib_div::devLog('dep '.$dep['title'], $this->prefixId, 0, $dep);
 						$temp = '';
-						foreach ($dependants as $dep){
-							if ($outcome['uid'] == $dep['dependant_outcome']){
+						foreach ($this->questions as $question){
+							//t3lib_div::devLog('q '.$question['title'], $this->prefixId, 0, $question);
+							if ($question['uid'] == $dep['activating_question']){
 								switch ($question['closed_type']){
 									case 'radio_single':
+										//t3lib_div::devLog('mmm '.$dep['activating_value'], $this->prefixId, 0, array($answers[$dep['activating_question']]['options']));
 										if ($answers[$dep['activating_question']]['options'] == $dep['activating_value']){
+											//t3lib_div::devLog('mmm '.$dep['activating_value'], $this->prefixId, 0, array($answers[$dep['activating_question']]['options']));
 											$own_counter ++;
-											$temp .= $this->pi_RTEcssText($outcome['text']);
+											$temp = $this->pi_RTEcssText($outcome['text']);
 										}
 										break;
 									case 'check_multi':
 										if (in_array($dep['activating_value'],$answers[$dep['activating_question']]['options'])){
 											$own_counter ++;
-											$temp .= $this->pi_RTEcssText($outcome['text']);
+											$temp = $this->pi_RTEcssText($outcome['text']);
 										}
 										break;
 								}
 							}
 						}
-						//t3lib_div::devLog('outcome '.$outcome['title'], $this->prefixId, 0, array($dep_counter,$own_counter));
+						//t3lib_div::devLog('outcome '.$outcome['title'], $this->prefixId, 0, array('dep'=>$dep_counter,'own'=>$own_counter));
 					}
 					if ($dep_counter == $own_counter){
 						$content .= $temp;
