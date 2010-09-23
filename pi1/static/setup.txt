@@ -491,5 +491,40 @@ plugin.tx_kequestionnaire_pi1 {
 		.keq_matrix_table .keq_img_td_right {
 			margin-left: 5px;
 		}
+		
+		div.keq_tooltip
+  {
+    position: relative;
+    text-decoration: none;
+    font-weight: bold;
+    border-bottom:0px dotted #4dbcf3;
+    display:inline;
+  }
+		
+ 
+  div.keq_tooltip:hover {
+    background: transparent;
+    z-index: 100;
+  }
+		
+  div.keq_tooltip div.keq_tip {
+    display: none;
+    text-decoration: none;
+  }
+		
+  div.keq_tooltip:hover div.keq_tip {
+    display: block;
+    position: absolute;
+    top: 5px;
+    left: 20px;
+    width: 200px;
+    z-index: 100;
+    padding: 2px 10px 2px 10px;
+    border: 1px dashed #666666;
+    background: #dddddd;
+    color: #000000;
+    font-family: Verdana, Arial, Helvetica, Sans-serif;
+    text-align: left;
+  }
 	)
 }
