@@ -177,3 +177,7 @@
     padding: 2px;
     page-break-inside: avoid;
 }
+
+.outcome a {
+    margin-left: 5px;
+}
