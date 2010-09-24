@@ -98,6 +98,7 @@
 			<label index="pdf_outcome">Ergebnis herunterladen</label>
 			
 			<label index="pdf_compare_title">korrekte Antwort</label>
+			<label index="pdf_title">Ihre Auswertung vom </label>
 		</languageKey>
 		<languageKey index="de" type="array">
 			<label index="test">Test</label>
@@ -191,6 +192,7 @@
 			<label index="pdf_outcomes">Ergebnis herunterladen</label>
 			
 			<label index="pdf_compare_title">korrekte Antwort</label>
+			<label index="pdf_title">Ihre Auswertung vom </label>
 		</languageKey>
 	</data>
 </T3locallang>

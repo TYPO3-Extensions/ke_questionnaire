@@ -690,7 +690,7 @@ $TCA["tx_kequestionnaire_questions"] = array (
                                 ),
 			)
 		),
-                'dependancy_simple' => array (
+        'dependancy_simple' => array (
 			'exclude' => 1,
 			'label'   => 'LLL:EXT:ke_questionnaire/locallang_db.xml:tx_kequestionnaire_questions.dependancy_simple',
 			'config'  => array (
@@ -1934,7 +1934,7 @@ $TCA["tx_kequestionnaire_outcomes"] = array (
 				"maxitems" => 1,
 			)
 		),
-                "dependancy" => Array (
+        "dependancy" => Array (
 			"exclude" => 1,
 			"label" => "LLL:EXT:ke_questionnaire/locallang_db.xml:tx_kequestionnaire_questions.dependancy",
 			"config" => Array (
@@ -1955,9 +1955,18 @@ $TCA["tx_kequestionnaire_outcomes"] = array (
                                 ),
 			)
 		),
+		'dependancy_simple' => array (
+			'exclude' => 1,
+			'label'   => 'LLL:EXT:ke_questionnaire/locallang_db.xml:tx_kequestionnaire_questions.dependancy_simple',
+			'config'  => array (
+				'type'    => 'check',
+				'default' => '0'
+			)
+			
+		),
 	),
 	"types" => array (
-		"0" => array("showitem" => "title;;;;2-2-2,type, value_start;;;;3-3-3, value_end, text;;;richtext[cut|copy|paste|formatblock|textcolor|bold|italic|underline|left|center|right|orderedlist|unorderedlist|outdent|indent|link|table|image|line|chMode]:rte_transform[mode=ts_css|imgpath=uploads/tx_kequestionnaire/rte/], image, image_position, dependancy")
+		"0" => array("showitem" => "title;;;;2-2-2,type, value_start;;;;3-3-3, value_end, text;;;richtext[cut|copy|paste|formatblock|textcolor|bold|italic|underline|left|center|right|orderedlist|unorderedlist|outdent|indent|link|table|image|line|chMode]:rte_transform[mode=ts_css|imgpath=uploads/tx_kequestionnaire/rte/], image, image_position, dependancy_simple, dependancy")
                 //"0" => array("showitem" => "sys_language_uid;;;;1-1-1, l18n_parent, l18n_diffsource, hidden;;1, title;;;;2-2-2, value_start;;;;3-3-3, value_end, text;;;richtext[cut|copy|paste|formatblock|textcolor|bold|italic|underline|left|center|right|orderedlist|unorderedlist|outdent|indent|link|table|image|line|chMode]:rte_transform[mode=ts_css|imgpath=uploads/tx_kequestionnaire/rte/], image")
 	),
 	"palettes" => array (

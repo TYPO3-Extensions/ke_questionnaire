@@ -11,6 +11,7 @@
 //require_once(t3lib_extMgm::extPath('fpdf').'class.tx_fpdf.php');
 require_once(t3lib_extMgm::extPath('ke_dompdf')."res/dompdf/dompdf_config.inc.php");
 require_once(PATH_tslib . 'class.tslib_content.php'); // load content file
+require_once(t3lib_extMgm::extPath('ke_questionnaire')."pi1/class.tx_kequestionnaire_pi1.php");
 
 class dompdf_export {
         var $conf = array();      //Basis PDF Conf
@@ -201,12 +202,12 @@ class dompdf_export {
                 //return $html;
         }
         
-        function getPDFFilled($result){
+        function getPDFFilled($result,$date = ''){
                 $this->result = $result;
                 $this->getQuestions();
-                t3lib_div::devLog('result', 'pdf_export', 0, $result);
+                //t3lib_div::devLog('result', 'pdf_export', 0, $result);
                 
-                $html = $this->getHTML('filled');
+                $html = $this->getHTML('filled',$date);
                 
                 $this->pdf->load_html($html);
                 
@@ -217,12 +218,12 @@ class dompdf_export {
                 //return $html;
         }
         
-        function getPDFCompare($result){
+        function getPDFCompare($result,$date=''){
                 $this->result = $result;
                 $this->getQuestions();
                 //t3lib_div::devLog('result', 'pdf_export', 0, $result);
                 
-                $html = $this->getHTML('compare');
+                $html = $this->getHTML('compare',$date);
                 
                 $this->pdf->load_html($html);
                 
@@ -250,10 +251,11 @@ class dompdf_export {
                 //return $html;
         }
         
-        function getHTML($type){
+        function getHTML($type,$date){
                 $content = '';
                 
                 $this->getTemplates();
+                if ($date == '') $date = date('d.m.Y');
                 switch ($type){
                         case 'blank':
                                 $content .= $this->renderFirstPage();
@@ -283,6 +285,8 @@ class dompdf_export {
                 }
                 
                 $html = str_replace('###CONTENT###',$content,$this->templates['base']);
+                $html = str_replace('###PDF_TITLE###',$this->LOCAL_LANG['pdf_title'],$html);
+                $html = str_replace('###DATE###',$date,$html);
                 //t3lib_div::devLog('getHTML html '.$type, 'pdf_export', 0,array($html,$content,$this->templates['base']));
                 
                 $css = $this->getCSS();
@@ -473,21 +477,26 @@ class dompdf_export {
                                                                 case 'radio_single':
                                                                         if ($answers[$dep['activating_question']]['answer']['options'] == $dep['activating_value']){
                                                                                 $own_counter ++;
-                                                                                $temp = '<p>'.nl2br($outcome['text']).'<(p>';
                                                                         }
                                                                         break;
                                                                 case 'check_multi':
                                                                         if (in_array($dep['activating_value'],$answers[$dep['activating_question']]['answer']['options'])){
                                                                                 $own_counter ++;
-                                                                                $temp = '<p>'.nl2br($outcome['text']).'<(p>';
                                                                         }
                                                                         break;
                                                         }
                                                 }
                                         }
                                 }
-                                if ($dep_counter == $own_counter){
+                                $temp = '<div class="outcome">'.nl2br($outcome['text']).'</div>';
+                                if ($outcome['dependancy_simple'] == 1){
+                                    if ($own_counter > 0){
                                         $content .= $temp;
+                                    }
+                                } else {
+                                    if ($dep_counter == $own_counter){
+                                        $content .= $temp;
+                                    }
                                 }
                         } else {
                                 if ($points['own'] >= $outcome['value_start'] AND $points['own'] < $outcome['value_end']) {
@@ -513,7 +522,7 @@ class dompdf_export {
                         if ($question['show_title'] == 1) {
                                 $markerArray['###QUESTION_TITLE###'] = $question['title'];
                         }
-                        $markerArray['###QUESTION###'] = $question['text'];
+                        $markerArray['###QUESTION###'] = nl2br($question['text']);
                 }
                 $value = '&nbsp;';
                 $markerArray['###VALUE###'] = $value;
@@ -524,7 +533,7 @@ class dompdf_export {
                         }
                 }
                 //t3lib_div::devLog('answered', 'pdf_export', 0, $answered);
-                //t3lib_div::devLog('question', 'pdf_export', 0, $question);
+                t3lib_div::devLog('question', 'pdf_export', 0, $question);
                 switch ($question['type']){
                         case 'blind':
                                 $html = $this->renderContent($this->templates['blind'],$markerArray);

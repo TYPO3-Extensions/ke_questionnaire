@@ -1482,6 +1482,7 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 			$pdfdata = '';
 	
 			$conf = $this->loadTypoScriptForBEModule('tx_kequestionnaire');
+			//t3lib_div::devLog('ts conf', 'ke_questionnaire Export Mod', 0, $conf);
 			$pdf_conf = $conf['pdf.'];
 			$storage_pid = $this->ff_data['sDEF']['lDEF']['storage_pid']['vDEF'];
 	
@@ -1587,23 +1588,23 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 	* @return array
 	*/
         function loadTypoScriptForBEModule($extKey) {
-		global $TYPO3_CONF_VARS;
-		require_once(PATH_t3lib . 'class.t3lib_page.php');
-		require_once(PATH_t3lib . 'class.t3lib_tstemplate.php');
-		require_once(PATH_t3lib . 'class.t3lib_tsparser_ext.php');
-		//list($page) = t3lib_BEfunc::getRecordsByField('pages', 'pid', 0);
-		//$pageUid = intval($page['uid']);
-		$pageUid = $this->id;
-		$sysPageObj = t3lib_div::makeInstance('t3lib_pageSelect');
-		$rootLine = $sysPageObj->getRootLine($pageUid);
-		$TSObj = t3lib_div::makeInstance('t3lib_tsparser_ext');
-		$TSObj->tt_track = 0;
-		$TSObj->init();
-		$TSObj->runThroughTemplates($rootLine);
-		$TSObj->generateConfig();
-		//t3lib_div::devLog('PDF constants', 'ke_questionnaire Export Mod', 0, $TSObj->flatSetup);
-		//return $TSObj->flatSetup;
-		return $TSObj->setup_constants['plugin.'][$extKey.'.'];
+			global $TYPO3_CONF_VARS;
+			require_once(PATH_t3lib . 'class.t3lib_page.php');
+			require_once(PATH_t3lib . 'class.t3lib_tstemplate.php');
+			require_once(PATH_t3lib . 'class.t3lib_tsparser_ext.php');
+			//list($page) = t3lib_BEfunc::getRecordsByField('pages', 'pid', 0);
+			//$pageUid = intval($page['uid']);
+			$pageUid = $this->id;
+			$sysPageObj = t3lib_div::makeInstance('t3lib_pageSelect');
+			$rootLine = $sysPageObj->getRootLine($pageUid);
+			$TSObj = t3lib_div::makeInstance('t3lib_tsparser_ext');
+			$TSObj->tt_track = 0;
+			$TSObj->init();
+			$TSObj->runThroughTemplates($rootLine);
+			$TSObj->generateConfig();
+			//t3lib_div::devLog('PDF constants', 'ke_questionnaire Export Mod', 0, $TYPO3_CONF_VARS);
+			//return $TSObj->flatSetup;
+			return $TSObj->setup_constants['plugin.'][$extKey.'.'];
         }
 
 	function stripString($temp){

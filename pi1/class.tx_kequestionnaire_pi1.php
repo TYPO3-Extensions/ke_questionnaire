@@ -96,8 +96,9 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 		
 		//t3lib_div::devLog('PIVars', $this->prefixId, 0, $this->piVars);
 		//t3lib_div::devLog('Flex Form Array pi1', $this->prefixId, 0, $this->ffdata);
-		//t3lib_div::devLog('conf', $this->prefixId, 0, $this->conf);
+		t3lib_div::devLog('conf', $this->prefixId, 0, $this->conf);
 		//t3lib_div::devLog('questions', $this->prefixId, 0, $this->questions);
+		t3lib_div::devLog('content', $this->prefixId, 0, array($content));
 		//t3lib_div::devLog('_POST', $this->prefixId, 0, $_POST);
 		//t3lib_div::devLog('_GET', $this->prefixId, 0, $_GET);
 		//t3lib_div::devLog('_SESSION', $this->prefixId, 0, $_SESSION);
@@ -1325,13 +1326,11 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 										if ($answers[$dep['activating_question']]['options'] == $dep['activating_value']){
 											//t3lib_div::devLog('mmm '.$dep['activating_value'], $this->prefixId, 0, array($answers[$dep['activating_question']]['options']));
 											$own_counter ++;
-											$temp = $this->pi_RTEcssText($outcome['text']);
 										}
 										break;
 									case 'check_multi':
 										if (in_array($dep['activating_value'],$answers[$dep['activating_question']]['options'])){
 											$own_counter ++;
-											$temp = $this->pi_RTEcssText($outcome['text']);
 										}
 										break;
 								}
@@ -1339,8 +1338,15 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 						}
 						//t3lib_div::devLog('outcome '.$outcome['title'], $this->prefixId, 0, array('dep'=>$dep_counter,'own'=>$own_counter));
 					}
-					if ($dep_counter == $own_counter){
-						$content .= $temp;
+					$temp = $this->pi_RTEcssText($outcome['text']);
+					if ($outcome['dependancy_simple'] == 1){
+						if ($own_counter > 0){
+							$content .= $temp;
+						}
+					} else {
+						if ($dep_counter == $own_counter){
+							$content .= $temp;
+						}
 					}
 				} else {
 					//t3lib_div::devLog('outcome', $this->prefixId, 0, $outcome);
