@@ -1,7 +1,9 @@
 #page_margins {
+    display: block;
     width:740px;
     padding:10px;
     margin-left: 20px;
+    margin-right: 20px;
     font-family: Arial, sans-serif;
 }
 
@@ -39,7 +41,7 @@
 }
 
 .open_question{
-    width: 400px;
+    width: 500px;
     height: 15px;
     border: 1px solid black;
     background-color: #fff;
@@ -48,7 +50,7 @@
 
 .open_question_multi{
     width: 700px;
-    height: 100px;
+    min-height: 100px;
     border: 1px solid black;
     background-color: #fff;
     padding: 2px;
@@ -168,4 +170,10 @@
     margin-top: 5px;
     background-color: #ddd;
     padding: 0 5px 5px 5px;
+}
+
+.outcome {
+    margin: 5px 0 3px 0;
+    padding: 2px;
+    page-break-inside: avoid;
 }

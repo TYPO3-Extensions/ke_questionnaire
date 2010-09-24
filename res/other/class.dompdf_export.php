@@ -454,7 +454,7 @@ class dompdf_export {
                 $answers = $this->result;
                 //t3lib_div::devLog('result', 'pdf_export', 0, $this->result);
                 //t3lib_div::devLog('outcomes', 'pdf_export', 0, $this->outcomes);
-                //$points = $this->calculatePoints($this->result);
+                $points = $this->calculatePoints($this->result);
                 //t3lib_div::devLog('points', 'pdf_export', 0, $points);
                 foreach ($this->outcomes as $outcome){
                         if ($outcome['type'] == 'dependancy' AND $outcome['uid'] != 0){
@@ -500,7 +500,7 @@ class dompdf_export {
                                 }
                         } else {
                                 if ($points['own'] >= $outcome['value_start'] AND $points['own'] < $outcome['value_end']) {
-                                        $content .= '<p>'.nl2br($outcome['text']).'<(p>';
+                                        $content .= '<div class="outcome">'.nl2br($outcome['text']).'</div>';
                                 }
                         }
                 }
