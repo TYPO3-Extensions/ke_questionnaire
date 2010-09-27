@@ -35,7 +35,7 @@ class dompdf_export {
                 $this->pid = $pid;
                 $this->conf = $conf;
                 
-                $this->templateFolder = $this->ffdata['dDEF']['lDEF']['template_dir']['vDEF'];
+                $this->templateFolder = trim($this->ffdata['dDEF']['lDEF']['template_dir']['vDEF']);
                 if ($this->templateFolder == '') '../../../../'.trim($this->templateFolder);
                 
                 //t3lib_div::devLog('conf', 'pdf_export', 0, $conf);
@@ -533,7 +533,7 @@ class dompdf_export {
                         }
                 }
                 //t3lib_div::devLog('answered', 'pdf_export', 0, $answered);
-                t3lib_div::devLog('question', 'pdf_export', 0, $question);
+                //t3lib_div::devLog('question', 'pdf_export', 0, $question);
                 switch ($question['type']){
                         case 'blind':
                                 $html = $this->renderContent($this->templates['blind'],$markerArray);

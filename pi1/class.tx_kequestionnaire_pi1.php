@@ -96,9 +96,9 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 		
 		//t3lib_div::devLog('PIVars', $this->prefixId, 0, $this->piVars);
 		//t3lib_div::devLog('Flex Form Array pi1', $this->prefixId, 0, $this->ffdata);
-		t3lib_div::devLog('conf', $this->prefixId, 0, $this->conf);
+		//t3lib_div::devLog('conf', $this->prefixId, 0, $this->conf);
 		//t3lib_div::devLog('questions', $this->prefixId, 0, $this->questions);
-		t3lib_div::devLog('content', $this->prefixId, 0, array($content));
+		//t3lib_div::devLog('content', $this->prefixId, 0, array($content));
 		//t3lib_div::devLog('_POST', $this->prefixId, 0, $_POST);
 		//t3lib_div::devLog('_GET', $this->prefixId, 0, $_GET);
 		//t3lib_div::devLog('_SESSION', $this->prefixId, 0, $_SESSION);

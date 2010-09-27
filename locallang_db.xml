@@ -173,7 +173,7 @@
 			<label index="tx_kequestionnaire_questions.type.I.closed">Geschlossene Frage</label>
 			<label index="tx_kequestionnaire_questions.type.I.matrix">Matrix</label>
 			<label index="tx_kequestionnaire_questions.type.I.ematrix">Erweiterte Matrix</label>
-			<label index="tx_kequestionnaire_questions.type.I.semantic">Sematisches Differential</label>
+			<label index="tx_kequestionnaire_questions.type.I.semantic">Semantisches Differential</label>
 			<label index="tx_kequestionnaire_questions.type.I.demographic">Demographische Daten / Adress-Daten</label>
 			<label index="tx_kequestionnaire_questions.type.I.privacy">Datenschutzerklärung</label>
 			<label index="tx_kequestionnaire_questions.type.I.blind">Textelement</label>
@@ -280,7 +280,7 @@
 			<label index="tx_kequestionnaire_dependancies.activating_value">auslösender Wert (Wenn die auslösende Frage eine geschlossene Frage ist)</label>
 			<label index="tx_kequestionnaire_dependancies.activating_formula">auslösende Klausel (Vergleichsart,Wert)(Wenn die auslösende Frage eine offene Frage ist)</label>
 			
-			<label index="tx_kequestionnaire_sublines">Unterzeile (sematisches Differential)</label>
+			<label index="tx_kequestionnaire_sublines">Unterzeile (semantisches Differential)</label>
 			<label index="tx_kequestionnaire_sublines.start">von</label>
 			<label index="tx_kequestionnaire_sublines.end">bis</label>
 			
