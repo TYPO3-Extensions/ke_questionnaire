@@ -125,6 +125,7 @@
 			<label index="tx_kequestionnaire_submatrix.text">Sub Matrix Header</label>
 			
 			<label index="tx_kequestionnaire_outcomes">Outcome (for Type Point System)</label>
+			<label index="tx_kequestionnaire_outcomes.type">type</label>
 			<label index="tx_kequestionnaire_outcomes.title">title</label>
 			<label index="tx_kequestionnaire_outcomes.value_start">value range start</label>
 			<label index="tx_kequestionnaire_outcomes.value_end">value range end</label>
@@ -284,6 +285,7 @@
 			<label index="tx_kequestionnaire_sublines.end">bis</label>
 			
 			<label index="tx_kequestionnaire_outcomes">Auswertung (für den Typ Punktewertung)</label>
+			<label index="tx_kequestionnaire_outcomes.type">Typ</label>
 			<label index="tx_kequestionnaire_outcomes.title">Titel</label>
 			<label index="tx_kequestionnaire_outcomes.value_start">Punktebereich Start</label>
 			<label index="tx_kequestionnaire_outcomes.value_end">Punktebereich Ende</label>

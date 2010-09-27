@@ -1839,7 +1839,7 @@ $TCA["tx_kequestionnaire_outcomes"] = array (
 				"size" => "30",
 			)
 		),
-                "type" => Array (
+        "type" => Array (
 			"exclude" => 1,
 			"label" => "LLL:EXT:ke_questionnaire/locallang_db.xml:tx_kequestionnaire_outcomes.type",
 			"config" => Array (
