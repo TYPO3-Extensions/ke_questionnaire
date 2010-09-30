@@ -198,10 +198,12 @@ class question_matrix  extends question{
 
 			$errors=$field->validate($validationTypes,$value,$validationOptions);
 			//t3lib_div::devLog('validate '.$this->question['uid'], 'question_matrix', 0, array('errors'=>$errors));
-			if(count($errors) > 0) {
+			if (!$this->checkDependancies()){
+				$this->error=0;
+			} elseif(count($errors) > 0) {
 			    $this->error=1;
 			    $this->errorFields[] = $key;
-		        }
+		    }
 		}
 	}
 }

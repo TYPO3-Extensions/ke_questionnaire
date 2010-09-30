@@ -727,9 +727,11 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 									} else {
 										$fill_array[$question['uid']]['subquestions'][$subquestion['uid']] = array();
 										$fill_array[$question['uid']]['subquestions'][$subquestion['uid']]['columns'] = array();
-										foreach ($columns as $column){
-											$fill_array[$question['uid']]['subquestions'][$subquestion['uid']]['columns'][$column['uid']] = array();
-											//$fill_array[$question['uid']][$subline['uid']][$column['uid']] = 1;
+										if (is_array($columns)){
+											foreach ($columns as $column){
+												$fill_array[$question['uid']]['subquestions'][$subquestion['uid']]['columns'][$column['uid']] = array();
+												//$fill_array[$question['uid']][$subline['uid']][$column['uid']] = 1;
+											}
 										}
 									}
 								}
@@ -754,9 +756,11 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 									} else {
 										$fill_array[$question['uid']]['subquestions'][$subquestion['uid']] = array();
 										$fill_array[$question['uid']]['subquestions'][$subquestion['uid']]['columns'] = array();
-										foreach ($columns as $column){
-											$fill_array[$question['uid']]['subquestions'][$subquestion['uid']]['columns'][$column['uid']] = array();
-											//$fill_array[$question['uid']][$subline['uid']][$column['uid']] = 1;
+										if (is_array($columns)){
+											foreach ($columns as $column){
+												$fill_array[$question['uid']]['subquestions'][$subquestion['uid']]['columns'][$column['uid']] = array();
+												//$fill_array[$question['uid']][$subline['uid']][$column['uid']] = 1;
+											}
 										}
 									}
 								}

@@ -224,7 +224,9 @@ class question_demographic extends question{
 
 
 			$errors=$field->validate($validationTypes);
-			if(count($errors) > 0) {
+			if (!$this->checkDependancies()){
+				$this->error=0;
+			} elseif(count($errors) > 0) {
 				$this->error=1;
 				$this->errorFields[] = $key;
 			};

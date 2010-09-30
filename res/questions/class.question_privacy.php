@@ -73,7 +73,9 @@ class question_privacy extends question{
 				
 		// Get all validation errors
 		$errors=$this->fields["privacy"]->validate($validationTypes,$value);
-		if(count($errors)>0){
+		if (!$this->checkDependancies()){
+			$this->error=0;
+		} elseif(count($errors)>0){
 			$this->error=1;
 			
 		}

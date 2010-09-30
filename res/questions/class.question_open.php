@@ -109,10 +109,11 @@ class question_open extends question{
 
 		// Get all validation errors
 		$errors=$this->fields["text"]->validate($validationTypes,$value,$validationOptions);
-
-		if(count($errors) > 0) {
+		if (!$this->checkDependancies()){
+			$this->error=0;
+		} elseif(count($errors) > 0) {
 		    $this->error=1;
-                    $this->errorFields[] = $key;
+            $this->errorFields[] = $key;
 		}
 
 	}

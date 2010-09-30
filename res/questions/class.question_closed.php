@@ -210,6 +210,7 @@ class question_closed extends question {
 	 */
 	function validate(){
 		//t3lib_div::devLog('validate', 'question_closed', 0, array('type'=>$this->type));
+		//t3lib_div::devLog('mist', 'test', 0, array($this->checkDependancies));
 
 		$value=null;$doValidationForField=0;
 		$errors=array();
@@ -253,8 +254,12 @@ class question_closed extends question {
 
 		$value=$this->answer["options"];
 		if(!empty($value)) return;
-		$this->error=1;
-		$this->errorMsg=$this->obj->pi_getLL("error_required");
+		if (!$this->checkDependancies()){
+			$this->error=0;
+		} else {
+			$this->error=1;
+			$this->errorMsg=$this->obj->pi_getLL("error_required");
+		}
 	}
 }
 

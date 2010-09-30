@@ -419,11 +419,11 @@ class question{
 		    $check_against = $this->obj->piVars[$dependancy['activating_question']]['options'];
 		    //t3lib_div::devLog('check_against '.$this->question['uid'].'/'.$key, 'question base class', 0, array($check_against));
 		    if (is_array($check_against)){
-			if (in_array($dependancy['activating_value'],$check_against)) $is++;
-		    } else {
-			if ($this->obj->piVars[$dependancy['activating_question']]['options'] == $dependancy['activating_value']){
-			    $is ++;
-			}
+				if (in_array($dependancy['activating_value'],$check_against)) $is++;
+				} else {
+				if ($this->obj->piVars[$dependancy['activating_question']]['options'] == $dependancy['activating_value']){
+					$is ++;
+				}
 		    }
 		    /*$options = $this->obj->piVars[$dependancy['activating_question']]['options'];
 		    if (is_array($options)){
@@ -903,78 +903,79 @@ class question{
      *
      */
     function getSaveArray($timestamp = ''){
-	$saveArray = array();
-	/**
-	 * basic save-structure for the xml-array to store
-	 * <questionn_id>
-	 * 	question: ???
-	 * 	question_id: id
-	 * 	possible_answers:
-	 * 		<answer_nr> 123 </answer_nr>
-	 * 		<answer_nr> 234 </answer_nr>
-	 * 	answer: 123
-	 * 	time:
-	 * </frage_id>
-	*/
-
-	$saveArray[$this->question['uid']] = array();
-	$saveArray[$this->question['uid']]['question'] = $this->question['text'];
-	if ($this->question['text'] == '')$saveArray[$this->question['uid']]['question'] = $this->question['title'];
-	$saveArray[$this->question['uid']]['question_id'] = $this->question['uid'];
-	$saveArray[$this->question['uid']]['type'] = $this->question['type'];
-	$saveArray[$this->question['uid']]['subtype'] = $this->type;
-
-	if (count($this->answers) > 0){
-	    //t3lib_div::debug($this->answers,"answers");
-	    $saveArray[$this->question['uid']]['possible_answers'] = array();
-	    foreach ($this->answers as $nr => $answer){
-		//t3lib_div::devLog('answer '.$this->question['uid'], 'class.question', 0, $answer);
-		$i ++;
-		$text=($answer['text'] != '')?$answer['text']:$answer['title'];
-		$saveArray[$this->question['uid']]['possible_answers'][$nr] = $text;
-	    }
-	}
-	// for Matrix
-	if (count($this->subquestions) > 0){
-	    $saveArray[$this->question['uid']]['possible_answers']['lines'] = array();
-	    foreach ($this->subquestions as $nr => $subquestion){
-		if ($subquestion['title_line'] == 0){
-		    $text=($subquestion['text'] != '')?$subquestion['text']:$subquestion['title'];
-		    $saveArray[$this->question['uid']]['possible_answers']['lines'][$nr] = $text;
+		$saveArray = array();
+		/**
+		 * basic save-structure for the xml-array to store
+		 * <questionn_id>
+		 * 	question: ???
+		 * 	question_id: id
+		 * 	possible_answers:
+		 * 		<answer_nr> 123 </answer_nr>
+		 * 		<answer_nr> 234 </answer_nr>
+		 * 	answer: 123
+		 * 	time:
+		 * </frage_id>
+		*/
+		if ($this->checkDependancies()){
+			$saveArray[$this->question['uid']] = array();
+			$saveArray[$this->question['uid']]['question'] = $this->question['text'];
+			if ($this->question['text'] == '')$saveArray[$this->question['uid']]['question'] = $this->question['title'];
+			$saveArray[$this->question['uid']]['question_id'] = $this->question['uid'];
+			$saveArray[$this->question['uid']]['type'] = $this->question['type'];
+			$saveArray[$this->question['uid']]['subtype'] = $this->type;
+		
+			if (count($this->answers) > 0){
+				//t3lib_div::debug($this->answers,"answers");
+				$saveArray[$this->question['uid']]['possible_answers'] = array();
+				foreach ($this->answers as $nr => $answer){
+				//t3lib_div::devLog('answer '.$this->question['uid'], 'class.question', 0, $answer);
+				$i ++;
+				$text=($answer['text'] != '')?$answer['text']:$answer['title'];
+				$saveArray[$this->question['uid']]['possible_answers'][$nr] = $text;
+				}
+			}
+			// for Matrix
+			if (count($this->subquestions) > 0){
+				$saveArray[$this->question['uid']]['possible_answers']['lines'] = array();
+				foreach ($this->subquestions as $nr => $subquestion){
+				if ($subquestion['title_line'] == 0){
+					$text=($subquestion['text'] != '')?$subquestion['text']:$subquestion['title'];
+					$saveArray[$this->question['uid']]['possible_answers']['lines'][$nr] = $text;
+				}
+				}
+			}
+			// for Semantic
+			if (count($this->sublines) > 0){
+				$saveArray[$this->question['uid']]['possible_answers']['lines'] = array();
+				foreach ($this->sublines as $nr => $subline){
+				$saveArray[$this->question['uid']]['possible_answers']['lines'][$nr]['start'] = $subline['start'];
+				$saveArray[$this->question['uid']]['possible_answers']['lines'][$nr]['end'] = $subline['end'];
+				}
+			}
+			//t3lib_div::devLog('answer '.$this->question['uid'], 'class.question', 0, $this->answer);
+			if ($this->answer['text']) $saveArray[$this->question['uid']]['answer'] = $this->answer['text'];
+			if (is_array($this->answer['options']) AND count($this->answer['options']) > 0) {
+				//t3lib_div::devLog('options '.$this->question['uid'], 'class.question', 0, $this->answer['options']);
+				//if (is_array($this->answer['options'])) $saveArray[$this->question['uid']]['answer'] = implode(',',$this->answer['options']);
+				//if (is_array($this->answer['options'])) $saveArray[$this->question['uid']]['answer'] = t3lib_div::array2xml($this->answer['options']);
+				//if (is_array($this->answer['options'])) $saveArray[$this->question['uid']]['answer'] = $this->answer['options'];
+				//else
+				$saveArray[$this->question['uid']]['answer'] = $this->answer;
+			} elseif (!is_array($this->answer['options']) AND $this->answer['options']){
+				$saveArray[$this->question['uid']]['answer'] = $this->answer;
+			}
+			if (is_array($this->answer['fe_users'])){
+				//t3lib_div::devLog('fe_users '.$this->question['uid'], 'class.question', 0, $this->answer['fe_users']);
+				//if (is_array($this->answer['options'])) $saveArray[$this->question['uid']]['answer'] = t3lib_div::array2xml($this->answer);
+				$saveArray[$this->question['uid']]['answer'] = $this->answer;
+				//if (count($saveArray[$this->question['uid']]['answer']['options']) == 0) unset($saveArray[$this->question['uid']]['answer']['options']);
+			}
+			$saveArray[$this->question['uid']]['time'] = mktime();
+			// t3lib_div::debug($saveArray,"saveArray");
+			// t3lib_div::debug($this->columns,"columns");
 		}
-	    }
-	}
-	// for Semantic
-	if (count($this->sublines) > 0){
-	    $saveArray[$this->question['uid']]['possible_answers']['lines'] = array();
-	    foreach ($this->sublines as $nr => $subline){
-		$saveArray[$this->question['uid']]['possible_answers']['lines'][$nr]['start'] = $subline['start'];
-		$saveArray[$this->question['uid']]['possible_answers']['lines'][$nr]['end'] = $subline['end'];
-	    }
-	}
-	//t3lib_div::devLog('answer '.$this->question['uid'], 'class.question', 0, $this->answer);
-	if ($this->answer['text']) $saveArray[$this->question['uid']]['answer'] = $this->answer['text'];
-	if (is_array($this->answer['options']) AND count($this->answer['options']) > 0) {
-	    //t3lib_div::devLog('options '.$this->question['uid'], 'class.question', 0, $this->answer['options']);
-	    //if (is_array($this->answer['options'])) $saveArray[$this->question['uid']]['answer'] = implode(',',$this->answer['options']);
-	    //if (is_array($this->answer['options'])) $saveArray[$this->question['uid']]['answer'] = t3lib_div::array2xml($this->answer['options']);
-	    //if (is_array($this->answer['options'])) $saveArray[$this->question['uid']]['answer'] = $this->answer['options'];
-	    //else
-	    $saveArray[$this->question['uid']]['answer'] = $this->answer;
-	} elseif (!is_array($this->answer['options']) AND $this->answer['options']){
-	    $saveArray[$this->question['uid']]['answer'] = $this->answer;
-	}
-	if (is_array($this->answer['fe_users'])){
-	    //t3lib_div::devLog('fe_users '.$this->question['uid'], 'class.question', 0, $this->answer['fe_users']);
-	    //if (is_array($this->answer['options'])) $saveArray[$this->question['uid']]['answer'] = t3lib_div::array2xml($this->answer);
-	    $saveArray[$this->question['uid']]['answer'] = $this->answer;
-	    //if (count($saveArray[$this->question['uid']]['answer']['options']) == 0) unset($saveArray[$this->question['uid']]['answer']['options']);
-	}
-	$saveArray[$this->question['uid']]['time'] = mktime();
-	// t3lib_div::debug($saveArray,"saveArray");
-	// t3lib_div::debug($this->columns,"columns");
-
-	return $saveArray;
+	
+		return $saveArray;
     }
 }
 

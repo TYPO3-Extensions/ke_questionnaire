@@ -131,7 +131,10 @@ class question_semantic extends question{
 				
 				if(count($errors)) $this->error=1;
 			}
-
+			
+			if (!$this->checkDependancies()){
+				$this->error=0;
+			}
 
 		}
 
