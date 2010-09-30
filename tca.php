@@ -332,7 +332,7 @@ $TCA["tx_kequestionnaire_questions"] = array (
 			)
 		),
 		"closed_selectsize" => Array (
-                        "displayCond" => "FIELD:closed_type:=:select_multi",
+			"displayCond" => "FIELD:closed_type:=:select_multi",
 			"exclude" => 1,
 			"label" => "LLL:EXT:ke_questionnaire/locallang_db.xml:tx_kequestionnaire_questions.closed_selectsize",
 			"config" => Array (
@@ -405,7 +405,7 @@ $TCA["tx_kequestionnaire_questions"] = array (
 			)
 		),
 		"matrix_validation" => Array (
-                        "displayCond" => "FIELD:matrix_type:=:input",
+            "displayCond" => "FIELD:matrix_type:=:input",
 			"exclude" => 1,
 			"label" => "LLL:EXT:ke_questionnaire/locallang_db.xml:tx_kequestionnaire_questions.matrix_validation",
 			"config" => Array (

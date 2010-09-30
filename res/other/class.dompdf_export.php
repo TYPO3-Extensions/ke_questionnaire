@@ -287,7 +287,7 @@ class dompdf_export {
                 $html = str_replace('###CONTENT###',$content,$this->templates['base']);
                 $html = str_replace('###PDF_TITLE###',$this->LOCAL_LANG['pdf_title'],$html);
                 $html = str_replace('###DATE###',$date,$html);
-                //t3lib_div::devLog('getHTML html '.$type, 'pdf_export', 0,array($html,$content,$this->templates['base']));
+                t3lib_div::devLog('getHTML html '.$type, 'pdf_export', 0,array($html,$content,$this->templates['base']));
                 
                 $css = $this->getCSS();
                 $html = str_replace('###CSS###',$css,$html);
@@ -366,7 +366,7 @@ class dompdf_export {
                         }
                 }
                 
-                //t3lib_div::devLog('templates', 'pdf', 0, $this->templates);
+                t3lib_div::devLog('templates', 'pdf', 0, $this->templates);
                 
         }
         
@@ -532,7 +532,7 @@ class dompdf_export {
                                 $answered = $this->result[$question['uid']]['answer'];
                         }
                 }
-                //t3lib_div::devLog('answered', 'pdf_export', 0, $answered);
+                t3lib_div::devLog('answered', 'pdf_export', 0, array($answered));
                 //t3lib_div::devLog('question', 'pdf_export', 0, $question);
                 switch ($question['type']){
                         case 'blind':
@@ -542,6 +542,8 @@ class dompdf_export {
                                 if ($answered) $markerArray['###VALUE###'] = $answered;
                                 if ($question['open_type'] == 1){
                                         if ($answered) $markerArray['###VALUE###'] = nl2br($answered);
+                                        $markerArray['###CLASS###'] = '';
+                                        if (trim($answered) == '') $markerArray['###CLASS###'] = '_empty';
                                         $html = $this->renderContent($this->templates['open_multi'],$markerArray);
                                 } else {
                                         if ($answered) $markerArray['###VALUE###'] = $answered;
@@ -608,6 +610,8 @@ class dompdf_export {
                 switch ($question['type']){
                         case 'open':
                                 if ($question['open_compare_text']){
+                                        $markerArray['###CLASS###'] = '';
+                                        if (trim($question['open_compare_text']) == '') $markerArray['###CLASS###'] = '_empty';
                                         $markerArray['###VALUE###'] = nl2br($question['open_compare_text']);
                                         $content .= $this->renderContent($this->templates['open_compare'],$markerArray);
                                 }
