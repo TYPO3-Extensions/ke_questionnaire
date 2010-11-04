@@ -385,7 +385,8 @@
 				//images
 				$markerArray = $this->renderImage($markerArray,$column);
 				$markerArray['###VALUE###'] = $column["title"];
-				$this->cObj->substituteMarkerArrayCached($tmplCol, $markerArray);
+				
+				$col = $this->cObj->substituteMarkerArrayCached($tmplCol, $markerArray);
 				$this->html.=$col;
 			}
 
