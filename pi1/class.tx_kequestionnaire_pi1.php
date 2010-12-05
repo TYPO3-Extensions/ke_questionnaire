@@ -1204,6 +1204,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 		//if the redirect page is set
 		if ($this->ffdata['end_page']){
 			$link = $this->pi_getPageLink($this->ffdata['end_page']);
+			if ($GLOBALS['TSFE']->config['config']['baseURL']) $link = $GLOBALS['TSFE']->config['config']['baseURL'].$link;
 			header('Location:'.$link);
 		}
 		
