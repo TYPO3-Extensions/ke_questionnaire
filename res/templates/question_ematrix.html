@@ -1,0 +1,125 @@
+<html>
+<head>
+<link rel="stylesheet" href="styles.css" type="text/css">
+</head>
+<body>
+
+<!-- ###QUESTION_MATRIX_GENERAL### begin-->
+<!-- <form method="GET" action="index.php"> -->
+
+<div class="keq_unit" id="question_###NAME###" ###DEPENDANT_STYLE###>
+    <div class="keq_img_left">###IMG_LEFT###</div>
+    <div class="keq_img_right">###IMG_RIGHT###</div>
+    <div class="keq_img_top">###IMG_TOP###</div>
+    <div class="keq_question">
+	###TITLE######TEXT###
+	###HELPBOX###
+    </div>
+    <div class="keq_img_bottom">###IMG_BOTTOM###</div>
+    <div class="keq_cleaner">&nbsp;</div>
+    <div class="keq_selection">
+	<table>
+	    <thead>
+		<!-- ###HEAD### begin-->
+		<tr>
+		    <th></th>
+		    <!-- ###SUBMATRIX_COLUMN### begin--><th class="keq_matrix_th" colspan="###COLSPAN###">###VALUE###</th><!-- ###SUBMATRIX_COLUMN### end-->
+		    <th></th>
+		</tr>
+		<tr>
+		    <th></th>
+		    <!-- ###COLUMN### begin--><th class="keq_matrix_th">###VALUE###</th><!-- ###COLUMN### end-->
+		    <th></th>
+		</tr>
+		<!-- ###HEAD### end-->
+	    </thead>
+	    <tbody>
+		<!-- ###FIELDS### begin-->
+		    <!-- ###SUBQUESTION### begin-->
+		    <tr class="###ODD_EVEN###">
+			<td>###QUESTION###
+				<!-- ###INPUT### begin--><br />
+					<input ###DEPENDANT### type="input" name="###PI###[###NAME###][text][###SUBQUESTION_ID###][]" id="keq_###NAME###_###SUBQUESTION_ID###" value="###VALUE###">
+				<!-- ###INPUT### end-->
+			</td>
+			<!-- ###SUBMATRIX### begin-->
+			    <!-- ###COLUMNS### begin-->
+				<!-- ###RADIO_COLUMN### begin-->
+				    <td class="keq_matrix_radio">
+					<input ###DEPENDANT### type="radio" name="###PI###[###NAME###][options][###SUBQUESTION_ID###][###SUBMATRIX_ID###][single]" id="keq_###NAME###_###SUBQUESTION_ID###_###SUBMATRIX_ID###_###VALUE###" value="###VALUE###" ###CHECKED###>
+				    </td>
+				<!-- ###RADIO_COLUMN### end-->
+				<!-- ###CHECK_COLUMN### begin-->
+				    <td class="keq_matrix_checkbox">
+					<input ###DEPENDANT### type="checkbox" name="###PI###[###NAME###][options][###SUBQUESTION_ID###][###SUBMATRIX_ID###][###COLUMN_ID###][]" value="###VALUE###" id="keq_###NAME###_###SUBQUESTION_ID###_###SUBMATRIX_ID###_###VALUE###" ###CHECKED###>
+				    </td>
+				<!-- ###CHECK_COLUMN### end-->
+				<!-- ###INPUT_COLUMN### begin-->
+				    <td class="keq_matrix_input">
+					<input ###DEPENDANT### type="input" name="###PI###[###NAME###][options][###SUBQUESTION_ID###][###SUBMATRIX_ID###][###COLUMN_ID###][]" id="keq_###NAME###_###SUBQUESTION_ID###_###SUBMATRIX_ID###_###COLUMN_ID###" value="###VALUE###">
+				    </td>
+				<!-- ###INPUT_COLUMN### end-->
+				<!-- ###INPUT_TEXT_COLUMN### begin-->
+				    <td class="keq_matrix_input">
+					<input ###DEPENDANT### type="input" name="###PI###[###NAME###][options][###SUBQUESTION_ID###][###SUBMATRIX_ID###][###COLUMN_ID###][]" id="keq_###NAME###_###SUBQUESTION_ID###_###SUBMATRIX_ID###_###COLUMN_ID###" value="###VALUE###">
+				    </td>
+				<!-- ###INPUT_TEXT_COLUMN### end-->
+				<!-- ###INPUT_NUMERIC_COLUMN### begin-->
+				    <td class="keq_matrix_input">
+					<input ###DEPENDANT### type="input" name="###PI###[###NAME###][options][###SUBQUESTION_ID###][###SUBMATRIX_ID###][###COLUMN_ID###][]" id="keq_###NAME###_###SUBQUESTION_ID###_###SUBMATRIX_ID###_###COLUMN_ID###" value="###VALUE###">
+					<span class="keq_format">
+					    ###FORMAT_NUMERIC###
+					</span>
+				    </td>
+				<!-- ###INPUT_NUMERIC_COLUMN### end-->
+				<!-- ###INPUT_DATE_COLUMN### begin-->
+				    <td class="keq_matrix_input">
+					<input ###DEPENDANT### type="input" name="###PI###[###NAME###][options][###SUBQUESTION_ID###][###SUBMATRIX_ID###][###COLUMN_ID###][]" id="keq_###NAME###_###SUBQUESTION_ID###_###SUBMATRIX_ID###_###COLUMN_ID###" value="###VALUE###">
+					<span class="keq_format">
+					    ###FORMAT_DATE###
+					</span>
+				    </td>
+				<!-- ###INPUT_DATE_COLUMN### end-->
+				<!-- ###INPUT_PERCENT_COLUMN### begin-->
+				    <td class="keq_matrix_input">
+					<input ###DEPENDANT### type="input" name="###PI###[###NAME###][options][###SUBQUESTION_ID###][###SUBMATRIX_ID###][###COLUMN_ID###][]" id="keq_###NAME###_###SUBQUESTION_ID###_###SUBMATRIX_ID###_###COLUMN_ID###" value="###VALUE###"> %
+				    </td>
+				<!-- ###INPUT_PERCENT_COLUMN### end-->
+				<!-- ###TITLELINE### begin-->
+				<tr class="###ODD_EVEN###">
+				    <td colspan="###COLSPAN###">###QUESTION###</td>
+				</tr>
+				<!-- ###TITLELINE### end-->
+			    <!-- ###COLUMNS### end-->
+			<!-- ###SUBMATRIX### end-->
+			<td><!-- ###ERROR_MESSAGE### begin--><div class="keq_error">###ERROR###</div><!-- ###ERROR_MESSAGE### end--></td>
+		    </tr>
+		    <!-- ###SUBQUESTION### end-->
+		    <!-- ###SUM### begin-->
+			</tbody>
+			<tfoot>
+			    <tr class="###ODD_EVEN###">
+				<td>###SUMME###</td>
+				<!-- ###COLUMNS### begin-->
+				    <!-- ###COLUMN### begin-->
+					<td class="keq_matrix_input">
+					    <input ###DEPENDANT### type="input" value="###VALUE###"> %
+					</td>
+				    <!-- ###COLUMN### end-->
+				    <td><input type="input" name="" /></td>
+				    <td><input type="input" name="" /></td>
+				    <td><input type="input" name="" /></td>
+				<!-- ###COLUMNS### end-->
+				<td><!-- ###ERROR_MESSAGE### begin--><div class="keq_error">###ERROR###</div><!-- ###ERROR_MESSAGE### end--></td>
+			    </tr>
+			</tfoot>
+		    <!-- ###SUM### end-->
+	        <!-- ###FIELDS### end-->
+	    </tbody>
+	</table>
+    </div>
+</div>
+<!-- ###QUESTION_MATRIX_GENERAL### end-->
+
+</body>
+</html>
