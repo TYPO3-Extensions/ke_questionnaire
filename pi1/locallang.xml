@@ -95,7 +95,7 @@
 			<label index="pdf_empty">leeren Fragebogen herunterladen</label>
 			<label index="pdf_filled">ausgefüllten Fragebogen herunterladen</label>
 			<label index="pdf_compare">Vergleich herunterladen</label>
-			<label index="pdf_outcome">Ergebnis herunterladen</label>
+			<label index="pdf_outcomes">Ergebnis herunterladen</label>
 			
 			<label index="pdf_compare_title">korrekte Antwort</label>
 			<label index="pdf_title">Ihre Auswertung vom </label>
