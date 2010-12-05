@@ -274,6 +274,8 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 					}
 					//$temp .= t3lib_div::view_array($row);
 					$temp_array['uid'] = $row['uid'];
+					$temp_array['start_tstamp'] = $row['start_tstamp'];
+					$temp_array['finished_tstamp'] = $row['finished_tstamp'];
 					$this->results[] = $temp_array;
 					$langs[$row['sys_language_uid']] = 1;
 					if ($row['finished_tstamp'] > 0) $finished ++;
