@@ -1,6 +1,29 @@
 (add new changes on top of this file)
 
-10-09-22 Nadine Schwingler  <schwingler@kennziffer.com>
+$Id$
+
+2010-12-06 Martin Bless  <martin.bless@gmail.com>
+
+	* Feature: Providing the typoscript option 
+	  plugin.tx_questionnaire.switchToPdfGenerator = pi1/class.pdfresult.php.
+	  This will switch to that class and allows some development independently of existing code.
+
+2010-12-05 Martin Bless  <martin.bless@gmail.com>
+
+	* Bugfix: removing inconsistency in locallang.xml
+	* BTW: 'default' values in locallang.xml are mostly english but partly german.
+	  Shouldn't they all be english?
+
+2010-12-05 Nadine Schwingler    <schwingler@kennziffer.com>
+
+	* Minor fix for pi1 last page redirect
+	* Minor fix for CSV-Export
+	
+2010-12-05 Martin Bless  <martin.bless@gmail.com>
+
+	* Bugfix: Build $this->templateFolder correctly
+
+2010-09-22 Nadine Schwingler  <schwingler@kennziffer.com>
 	
 	* Bugfix for Pictures in Closed and Matrix questions. They will be shown now
 	* New Functions: PDF Export in BE was extended (empty, filled and compared Download possible now) with ke_dompdf only
@@ -8,77 +31,77 @@
 	* Templates are expanded for DOMPDF-Export Functionality.
 	* fpdf Export still supported, only for empty questionnaires and support for it will stop soon.
 
-10-09-17 Nadine Schwingler  <schwingler@kennziffer.com>
+2010-09-17 Nadine Schwingler  <schwingler@kennziffer.com>
 
 	* Bugfix for BE-Analyses
 
-10-09-15 Nadine Schwingler  <schwingler@kennziffer.com>
+2010-09-15 Nadine Schwingler  <schwingler@kennziffer.com>
 	
 	* Bugfix for BE-CSV-Exports
 	* Bugfix for Calculation of the point of multiple-choice answers
 	* Bugfix for Page-Calculation with Multipages and Premium installed
 
-10-08-25 Nadine Schwingler  <schwingler@kennziffer.com>
+2010-08-25 Nadine Schwingler  <schwingler@kennziffer.com>
 	
 	* Bugfix for ke_questionnaire-installations on non utf-8 databases. BE-Analysis is now working.
 
-10-07-28 Nadine Schwingler  <schwingler@kennziffer.com>
+2010-07-28 Nadine Schwingler  <schwingler@kennziffer.com>
 	
 	* Cleaned some HTML-Syntax Errors
 	* Added more CSH for plugin and questions
 
-10-07-08 Nadine Schwingler  <schwingler@kennziffer.com>
+2010-07-08 Nadine Schwingler  <schwingler@kennziffer.com>
 	
 	* Changed the input-field option for answers in closed questions to meet the requirements for randomized answers. Old version still works, but will not be shown anymore.
 	* Added first CSH to plugin and questions
 	* Added another Hook for the closed answer manipulation
 
-10-07-06 Nadine Schwingler  <schwingler@kennziffer.com>
+2010-07-06 Nadine Schwingler  <schwingler@kennziffer.com>
 	
 	* Added validation to open text questions, that they need to be answered correctly.
 
-10-07-01 Nadine Schwingler  <schwingler@kennziffer.com>
+2010-07-01 Nadine Schwingler  <schwingler@kennziffer.com>
 	
 	* The max-answer-Option is now also available for checkbox-type Matrix questions
 
-10-06-22 Nadine Schwingler  <schwingler@kennziffer.com>
+2010-06-22 Nadine Schwingler  <schwingler@kennziffer.com>
 	
 	* Changed the outfit of both csv-Export so it's not so blown up
 
-10-06-15 Nadine Schwingler  <schwingler@kennziffer.com>
+2010-06-15 Nadine Schwingler  <schwingler@kennziffer.com>
 	
 	* Added the possibility to give multiple choice closed questions a max amount of answers
 
-10-06-08 Nadine Schwingler  <schwingler@kennziffer.com>
+2010-06-08 Nadine Schwingler  <schwingler@kennziffer.com>
 
 	* Added some hooks to the extension at different places
 	* Some Bug fixes in Analyse BE-Module
 	* Added Scheduler Support for Email-Notifications for mods and admin
 
-10-06-01 Nadine Schwingler  <schwingler@kennziffer.com>
+2010-06-01 Nadine Schwingler  <schwingler@kennziffer.com>
 	
 	* Language-Export in Export BE-Module. If there are more than one lang-version of the Questionnaire you can now export only the selected lang.
 
-10-05-23 Nadine Schwingler  <schwingler@kennziffer.com>
+2010-05-23 Nadine Schwingler  <schwingler@kennziffer.com>
 	
 	* Security Update
 
-10-04-23 Nadine Schwingler  <schwingler@kennziffer.com>
+2010-04-23 Nadine Schwingler  <schwingler@kennziffer.com>
 	
 	* Changed Version for TER-Compatibility
 
-10-04-19 Nadine Schwingler  <schwingler@kennziffer.com>
+2010-04-19 Nadine Schwingler  <schwingler@kennziffer.com>
 	
 	* Added Image Marker for Questions
 
-09-12-23 Nadine Schwingler  <schwingler@kennziffer.com>
+2009-12-23 Nadine Schwingler  <schwingler@kennziffer.com>
 
 	* Changed Flex-Form-Conf for PI1 remember to check the plugin-conf
 
-09-12-12 Nadine Schwingler  <schwingler@kennziffer.com>
+2009-12-12 Nadine Schwingler  <schwingler@kennziffer.com>
 
 	* Added OpenFlash Charts and extendet Matrix
 
-09-09-01 Nadine Schwingler  <schwingler@kennziffer.com>
+2009-09-01 Nadine Schwingler  <schwingler@kennziffer.com>
 
 	* Initial release
