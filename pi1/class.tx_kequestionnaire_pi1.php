@@ -106,14 +106,46 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 		//t3lib_div::devLog('_POST', $this->prefixId, 0, $_POST);
 		//t3lib_div::devLog('_GET', $this->prefixId, 0, $_GET);
 		//t3lib_div::devLog('_SESSION', $this->prefixId, 0, $_SESSION);
-				
-		//get the PDF-Version of the Questionnaire => the response is a pdf
-		if ($this->piVars['pdf'] == 1){
-			$this->getPDF($this->piVars['type']);
-			exit;
-		}
 
-		//if there are no questions made for the questionnaire
+		// There are two main tasks we might have to do: 
+		//   mainAskQuestions OR mainGetResults
+		// First thing is to set a flag indicating what's needed
+		$this->mainTask = 'mainAskQuestions';
+		if ($this->piVars['pdf'] == 1) { $this->mainTask = 'mainGetResults'; }
+
+		// now use the flag in the main task dispatcher
+		$content = '';
+		switch ($this->mainTask) {
+			case 'mainAskQuestions':
+				$content = $this->mainAskQuestions();
+				break;
+			case 'mainGetResults':
+				$content = $this->mainGetResults();
+				break;
+			default:
+				$content = 'unknown task \'' . $this->mainTask . '\'';
+		}
+		return $content;
+	}
+
+	function mainGetResults() {
+		$content = '';
+			// allow a different method to display results
+		if ($this->conf['switchToPdfGenerator'] == 'pi1/class.pdfresult.php') {
+			require_once(t3lib_extMgm::extPath('ke_questionnaire').'pi1/class.pdfresult.php');
+			$content = pdfresult::main($this);
+		} else {
+				// get the PDF-Version of the Questionnaire => the response is a pdf
+			if ($this->piVars['pdf'] == 1){
+				$this->getPDF($this->piVars['type']);
+				exit;
+			}
+		}
+		return $content;
+	}
+
+	function mainAskQuestions() {
+		// if there are no questions made for the questionnaire
 		if (count($this->questions) == 0){
 			$content = $this->pi_getLL('no_questions');
 			//Hook to manipulate the Error-Message for no questions
