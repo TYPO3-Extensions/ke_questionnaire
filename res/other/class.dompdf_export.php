@@ -255,7 +255,7 @@ class dompdf_export {
 		//return $html;
 	}
 
-	function getHTML($type,$date){
+	function getHTML($type, $date='') {
 		$content = '';
 
 		$this->getTemplates();
