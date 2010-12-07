@@ -42,6 +42,7 @@
 			<label index="tx_kequestionnaire_questions.open_post_text">open question post text</label>
 			<label index="tx_kequestionnaire_questions.open_validation.I.0">none</label>
 			<label index="tx_kequestionnaire_questions.open_validation.I.1">numeric</label>
+			<label index="tx_kequestionnaire_questions.open_validation.I.1a">integer</label>
 			<label index="tx_kequestionnaire_questions.open_validation.I.2">date</label>
 			<label index="tx_kequestionnaire_questions.open_validation.I.3">e-mail</label>
 			<label index="tx_kequestionnaire_questions.open_validation.I.4">text</label>
@@ -63,6 +64,7 @@
 			<label index="tx_kequestionnaire_questions.matrix_type.I.2">input fields (validation possible)</label>
 			<label index="tx_kequestionnaire_questions.matrix_type">matrix type</label>
 			<label index="tx_kequestionnaire_questions.matrix_validation.I.0">numeric</label>
+			<label index="tx_kequestionnaire_questions.matrix_validation.I.0a">integer</label>
 			<label index="tx_kequestionnaire_questions.matrix_validation.I.1">date</label>
 			<label index="tx_kequestionnaire_questions.matrix_validation.I.2">percent</label>
 			<label index="tx_kequestionnaire_questions.matrix_validation">matrix validation types</label>
@@ -201,6 +203,7 @@
 			<label index="tx_kequestionnaire_questions.open_post_text">Text hinter dem Eingabefeld</label>
 			<label index="tx_kequestionnaire_questions.open_validation.I.0">keine</label>
 			<label index="tx_kequestionnaire_questions.open_validation.I.1">Zahlen</label>
+			<label index="tx_kequestionnaire_questions.open_validation.I.1a">Ganzzahl</label>
 			<label index="tx_kequestionnaire_questions.open_validation.I.2">Datum</label>
 			<label index="tx_kequestionnaire_questions.open_validation.I.3">E-Mail</label>
 			<label index="tx_kequestionnaire_questions.open_validation.I.4">Text</label>

@@ -61,6 +61,9 @@ class question_open extends question{
 					case "numeric":
 						$out= "QUESTION_NUMBERIC";
 					break;
+					case "integer":
+						$out= "QUESTION_INTEGER";
+					break;
 					case "date":
 						$out= "QUESTION_DATE";
 					break;

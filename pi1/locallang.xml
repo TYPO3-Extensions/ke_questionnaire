@@ -12,6 +12,7 @@
 
 			<label index="format">follow this format: </label>
 			<label index="format_numeric">follow this format: 00,00</label>
+			<label index="format_integer">follow this format: 00</label>
 			<label index="format_date">follow this format: tt.mm.yyyy</label>
 			<label index="format_email">follow this format: name@domain.land</label>
 			
@@ -20,6 +21,7 @@
 			<label index="error_maxAnswersColumn">Sie dürfen maximal ###MAX### Antworten aus der Spalte auswählen.</label>
 
 			<label index="error_numeric">Please insert Numeric</label>
+			<label index="error_integer">Please insert an Integer</label>
 			<label index="error_date">Please insert Date</label>
 			<label index="error_email">Please insert Email</label>
 			<label index="error_text">You must answer according to the question</label>
@@ -29,6 +31,7 @@
 			<label index="error_matrix_required_option">required</label>
 			<label index="error_matrix_required_input">required</label>
 			<label index="error_matrix_numeric">Please insert Numeric</label>
+			<label index="error_matrix_integer">Please insert Integer</label>
 			<label index="error_matrix_date">Please insert Date</label>
 			<label index="error_matrix_sum">The Sum must be 100%</label>
 
@@ -107,6 +110,7 @@
 
 			<label index="format">Format beachten: </label>
 			<label index="format_numeric">Format beachten: 00,00</label>
+			<label index="format_integer">Format beachten: 00</label>
 			<label index="format_date">Format beachten: tt.mm.yyyy</label>
 			<label index="format_email">Format beachten: name@domain.land</label>
 
@@ -115,6 +119,7 @@
 			<label index="error_maxAnswersColumn">Sie dürfen maximal ###MAX### Antworten aus der Spalte auswählen.</label>
 
 			<label index="error_numeric">Bitte Zahl eingeben</label>
+			<label index="error_integer">Bitte Ganzzahl eingeben</label>
 			<label index="error_date">Bitte Datum eingeben</label>
 			<label index="error_email">Bitte Email eingeben</label>
 			<label index="error_text">Sie müssen der Fragestellung entsprechend antworten</label>
@@ -124,6 +129,7 @@
 			<label index="error_matrix_required_option">Pflichtfeld</label>
 			<label index="error_matrix_required_input">Pflichtfeld</label>
 			<label index="error_matrix_numeric">Bitte Zahl eingeben</label>
+			<label index="error_matrix_integer">Bitte Ganzzahl eingeben</label>
 			<label index="error_matrix_date">Bitte Datum eingeben</label>
 			<label index="error_matrix_sum">Die Summe muss 100% ergeben</label>
 

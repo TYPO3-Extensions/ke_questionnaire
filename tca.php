@@ -287,6 +287,7 @@ $TCA["tx_kequestionnaire_questions"] = array (
 				"items" => Array (
 					Array("LLL:EXT:ke_questionnaire/locallang_db.xml:tx_kequestionnaire_questions.open_validation.I.0", "0"),
 					Array("LLL:EXT:ke_questionnaire/locallang_db.xml:tx_kequestionnaire_questions.open_validation.I.1", "numeric"),
+                                        Array("LLL:EXT:ke_questionnaire/locallang_db.xml:tx_kequestionnaire_questions.open_validation.I.1a", "integer"),
 					Array("LLL:EXT:ke_questionnaire/locallang_db.xml:tx_kequestionnaire_questions.open_validation.I.2", "date"),
 					Array("LLL:EXT:ke_questionnaire/locallang_db.xml:tx_kequestionnaire_questions.open_validation.I.3", "email"),
                                         Array("LLL:EXT:ke_questionnaire/locallang_db.xml:tx_kequestionnaire_questions.open_validation.I.4", "text"),
@@ -413,6 +414,7 @@ $TCA["tx_kequestionnaire_questions"] = array (
 				"items" => Array (
                                         Array("--", ""),
 					Array("LLL:EXT:ke_questionnaire/locallang_db.xml:tx_kequestionnaire_questions.matrix_validation.I.0", "numeric"),
+                                        Array("LLL:EXT:ke_questionnaire/locallang_db.xml:tx_kequestionnaire_questions.matrix_validation.I.0a", "integer"),
 					Array("LLL:EXT:ke_questionnaire/locallang_db.xml:tx_kequestionnaire_questions.matrix_validation.I.1", "date"),
 					Array("LLL:EXT:ke_questionnaire/locallang_db.xml:tx_kequestionnaire_questions.matrix_validation.I.2", "percent"),
 				),

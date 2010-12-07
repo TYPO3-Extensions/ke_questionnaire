@@ -34,6 +34,7 @@ class kequestionnaire_input_matrix extends kequestionnaire_input{
                         case "matrix_checkbox":
                         case "matrix_input":
                         case "matrix_input_numeric":
+                        case "matrix_input_integer":
                         case "matrix_input_date":
                         case "matrix_input_percent":
                                 $out=$this->renderMatrixElement($this->type);
@@ -42,6 +43,7 @@ class kequestionnaire_input_matrix extends kequestionnaire_input{
                         case "matrix_checkbox_with_input":
                         case "matrix_input_with_input":
                         case "matrix_input_numeric_with_input":
+                        case "matrix_input_integer_with_input":
                         case "matrix_input_date_with_input":
                         case "matrix_input_percent_with_input":
                                 $type=substr($this->type,0,strlen($this->type)-strlen("_with_input"));
@@ -145,6 +147,8 @@ class kequestionnaire_input_matrix extends kequestionnaire_input{
                                 break;
                         case 'matrix_input_numeric': $marker = '###INPUT_NUMERIC_COLUMN###';
                                 break;
+                        case 'matrix_input_integer': $marker = '###INPUT_INTEGER_COLUMN###';
+                                break;
                         case 'matrix_input_date': $marker = '###INPUT_DATE_COLUMN###';
                                 break;
                         case 'matrix_input_percent': $marker = '###INPUT_PERCENT_COLUMN###';
@@ -198,6 +202,7 @@ class kequestionnaire_input_matrix extends kequestionnaire_input{
                                         }
                                 break;
                                 case "matrix_input_numeric":
+                                case "matrix_input_integer":
                                 case "matrix_input_date":
                                 case "matrix_input_percent":
                                 case "matrix_input":
@@ -423,6 +428,17 @@ function keq_checkMaxColumn(qid,subqs,colid,idy,max,title) {
                                                 if(isset($value[$key][$keyCol]) && $value[$key][$keyCol]!="") continue;
                                                 $out=0;
                                                 $this->subquestions[$key]["error"]=$validationType;
+                                        }
+                                }
+                        break;
+                        case "matrix_integer":
+                                foreach($this->subquestions as $key=>$subquestion){
+                                        foreach($this->columns as $keyCol => $column){
+                                                $check = $value[$key][$keyCol][0];
+                                                $out = 0;
+                                                if (is_numeric($check)){
+                                                        if ((int)$check == $check) $out = 1;
+                                                }
                                         }
                                 }
                         break;

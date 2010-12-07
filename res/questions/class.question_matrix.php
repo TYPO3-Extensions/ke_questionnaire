@@ -98,6 +98,9 @@ class question_matrix  extends question{
 					case "numeric":
 						$type= "matrix_input_numeric";
 					break;
+					case "integer":
+						$type= "matrix_input_integer";
+					break;
 					case "date":
 						$type= "matrix_input_date";
 					break;
@@ -179,6 +182,9 @@ class question_matrix  extends question{
 					switch($this->question["matrix_validation"]){
 						case "numeric":
 							$validationTypes[]="matrix_numeric";
+						break;
+						case "integer":
+							$validationTypes[]="matrix_integer";
 						break;
 						case "date":
 							$validationTypes[]="matrix_date";

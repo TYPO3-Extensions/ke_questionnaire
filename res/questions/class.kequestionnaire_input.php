@@ -422,6 +422,8 @@
 					break;
 				case 'matrix_input_numeric': $marker = '###INPUT_NUMERIC_COLUMN###';
 					break;
+				case 'matrix_input_integer': $marker = '###INPUT_INTEGER_COLUMN###';
+					break;
 				case 'matrix_input_date': $marker = '###INPUT_DATE_COLUMN###';
 					break;
 				case 'matrix_input_percent': $marker = '###INPUT_PERCENT_COLUMN###';
@@ -468,6 +470,7 @@
 						}
 					break;
 					case "matrix_input_numeric":
+					case "matrix_input_integer":
 					case "matrix_input_date":
 					case "matrix_input_percent":
 					case "matrix_input":
@@ -849,6 +852,13 @@ function keq_selectMax(namy) {
 					if($validationOptions["numberDivider"]=="," && substr_count($value,".")>0) $out=0;
 					elseif($validationOptions["numberDivider"]=="." && substr_count($value,",")>0) $out=0;
 					elseif($valNumeric!="") $out=is_numeric($valNumeric);
+				break;
+				case 'integer':
+					if($value=="") break;
+					$out = 0;
+					if (is_numeric($value)){
+						if ((int)$value == $value) $out = 1;
+					}
 				break;
 				case 'date':
 					if(!isset($validationOptions["dateFormat"]) || $value=="") break;
