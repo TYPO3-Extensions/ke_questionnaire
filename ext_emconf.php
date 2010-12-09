@@ -12,7 +12,7 @@
 
 $EM_CONF[$_EXTKEY] = array(
 	'title' => 'Questionnaire',
-	'description' => 'Easily creating any type of questionnaire, survey, poll, quiz or eLearning. The results may at any time evaluated and displayed graphically. See further information - also about the premium version - at www.ke-questionnaire.de',
+	'description' => 'Easily create any type of questionnaire, survey, poll, quiz or eLearning. The results may be evaluated and displayed graphically at any time. See further information - also about the premium version - at www.ke-questionnaire.de',
 	'category' => 'fe',
 	'author' => 'Nadine Schwingler (kennziffer.com)',
 	'author_email' => 'schwingler@kennziffer.com',
