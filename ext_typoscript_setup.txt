@@ -1,13 +1,13 @@
 plugin.tx_kequestionnaire_pi1 {
     dateformat.de	= dd.mm.YY
     dateformat.en	= mm-dd-YY
-    # Number of page that will give the start timestamp for the result set.
-    # If 0 timestamp is set with finishing the questionnaire
+	    # Number of page that will give the start timestamp for the result set.
+	    # If 0 timestamp is set with finishing the questionnaire
     timestamp_startpage = 1
-    # If you have a finish-Page and not the ke_questionnaire generated page
-    # you can add the result ID to the link
+	    # If you have a finish-Page and not the ke_questionnaire generated page
+	    # you can add the result ID to the link
     resultIdToFinishPage = 0
-    # central Template Config
+	    # central Template Config
     template_dir = EXT:ke_questionnaire/res/templates/
 }
 
