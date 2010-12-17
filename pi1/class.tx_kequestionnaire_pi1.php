@@ -1109,70 +1109,70 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 	}
 
 	/**
-	 * renders the End-Page for the Questionnaire
+	 * render the final page of the questionnaire
 	 */
-	function renderLastPage(){
-		//if it is a free-access questionnaire, the save array needs to be rendered:
-		if ($this->ffdata['access'] == 'FREE') $this->renderHiddenFields();
-		//when the user calls the end-page of the questionnaire,
-		//he is finished with the current participation has ended
+	function renderLastPage() {
+			// if it is a questionnaire with free access the save array needs to be rendered:
+		if ($this->ffdata['access'] == 'FREE') {
+			$this->renderHiddenFields();
+		}
+			// When the user reaches the endpage of the questionnaire
+			// he is finished. The current participation has ended.
 		$this->finished = true;
-		//save the Results when showing the last page, regardless of access-type
+			// save the results when showing the last page regardless of access-type
 		$resultId = $this->setResults($this->piVars['result_id']);
-		if (!$this->piVars['result_id']) $this->piVars['result_id'] = $resultId;
-		//t3lib_div::devLog('renderLastPage '.$resultId, $this->prefixId, 0, array($this->saveArray));
-
-		//if the mailing is active and set to direct, send the information mail
-		if ($this->ffdata['mailing'] == 1 AND $this->ffdata['mail_turn'] == 'PROMPT'){
+		if (!$this->piVars['result_id']) {
+			$this->piVars['result_id'] = $resultId;
+		}
+			// if mailing is active and of type "direct" send the information mail
+		if ($this->ffdata['mailing'] == 1 AND $this->ffdata['mail_turn'] == 'PROMPT') {
 			$email_adresses = $this->ffdata['emails'];
 			$mail_texts = array();
 			$mail_texts['subject'] = $this->ffdata['inform_mail_subject'];
 			$mail_texts['body'] = $this->ffdata['inform_mail_text'];
 			$mail_texts['fromEmail'] = $this->ffdata['mail_sender'];
 			$mail_texts['fromName'] = $this->ffdata['mail_from'];
-			$this->sendMail($email_adresses,$mail_texts);
-			
+			$this->sendMail($email_adresses, $mail_texts);
+				// update mailsent timestamp
 			$saveField = array();
 			$saveField['mailsent_tstamp'] = mktime();
-			$GLOBALS['TYPO3_DB']->exec_UPDATEquery('tx_kequestionnaire_results','uid='.$resultId,$saveField);
+			$GLOBALS['TYPO3_DB']->exec_UPDATEquery('tx_kequestionnaire_results', 'uid='.$resultId, $saveField);
 		}
-		
 		$content = '';
 		$markerArray = array();
-
 		$markerArray['###TEXT###'] = $this->pi_RTEcssText($this->ffdata['end_text']);
-		if ($markerArray['###TEXT###'] == '') $markerArray['###TEXT###'] = $this->pi_getLL('standard_endtext');
-		
-		//PDF-Output
+		if ($markerArray['###TEXT###'] == '') {
+			$markerArray['###TEXT###'] = $this->pi_getLL('standard_endtext');
+		}
+			// create link for PDF output
 		$markerArray['###PDF###'] = '';
-		if ($this->ffdata['pdf_type']){
-			$pdf_types = explode(',',$this->ffdata['pdf_type']);
+		if ($this->ffdata['pdf_type']) {
+			$pdf_types = explode(',', $this->ffdata['pdf_type']);
 			$pdf_links = '';
-			foreach ($pdf_types as $pdf_type){
+			foreach ($pdf_types as $pdf_type) {
 				$temp_markerArray = array();
 				$pdf_type = strtolower($pdf_type);
 				$temp_markerArray['###TYPE###'] = $pdf_type;
-				
 				$add_params = array();
 				$add_params[$this->prefixId.'[pdf]'] = 1;
 				$add_params[$this->prefixId.'[p_id]'] = $this->piVars['result_id'];
 				$add_params['no_cache'] = 1;
 				switch ($pdf_type){
 					case 'empty':
-							$link_title = $this->pi_getLL('pdf_empty');
-							$add_params[$this->prefixId.'[type]'] = 'empty';
+						$link_title = $this->pi_getLL('pdf_empty');
+						$add_params[$this->prefixId.'[type]'] = 'empty';
 						break;
 					case 'filled':
-							$link_title = $this->pi_getLL('pdf_filled');
-							$add_params[$this->prefixId.'[type]'] = 'filled';
+						$link_title = $this->pi_getLL('pdf_filled');
+						$add_params[$this->prefixId.'[type]'] = 'filled';
 						break;
 					case 'compare':
-							$link_title = $this->pi_getLL('pdf_compare');
-							$add_params[$this->prefixId.'[type]'] = 'compare';
+						$link_title = $this->pi_getLL('pdf_compare');
+						$add_params[$this->prefixId.'[type]'] = 'compare';
 						break;
 					case 'outcomes':
-							$link_title = $this->pi_getLL('pdf_outcomes');
-							$add_params[$this->prefixId.'[type]'] = 'outcomes';
+						$link_title = $this->pi_getLL('pdf_outcomes');
+						$add_params[$this->prefixId.'[type]'] = 'outcomes';
 						break;
 				}
 				$pdf_link = $this->pi_linkToPage($link_title,
@@ -1185,70 +1185,69 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 			}
 			$markerArray['###PDF###'] = $pdf_links;	
 		}
-		
-		
+
 		$add_info = '';
-		switch ($this->type){
+		switch ($this->type) {
 			case 'QUIZ':
-					if ($this->ffdata['user_reports'] == 1){
-						$add_info = $this->getQuizReport();
-					}
+				if ($this->ffdata['user_reports'] == 1) {
+					$add_info = $this->getQuizReport();
+				}
 				break;
 			case 'POINTS':
-					$add_info = $this->getPointsReport();
+				$add_info = $this->getPointsReport();
 				break;
 		}
 		$markerArray['###TEXT###'] .= $add_info;
-
 		$markerArray['###NAV###'] = '';
 		$markerArray['###HIDDEN_FIELDS###'] = '';
-		
-		//Hook to do something after the questionnaire is finished
+
+			// hook: the questionnaire ist finished, the markerarray ist setup, the result page is not yet rendered
 		if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$this->extKey]['pi1_renderLastPage'])){
 			foreach($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$this->extKey]['pi1_renderLastPage'] as $_classRef){
 				$_procObj = & t3lib_div::getUserObj($_classRef);
-				$markerArray = $_procObj->pi1_renderLastPage($this,$resultId,$markerArray);
+				$markerArray = $_procObj->pi1_renderLastPage($this, $resultId, $markerArray);
 			}
 		}
 		
-		//if finish page differs by answer, check this here
+			// if finish page differs by answer, check this here
 		if(intval($this->ffdata['redirect_on_finish_uid'] != 0)) {
-			$res_answers = $GLOBALS['TYPO3_DB']->exec_SELECTquery('tx_kequestionnaire_answers.uid,tx_kequestionnaire_answers.finish_page_uid','tx_kequestionnaire_questions,tx_kequestionnaire_answers','tx_kequestionnaire_questions.uid = tx_kequestionnaire_answers.question_uid AND tx_kequestionnaire_questions.uid = '.$this->ffdata['redirect_on_finish_uid']);
-			
-			//get finish pages from answers
+			$res_answers = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
+				'tx_kequestionnaire_answers.uid, tx_kequestionnaire_answers.finish_page_uid',
+				'tx_kequestionnaire_questions,tx_kequestionnaire_answers',
+				'tx_kequestionnaire_questions.uid = tx_kequestionnaire_answers.question_uid AND tx_kequestionnaire_questions.uid = ' . 
+					$this->ffdata['redirect_on_finish_uid'])
+			;
+				// get finish pages from answers
 			while($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res_answers)) {
 				$finishPids[$row['uid']] = $row['finish_page_uid'];
 			}
-			
-			//set finish page by current answer
+				// set finish page by current answer
 			$finishPage = $finishPids[$this->saveArray[$this->ffdata['redirect_on_finish_uid']]['answer']['options']];
-			
-			//if no finishing page given in answer, ignore and go on - else: redirect
+
+				//if no finishing page given in answer, ignore and go on. Else: redirect
 			if(strlen($finishPage) && $finishPage > 0) {
-				//if the conf Var is set, give the resultId to the link
+					// if the conf var is set, find the resultId to the link
 				$fp_params = array();
-				if ($this->conf['resultIdToFinishPage'] == 1){
+				if ($this->conf['resultIdToFinishPage'] == 1) {
 					$fp_params[$this->prefixId]['resultId'] = $resultId;
 				}
-				$link = $this->pi_getPageLink($finishPage,'',$fp_params);
-				if ($GLOBALS['TSFE']->config['config']['baseURL']) $link = $GLOBALS['TSFE']->config['config']['baseURL'].$link;
-				header('Location:'.$link);
-				//t3lib_div::devLog('renderLastPage', $this->prefixId, 0, array($fp_params,$link));
+				$link = $this->pi_getPageLink($finishPage, '', $fp_params);
+				if ($GLOBALS['TSFE']->config['config']['baseURL']) {
+					$link = $GLOBALS['TSFE']->config['config']['baseURL'] . $link;
+				}
+				header('Location:' . $link);
 			}
 		}
-		
-		//if the redirect page is set
-		if ($this->ffdata['end_page']){
+			//if the redirect page is set
+		if ($this->ffdata['end_page']) {
 			$link = $this->pi_getPageLink($this->ffdata['end_page']);
-			if ($GLOBALS['TSFE']->config['config']['baseURL']) $link = $GLOBALS['TSFE']->config['config']['baseURL'].$link;
-			header('Location:'.$link);
+			if ($GLOBALS['TSFE']->config['config']['baseURL']) {
+				$link = $GLOBALS['TSFE']->config['config']['baseURL'] . $link;
+			}
+			header('Location:' . $link);
 		}
-		
 		$this->renderHiddenFields();
-		$content = $this->renderContent('###OTHER_PAGE###',$markerArray);
-
-		//t3lib_div::devLog('renderLastPage', $this->prefixId, 0, $markerArray);
-
+		$content = $this->renderContent('###OTHER_PAGE###', $markerArray);
 		return $content;
 	}
 	
