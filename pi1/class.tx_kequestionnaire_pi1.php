@@ -1238,9 +1238,15 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 				header('Location:' . $link);
 			}
 		}
-			//if the redirect page is set
-		if ($this->ffdata['end_page']) {
-			$link = $this->pi_getPageLink($this->ffdata['end_page']);
+			// if the redirect page is set
+		$finishPage = $this->ffdata['end_page'];
+		if ($finishPage) {
+			$fp_params = array();
+			if ($this->conf['resultIdToFinishPage'] == 1) {
+				$fp_params[$this->prefixId]['resultId'] = $resultId;
+			}
+			$link = $this->pi_getPageLink($finishPage, '', $fp_params);
+
 			if ($GLOBALS['TSFE']->config['config']['baseURL']) {
 				$link = $GLOBALS['TSFE']->config['config']['baseURL'] . $link;
 			}
