@@ -32,7 +32,7 @@ class result {
 	var $questions = array();  //Question-array
 
 	function __construct($pid, $title, $that) {
-		$this->that = $that
+		$this->that = $that;
 		$this->title = $title;
 		$this->ffdata = $ffdata;
 		$this->pid = $pid;
