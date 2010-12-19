@@ -1245,6 +1245,22 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 			if ($this->conf['resultIdToFinishPage'] == 1) {
 				$fp_params[$this->prefixId]['resultId'] = $resultId;
 			}
+			
+				// new TS setup
+				# resultPage {
+				#		addResultId = 1
+				#		addResultToken = 1
+				#		typeNum = {$pageQuestResult.typeNum}
+				# }
+			if ($this->conf['resultPage.']['addResultId'] == 1) {
+				$fp_params[$this->prefixId]['resultId'] = $resultId;
+			}
+			if ($this->conf['resultPage.']['typeNum']) {
+				$finishPage .= ',' . $this->conf['resultPage.']['typeNum'];
+			}
+			if ($this->conf['resultPage.']['addResultToken'] == 1) {
+				$fp_params[$this->prefixId]['resultToken'] = md5(microtime());
+			}
 			$link = $this->pi_getPageLink($finishPage, '', $fp_params);
 
 			if ($GLOBALS['TSFE']->config['config']['baseURL']) {

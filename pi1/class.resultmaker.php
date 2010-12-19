@@ -18,7 +18,7 @@
 require_once(PATH_tslib . 'class.tslib_content.php');
 require_once(t3lib_extMgm::extPath('ke_questionnaire') . 'pi1/class.tx_kequestionnaire_pi1.php');
 
-class result {
+class resultmaker {
 	var $pid = 0;		// storage of questionnaire items
 	var $ffdata = '';
 	var $templateFolder = '';
@@ -31,7 +31,7 @@ class result {
 
 	var $questions = array();  //Question-array
 
-	function __construct($pid, $title, $that) {
+	function __construct($pid, $title, $ffdata) {
 		$this->that = $that;
 		$this->title = $title;
 		$this->ffdata = $ffdata;
@@ -185,69 +185,27 @@ class result {
 		return $lines;
 	}
 
-	function getPDFBlank(){
+	function getResultBlank() {
 		$this->getQuestions();
 		$html = $this->getHTML('blank');
-		//t3lib_div::devLog('html', 'pdf_export', 0, array($html));
-
-		$this->pdf->load_html($html);
-
-		$this->pdf->render();
-		$this->pdf->stream("questionnaire_".$this->pid.".pdf");
-
-		//return $html;
+		return $html;
 	}
 
-	function getPDFFilled($result,$date = ''){
+	function getResultFilled($result, $date = '') {
 		$this->result = $result;
 		$this->getQuestions();
-		//t3lib_div::devLog('result', 'pdf_export', 0, $result);
-
-		$html = $this->getHTML('filled',$date);
-
-		$this->pdf->load_html($html);
-
-		$this->pdf->render();
-		$this->pdf->stream("questionnaire_".$this->pid.".pdf");
-		//t3lib_div::devLog('html', 'pdf_export', 0, array($html));
-
-		//return $html;
+		$html = $this->getHTML('filled', $date);
+		return $html;
 	}
 
-	function getPDFCompare($result,$date=''){
+	function getResultCompare($result, $date='') {
 		$this->result = $result;
 		$this->getQuestions();
-		//t3lib_div::devLog('result', 'pdf_export', 0, $result);
-
 		$html = $this->getHTML('compare',$date);
-
-		$this->pdf->load_html($html);
-
-		$this->pdf->render();
-		$this->pdf->stream("questionnaire_".$this->pid.".pdf");
-		//t3lib_div::devLog('html', 'pdf_export', 0, array($html));
-
-		//return $html;
+		return $html;
 	}
 
-	function getPDFOutcomes($result){
-		$this->result = $result;
-		$this->getQuestions();
-		$this->getOutcomes();
-		//t3lib_div::devLog('result', 'pdf_export', 0, $result);
-
-		$html = $this->getHTML('outcomes');
-
-		$this->pdf->load_html($html);
-
-		$this->pdf->render();
-		$this->pdf->stream("questionnaire_".$this->pid.".pdf");
-		//t3lib_div::devLog('html', 'pdf_export', 0, array($html));
-
-		//return $html;
-	}
-
-	function getPDFOutcomesHtml($result){
+	function getResultOutcomes($result) {
 		$this->result = $result;
 		$this->getQuestions();
 		$this->getOutcomes();
