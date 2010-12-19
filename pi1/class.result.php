@@ -15,16 +15,11 @@
  *
  */
 
-
-	// require_once(t3lib_extMgm::extPath('fpdf') . 'class.tx_fpdf.php');
-require_once(t3lib_extMgm::extPath('ke_dompdf') . 'res/dompdf/dompdf_config.inc.php');
-require_once(PATH_tslib . 'class.tslib_content.php');	// t3 content element classes
+require_once(PATH_tslib . 'class.tslib_content.php');
 require_once(t3lib_extMgm::extPath('ke_questionnaire') . 'pi1/class.tx_kequestionnaire_pi1.php');
 
-class pdfresult_dompdf {
-	var $conf = array();      //Basis PDF Conf
-	var $pdf = '';            //PDF-Objekt
-	var $pid = 0;             //Pid of data Storage
+class result {
+	var $pid = 0;		// storage of questionnaire items
 	var $ffdata = '';
 	var $templateFolder = '';
 	var $title = '';
@@ -36,22 +31,13 @@ class pdfresult_dompdf {
 
 	var $questions = array();  //Question-array
 
-	function pdfresult_dompdf($conf, $pid, $title, $ffdata){
-		spl_autoload_register('DOMPDF_autoload');
+	function __construct($pid, $title, $that) {
+		$this->that = $that
 		$this->title = $title;
 		$this->ffdata = $ffdata;
 		$this->pid = $pid;
-		$this->conf = $conf;
 
 		$this->templateFolder = trim(PATH_site . ltrim($this->ffdata['dDEF']['lDEF']['template_dir']['vDEF'], '/'));
-		if ($this->templateFolder == '') {
-			'../../../../' . trim($this->templateFolder);
-		}
-
-		//t3lib_div::devLog('conf', 'pdf_export', 0, $conf);
-		//t3lib_div::devLog('ffdata', 'pdf_export', 0, $ffdata);
-
-		$this->pdf = new DOMPDF();
 
 		$basePath = t3lib_extMgm::extPath('ke_questionnaire').'pi1/locallang.php';
 		$tempLOCAL_LANG = t3lib_div::readLLfile($basePath,'default');
