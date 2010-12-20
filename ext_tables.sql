@@ -320,6 +320,7 @@ CREATE TABLE tx_kequestionnaire_results (
 	xmldata longtext NOT NULL,
 	ip tinytext NOT NULL,
 	mailsent_tstamp int(11) DEFAULT '0' NOT NULL,
+	token tinytext NOT NULL,
 
 	PRIMARY KEY (uid),
 	KEY parent (pid)
