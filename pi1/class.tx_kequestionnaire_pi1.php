@@ -250,6 +250,20 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 					}
 				}
 				break;
+			default:
+				//Hook to include new access-types
+				if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$this->extKey]['pi1_accessType'])){
+					foreach($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$this->extKey]['pi1_accessType'] as $_classRef){
+						$_procObj = & t3lib_div::getUserObj($_classRef);
+						$parts = array();
+						//contains: subPart, markerArray and save variable
+						$parts = $_procObj->pi1_accessType($this);
+						$subPart = $parts['subPart'];
+						$markerArray = $parts['markerArray'];
+						$save = $parts['save'];
+					}
+				}
+				break;
 		}
 		//t3lib_div::devLog('lastanswered: '.$this->lastAnswered, $this->prefixId, 0, $this->saveArray[$this->lastAnswered]);
 
@@ -1480,7 +1494,8 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 			}
 		}
 		
-		$returner['percent'] = ($own_total/$max_points)*100;
+		if ($max_points > 0) $returner['percent'] = ($own_total/$max_points)*100;
+		else $returner['precent'] = 0;
 		$returner['own'] = $own_total;
 		$returner['max'] = $max_points;
 		$returner['bars'] = $bars;
