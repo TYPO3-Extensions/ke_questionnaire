@@ -27,6 +27,7 @@
 			<label index="tt_content.pi_flexform.type.questionnaire">Questionnaire</label>
 			<label index="tt_content.pi_flexform.type.quiz">Quiz/eLearning</label>
 			<label index="tt_content.pi_flexform.type.points">Points</label>
+			<label index="tt_content.pi_flexform.type.constant">Constant Questionnaire</label>
 
 			<label index="tt_content.pi_flexform.user_reports">Show Analysis in Frontend</label>
 			<label index="tt_content.pi_flexform.q_report_graph">show graphical analysis</label>
@@ -131,6 +132,7 @@
 			<label index="tt_content.pi_flexform.type.questionnaire">Fragebogen</label>
 			<label index="tt_content.pi_flexform.type.quiz">Quiz/eLearning</label>
 			<label index="tt_content.pi_flexform.type.points">Punktewertung</label>
+			<label index="tt_content.pi_flexform.type.constant">Dauerbefragung</label>
 
 			<label index="tt_content.pi_flexform.user_reports">Frontend-Auswertungen für Nutzer anzeigen</label>
 			<label index="tt_content.pi_flexform.q_report_graph">graphische Auswertung anzeigen</label>

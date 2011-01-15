@@ -434,7 +434,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 		$where .= ' AND finished_tstamp != 0';
 		$where .= ' AND deleted = 0';
 		$res_results = $GLOBALS['TYPO3_DB']->exec_SELECTquery('count(uid) as counter','tx_kequestionnaire_results',$where);
-		//t3lib_div::devLog('checkResults '.$authCodeId, $this->prefixId, 0, array($GLOBALS['TYPO3_DB']->SELECTquery('count(uid) as counter','tx_kequestionnaire_results',$where)));
+		t3lib_div::devLog('checkResults '.$authCodeId, $this->prefixId, 0, array($GLOBALS['TYPO3_DB']->SELECTquery('count(uid) as counter','tx_kequestionnaire_results',$where)));
 		if ($res_results){
 			$counter = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res_results);
 			$content['finished_count'] = $counter['counter'];
@@ -520,7 +520,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 				}
 			}
 		}
-		//t3lib_div::devLog('getResults saveArray', $this->prefixId, 0, array($this->saveArray));
+		t3lib_div::devLog('getResults saveArray', $this->prefixId, 0, array($this->saveArray));
 	}
 
 	/**
@@ -1140,7 +1140,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 		if ($this->ffdata['access'] == 'FREE') $this->renderHiddenFields();
 		//when the user calls the end-page of the questionnaire,
 		//he is finished with the current participation has ended
-		$this->finished = true;
+		if ($this->type != "CONSTANT") $this->finished = true;
 		//save the Results when showing the last page, regardless of access-type
 		$resultId = $this->setResults($this->piVars['result_id']);
 		if (!$this->piVars['result_id']) $this->piVars['result_id'] = $resultId;
