@@ -1681,7 +1681,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 			case 'closed':
 				$question_obj = new question_closed();
 				if (is_array($this->saveArray[$question['uid']]) AND !$this->piVars[$question['uid']] AND $this->saveArray[$question['uid']]){
-					if (stristr($this->saveArray[$question['uid']]['answer'],'<phparray>')){
+					if (!is_array($this->saveArray[$question['uid']]['answer']) AND stristr($this->saveArray[$question['uid']]['answer'],'<phparray>')){
 						$this->piVars[$question['uid']]['options'] = $this->saveArray[$question['uid']]['answer'];
 					} else {
 						$this->piVars[$question['uid']] = $this->saveArray[$question['uid']]['answer'];
