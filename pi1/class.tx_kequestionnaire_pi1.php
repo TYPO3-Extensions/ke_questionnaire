@@ -422,6 +422,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 		$where = 'auth='.$authCodeId;
 		$where .= ' AND finished_tstamp = 0';
 		$where .= ' AND deleted = 0';
+		$where .= ' AND pid = '.$this->pid;
 		$orderBy = 'start_tstamp DESC,tstamp DESC';
 		$res_results = $GLOBALS['TYPO3_DB']->exec_SELECTquery('uid,finished_tstamp','tx_kequestionnaire_results',$where,'',$orderBy,1);
 		if ($res_results){
@@ -431,9 +432,10 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 		}
 		$where = 'auth='.$authCodeId;
 		$where .= ' AND finished_tstamp != 0';
+		$where .= ' AND pid = '.$this->pid;
 		$where .= ' AND deleted = 0';
 		$res_results = $GLOBALS['TYPO3_DB']->exec_SELECTquery('count(uid) as counter','tx_kequestionnaire_results',$where);
-		t3lib_div::devLog('checkResults '.$authCodeId, $this->prefixId, 0, array($GLOBALS['TYPO3_DB']->SELECTquery('count(uid) as counter','tx_kequestionnaire_results',$where)));
+		//t3lib_div::devLog('checkResults '.$authCodeId, $this->prefixId, 0, array($GLOBALS['TYPO3_DB']->SELECTquery('count(uid) as counter','tx_kequestionnaire_results',$where)));
 		if ($res_results){
 			$counter = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res_results);
 			$content['finished_count'] = $counter['counter'];
