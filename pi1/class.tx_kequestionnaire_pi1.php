@@ -374,15 +374,6 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 			case 'AUTH_CODE':
 				if ($this->authCode) $where = 'authcode="'.$this->authCode.'"';
 				break;
-			default:
-				//Hook to get another access method
-				if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$this->extKey]['pi1_getAuthCodeId'])){
-					foreach($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$this->extKey]['pi1_getAuthCodeId'] as $_classRef){
-						$_procObj = & t3lib_div::getUserObj($_classRef);
-						$where = $_procObj->pi1_getAuthCodeId($this);
-					}
-				}
-			
 		}
 		$where .= ' AND pid='.$this->pid;
 		$where .= $this->cObj->enableFields('tx_kequestionnaire_authcodes');
@@ -404,6 +395,14 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 
 				$GLOBALS['TYPO3_DB']->exec_INSERTquery('tx_kequestionnaire_authcodes',$saveFields);
 				$authCode_id = $GLOBALS['TYPO3_DB']->sql_insert_id();
+			} else {
+				//Hook to get another access method
+				if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$this->extKey]['pi1_getAuthCodeId'])){
+					foreach($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$this->extKey]['pi1_getAuthCodeId'] as $_classRef){
+						$_procObj = & t3lib_div::getUserObj($_classRef);
+						$authCode_id = $_procObj->pi1_getAuthCodeId($this);
+					}
+				}
 			}
 		}
 
