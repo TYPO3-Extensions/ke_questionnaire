@@ -256,8 +256,9 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 					foreach($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$this->extKey]['pi1_accessType'] as $_classRef){
 						$_procObj = & t3lib_div::getUserObj($_classRef);
 						$parts = array();
+						$parts['markerArray'] = $markerArray;
 						//contains: subPart, markerArray and save variable
-						$parts = $_procObj->pi1_accessType($this);
+						$parts = $_procObj->pi1_accessType($this,$parts);
 						$subPart = $parts['subPart'];
 						$markerArray = $parts['markerArray'];
 						$save = $parts['save'];
@@ -373,6 +374,15 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 			case 'AUTH_CODE':
 				if ($this->authCode) $where = 'authcode="'.$this->authCode.'"';
 				break;
+			default:
+				//Hook to get another access method
+				if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$this->extKey]['pi1_getAuthCodeId'])){
+					foreach($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$this->extKey]['pi1_getAuthCodeId'] as $_classRef){
+						$_procObj = & t3lib_div::getUserObj($_classRef);
+						$where = $_procObj->pi1_getAuthCodeId($this);
+					}
+				}
+			
 		}
 		$where .= ' AND pid='.$this->pid;
 		$where .= $this->cObj->enableFields('tx_kequestionnaire_authcodes');
