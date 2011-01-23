@@ -297,8 +297,8 @@ $TCA["tx_kequestionnaire_questions"] = array (
 				"maxitems" => 1,
 			)
 		),
-        "open_validation_text" => Array (
-            'displayCond' => 'FIELD:open_validation:=:text',
+                "open_validation_text" => Array (
+                    'displayCond' => 'FIELD:open_validation:=:text',
 			"exclude" => 1,
 			"label" => "LLL:EXT:ke_questionnaire/locallang_db.xml:tx_kequestionnaire_questions.open_validation_text",
 			"config" => Array (
@@ -406,7 +406,7 @@ $TCA["tx_kequestionnaire_questions"] = array (
 			)
 		),
 		"matrix_validation" => Array (
-            "displayCond" => "FIELD:matrix_type:=:input",
+                    "displayCond" => "FIELD:matrix_type:=:input",
 			"exclude" => 1,
 			"label" => "LLL:EXT:ke_questionnaire/locallang_db.xml:tx_kequestionnaire_questions.matrix_validation",
 			"config" => Array (
@@ -1096,6 +1096,13 @@ $TCA["tx_kequestionnaire_answers"] = array (
 				"type" => "check",
                         )
 		),
+                "validate_input" => Array (
+                        "exclude" => 1,
+			"label" => "LLL:EXT:ke_questionnaire/locallang_db.xml:tx_kequestionnaire_answers.validate_input",
+			"config" => Array (
+				"type" => "check",
+                        )
+		),
 		"value" => Array (
 			"exclude" => 1,
 			"label" => "LLL:EXT:ke_questionnaire/locallang_db.xml:tx_kequestionnaire_answers.value",
@@ -1203,7 +1210,7 @@ $TCA["tx_kequestionnaire_answers"] = array (
 		),
 	),
 	"types" => array (
-		"0" => array("showitem" => "sys_language_uid;;;;1-1-1, l18n_parent,question_uid, title;;;;2-2-2, show_input, value;;;;3-3-3, correct_answer, text;;;richtext[paste|bold|italic|underline|formatblock|class|left|center|right|orderedlist|unorderedlist|outdent|indent|link|image]:rte_transform[mode=ts];4-4-4, helptext;;;richtext[paste|bold|italic|underline|formatblock|class|left|center|right|orderedlist|unorderedlist|outdent|indent|link|image]:rte_transform[mode=ts], image;;;;5-5-5, image_position,finish_page_uid")
+		"0" => array("showitem" => "sys_language_uid;;;;1-1-1, l18n_parent,question_uid, title;;;;2-2-2, show_input, validate_input, value;;;;3-3-3, correct_answer, text;;;richtext[paste|bold|italic|underline|formatblock|class|left|center|right|orderedlist|unorderedlist|outdent|indent|link|image]:rte_transform[mode=ts];4-4-4, helptext;;;richtext[paste|bold|italic|underline|formatblock|class|left|center|right|orderedlist|unorderedlist|outdent|indent|link|image]:rte_transform[mode=ts], image;;;;5-5-5, image_position,finish_page_uid")
                 //"0" => array("showitem" => "sys_language_uid;;;;1-1-1, l18n_parent, l18n_diffsource, hidden;;1, question_uid, title;;;;2-2-2, value;;;;3-3-3, correct_answer, text;;;richtext[paste|bold|italic|underline|formatblock|class|left|center|right|orderedlist|unorderedlist|outdent|indent|link|image]:rte_transform[mode=ts], helptext;;;richtext[paste|bold|italic|underline|formatblock|class|left|center|right|orderedlist|unorderedlist|outdent|indent|link|image]:rte_transform[mode=ts], image")
 	),
 	"palettes" => array (

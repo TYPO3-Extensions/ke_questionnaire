@@ -101,6 +101,7 @@ CREATE TABLE tx_kequestionnaire_answers (
         question_uid int(11) DEFAULT '0' NOT NULL,
         finish_page_uid int(11) DEFAULT '0' NOT NULL,
         show_input tinyint(3) DEFAULT '0' NOT NULL,
+        validate_input tinyint(3) DEFAULT '0' NOT NULL,
     
 	PRIMARY KEY (uid),
 	KEY parent (pid)
@@ -134,11 +135,11 @@ CREATE TABLE tx_kequestionnaire_columns (
 	hidden tinyint(4) DEFAULT '0' NOT NULL,
 	fe_group int(11) DEFAULT '0' NOT NULL,
 	title tinytext NOT NULL,
-    different_type varchar(11) DEFAULT '' NOT NULL,
-    maxanswers int(11) DEFAULT '0' NOT NULL,
+        different_type varchar(11) DEFAULT '' NOT NULL,
+        maxanswers int(11) DEFAULT '0' NOT NULL,
 	image blob NOT NULL,
-    image_position varchar(11) DEFAULT '' NOT NULL,
-    question_uid int(11) DEFAULT '0' NOT NULL,
+        image_position varchar(11) DEFAULT '' NOT NULL,
+        question_uid int(11) DEFAULT '0' NOT NULL,
         
 	PRIMARY KEY (uid),
 	KEY parent (pid),
@@ -254,15 +255,15 @@ CREATE TABLE tx_kequestionnaire_outcomes (
 	starttime int(11) DEFAULT '0' NOT NULL,
 	endtime int(11) DEFAULT '0' NOT NULL,
 	fe_group int(11) DEFAULT '0' NOT NULL,
-    type varchar(11) DEFAULT '' NOT NULL,
+        type varchar(11) DEFAULT '' NOT NULL,
 	title tinytext NOT NULL,
 	value_start int(11) DEFAULT '0' NOT NULL,
 	value_end int(11) DEFAULT '0' NOT NULL,
 	text text NOT NULL,
 	image blob NOT NULL,
-    image_position varchar(11) DEFAULT '' NOT NULL,
-    dependancy blob NOT NULL,
-    dependancy_simple tinyint(3) DEFAULT '0' NOT NULL,
+        image_position varchar(11) DEFAULT '' NOT NULL,
+        dependancy blob NOT NULL,
+        dependancy_simple tinyint(3) DEFAULT '0' NOT NULL,
 
 	PRIMARY KEY (uid),
 	KEY parent (pid)

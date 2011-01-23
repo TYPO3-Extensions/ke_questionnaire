@@ -95,6 +95,7 @@
 			<label index="tx_kequestionnaire_answers.image">image</label>
 			<label index="tx_kequestionnaire_answers.finish_page_uid">Page shown after finishing the questionnaire</label>
 			<label index="tx_kequestionnaire_answers.show_input">Show input field after answer (only with radio and checkbox type question)</label>
+			<label index="tx_kequestionnaire_answers.validate_input">Don't validate input field after answer (only with radio and checkbox type question)</label>
 			
 			<label index="tx_kequestionnaire_columns">Column (for matrix or semantic differential)</label>
 			<label index="tx_kequestionnaire_columns.title">title</label>
@@ -259,6 +260,7 @@
 			<label index="tx_kequestionnaire_answers.image">Bild</label>
 			<label index="tx_kequestionnaire_answers.finish_page_uid">Abschlussseite bei Beendigung</label>
 			<label index="tx_kequestionnaire_answers.show_input">Eingabefeld hinter Antwort anzeigen (Nur bei Radioboxen oder Checkboxen)</label>
+			<label index="tx_kequestionnaire_answers.validate_input">Eingabefeld hinter Antwort NICHT überprüfen (Nur bei Radioboxen oder Checkboxen)</label>
 			
 			<label index="tx_kequestionnaire_columns">Fragenspalte (für Matrix oder semantisches Differential)</label>
 			<label index="tx_kequestionnaire_columns.title">Titel</label>

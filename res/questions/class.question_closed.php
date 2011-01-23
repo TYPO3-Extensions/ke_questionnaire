@@ -225,6 +225,8 @@ class question_closed extends question {
 					}else{
 						if(!in_array($key,$this->answer["options"])) continue;
 					}
+					//t3lib_div::debug($this->fields[$key]->options[$key],' answer '.$key);
+					if ($this->fields[$key]->options[$key]['validate_input'] == 1) continue;
 					$errors=$this->fields[$key]->validate(array("required"),$this->answer["text"][$key]);
 					if(count($errors) > 0) {
 						    $this->error=1;

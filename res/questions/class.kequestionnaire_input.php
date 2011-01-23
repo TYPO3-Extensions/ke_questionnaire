@@ -805,6 +805,7 @@ function keq_selectMax(namy) {
 		 *
 		 */
 		function validate($validationTypes,$value=NULL,$validationOptions=array()){
+			//t3lib_div::debug($validationTypes,'valTypes');
 
 			if(!is_array($validationTypes)) $validationTypes=array($validationTypes);
 			if(is_null($value)) $value=$this->value;
