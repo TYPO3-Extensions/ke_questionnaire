@@ -235,12 +235,12 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 
 		$this->content.=$this->doc->section($title,$content,0,1);
 	}
-
-	function getCSVInfos(){
-		//t3lib_div::devLog('getCSVInfos POST', 'ke_questionnaire Export Mod', 0, $_POST);
-		global $LANG;
-
-		$content = '';
+	
+	function loadResults(){
+		$counters = array();
+		$counters['counting'] = 0;
+		$counters['finished'] = 0;
+		
 		$this->results = array();
 		$finished = 0;
 		$counting = 0;
@@ -262,31 +262,76 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*','tx_kequestionnaire_results',$where,'','uid');
 		//t3lib_div::devLog('getCSVInfos', 'ke_questionnaire Export Mod', 0, array($GLOBALS['TYPO3_DB']->SELECTquery('*','tx_kequestionnaire_results',$where,'','uid')));
 		if ($res){
-			while($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)){
-				if ($row['xmldata'] != '') {
-					$temp_array = '';
-					$encoding = "UTF-8";
-					if ( true === mb_check_encoding ($row['xmldata'], $encoding ) ){
-						$temp_array = t3lib_div::xml2array($row['xmldata']);
-						if (count($temp_array) == 1) $temp_array = t3lib_div::xml2array(utf8_encode($row['xmldata']));
-					} else {
-						$temp_array = t3lib_div::xml2array(utf8_encode($row['xmldata']));
+			$count_results = $GLOBALS['TYPO3_DB']->sql_num_rows($res);
+		}
+		//t3lib_div::debug($count_results);
+		if ($count_results > $this->extConf['exportBlocks']){
+			$limit = 0;
+			$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*','tx_kequestionnaire_results',$where,'','uid','('.$limit.','.$this->extConf['exportBlocks'].')');
+			if ($res){
+				while($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)){
+					if ($row['xmldata'] != '') {
+						$temp_array = '';
+						$encoding = "UTF-8";
+						if ( true === mb_check_encoding ($row['xmldata'], $encoding ) ){
+							$temp_array = t3lib_div::xml2array($row['xmldata']);
+							if (count($temp_array) == 1) $temp_array = t3lib_div::xml2array(utf8_encode($row['xmldata']));
+						} else {
+							$temp_array = t3lib_div::xml2array(utf8_encode($row['xmldata']));
+						}
+						//$temp .= t3lib_div::view_array($row);
+						$temp_array['uid'] = $row['uid'];
+						$temp_array['start_tstamp'] = $row['start_tstamp'];
+						$temp_array['finished_tstamp'] = $row['finished_tstamp'];
+						$this->results[] = $temp_array;
+						$langs[$row['sys_language_uid']] = 1;
+						if ($row['finished_tstamp'] > 0) $finished ++;
+						$counting ++;
 					}
-					//$temp .= t3lib_div::view_array($row);
-					$temp_array['uid'] = $row['uid'];
-					$temp_array['start_tstamp'] = $row['start_tstamp'];
-					$temp_array['finished_tstamp'] = $row['finished_tstamp'];
-					$this->results[] = $temp_array;
-					$langs[$row['sys_language_uid']] = 1;
-					if ($row['finished_tstamp'] > 0) $finished ++;
-					$counting ++;
+				}
+			}
+			$limit += $this->extConf['exportBlocks'];
+		} else {
+			if ($res){
+				while($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)){
+					if ($row['xmldata'] != '') {
+						$temp_array = '';
+						$encoding = "UTF-8";
+						if ( true === mb_check_encoding ($row['xmldata'], $encoding ) ){
+							$temp_array = t3lib_div::xml2array($row['xmldata']);
+							if (count($temp_array) == 1) $temp_array = t3lib_div::xml2array(utf8_encode($row['xmldata']));
+						} else {
+							$temp_array = t3lib_div::xml2array(utf8_encode($row['xmldata']));
+						}
+						//$temp .= t3lib_div::view_array($row);
+						$temp_array['uid'] = $row['uid'];
+						$temp_array['start_tstamp'] = $row['start_tstamp'];
+						$temp_array['finished_tstamp'] = $row['finished_tstamp'];
+						$this->results[] = $temp_array;
+						$langs[$row['sys_language_uid']] = 1;
+						if ($row['finished_tstamp'] > 0) $finished ++;
+						$counting ++;
+					}
 				}
 			}
 		}
-		//t3lib_div::devLog('getCSVInfos langs', 'ke_questionnaire Export Mod', 0, $langs);
+		
+		$counters['counting'] = $counting;
+		$counters['finished'] = $finished;
+		$counters['langs'] = $langs;
+		
+		return $counters;
+	}
 
-		$content = $LANG->getLL('result_count').': '.$counting.'<br />';
-		$content .= $LANG->getLL('finished_count').': '.$finished;
+	function getCSVInfos(){
+		//t3lib_div::devLog('getCSVInfos POST', 'ke_questionnaire Export Mod', 0, $_POST);
+		global $LANG;
+
+		$content = '';
+		$counters = $this->loadResults();
+		
+		$content = $LANG->getLL('result_count').': '.$counters['counting'].'<br />';
+		$content .= $LANG->getLL('finished_count').': '.$counters['finished'];
 
 		$content .= '<p><br /><hr />';
 		$content .= '<p>'.$LANG->getLL('CSV_download_type');
@@ -306,7 +351,7 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 		if ($this->q_data['sys_language_uid'] > 0 AND $langs[$this->q_data['sys_language_uid']] == 1){
 			$content .= '<p><input type="checkbox" name="only_this_lang" value="L_'.$this->q_data['sys_language_uid'].'" /> '.$LANG->getLL('download_only_this_lang').'</p>';
 		} else if ($this->q_data['sys_language_uid'] == 0 AND $langs[0] == 1){
-			foreach ($langs as $key => $is){
+			foreach ($counters['langs'] as $key => $is){
 				if ($key != 0) {
 					$content .= '<p><input type="checkbox" name="only_this_lang" value="L_'.(string)$this->q_data['sys_language_uid'].'" /> '.$LANG->getLL('download_only_this_lang').'</p>';
 					break;
@@ -326,52 +371,10 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 		global $LANG;
 
 		$content = '';
-		$this->results = array();
-		$finished = 0;
-		$counting = 0;
-
-		//$content .= t3lib_div::view_array($this->ff_data);
-		$storage_pid = $this->ff_data['sDEF']['lDEF']['storage_pid']['vDEF'];
-		//t3lib_div::devLog('getCSVInfos', 'ke_questionnaire Export Mod', 0, $storage_pid);
-
-		$where = 'pid='.$storage_pid.' AND hidden=0 AND deleted=0';
+		$counters = $this->loadResults();
 		
-		//Check if only the actual plugin-lang should be selected
-		$langs = array();
-		if (htmlentities(t3lib_div::_GP('only_this_lang'))){
-			$only_lang = explode('_',htmlentities(t3lib_div::_GP('only_this_lang')));
-			$where .= ' AND sys_language_uid='.$only_lang[1];
-		}
-		
-		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*','tx_kequestionnaire_results',$where,'','uid');
-		//t3lib_div::devLog('getCSVInfos', 'ke_questionnaire Export Mod', 0, array($GLOBALS['TYPO3_DB']->SELECTquery('*','tx_kequestionnaire_results','pid='.$storage_pid.' AND hidden=0 AND deleted=0')));
-		$langs = array();
-		if ($res){
-			while($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)){
-				if ($row['xmldata'] != '') {
-					$temp_array = '';
-					$encoding = "UTF-8";
-					if ( true === mb_check_encoding ($row['xmldata'], $encoding ) ){
-						$temp_array = t3lib_div::xml2array($row['xmldata']);
-						if (count($temp_array) == 1) $temp_array = t3lib_div::xml2array(utf8_encode($row['xmldata']));
-					} else {
-						$temp_array = t3lib_div::xml2array(utf8_encode($row['xmldata']));
-					}
-					//$temp .= t3lib_div::view_array($row);
-					$temp_array['uid'] = $row['uid'];
-					$this->results[] = $temp_array;
-					$langs[$row['sys_language_uid']] = 1;
-					$value_array = t3lib_div::xml2array($row['xmldata']);
-					//t3lib_div::devLog('value_array ', 'ke_questionnaire Export Mod', 0, $value_array);
-					if ($row['finished_tstamp'] > 0) $finished ++;
-					$counting ++;
-				}
-			}
-		}
-		//t3lib_div::devLog('getSPSSInfos RESULTS', 'ke_questionnaire Export Mod', 0, $this->results);
-
-		$content = $LANG->getLL('result_count').': '.$counting.'<br />';
-		$content .= $LANG->getLL('finished_count').': '.$finished;
+		$content = $LANG->getLL('result_count').': '.$counters['counting'].'<br />';
+		$content .= $LANG->getLL('finished_count').': '.$counters['finished'];
 
 		$content .= '<p><br /><hr />';
 		$content .= '<p><input type="checkbox" name="only_finished" value="1" checked /> '.$LANG->getLL('download_only_finished').'</p><br />';
@@ -382,7 +385,7 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 		if ($this->q_data['sys_language_uid'] > 0 AND $langs[$this->q_data['sys_language_uid']] == 1){
 			$content .= '<p><input type="checkbox" name="only_this_lang" value="L_'.$this->q_data['sys_language_uid'].'" /> '.$LANG->getLL('download_only_this_lang').'</p>';
 		} else if ($this->q_data['sys_language_uid'] == 0 AND $langs[0] == 1){
-			foreach ($langs as $key => $is){
+			foreach ($counters['langs'] as $key => $is){
 				if ($key != 0) {
 					$content .= '<p><input type="checkbox" name="only_this_lang" value="L_'.(string)$this->q_data['sys_language_uid'].'" /> '.$LANG->getLL('download_only_this_lang').'</p>';
 					break;

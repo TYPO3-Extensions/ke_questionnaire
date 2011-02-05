@@ -21,3 +21,6 @@ CSV_qualifier = "
 
 # cat=basic/enable; type=integer; label=Max length of Authcode
 maxAuthCodeLength = 0
+
+# cat=basic/enable; type=integer; label=Export Blocks:Max Blocks for Export to parse in one turn
+exportBlocks = 100
