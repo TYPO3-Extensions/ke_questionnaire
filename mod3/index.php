@@ -57,6 +57,7 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 		//get the given Parameters
 		$this->q_id = intval(t3lib_div::_GP('q_id'));
 		$this->pid = intval(t3lib_div::_GP('id'));
+		$this->temp_table = 'tx_kequestionnaire_temp_'.$this->q_id;
 		
 		$this->extConf = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['ke_questionnaire']);
 		if (t3lib_extMgm::isLoaded('ke_questionnaire_premium')) $this->pr_extConf = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['ke_questionnaire_premium']);
@@ -261,7 +262,7 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 		
 		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*','tx_kequestionnaire_results',$where,'','uid');
 		//t3lib_div::devLog('getCSVInfos', 'ke_questionnaire Export Mod', 0, array($GLOBALS['TYPO3_DB']->SELECTquery('*','tx_kequestionnaire_results',$where,'','uid')));
-		if ($res){
+		/*if ($res){
 			$count_results = $GLOBALS['TYPO3_DB']->sql_num_rows($res);
 		}
 		//t3lib_div::debug($count_results);
@@ -291,34 +292,97 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 				}
 			}
 			$limit += $this->extConf['exportBlocks'];
-		} else {
+		} else {*/
 			if ($res){
+				$row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
+				$result_array = '';
+				$encoding = "UTF-8";
+				if ( true === mb_check_encoding ($row['xmldata'], $encoding ) ){
+					$result_array = t3lib_div::xml2array($row['xmldata']);
+					if (count($result_array) == 1) $result_array = t3lib_div::xml2array(utf8_encode($row['xmldata']));
+				} else {
+					$result_array = t3lib_div::xml2array(utf8_encode($row['xmldata']));
+				}
+				$temp_array = array();
+				//$temp .= t3lib_div::view_array($row);
+				$temp_array['uid'] = $row['uid'];
+				$temp_array['start_tstamp'] = $row['start_tstamp'];
+				$temp_array['finished_tstamp'] = $row['finished_tstamp'];
+				$this->results[] = $temp_array;
+				//t3lib_div::debug($temp_array,'array');	
+				$langs[$row['sys_language_uid']] = 1;
+				if ($row['finished_tstamp'] > 0) $finished ++;
+				$counting ++;
+				
+				$drop_table = "DROP TABLE IF EXISTS ".$this->temp_table.";";
+				$GLOBALS['TYPO3_DB']->sql_query($drop_table);
+				$fields = 'result_id INT, question_id INT,answer TEXT,start_tstamp INT, finished_tstamp INT';
+				$create_table = "CREATE TABLE IF NOT EXISTS ".$this->temp_table." ($fields);";
+				$GLOBALS['TYPO3_DB']->sql_query($create_table);
+				
+				$insert_fields = array();
+				$insert_fields['result_id'] = $row['uid'];
+				$insert_fields['start_tstamp'] = $row['start_tstamp'];
+				$insert_fields['finished_tstamp'] = $row['finished_tstamp'];
+				foreach ($result_array as $key => $values){
+					$insert_fields['question_id'] = $values['question_id'];
+					if (!is_array($values['answer']))$insert_fields['answer'] = $values['answer'];
+					else {
+						$insert_fields['answer'] = t3lib_div::array2xml($values['answer']);
+					}
+					if ($key > 0){
+						$GLOBALS['TYPO3_DB']->exec_INSERTquery($this->temp_table,$insert_fields);	
+					} elseif ($key == $random_pools) {
+						$temp_array['random_pools'] = $values;
+					}
+				}
+					
 				while($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)){
 					if ($row['xmldata'] != '') {
-						$temp_array = '';
+						$result_array = '';
 						$encoding = "UTF-8";
 						if ( true === mb_check_encoding ($row['xmldata'], $encoding ) ){
-							$temp_array = t3lib_div::xml2array($row['xmldata']);
-							if (count($temp_array) == 1) $temp_array = t3lib_div::xml2array(utf8_encode($row['xmldata']));
+							$result_array = t3lib_div::xml2array($row['xmldata']);
+							if (count($result_array) == 1) $result_array = t3lib_div::xml2array(utf8_encode($row['xmldata']));
 						} else {
-							$temp_array = t3lib_div::xml2array(utf8_encode($row['xmldata']));
+							$result_array = t3lib_div::xml2array(utf8_encode($row['xmldata']));
 						}
 						//$temp .= t3lib_div::view_array($row);
 						$temp_array['uid'] = $row['uid'];
 						$temp_array['start_tstamp'] = $row['start_tstamp'];
 						$temp_array['finished_tstamp'] = $row['finished_tstamp'];
 						$this->results[] = $temp_array;
+						
+						$insert_fields = array();
+						$insert_fields['result_id'] = $row['uid'];
+						$insert_fields['start_tstamp'] = $row['start_tstamp'];
+						$insert_fields['finished_tstamp'] = $row['finished_tstamp'];
+						foreach ($result_array as $key => $values){
+							$insert_fields['question_id'] = $values['question_id'];
+							if (!is_array($values['answer']))$insert_fields['answer'] = $values['answer'];
+							else {
+								$insert_fields['answer'] = t3lib_div::array2xml($values['answer']);
+							}
+							if ($key > 0){
+								$GLOBALS['TYPO3_DB']->exec_INSERTquery($this->temp_table,$insert_fields);	
+							} elseif ($key == $random_pools) {
+								$temp_array['random_pools'] = $values;
+							}
+						}
+						
 						$langs[$row['sys_language_uid']] = 1;
 						if ($row['finished_tstamp'] > 0) $finished ++;
 						$counting ++;
 					}
 				}
 			}
-		}
+		//}
 		
 		$counters['counting'] = $counting;
 		$counters['finished'] = $finished;
 		$counters['langs'] = $langs;
+		
+		//t3lib_div::debug($this->results);
 		
 		return $counters;
 	}
@@ -800,13 +864,26 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 			$value_arrays[$result['uid']]['authcode'] = $auth['authcode'];
 			$fill_array['result_nrs'][] = $result['uid'];
 		}
-		//t3lib_div::devLog('simplify results value_arrays', 'ke_questionnaire Export Mod', 0, $value_arrays);
+		t3lib_div::devLog('simplify results value_arrays', 'ke_questionnaire Export Mod', 0, $value_arrays);
 
 		foreach ($fill_array as $q_nr => $q_values){
 			//t3lib_div::devLog('getCSVQBase q_values '.$q_nr, 'ke_questionnaire Export Mod', 0, $q_values);
 			foreach ($value_arrays as $v_nr => $v_values){
 				//$fill_array[$q_nr]['results'][$v_nr] = array();
 				$act_v = $v_values[$q_nr];
+				$get_where = 'result_id = '.$v_nr.' AND question_id = '.$q_nr;
+				$get_answers = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*',$this->temp_table,$get_where);
+				if ($get_answers){
+					$get_row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($get_answers);
+					$encoding = "UTF-8";
+					if ( true === mb_check_encoding ($get_row['answer'], $encoding ) ){
+						$result_array = t3lib_div::xml2array($get_row['answer']);
+						if (count($result_array) == 1) $result_array = t3lib_div::xml2array(utf8_encode($get_row['answer']));
+					} else {
+						$result_array = t3lib_div::xml2array(utf8_encode($get_row['answer']));
+					}
+					$act_v['answer'] = $result_array;
+				}
 				//t3lib_div::devLog('simplify results value_arrays '.$q_nr, 'ke_questionnaire Export Mod', 0, array($act_v,$v_values));
 				switch ($q_values['type']){
 					case 'authcode': $fill_array[$q_nr]['results'][$v_nr] = $act_v;
