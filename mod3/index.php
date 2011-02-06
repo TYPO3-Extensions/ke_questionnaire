@@ -864,7 +864,7 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 			$value_arrays[$result['uid']]['authcode'] = $auth['authcode'];
 			$fill_array['result_nrs'][] = $result['uid'];
 		}
-		t3lib_div::devLog('simplify results value_arrays', 'ke_questionnaire Export Mod', 0, $value_arrays);
+		//t3lib_div::devLog('simplify results value_arrays', 'ke_questionnaire Export Mod', 0, $value_arrays);
 
 		foreach ($fill_array as $q_nr => $q_values){
 			//t3lib_div::devLog('getCSVQBase q_values '.$q_nr, 'ke_questionnaire Export Mod', 0, $q_values);
@@ -983,7 +983,7 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 				}
 			}
 		}
-		$this->simpleResults = $fill_array;
+		//$this->simpleResults = $fill_array;
 		//t3lib_div::devLog('getCSVQBase fill_array', 'ke_questionnaire Export Mod', 0, $fill_array);
 		//t3lib_div::devLog('getCSVQBase simple results', 'ke_questionnaire Export Mod', 0, $this->simpleResults);
 	}
