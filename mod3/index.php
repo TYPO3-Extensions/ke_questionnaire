@@ -314,7 +314,7 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 				if ($row['finished_tstamp'] > 0) $finished ++;
 				$counting ++;
 				
-				$drop_table = "DROP TABLE IF EXISTS ".$this->temp_table.";";
+				/*$drop_table = "DROP TABLE IF EXISTS ".$this->temp_table.";";
 				$GLOBALS['TYPO3_DB']->sql_query($drop_table);
 				$fields = 'result_id INT, question_id INT,answer TEXT,start_tstamp INT, finished_tstamp INT';
 				$create_table = "CREATE TABLE IF NOT EXISTS ".$this->temp_table." ($fields);";
@@ -375,6 +375,7 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 						$counting ++;
 					}
 				}
+				*/
 			}
 		//}
 		
