@@ -57,7 +57,7 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 		//get the given Parameters
 		$this->q_id = intval(t3lib_div::_GP('q_id'));
 		$this->pid = intval(t3lib_div::_GP('id'));
-		$this->temp_table = 'tx_kequestionnaire_temp_'.$this->q_id;
+		$this->temp_file = 'tx_kequestionnaire_temp_'.$this->q_id.'_'.$GLOBALS['BE_USER']->user['uid'];
 		
 		$this->extConf = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['ke_questionnaire']);
 		if (t3lib_extMgm::isLoaded('ke_questionnaire_premium')) $this->pr_extConf = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['ke_questionnaire_premium']);
@@ -261,129 +261,31 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 		//t3lib_div::devLog('getCSVInfos', 'ke_questionnaire Export Mod', 0, $only_lang);
 		
 		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*','tx_kequestionnaire_results',$where,'','uid');
-		//t3lib_div::devLog('getCSVInfos', 'ke_questionnaire Export Mod', 0, array($GLOBALS['TYPO3_DB']->SELECTquery('*','tx_kequestionnaire_results',$where,'','uid')));
-		/*if ($res){
-			$count_results = $GLOBALS['TYPO3_DB']->sql_num_rows($res);
-		}
-		//t3lib_div::debug($count_results);
-		if ($count_results > $this->extConf['exportBlocks']){
-			$limit = 0;
-			$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*','tx_kequestionnaire_results',$where,'','uid','('.$limit.','.$this->extConf['exportBlocks'].')');
-			if ($res){
-				while($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)){
-					if ($row['xmldata'] != '') {
-						$temp_array = '';
-						$encoding = "UTF-8";
-						if ( true === mb_check_encoding ($row['xmldata'], $encoding ) ){
-							$temp_array = t3lib_div::xml2array($row['xmldata']);
-							if (count($temp_array) == 1) $temp_array = t3lib_div::xml2array(utf8_encode($row['xmldata']));
-						} else {
-							$temp_array = t3lib_div::xml2array(utf8_encode($row['xmldata']));
-						}
-						//$temp .= t3lib_div::view_array($row);
-						$temp_array['uid'] = $row['uid'];
-						$temp_array['start_tstamp'] = $row['start_tstamp'];
-						$temp_array['finished_tstamp'] = $row['finished_tstamp'];
-						$this->results[] = $temp_array;
-						$langs[$row['sys_language_uid']] = 1;
-						if ($row['finished_tstamp'] > 0) $finished ++;
-						$counting ++;
-					}
-				}
-			}
-			$limit += $this->extConf['exportBlocks'];
-		} else {*/
-			if ($res){
-				$row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
-				$result_array = '';
-				$encoding = "UTF-8";
-				if ( true === mb_check_encoding ($row['xmldata'], $encoding ) ){
-					$result_array = t3lib_div::xml2array($row['xmldata']);
-					if (count($result_array) == 1) $result_array = t3lib_div::xml2array(utf8_encode($row['xmldata']));
-				} else {
-					$result_array = t3lib_div::xml2array(utf8_encode($row['xmldata']));
-				}
-				$temp_array = array();
-				//$temp .= t3lib_div::view_array($row);
-				$temp_array['uid'] = $row['uid'];
-				$temp_array['start_tstamp'] = $row['start_tstamp'];
-				$temp_array['finished_tstamp'] = $row['finished_tstamp'];
-				$this->results[] = $temp_array;
-				//t3lib_div::debug($temp_array,'array');	
-				$langs[$row['sys_language_uid']] = 1;
-				if ($row['finished_tstamp'] > 0) $finished ++;
-				$counting ++;
-				
-				/*$drop_table = "DROP TABLE IF EXISTS ".$this->temp_table.";";
-				$GLOBALS['TYPO3_DB']->sql_query($drop_table);
-				$fields = 'result_id INT, question_id INT,answer TEXT,start_tstamp INT, finished_tstamp INT';
-				$create_table = "CREATE TABLE IF NOT EXISTS ".$this->temp_table." ($fields);";
-				$GLOBALS['TYPO3_DB']->sql_query($create_table);
-				
-				$insert_fields = array();
-				$insert_fields['result_id'] = $row['uid'];
-				$insert_fields['start_tstamp'] = $row['start_tstamp'];
-				$insert_fields['finished_tstamp'] = $row['finished_tstamp'];
-				foreach ($result_array as $key => $values){
-					$insert_fields['question_id'] = $values['question_id'];
-					if (!is_array($values['answer']))$insert_fields['answer'] = $values['answer'];
-					else {
-						$insert_fields['answer'] = t3lib_div::array2xml($values['answer']);
-					}
-					if ($key > 0){
-						$GLOBALS['TYPO3_DB']->exec_INSERTquery($this->temp_table,$insert_fields);	
-					} elseif ($key == $random_pools) {
-						$temp_array['random_pools'] = $values;
-					}
-				}
-					
-				while($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)){
-					if ($row['xmldata'] != '') {
-						$result_array = '';
-						$encoding = "UTF-8";
-						if ( true === mb_check_encoding ($row['xmldata'], $encoding ) ){
-							$result_array = t3lib_div::xml2array($row['xmldata']);
-							if (count($result_array) == 1) $result_array = t3lib_div::xml2array(utf8_encode($row['xmldata']));
-						} else {
-							$result_array = t3lib_div::xml2array(utf8_encode($row['xmldata']));
-						}
-						//$temp .= t3lib_div::view_array($row);
-						$temp_array['uid'] = $row['uid'];
-						$temp_array['start_tstamp'] = $row['start_tstamp'];
-						$temp_array['finished_tstamp'] = $row['finished_tstamp'];
-						$this->results[] = $temp_array;
-						
-						$insert_fields = array();
-						$insert_fields['result_id'] = $row['uid'];
-						$insert_fields['start_tstamp'] = $row['start_tstamp'];
-						$insert_fields['finished_tstamp'] = $row['finished_tstamp'];
-						foreach ($result_array as $key => $values){
-							$insert_fields['question_id'] = $values['question_id'];
-							if (!is_array($values['answer']))$insert_fields['answer'] = $values['answer'];
-							else {
-								$insert_fields['answer'] = t3lib_div::array2xml($values['answer']);
-							}
-							if ($key > 0){
-								$GLOBALS['TYPO3_DB']->exec_INSERTquery($this->temp_table,$insert_fields);	
-							} elseif ($key == $random_pools) {
-								$temp_array['random_pools'] = $values;
-							}
-						}
-						
-						$langs[$row['sys_language_uid']] = 1;
-						if ($row['finished_tstamp'] > 0) $finished ++;
-						$counting ++;
-					}
-				}
-				*/
-			}
-		//}
 		
+		if ($res){
+			$result_array = '';
+			$encoding = "UTF-8";
+			while($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)){
+				if ($row['xmldata'] != '') {
+					//$temp .= t3lib_div::view_array($row);
+					$temp_array = array();
+					$temp_array['uid'] = $row['uid'];
+					$temp_array['start_tstamp'] = $row['start_tstamp'];
+					$temp_array['finished_tstamp'] = $row['finished_tstamp'];
+					$this->results[] = $temp_array;
+					
+					$langs[$row['sys_language_uid']] = 1;
+					if ($row['finished_tstamp'] > 0) $finished ++;
+					$counting ++;
+				}
+			}
+		}
+	
 		$counters['counting'] = $counting;
 		$counters['finished'] = $finished;
 		$counters['langs'] = $langs;
 		
-		//t3lib_div::debug($this->results);
+		//t3lib_div::debug($this->results, 'result_array');
 		
 		return $counters;
 	}
@@ -561,7 +463,17 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 		$result_line = $this->getQBaseResultLine($free_cells);
 		
 		$lineset .= $pure_parter.$pure_parter.$pure_parter.$result_line."\n";
+		$file_path = PATH_site.'/typo3temp/'.$this->temp_file;
+		$store_file = fopen($file_path,'r');
 		foreach ($this->simpleResults as $q_id => $question){
+			//read the data from the file
+			$read_line = fgets($store_file);
+			$read_line = str_replace("\n",'',$read_line);
+			//t3lib_div::devLog('read_line '.$q_id, 'ke_questionnaire Export Mod', 0, array($read_line));
+			$read_line = json_decode($read_line,true);
+			$question['data'] = array();
+			$question['data'] = $read_line;
+			//t3lib_div::devLog('getCSVSimple q_data', 'ke_questionnaire Export Mod', 0, $question);
 			$line = array();
 			$line[] = $question['uid'];
 			$line[] = $this->stripString($question['title']);
@@ -579,27 +491,28 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 				$lineset .= $delimeter.implode($parter,$line).$delimeter;
 				$lineset .= $pure_parter.$result_line."\n";
 				//t3lib_div::devLog('getCSVQBase '.$question['type'], 'ke_questionnaire Export Mod', 0, '');
+				
 		*/		switch ($question['type']){
-					case 'authcode':	$lineset .= $this->getQBaseLine($free_cells,$question['uid'],$question['type']);
+					case 'authcode':	$lineset .= $this->getQBaseLine($free_cells,$question);
 						break;
-					case 'start_tstamp':	$lineset .= $this->getQBaseLine($free_cells,$question['uid'],$question['type']);
+					case 'start_tstamp':	$lineset .= $this->getQBaseLine($free_cells,$question);
 						break;
-					case 'finished_tstamp':	$lineset .= $this->getQBaseLine($free_cells,$question['uid'],$question['type']);
+					case 'finished_tstamp':	$lineset .= $this->getQBaseLine($free_cells,$question);
 						break;
-					case 'open':	$lineset .= $this->getQBaseLine($free_cells,$question['uid'],$question['type']);
+					case 'open':	$lineset .= $this->getQBaseLine($free_cells,$question);
 						break;
 					case 'closed':
 							$lineset .= "\n";
 							foreach ($question['answers'] as $a_id => $a_values){
 								$answer = t3lib_BEfunc::getRecord('tx_kequestionnaire_answers',$a_id);
-								$lineset .= $this->getQBaseLine($free_cells+2,$question['uid'],$question['type'],$answer);
+								$lineset .= $this->getQBaseLine($free_cells+2,$question,$answer);
 							}
 							/*$where = 'question_uid='.$question['uid'].' and hidden=0 and deleted=0';
 							$res_answers = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*','tx_kequestionnaire_answers',$where,'','sorting');
 							//t3lib_div::devLog('getCSVQBase '.$question['type'], 'ke_questionnaire Export Mod', 0, array($GLOBALS['TYPO3_DB']->SELECTquery('*','tx_kequestionnaire_answers',$where,'','sorting')));
 							if ($res_answers){
 								while ($answer = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res_answers)){
-									$lineset .= $this->getQBaseLine($free_cells,$question['uid'],$question['type'],$answer);
+									$lineset .= $this->getQBaseLine($free_cells,$question,$answer);
 								}
 							}*/
 						break;
@@ -616,7 +529,7 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 								$lineset .= $delimeter.implode($parter,$line).$delimeter."\n";
 								foreach ($sub_values['columns'] as $c_id => $c_values){
 									$column = t3lib_BEfunc::getRecord('tx_kequestionnaire_columns',$c_id);
-									$lineset .= $this->getQBaseLine($free_cells+2,$question['uid'],$question['type'],array(),$subquestion['uid'],$column);
+									$lineset .= $this->getQBaseLine($free_cells+2,$question,array(),$subquestion['uid'],$column);
 								}
 							}
 							/*$columns = array();
@@ -639,7 +552,7 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 										$line[] = $subquestion['title'];
 										$lineset .= $delimeter.implode($parter,$line).$delimeter."\n";
 										foreach ($columns as $column){
-											$lineset .= $this->getQBaseLine($free_cells,$question['uid'],$question['type'],array(),$subquestion['uid'],$column);
+											$lineset .= $this->getQBaseLine($free_cells,$question,array(),$subquestion['uid'],$column);
 										}
 									}
 								}
@@ -658,7 +571,7 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 								$lineset .= $delimeter.implode($parter,$line).$delimeter."\n";
 								foreach ($sub_values['columns'] as $c_id => $c_values){
 									$column = t3lib_BEfunc::getRecord('tx_kequestionnaire_columns',$c_id);
-									$lineset .= $this->getQBaseLine($free_cells+2,$question['uid'],$question['type'],array(),$subquestion['uid'],$column);
+									$lineset .= $this->getQBaseLine($free_cells+2,$question,array(),$subquestion['uid'],$column);
 								}
 							}
 							/*$columns = array();
@@ -679,7 +592,7 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 									$line[] = $subline['start'].' - '.$subline['end'];
 									$lineset .= $delimeter.implode($parter,$line).$delimeter."\n";
 									foreach ($columns as $column){
-										$lineset .= $this->getQBaseLine($free_cells,$question['uid'],$question['type'],array(),$subline['uid'],$column);
+										$lineset .= $this->getQBaseLine($free_cells,$question,array(),$subline['uid'],$column);
 									}
 								}
 							}*/
@@ -687,12 +600,12 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 					case 'demographic':
 							if (is_array($question['fe_users'])){
 								foreach ($question['fe_users'] as $field => $f_values){
-									$lineset .= $this->getQBaseLine($free_cells,$question['uid'],$question['type'],array(),0,array(),$field);
+									$lineset .= $this->getQBaseLine($free_cells,$question,array(),0,array(),$field);
 								}
 							}
 							if (is_array($question['tt_address'])){
 								foreach ($question['tt_address'] as $field => $f_values){
-									$lineset .= $this->getQBaseLine($free_cells,$question['uid'],$question['type'],array(),0,array(),$field);
+									$lineset .= $this->getQBaseLine($free_cells,$question,array(),0,array(),$field);
 								}
 							}
 							//t3lib_div::devLog('getCSVQBase '.$question['type'], 'ke_questionnaire Export Mod', 0, $question);
@@ -702,12 +615,12 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 							$fe_user_addressfields = explode(',',$flex['data']['sDEF']['lDEF']['FeUser_Fields']['vDEF']);
 							//t3lib_div::devLog('getCSVQBase flex', 'ke_questionnaire Export Mod', 0, array($fe_user_fields,$fe_user_addressfields));
 							foreach ($fe_user_fields as $field){
-								$lineset .= $this->getQBaseLine($free_cells,$question['uid'],$question['type'],array(),0,array(),$field);
+								$lineset .= $this->getQBaseLine($free_cells,$question,array(),0,array(),$field);
 							}
 							foreach ($fe_user_addressfields as $field){
-								$lineset .= $this->getQBaseLine($free_cells,$question['uid'],$question['type'],array(),0,array(),$field);
+								$lineset .= $this->getQBaseLine($free_cells,$question,array(),0,array(),$field);
 							}*/
-							//$lineset .= $this->getQBaseLine($free_cells,$question['uid'],$question['type']);
+							//$lineset .= $this->getQBaseLine($free_cells,$question);
 						break;
 					default:
 							$delimeter = $this->extConf['CSV_qualifier'];
@@ -724,6 +637,7 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 				}
 			}
 		}
+		fclose($store_file);
 		$csvdata .= $lineset."\n";
 
 		//t3lib_div::devLog('getCSVQBase return', 'ke_questionnaire Export Mod', 0, array($csvheader,$csvdata));
@@ -849,13 +763,14 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 							foreach ($fe_user_addressfields as $field){
 								$fill_array[$question['uid']]['tt_address'][$field] = array();
 							}
-							//$lineset .= $this->getQBaseLine($free_cells,$question['uid'],$question['type']);
+							//$lineset .= $this->getQBaseLine($free_cells,$question);
 						break;
 				}
 			}
 		}
 		$value_arrays = array();
 		//t3lib_div::devLog('simplify results results', 'ke_questionnaire Export Mod', 0, $results);
+		$result_nrs = array();
 		foreach ($results as $result){
 			//t3lib_div::devLog('simplify results result', 'ke_questionnaire Export Mod', 0, $result);
 			$value_arrays[$result['uid']] = $result;//t3lib_div::xml2array($result['xmldata']);
@@ -863,37 +778,42 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 			$value_arrays[$result['uid']]['finished_tstamp'] = $result['finished_tstamp'];
 			$auth = t3lib_BEfunc::getRecord('tx_kequestionnaire_authcodes',$result['auth']); //test
 			$value_arrays[$result['uid']]['authcode'] = $auth['authcode'];
-			$fill_array['result_nrs'][] = $result['uid'];
+			$result_nrs[] = $result['uid'];
 		}
 		//t3lib_div::devLog('simplify results value_arrays', 'ke_questionnaire Export Mod', 0, $value_arrays);
-
+		//t3lib_div::devLog('fill array', 'ke_questionnaire Export Mod', 0, $fill_array);
+		$file_path = PATH_site.'typo3temp/'.$this->temp_file;
+		if (file_exists($file_path)) unlink($file_path);
+		$store_file = fopen($file_path,'a+');
 		foreach ($fill_array as $q_nr => $q_values){
 			//t3lib_div::devLog('getCSVQBase q_values '.$q_nr, 'ke_questionnaire Export Mod', 0, $q_values);
+			$write_array = array();
 			foreach ($value_arrays as $v_nr => $v_values){
-				//$fill_array[$q_nr]['results'][$v_nr] = array();
+				$write_array['results'][$v_nr] = array();
 				$act_v = $v_values[$q_nr];
-				$get_where = 'result_id = '.$v_nr.' AND question_id = '.$q_nr;
-				$get_answers = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*',$this->temp_table,$get_where);
+				$get_where = 'uid = '.$v_nr;
+				$get_answers = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*','tx_kequestionnaire_results',$get_where);
 				if ($get_answers){
-					$get_row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($get_answers);
+					$arow = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($get_answers);
 					$encoding = "UTF-8";
-					if ( true === mb_check_encoding ($get_row['answer'], $encoding ) ){
-						$result_array = t3lib_div::xml2array($get_row['answer']);
-						if (count($result_array) == 1) $result_array = t3lib_div::xml2array(utf8_encode($get_row['answer']));
+					if ( true === mb_check_encoding ($arow['xmldata'], $encoding ) ){
+						$result_array = t3lib_div::xml2array($arow['xmldata']);
+						if (count($result_array) == 1) $result_array = t3lib_div::xml2array(utf8_encode($arow['xmldata']));
 					} else {
-						$result_array = t3lib_div::xml2array(utf8_encode($get_row['answer']));
+						$result_array = t3lib_div::xml2array(utf8_encode($arow['xmldata']));
 					}
-					$act_v['answer'] = $result_array;
+					//t3lib_div::devLog('r '.$q_nr, 'ke_questionnaire Export Mod', 0, array($result_array, $row));
+					$act_v = $result_array[$q_nr];
 				}
 				//t3lib_div::devLog('simplify results value_arrays '.$q_nr, 'ke_questionnaire Export Mod', 0, array($act_v,$v_values));
 				switch ($q_values['type']){
-					case 'authcode': $fill_array[$q_nr]['results'][$v_nr] = $act_v;
+					case 'authcode': $write_array['results'][$v_nr] = $act_v;
 						break;
-					case 'start_tstamp': $fill_array[$q_nr]['results'][$v_nr] = $act_v;
+					case 'start_tstamp': $write_array['results'][$v_nr] = $act_v;
 						break;
-					case 'finished_tstamp': $fill_array[$q_nr]['results'][$v_nr] = $act_v;
+					case 'finished_tstamp': $write_array['results'][$v_nr] = $act_v;
 						break;
-					case 'open': $fill_array[$q_nr]['results'][$v_nr] = $act_v['answer'];
+					case 'open': $write_array['results'][$v_nr] = $act_v['answer'];
 						break;
 					case 'closed':
 							//t3lib_div::devLog('closed '.$q_nr, 'ke_questionnaire Export Mod', 0, $act_v);
@@ -901,19 +821,20 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 								foreach ($q_values['answers'] as $a_nr => $a_values){
 									if (in_array($a_nr,$act_v['answer']['options'])){
 										if ($act_v['answer']['text'][$a_nr]){
-											$fill_array[$q_nr]['answers'][$a_nr]['results'][$v_nr] = '('.$act_v['answer']['text'][$a_nr].') '.$marker;
+											$write_array['answers'][$a_nr]['results'][$v_nr] = '('.$act_v['answer']['text'][$a_nr].') '.$marker;
 										} else {
-											$fill_array[$q_nr]['answers'][$a_nr]['results'][$v_nr] = $marker;
+											$write_array['answers'][$a_nr]['results'][$v_nr] = $marker;
 										}
 									}
 								}
 							} else {
 								foreach ($q_values['answers'] as $a_nr => $a_values){
+									//t3lib_div::devLog('closed '.$q_nr, 'ke_questionnaire Export Mod', 0, array($a_nr,$a_values,$act_v['answer']['options']));
 									if ($a_nr == $act_v['answer']['options']){
 										if ($act_v['answer']['text'][$a_nr]){
-											$fill_array[$q_nr]['answers'][$a_nr]['results'][$v_nr] = '('.$act_v['answer']['text'][$a_nr].') '.$marker;
+											$write_array['answers'][$a_nr]['results'][$v_nr] = '('.$act_v['answer']['text'][$a_nr].') '.$marker;
 										} else {
-											$fill_array[$q_nr]['answers'][$a_nr]['results'][$v_nr] = $marker;
+											$write_array['answers'][$a_nr]['results'][$v_nr] = $marker;
 										}
 									}
 								}
@@ -931,21 +852,21 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 									if ($q_values['columns'][$c_nr]['different_type'] != '') $temp_type = $q_values['columns'][$c_nr]['different_type'];
 									//t3lib_div::devLog('matrix temp_type '.$temp_type, 'ke_questionnaire Export Mod', 0, $act_v);
 									if ($temp_type == 'input'){
-										$fill_array[$q_nr]['subquestions'][$sub_nr]['columns'][$c_nr]['results'][$v_nr] = $act_v['answer']['options'][$sub_nr][$c_nr][0];
+										$write_array['subquestions'][$sub_nr]['columns'][$c_nr]['results'][$v_nr] = $act_v['answer']['options'][$sub_nr][$c_nr][0];
 									} elseif (is_array($act_v['answer']['options'][$sub_nr])){
 										//if (in_array($c_nr,$act_v['answer']['options'][$sub_nr])){
 										if ($act_v['answer']['options'][$sub_nr][$c_nr][0] == $c_nr){
-											$fill_array[$q_nr]['subquestions'][$sub_nr]['columns'][$c_nr]['results'][$v_nr] = $marker;
+											$write_array['subquestions'][$sub_nr]['columns'][$c_nr]['results'][$v_nr] = $marker;
 										} elseif ($c_nr == $act_v['answer']['options'][$sub_nr]['single']) {
-											$fill_array[$q_nr]['subquestions'][$sub_nr]['columns'][$c_nr]['results'][$v_nr] = $marker;
+											$write_array['subquestions'][$sub_nr]['columns'][$c_nr]['results'][$v_nr] = $marker;
 										}
 									} else {
 										if ($c_nr == $act_v['answer']['options'][$sub_nr]){
-											$fill_array[$q_nr]['subquestions'][$sub_nr]['columns'][$c_nr]['results'][$v_nr] = $marker;
+											$write_array['subquestions'][$sub_nr]['columns'][$c_nr]['results'][$v_nr] = $marker;
 										}
 									}
 									if ($act_v['answer']['text'][$sub_nr]){
-										$fill_array[$q_nr]['subquestions'][$sub_nr]['columns'][$c_nr]['results'][$v_nr] = '('.$act_v['answer']['text'][$sub_nr][0].') '.$fill_array[$q_nr]['subquestions'][$sub_nr]['columns'][$c_nr]['results'][$v_nr];
+										$write_array['subquestions'][$sub_nr]['columns'][$c_nr]['results'][$v_nr] = '('.$act_v['answer']['text'][$sub_nr][0].') '.$write_array['subquestions'][$sub_nr]['columns'][$c_nr]['results'][$v_nr];
 									}
 								}
 							}
@@ -956,12 +877,12 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 							//t3lib_div::devLog('demo '.$q_nr, 'ke_questionnaire Export Mod', 0, $act_v);
 							if (is_array($act_v['answer']['fe_users'])){
 								foreach ($act_v['answer']['fe_users'] as $fe_nr => $fe_values){
-									$fill_array[$q_nr]['fe_users'][$fe_nr]['results'][$v_nr] = $fe_values;
+									$write_array['fe_users'][$fe_nr]['results'][$v_nr] = $fe_values;
 								}
 							}
 							if (is_array($act_v['answer']['tt_address'])){
 								foreach ($act_v['answer']['tt_address'] as $fe_nr => $fe_values){
-									$fill_array[$q_nr]['tt_address'][$fe_nr]['results'][$v_nr] = $fe_values;
+									$write_array['tt_address'][$fe_nr]['results'][$v_nr] = $fe_values;
 								}
 							}
 						break;
@@ -970,7 +891,7 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 							if (is_array($act_v) AND is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['ke_questionnaire']['CSVExportSimplifyResults'])){
 								foreach($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['ke_questionnaire']['CSVExportSimplifyResults'] as $_classRef){
 									$_procObj = & t3lib_div::getUserObj($_classRef);
-									$fill_array[$q_nr] = $_procObj->CSVExportSimplifyResults($q_values,$act_v, $v_nr, $marker, $fill_array[$q_nr]);
+									$write_array = $_procObj->CSVExportSimplifyResults($q_values,$act_v, $v_nr, $marker, $write_array);
 								}
 							}
 						break;
@@ -979,19 +900,25 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 				if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['ke_questionnaire']['CSVExportSimplifyResultsOther'])){
 					foreach($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['ke_questionnaire']['CSVExportSimplifyResultsOther'] as $_classRef){
 						$_procObj = & t3lib_div::getUserObj($_classRef);
-						$fill_array = $_procObj->CSVExportSimplifyResultsOther($fill_array,$v_values,$v_nr);
+						$write_array = $_procObj->CSVExportSimplifyResultsOther($write_array,$v_values,$v_nr);
 					}
 				}
 			}
+			//t3lib_div::devLog('fill_array', 'ke_questionnaire Export Mod', 0, $fill_array);
+			//t3lib_div::devLog('write_array '.$q_nr.'/'.$v_nr, 'ke_questionnaire Export Mod', 0, $write_array);
+			if (is_array($write_array) AND count($write_array) > 0) fwrite($store_file,json_encode($write_array)."\n");
 		}
-		//$this->simpleResults = $fill_array;
+		fclose($store_file);
+		$fill_array['result_nrs'] = $result_nrs;
+		$this->simpleResults = $fill_array;
 		//t3lib_div::devLog('getCSVQBase fill_array', 'ke_questionnaire Export Mod', 0, $fill_array);
 		//t3lib_div::devLog('getCSVQBase simple results', 'ke_questionnaire Export Mod', 0, $this->simpleResults);
 	}
 
-	function getQBaseLine($free_cells,$question,$type,$answer=array(),$subquestion=0,$column=array(),$dem_field=''){
+	function getQBaseLine($free_cells,$question,$answer=array(),$subquestion=0,$column=array(),$dem_field=''){
 		//t3lib_div::devLog('getQBaseLine', 'ke_questionnaire Export Mod', 0, array($free_cells,$question,$type,$answer,$subquestion,$column,$dem_field));
 		global $LANG;
+		$type = $question['type'];
 
 		$delimeter = $this->extConf['CSV_qualifier'];
 		$parter = $delimeter.$this->extConf['CSV_parter'].$delimeter;
@@ -1002,9 +929,12 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 
 		$line_add = '';
 		$take = $this->simpleResults[$question];
+		if (is_array($question['data'])) $take = $question['data'];
 		$results = $this->simpleResults['result_nrs'];
+		//t3lib_div::devLog('getCSVQBase question', 'ke_questionnaire Export Mod', 0, array($question));
 		//t3lib_div::devLog('getCSVQBase take', 'ke_questionnaire Export Mod', 0, $take);
 		//t3lib_div::devLog('getCSVQBase results '.$type, 'ke_questionnaire Export Mod', 0, $results);
+		$question = $question['uid'];
 		switch($type){
 			case 'authcode': $line[] = '';
 					foreach ($results as $nr => $result_id){
@@ -1032,7 +962,7 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 					}
 				break;
 			case 'closed': $line[] = $answer['title'];
-					if (is_array($take['answers'][$answer['uid']]['results'])){
+					if (is_array($take)){
 						//t3lib_div::devLog('getQbaseLine take '.$question, 'ke_questionnaire Export Mod', 0, $take);
 						foreach ($results as $nr => $result_id){
 							//t3lib_div::devLog('getQbaseLine take '.$result_id, 'ke_questionnaire Export Mod', 0, $take['answers'][$answer['uid']]['results']);
@@ -1046,6 +976,20 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 					} else {
 						$line[] = '';
 					}
+					/*if (is_array($take['answers'][$answer['uid']]['results'])){
+						//t3lib_div::devLog('getQbaseLine take '.$question, 'ke_questionnaire Export Mod', 0, $take);
+						foreach ($results as $nr => $result_id){
+							//t3lib_div::devLog('getQbaseLine take '.$result_id, 'ke_questionnaire Export Mod', 0, $take['answers'][$answer['uid']]['results']);
+							if ($take['answers'][$answer['uid']]['results'][$result_id]){
+								$take['answers'][$answer['uid']]['results'][$result_id] = str_replace($delimeter,$delimeter.$delimeter,$take['answers'][$answer['uid']]['results'][$result_id]);
+								$line[] = $take['answers'][$answer['uid']]['results'][$result_id];
+							} else {
+								$line[] = '';
+							}
+						}
+					} else {
+						$line[] = '';
+					}*/
 				break;
 			case 'semantic':
 			case 'matrix': $line[] = $column['title'];
@@ -1136,7 +1080,7 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 		
 		$csvheader = $this->q_data['header']."\n\n";
 		$this->simplifyResults();
-		//t3lib_div::devLog('getCSVSimple simpleResults', 'ke_questionnaire Export Mod', 0, $this->simpleResults);
+		t3lib_div::devLog('getCSVSimple simpleResults', 'ke_questionnaire Export Mod', 0, $this->simpleResults);
 		
 		if (is_array($this->simpleResults)){
 			$headline = array();
@@ -1175,10 +1119,14 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 			}
 		}
 		$csvheader .= $delimeter.implode($parter,$headline).$delimeter."\n";
+		//t3lib_div::devLog('simpleresults', 'ke_questionnaire Export Mod', 0, $this->simpleResults);
 		if (is_array($this->simpleResults['result_nrs'])){
 			foreach ($this->simpleResults['result_nrs'] as $nr){
 				$result_line = array();
 				foreach ($this->simpleResults as $question_id => $values){
+					$file_path = PATH_site.'/typo3temp/'.$this->temp_file;
+					$store_file = fopen($file_path,'r');
+					t3lib_div::devLog('getCSVSimple q_data', 'ke_questionnaire Export Mod', 0, $values);
 					if ($values['title'] != ''){
 						switch ($values['type']){
 							case 'closed':
@@ -1200,7 +1148,8 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 								$result_line[] = $values['results'][$nr];
 							break;
 						}
-					}	
+					}
+					fclose($file_path);
 				}
 				$csvdata .= $delimeter.implode($parter,$result_line).$delimeter."\n";
 			}
@@ -1547,7 +1496,7 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 							foreach ($fe_user_addressfields as $field){
 								$base_row[$row['uid']]['possible_answers']['tt_address'][] = $field;
 							}
-							//$lineset .= $this->getQBaseLine($free_cells,$question['uid'],$question['type']);
+							//$lineset .= $this->getQBaseLine($free_cells,$question);
 						break;
 				}
 			}
