@@ -130,4 +130,7 @@ $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['scheduler']['tasks']['tx_kequestionna
 	//'additionalFields' => 'tx_kersssimulatettnews_scheduleradd' // Zusätzliche Felder
 );
 
+//Ajax support for BE-Module
+$TYPO3_CONF_VARS['BE']['AJAX']['tx_kequestionnaire::csv_createDataFile'] = 'EXT:ke_questionnaire/mod3/ajax.php:tx_kequestionnaire_module3_ajax->ajaxCreateDataFile';
+
 ?>

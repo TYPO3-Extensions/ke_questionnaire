@@ -18,6 +18,8 @@
 			<label index="kedompdf_fpdf">Both extensions are installed, ke_dompdf will be used</label>
 
 			<label index="download_button">Download</label>
+			<label index="download_count"> Es wurde Datensatz &lt;span id="pointer"&gt;%s&lt;/span&gt; von %s verarbeitet</label>
+			<label index="download_parts">Es sind zu viele Datensätze vorhanden, um diese auf einmal zu exportieren. Der Export wird generiert, dies kann eine Weile dauern.</label>
 			<label index="download_button_spss_base">Download SPSS Base-File</label>
 			<label index="download_button_spss_data">Download SPSS Data-File</label>
 			<label index="download_button_pdf_blank">Download the empty PDF-Questionnaire</label>
