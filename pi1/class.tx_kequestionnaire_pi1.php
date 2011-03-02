@@ -207,7 +207,8 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 						//t3lib_div::devLog('check_result', $this->prefixId, 0, $check_result);
 					}
 					//and select the last one if there is one and not working on one
-					if ($check_result['last_result'] > 0 AND !$this->piVars['result_id']){
+					if ($check_result['last_result'] > 0 AND $check_result['finished_count'] < $this->ffdata['max_participations'] AND !$this->piVars['result_id']){
+					//if ($check_result['last_result'] > 0 AND !$this->piVars['result_id']){
 						//if the admin didn't chose the restart possibility show the page
 						if ($this->ffdata['restart_possible'] != 1){
 							$this->getResults($check_result['last_result'],$make_history);
