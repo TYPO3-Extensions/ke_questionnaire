@@ -43,7 +43,7 @@ class tx_kequestionnaire_tx_kequestionnaire_dependancies_activating_question {
 */
 		$where = 'hidden=0 and deleted=0 and pid='.$params['row']['pid'];
 		$where .= ' AND (type="closed"';
-		$where .= ' OR (type="open" AND open_validation="numeric"))';
+		$where .= ' OR (type="open" AND open_validation="numeric")';
 		$where .= ' OR (type="open" AND open_validation="integer"))';
 		//t3lib_div::devLog('params', 'activating_question', 0, $params);
 		//t3lib_div::devLog('where', 'activating_question', 0, array($where));
