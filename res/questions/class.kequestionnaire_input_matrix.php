@@ -55,6 +55,9 @@ class kequestionnaire_input_matrix extends kequestionnaire_input{
                         case "matrix_title_line":
                                 $out=$this->renderMatrixTitleLine();
                                 break;
+                        case "matrix_slider":
+                                $out=$this->renderMatrixSlider();
+                                break;
                         default:
                                 $out="Type $this->type not defined.";
                                 //t3lib_div::debug($out,"Inputklasse");
@@ -85,6 +88,16 @@ class kequestionnaire_input_matrix extends kequestionnaire_input{
                 // Anpassungen Title-Line für Matrix
                 if ($this->type == 'matrix_title_line'){
                         $markerArray["###ODD_EVEN###"]='title_line';
+                } else {
+                        $markerArray["###ODD_EVEN###"]=$this->odd?"odd":"even";
+                }
+                //#############################################
+
+                //#############################################
+                // KENNZIFFER Stefan Froemken 15.12.2010
+                // Anpassungen Slider für Matrix
+                if ($this->type == 'matrix_slider'){
+                        $markerArray["###ODD_EVEN###"]='slider';
                 } else {
                         $markerArray["###ODD_EVEN###"]=$this->odd?"odd":"even";
                 }
@@ -312,8 +325,68 @@ class kequestionnaire_input_matrix extends kequestionnaire_input{
         
                 return $this->html;
         }
-        
-        function checkOnchange ($act_subq_id,$act_col) {
+
+				function renderMatrixSlider(){
+					$question = $type=="semantic" ? $this->sublines[$this->fieldName] : $this->subquestions[$this->fieldName];
+					$temp = count($this->columns);
+					foreach($this->columns as $key => $value) {
+						$jsCase .= '
+							case ' . $key . ':
+							value = "' . $value['title'] . '";
+							break;
+						';
+					}
+					
+					$tmplCol=$this->cObj->getSubpart($this->tmpl, '###SLIDER###');
+					$header = $this->cObj->getSubpart($this->cObj->fileResource($this->template), '###HEADER_ADDITIONS###');
+					$GLOBALS['TSFE']->register['kequestionnaire'] .= '
+						$(function() {
+							$( "#keq_'.$question['question_uid'].'_'.$question['uid'].'" ).val(1);
+							$( "#span_'.$question['question_uid'].'_'.$question['uid'].'" ).text(id2title(1));
+							$( "#slider_'.$question['question_uid'].'_'.$question['uid'].'" ).slider({
+								value: 1,
+								min: 1,
+								max: '.$temp.',
+								step: 1,
+								slide: function( event, ui ) {
+									$( "#keq_'.$question['question_uid'].'_'.$question['uid'].'" ).val(ui.value);
+									$( "#span_'.$question['question_uid'].'_'.$question['uid'].'" ).text(id2title(ui.value));
+								}
+							});
+							
+							function id2title(id) {
+								switch(id) {
+									' . $jsCase . '
+								}
+								
+								return value;
+							}
+						});
+					';
+					$GLOBALS['TSFE']->additionalHeaderData['kequestionnaire'] = '
+						<link rel="stylesheet" type="text/css" href="'.t3lib_extMgm::siteRelPath('ke_questionnaire').'res/jquery/jquery-ui-1.8.7.custom.css" media="all" />
+						<script src="'.t3lib_extMgm::siteRelPath('ke_questionnaire').'res/jquery/jquery-1.4.4.min.js" type="text/javascript"></script>
+						<script src="'.t3lib_extMgm::siteRelPath('ke_questionnaire').'res/jquery/jquery.ui.core.min.js" type="text/javascript"></script>
+						<script src="'.t3lib_extMgm::siteRelPath('ke_questionnaire').'res/jquery/jquery.ui.widget.min.js" type="text/javascript"></script>
+						<script src="'.t3lib_extMgm::siteRelPath('ke_questionnaire').'res/jquery/jquery.ui.mouse.min.js" type="text/javascript"></script>
+						<script src="'.t3lib_extMgm::siteRelPath('ke_questionnaire').'res/jquery/jquery.ui.slider.min.js" type="text/javascript"></script>
+						<script type="text/javascript">
+						'.$GLOBALS['TSFE']->register['kequestionnaire'].'
+						</script>
+					';
+					
+					$markerArray["###COLSPAN###"] = $temp;
+					
+					$markerArray["###QUESTION###"] = $type=="semantic"?$question["start"]:($question["text"]!=""?$question["text"]:$question["title"]);
+					$markerArray["###JQ_SLIDER###"] = '<label for="keq_'.$question['question_uid'].'_'.$question['uid'].'">Aktueller Wert: <span id="span_'.$question['question_uid'].'_'.$question['uid'].'"></span></label><input type="hidden" value="" id="keq_'.$question['question_uid'].'_'.$question['uid'].'" name="tx_kequestionnaire_pi1['.$question['question_uid'].'][options]['.$question['uid'].'][single]" style="border: none;" /><br /><div id="slider_'.$question['question_uid'].'_'.$question['uid'].'" style="margin-left: 30px; margin-right: 30px;"></div>';
+					
+					$this->html=$this->cObj->substituteMarkerArrayCached($tmplCol, $markerArray);
+					//t3lib_div::devLog('markerArraySub tpl', 'input->MatrixElement', 0, array($this->html));
+					
+					return $this->html;
+				}
+				
+				function checkOnchange ($act_subq_id,$act_col) {
                 $onchange = '';
                 
                 //If there are max Answers for the whole matrix

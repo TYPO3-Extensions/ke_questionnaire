@@ -108,6 +108,7 @@
 			
 			<label index="tx_kequestionnaire_subquestions">Subquestion (matrix)</label>
 			<label index="tx_kequestionnaire_subquestions.title_line">is title line (no input fields rendered)</label>
+			<label index="tx_kequestionnaire_subquestions.render_as_slider">only one input field will be rendered</label>
 			<label index="tx_kequestionnaire_subquestions.title">title</label>
 			<label index="tx_kequestionnaire_subquestions.text">text</label>
 			<label index="tx_kequestionnaire_subquestions.image">image</label>
@@ -276,6 +277,7 @@
 			<label index="tx_kequestionnaire_subquestions.text">Text</label>
 			<label index="tx_kequestionnaire_subquestions.image">Bild</label>
 			<label index="tx_kequestionnaire_subquestions.title_line">Titelzeile (Es werden keine Eingabefelder generiert)</label>
+			<label index="tx_kequestionnaire_subquestions.render_as_slider">Anstatt von Eingabefeldern wird ein Slider eingebunden</label>
 			
 			<label index="tx_kequestionnaire_dependancies">Abhängigkeit (von Fragen)</label>
 			<label index="tx_kequestionnaire_dependancies.dependant_question">abhängige Frage</label>

@@ -1456,6 +1456,14 @@ $TCA["tx_kequestionnaire_subquestions"] = array (
 				'default' => '0'
 			)
 		),
+                'render_as_slider' => array (
+			'exclude' => 1,
+			'label'   => 'LLL:EXT:ke_questionnaire/locallang_db.xml:tx_kequestionnaire_subquestions.render_as_slider',
+			'config'  => array (
+				'type'    => 'check',
+				'default' => '0'
+			)
+		),
                 "title" => Array (
 			"exclude" => 1,
 			"label" => "LLL:EXT:ke_questionnaire/locallang_db.xml:tx_kequestionnaire_subquestions.title",
@@ -1516,7 +1524,7 @@ $TCA["tx_kequestionnaire_subquestions"] = array (
 		),
 	),
 	"types" => array (
-		"0" => array("showitem" => "sys_language_uid;;;;1-1-1, l18n_parent,question_uid, title;;;;2-2-2, title_line, text;;;richtext[paste|bold|italic|underline|formatblock|class|left|center|right|orderedlist|unorderedlist|outdent|indent|link|image]:rte_transform[mode=ts];3-3-3, image, image_position")
+		"0" => array("showitem" => "sys_language_uid;;;;1-1-1, l18n_parent,question_uid, title;;;;2-2-2, title_line, render_as_slider, text;;;richtext[paste|bold|italic|underline|formatblock|class|left|center|right|orderedlist|unorderedlist|outdent|indent|link|image]:rte_transform[mode=ts];3-3-3, image, image_position")
                 //"0" => array("showitem" => "sys_language_uid;;;;1-1-1, l18n_parent, l18n_diffsource, hidden;;1, question_uid, title;;;;2-2-2, text;;;richtext[paste|bold|italic|underline|formatblock|class|left|center|right|orderedlist|unorderedlist|outdent|indent|link|image]:rte_transform[mode=ts];3-3-3, image")
 	),
 	"palettes" => array (

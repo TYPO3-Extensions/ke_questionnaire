@@ -173,6 +173,7 @@ CREATE TABLE tx_kequestionnaire_subquestions (
 	deleted tinyint(4) DEFAULT '0' NOT NULL,
 	hidden tinyint(4) DEFAULT '0' NOT NULL,
         title_line tinyint(4) DEFAULT '0' NOT NULL,
+        render_as_slider tinyint(4) DEFAULT '0' NOT NULL,
         title tinytext NOT NULL,
 	text text NOT NULL,
 	image blob NOT NULL,

@@ -136,6 +136,12 @@ class question_matrix  extends question{
 			// Anpassung Title-Line
 			if ($val['title_line'] == 1) $typeField = 'matrix_title_line';
 			//#############################################
+
+			//#############################################
+			// KENNZIFFER Stefan Froemken 15.12.2010
+			// Anpassung Slider
+			if ($val['render_as_slider'] == 1) $typeField = 'matrix_slider';
+			//#############################################
 			$this->fields[$key]=new kequestionnaire_input_matrix($key,$typeField,$this->answer,$marker,$this->obj,$this->subquestions,$this->columns, $this->question['matrix_maxanswers']);
 			$i++;
 		}

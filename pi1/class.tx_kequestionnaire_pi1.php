@@ -309,7 +309,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 			$diff = $chk_time - $this->piVars['page_tstamp'][$this->piVars['page']];
 			$secs = ceil($seconds - $diff);
 		} else {
-			$diff = $chk_time - $this->piVars['start_tstamp'];
+			$diff = $diff = $chk_time - $GLOBALS['TSFE']->fe_user->getKey('ses', 'kequestionnaire_start_tstamp');
 			$secs = ceil($seconds - $diff);			
 		}
 		
@@ -694,6 +694,17 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 			}
 			//t3lib_div::devLog('getPageNr lastAnswered '.$this->lastAnswered, 'test', 0, array('amount' => $amount,'pages'=>$pagecount, 'p Nr'=>$pageNr, 'qpp' =>$qpp, 'page-nr'=>$this->piVars['page'], 'q_nr'=>$q_nr));
 		}
+		// If page is not given, our sessions must be deleted/set to 0.
+		if(!$pageNr) {
+			$GLOBALS['TSFE']->fe_user->setKey('ses', 'kequestionnaire_page', 0);
+			$GLOBALS['TSFE']->fe_user->setKey('ses', 'kequestionnaire_start_tstamp', 0);
+		} else {
+			// If page is given we have to check if there are some modifications made in url
+			if($GLOBALS['TSFE']->fe_user->getKey('ses', 'kequestionnaire_page') && $GLOBALS['TSFE']->fe_user->getKey('ses', 'kequestionnaire_page') > $pageNr) {
+				$pageNr = $GLOBALS['TSFE']->fe_user->getKey('ses', 'kequestionnaire_page');
+			}
+			$GLOBALS['TSFE']->fe_user->setKey('ses', 'kequestionnaire_page', $pageNr);
+		}
 		$this->piVars['page']=$pageNr;
 		return $pageNr;
 	}
@@ -1073,7 +1084,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 			}
 			$timestamp_start = 1;
 			if ($this->conf['timestamp_startpage']) $timestamp_start = $this->conf['timestamp_startpage'];
-			if ($timestamp_start > 0 AND ($this->piVars['page'] > $timestamp_start OR $this->piVars['start_tstamp'] > 0) OR ($this->ffdata['timer_type'] AND $this->piVars['page'] > 0)){
+			/*if ($timestamp_start > 0 AND ($this->piVars['page'] > $timestamp_start OR $this->piVars['start_tstamp'] > 0) OR ($this->ffdata['timer_type'] AND $this->piVars['page'] > 0)){
 				$markerArray['###ID###'] = 'start_tstamp';
 				if (!$this->piVars['start_tstamp']) $started = mktime();
 				else $started = $this->piVars['start_tstamp'];
@@ -1081,7 +1092,13 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 				$markerArray['###VALUE###'] = $started;
 				$this->piVars['start_tstamp'] = $started;
 				$content .= $this->renderContent('###HIDDEN_FIELD###',$markerArray);
-			}
+			}*/
+			//Inserted by Stefan Froemken
+			if($timestamp_start > 0 AND $this->piVars['page'] >= $timestamp_start) {
+				if(!$GLOBALS['TSFE']->fe_user->getKey('ses', 'kequestionnaire_start_tstamp')) $started = mktime();
+				else $started = $GLOBALS['TSFE']->fe_user->getKey('ses', 'kequestionnaire_start_tstamp');
+				$GLOBALS['TSFE']->fe_user->setKey('ses', 'kequestionnaire_start_tstamp', $started);
+ 			}
 			if ($this->ffdata['timer_type'] AND $this->piVars['page'] > 0){
 				$started = mktime();
 				$markerArray['###ID###'] = 'page_tstamp';
