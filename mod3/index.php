@@ -472,7 +472,7 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 		include_once('ajax.php');
 		$creator = t3lib_div::makeInstance('tx_kequestionnaire_module3_ajax');
 		$creator->init();
-		t3lib_div::devLog('getResults', 'ke_questionnaire Export Mod', 0, $this->results);
+		//t3lib_div::devLog('getResults', 'ke_questionnaire Export Mod', 0, $this->results);
 		foreach ($this->results as $nr => $result){
 			$creator->createDataFile($nr);
 		}
