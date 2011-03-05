@@ -196,19 +196,27 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 				//CSV
 				case 1:
 					$title = $LANG->getLL('function1');
-
 					if (!t3lib_div::_GP('get_csv_parted')){
 						$content = $this->getCSVInfos();
 						if (t3lib_div::_GP('get_csv_parted_download')){
 							$content .= $this->getCSVDownload();
 							exit;
+						} else {
+							//t3lib_div::debug($_POST,'post');
+							if (t3lib_div::_GP('get_csv')){
+								$this->createDataFileAtOnce();
+								$content .= $this->getCSVDownload();
+								exit;
+							}
 						}
 					} else {
+						//t3lib_div::debug($_POST,'post');
 						//$pointer = $GLOBALS['BE_USER']->getModuleData("tools_beuser/index.php/pointer","ses");
 						//$this->results = $GLOBALS['BE_USER']->getModuleData("tools_beuser/index.php/results","ses");
 						$myVars = $GLOBALS['BE_USER']->getSessionData('tx_kequestionnaire');
 						$pointer = $myVars['pointer'];
 						$this->results = $myVars['results'];
+						//t3lib_div::debug($myVars,'myVars');
 						if ($myVars['giveDownload'] == 1){
 							$content .= $this->getCSVDownload();
 							exit;
@@ -347,19 +355,23 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 			}
 		}
 		$content .= '<br />';
+		//set some vars in the session
+		$myVars = $GLOBALS['BE_USER']->getSessionData('tx_kequestionnaire');
+		$myVars['q_id'] = $this->q_id;
+		$myVars['pid'] = $this->pid;
+		$myVars['ff_data'] = $this->ff_data;
+		$myVars['download_type'] = t3lib_div::_GP('download_type');
+		$myVars['results'] = $this->results;
 		if ($counters['counting'] > $this->extConf['exportParter']){
 			$content .= '<div style="color:red">'.$LANG->getLL('download_parts').'</div><br />';
-			//$GLOBALS['BE_USER']->pushModuleData("tools_beuser/index.php/pointer",0);
-			//$GLOBALS['BE_USER']->pushModuleData("tools_beuser/index.php/results",$this->results);
-			$myVars = $GLOBALS['BE_USER']->getSessionData('tx_kequestionnaire');
 			//t3lib_div::devLog('session', 'ke_questionnaire Export Mod', 0, $myVars);
 			$myVars['pointer'] = 0;
-			$myVars['results'] = $this->results;
-			$GLOBALS['BE_USER']->setAndSaveSessionData('tx_kequestionnaire',$myVars);
 			$content .= '<input type="submit" name="get_csv_parted" value="'.$LANG->getLL('download_button').'" />';	
 		} else {
 			$content .= '<input type="submit" name="get_csv" value="'.$LANG->getLL('download_button').'" />';	
 		}
+		t3lib_div::devLog('session', 'ke_questionnaire Export Mod', 0, $myVars);
+		$GLOBALS['BE_USER']->setAndSaveSessionData('tx_kequestionnaire',$myVars);
 		$content .= '</p>';
 
 		return $content;
@@ -439,6 +451,16 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 		return $content;
 	}
 	
+	function createDataFileAtOnce(){
+		include_once('ajax.php');
+		$creator = t3lib_div::makeInstance('tx_kequestionnaire_module3_ajax');
+		$creator->init();
+		t3lib_div::devLog('getResults', 'ke_questionnaire Export Mod', 0, $this->results);
+		foreach ($this->results as $nr => $result){
+			$creator->createDataFile($nr);
+		}
+	}
+	
 	function createDataFile($pointer){
 		//t3lib_div::debug($_ENV);
 		//t3lib_div::debug($_SERVER);
@@ -481,14 +503,6 @@ Event.observe(window, 'load', function() {
 </script>
 ";
 
-		//set some vars in the session
-		$myVars = $GLOBALS['BE_USER']->getSessionData('tx_kequestionnaire');
-		$myVars['q_id'] = $this->q_id;
-		$myVars['pid'] = $this->pid;
-		$myVars['ff_data'] = $this->ff_data;
-		$myVars['download_type'] = t3lib_div::_GP('download_type');
-		$GLOBALS['BE_USER']->setAndSaveSessionData('tx_kequestionnaire',$myVars);
-		
 		//delete the old generated file
 		$file_path = PATH_site.'typo3temp/'.$this->temp_file;
 		if (file_exists($file_path)) {
@@ -561,7 +575,7 @@ Event.observe(window, 'load', function() {
 		$lineset .= $pure_parter.$pure_parter.$pure_parter.$result_line."\n";
 		$file_path = PATH_site.'/typo3temp/'.$this->temp_file;
 		$store_file = fopen($file_path,'r');
-		t3lib_div::devLog('path', 'ke_questionnaire Export Mod', 0, array($file_path));
+		//t3lib_div::devLog('path', 'ke_questionnaire Export Mod', 0, array($file_path));
 		//foreach ($questiona as $q_id => $question){
 		if ($res){
 			while($question = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)){
@@ -579,7 +593,7 @@ Event.observe(window, 'load', function() {
 				$read_line = json_decode($read_line,true);
 				$question['data'] = array();
 				$question['data'] = $read_line;
-				t3lib_div::devLog('getCSVSimple q_data', 'ke_questionnaire Export Mod', 0, $question);
+				//t3lib_div::devLog('getCSVSimple q_data', 'ke_questionnaire Export Mod', 0, $question);
 				$line = array();
 				$line[] = $question['uid'];
 				$line[] = $this->stripString($question['title']);
@@ -1015,7 +1029,7 @@ Event.observe(window, 'load', function() {
 	}
 
 	function getQBaseLine($free_cells,$question,$answer=array(),$subquestion=0,$column=array(),$dem_field=''){
-		//t3lib_div::devLog('getQBaseLine', 'ke_questionnaire Export Mod', 0, array($free_cells,$question,$type,$answer,$subquestion,$column,$dem_field));
+		//t3lib_div::devLog('getQBaseLine', 'ke_questionnaire Export Mod', 0, array('free'=>$free_cells,'q'=>$question,'type'=>$type,'answer'=>$answer,'subq'=>$subquestion,'col'=>$column,$dem_field));
 		global $LANG;
 		$type = $question['type'];
 
@@ -1030,26 +1044,26 @@ Event.observe(window, 'load', function() {
 		$take = $this->simpleResults[$question];
 		if (is_array($question['data'])) $take = $question['data'];
 		//$results = $this->simpleResults['result_nrs'];
-		t3lib_div::devLog('getCSVQBase question', 'ke_questionnaire Export Mod', 0, $question);
-		t3lib_div::devLog('getCSVQBase take', 'ke_questionnaire Export Mod', 0, $take);
-		t3lib_div::devLog('getCSVQBase results '.$type, 'ke_questionnaire Export Mod', 0, $this->results);
+		//t3lib_div::devLog('getCSVQBase question', 'ke_questionnaire Export Mod', 0, $question);
+		//t3lib_div::devLog('getCSVQBase take', 'ke_questionnaire Export Mod', 0, $take);
+		//t3lib_div::devLog('getCSVQBase results '.$type, 'ke_questionnaire Export Mod', 0, $this->results);
 		$question = $question['uid'];
 		switch($type){
 			case 'authcode': $line[] = '';
-					foreach ($results as $nr => $result_id){
+					foreach ($this->results as $nr => $result_id){
 						$take['results'][$result_id] = str_replace($delimeter,$delimeter.$delimeter,$take['results'][$result_id]);
 						$line[] = $take['results'][$result_id];
 					}
 					//t3lib_div::devLog('simplify results value_arrays '.$q_nr, 'ke_questionnaire Export Mod', 0, $line);
 				break;
 			case 'start_tstamp': $line[] = '';
-					foreach ($results as $nr => $result_id){
+					foreach ($this->results as $nr => $result_id){
 						$take['results'][$result_id] = str_replace($delimeter,$delimeter.$delimeter,$take['results'][$result_id]);
 						$line[] = $take['results'][$result_id];
 					}
 				break;
 			case 'finished_tstamp': $line[] = '';
-					foreach ($results as $nr => $result_id){
+					foreach ($this->results as $nr => $result_id){
 						$take['results'][$result_id] = str_replace($delimeter,$delimeter.$delimeter,$take['results'][$result_id]);
 						$line[] = $take['results'][$result_id];
 					}
@@ -1095,7 +1109,8 @@ Event.observe(window, 'load', function() {
 			case 'semantic':
 			case 'matrix': $line[] = $column['title'];
 					if(is_array($take['subquestions'][$subquestion]['columns'][$column['uid']]['results'])){
-						foreach ($results as $nr => $result_id){
+						foreach ($this->results as $nr => $r_data){
+							$result_id = $r_data['uid'];
 							if ($take['subquestions'][$subquestion]['columns'][$column['uid']]['results'][$result_id]){
 								$take['subquestions'][$subquestion]['columns'][$column['uid']]['results'][$result_id] = str_replace($delimeter,$delimeter.$delimeter,$take['subquestions'][$subquestion]['columns'][$column['uid']]['results'][$result_id]);
 								$line[] = $take['subquestions'][$subquestion]['columns'][$column['uid']]['results'][$result_id];
@@ -1109,7 +1124,8 @@ Event.observe(window, 'load', function() {
 				break;
 			case 'demographic': $line[] = $dem_field;
 					if (is_array($take['fe_users'][$dem_field]['results'])){
-						foreach ($results as $nr => $result_id){
+						foreach ($this->results as $nr => $r_data){
+							$result_id = $r_data['uid'];
 							if ($take['fe_users'][$dem_field]['results'][$result_id]){
 								$take['fe_users'][$dem_field]['results'][$result_id] = str_replace($delimeter,$delimeter.$delimeter,$take['fe_users'][$dem_field]['results'][$result_id]);
 								$line[] = $take['fe_users'][$dem_field]['results'][$result_id];
@@ -1119,7 +1135,8 @@ Event.observe(window, 'load', function() {
 						}
 					}
 					if (is_array($take['tt_address'][$dem_field]['results'])){
-						foreach ($results as $nr => $result_id){
+						foreach ($this->results as $nr => $r_data){
+							$result_id = $r_data['uid'];
 							if ($take['tt_address'][$dem_field]['results'][$result_id]){
 								$take['tt_address'][$dem_field]['results'][$result_id] = str_replace($delimeter,$delimeter.$delimeter,$take['tt_address'][$dem_field]['results'][$result_id]);
 								$line[] = $take['tt_address'][$dem_field]['results'][$result_id];
@@ -1182,6 +1199,7 @@ Event.observe(window, 'load', function() {
 		$csvheader = $this->q_data['header']."\n\n";
 		$this->simplifyResults();
 		t3lib_div::devLog('getCSVSimple simpleResults', 'ke_questionnaire Export Mod', 0, $this->simpleResults);
+		t3lib_div::devLog('getCSVSimple results', 'ke_questionnaire Export Mod', 0, $this->results);
 		
 		if (is_array($this->simpleResults)){
 			$headline = array();
@@ -1195,6 +1213,7 @@ Event.observe(window, 'load', function() {
 							}
 						break;
 						case 'matrix':
+							//t3lib_div::devLog('getCSVSimple matrix', 'ke_questionnaire Export Mod', 0, $values);
 							foreach ($values['subquestions'] as $sub_id => $sub_values){
 								$subl = t3lib_BEfunc::getRecord('tx_kequestionnaire_subquestions',$sub_id);
 								foreach ($sub_values['columns'] as $col_id => $col_values){
@@ -1221,38 +1240,66 @@ Event.observe(window, 'load', function() {
 		}
 		$csvheader .= $delimeter.implode($parter,$headline).$delimeter."\n";
 		//t3lib_div::devLog('simpleresults', 'ke_questionnaire Export Mod', 0, $this->simpleResults);
-		if (is_array($this->simpleResults['result_nrs'])){
-			foreach ($this->simpleResults['result_nrs'] as $nr){
+		//if (is_array($this->simpleResults['result_nrs'])){
+		if (is_array($this->results)){
+			$file_path = PATH_site.'typo3temp/'.$this->temp_file;
+			foreach ($this->results as $r_id => $r_values){
+				$store_file = fopen($file_path,'r');
 				$result_line = array();
+				
 				foreach ($this->simpleResults as $question_id => $values){
-					$file_path = PATH_site.'/typo3temp/'.$this->temp_file;
-					$store_file = fopen($file_path,'r');
-					t3lib_div::devLog('getCSVSimple q_data', 'ke_questionnaire Export Mod', 0, $values);
+					$read_line = fgets($store_file);
+					//t3lib_div::devLog('read_line '.$file_path, 'ke_questionnaire Export Mod', 0, array($read_line));
+					$read_line = str_replace("\n",'',$read_line);
+					$read_line = json_decode($read_line,true);
+					t3lib_div::devLog('getCSVSimple q_data '.$values['title'], 'ke_questionnaire Export Mod', 0, $values);
+					t3lib_div::devLog('read line', 'ke_questionnaire Export Mod', 0, $read_line);
+						
+					//t3lib_div::devLog('r_values', 'ke_questionnaire Export Mod', 0, $r_values);
+					$nr = $r_values['uid'];
 					if ($values['title'] != ''){
 						switch ($values['type']){
 							case 'closed':
+								t3lib_div::devLog('read line closed', 'ke_questionnaire Export Mod', 0, $read_line);
+								t3lib_div::devLog('values closed', 'ke_questionnaire Export Mod', 0, $values);
 								foreach ($values['answers'] as $a_id => $a_values){
-									if ($values['answers'][$a_id]['results'][$nr]) $result_line[] = $values['answers'][$a_id]['results'][$nr];
+									//t3lib_div::devLog('read line closed ansers '.$a_id, 'ke_questionnaire Export Mod', 0, $a_values);
+									if ($read_line['answers'][$a_id]['results'][$nr]) $result_line[] = $read_line['answers'][$a_id]['results'][$nr];
 									else $result_line[] = '';
 								}
+								/*foreach ($values['answers'] as $a_id => $a_values){
+									if ($values['answers'][$a_id]['results'][$nr]) $result_line[] = $values['answers'][$a_id]['results'][$nr];
+									else $result_line[] = '';
+								}*/
 							break;
 							case 'matrix':
 							case 'sematic':
-								foreach ($values['subquestions'] as $sub_id => $sub_values){
+								//t3lib_div::devLog('getCSVSimple matrix', 'ke_questionnaire Export Mod', 0, $read_line);
+								foreach ($read_line['subquestions'] as $sub_id => $sub_values){
+									foreach ($sub_values['columns'] as $col_id => $col_values){
+										if ($read_line['subquestions'][$sub_id]['columns'][$col_id]['results'][$nr]) $result_line[] = $read_line['subquestions'][$sub_id]['columns'][$col_id]['results'][$nr];
+										else $result_line[] = '';
+									}
+								}
+								/*foreach ($values['subquestions'] as $sub_id => $sub_values){
 									foreach ($sub_values['columns'] as $col_id => $col_values){
 										if ($values['subquestions'][$sub_id]['columns'][$col_id]['results'][$nr]) $result_line[] = $values['subquestions'][$sub_id]['columns'][$col_id]['results'][$nr];
 										else $result_line[] = '';
 									}
-								}
+								}*/
 							break;
 							default:
-								$result_line[] = $values['results'][$nr];
+								//t3lib_div::devLog('getCSVSimple default', 'ke_questionnaire Export Mod', 0, $read_line);
+								$result_line[] = $read_line['results'][$nr];
 							break;
 						}
 					}
-					fclose($file_path);
 				}
+				fclose($store_file);
+				
 				$csvdata .= $delimeter.implode($parter,$result_line).$delimeter."\n";
+				
+				t3lib_div::devLog('result line', 'ke_questionnaire Export Mod', 0, $result_line);
 			}
 		}
 	

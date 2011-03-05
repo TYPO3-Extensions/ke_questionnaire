@@ -1,6 +1,4 @@
 <?php
-require_once(PATH_t3lib.'class.t3lib_scbase.php');
-
 class  tx_kequestionnaire_module3_ajax extends t3lib_SCbase {
     function init() {
         $myVars = $GLOBALS['BE_USER']->getSessionData('tx_kequestionnaire');
@@ -18,6 +16,7 @@ class  tx_kequestionnaire_module3_ajax extends t3lib_SCbase {
         $this->ff_data = $myVars['ff_data'];
         
         //t3lib_div::devLog('ajax vars', 'ke_questionnaire Export Mod', 0, array($this->q_id,$this->pid,$this->ff_data));
+        //t3lib_div::devLog('ajax vars', 'ke_questionnaire Export Mod', 0, $myVars);
         
         $this->results = $myVars['results'];
     }
@@ -28,6 +27,10 @@ class  tx_kequestionnaire_module3_ajax extends t3lib_SCbase {
         $pointer = t3lib_div::_GP('pointer');
         $ajaxObj->addContent('pointerly', $pointer);
         
+        $this->createDataFile($pointer);
+    }
+    
+    function createDataFile($pointer){
         //marker in CSV
         $marker = $this->extConf['CSV_marker'];
         //get the questions
@@ -154,8 +157,8 @@ class  tx_kequestionnaire_module3_ajax extends t3lib_SCbase {
         $auth = t3lib_BEfunc::getRecord('tx_kequestionnaire_authcodes',$result['auth']); //test
         $result['authcode'] = $auth['authcode'];
         $result_nrs[] = $result['uid'];
-        t3lib_div::devLog('create DataFile result '.$pointer, 'ke_questionnaire Export Mod', 0, $result);
-        t3lib_div::devLog('create DataFile this->result '.$pointer, 'ke_questionnaire Export Mod', 0, $this->results);
+        //t3lib_div::devLog('create DataFile result '.$pointer, 'ke_questionnaire Export Mod', 0, $result);
+        //t3lib_div::devLog('create DataFile this->result '.$pointer, 'ke_questionnaire Export Mod', 0, $this->results);
 
         //t3lib_div::devLog('simplify results value_arrays', 'ke_questionnaire Export Mod', 0, $value_arrays);
         $file_path = PATH_site.'typo3temp/'.$this->temp_file;
@@ -234,34 +237,34 @@ class  tx_kequestionnaire_module3_ajax extends t3lib_SCbase {
                                 case 'matrix':
                                 case 'semantic':
                                                 //t3lib_div::devLog('matrix '.$q_nr, 'ke_questionnaire Export Mod', 0, $act_v);
-                                                if (is_array($q_values['subquestions'])){
-						    foreach ($q_values['subquestions'] as $sub_nr => $sub_values){
-							    //t3lib_div::devLog('matrix sub '.$sub_nr, 'ke_questionnaire Export Mod', 0, $sub_values);
-							    foreach ($sub_values['columns'] as $c_nr => $c_values){
-								    //t3lib_div::devLog('matrix sub c '.$c_nr, 'ke_questionnaire Export Mod', 0, $c_values);
-								    $temp_type = $act_v['subtype'];
-								    if ($q_values['columns'][$c_nr]['different_type'] != '') $temp_type = $q_values['columns'][$c_nr]['different_type'];
-								    //t3lib_div::devLog('matrix temp_type '.$temp_type, 'ke_questionnaire Export Mod', 0, $act_v);
-								    if ($temp_type == 'input'){
-									    $write_array['subquestions'][$sub_nr]['columns'][$c_nr]['results'][$v_nr] = $act_v['answer']['options'][$sub_nr][$c_nr][0];
-								    } elseif (is_array($act_v['answer']['options'][$sub_nr])){
-									    //if (in_array($c_nr,$act_v['answer']['options'][$sub_nr])){
-									    if ($act_v['answer']['options'][$sub_nr][$c_nr][0] == $c_nr){
-										    $write_array['subquestions'][$sub_nr]['columns'][$c_nr]['results'][$v_nr] = $marker;
-									    } elseif ($c_nr == $act_v['answer']['options'][$sub_nr]['single']) {
-										    $write_array['subquestions'][$sub_nr]['columns'][$c_nr]['results'][$v_nr] = $marker;
-									    }
-								    } else {
-									    if ($c_nr == $act_v['answer']['options'][$sub_nr]){
-										    $write_array['subquestions'][$sub_nr]['columns'][$c_nr]['results'][$v_nr] = $marker;
-									    }
-								    }
-								    if ($act_v['answer']['text'][$sub_nr]){
-									    $write_array['subquestions'][$sub_nr]['columns'][$c_nr]['results'][$v_nr] = '('.$act_v['answer']['text'][$sub_nr][0].') '.$write_array['subquestions'][$sub_nr]['columns'][$c_nr]['results'][$v_nr];
-								    }
-							    }
-						    }
-						}
+                                                foreach ($q_values['subquestions'] as $sub_nr => $sub_values){
+                                                        //t3lib_div::devLog('matrix sub '.$sub_nr, 'ke_questionnaire Export Mod', 0, $sub_values);
+                                                        foreach ($sub_values['columns'] as $c_nr => $c_values){
+                                                                //t3lib_div::devLog('matrix sub c '.$c_nr, 'ke_questionnaire Export Mod', 0, $c_values);
+                                                                $temp_type = $act_v['subtype'];
+                                                                if ($q_values['columns'][$c_nr]['different_type'] != '') $temp_type = $q_values['columns'][$c_nr]['different_type'];
+                                                                //t3lib_div::devLog('matrix temp_type '.$temp_type, 'ke_questionnaire Export Mod', 0, $act_v);
+                                                                if ($temp_type == 'input'){
+                                                                        $write_array['subquestions'][$sub_nr]['columns'][$c_nr]['results'][$v_nr] = $act_v['answer']['options'][$sub_nr][$c_nr][0];
+                                                                } elseif (is_array($act_v['answer']['options'][$sub_nr])){
+                                                                        //if (in_array($c_nr,$act_v['answer']['options'][$sub_nr])){
+                                                                        if ($act_v['answer']['options'][$sub_nr][$c_nr][0] == $c_nr){
+                                                                                $write_array['subquestions'][$sub_nr]['columns'][$c_nr]['results'][$v_nr] = $marker;
+                                                                        } elseif ($c_nr == $act_v['answer']['options'][$sub_nr]['single']) {
+                                                                                $write_array['subquestions'][$sub_nr]['columns'][$c_nr]['results'][$v_nr] = $marker;
+                                                                        }
+                                                                } else {
+                                                                        if ($c_nr == $act_v['answer']['options'][$sub_nr]){
+                                                                                $write_array['subquestions'][$sub_nr]['columns'][$c_nr]['results'][$v_nr] = $marker;
+                                                                        }
+                                                                }
+                                                                if ($act_v['answer']['text'][$sub_nr]){
+                                                                        $write_array['subquestions'][$sub_nr]['columns'][$c_nr]['results'][$v_nr] = '('.$act_v['answer']['text'][$sub_nr][0].') '.$write_array['subquestions'][$sub_nr]['columns'][$c_nr]['results'][$v_nr];
+                                                                }
+                                                        }
+                                                }
+
+
                                         break;
                                 case 'demographic':
                                                 //t3lib_div::devLog('demo '.$q_nr, 'ke_questionnaire Export Mod', 0, $act_v);
@@ -298,7 +301,7 @@ class  tx_kequestionnaire_module3_ajax extends t3lib_SCbase {
                 //t3lib_div::devLog('write_array '.$q_nr.'/'.$v_nr, 'ke_questionnaire Export Mod', 0, $write_array);
                 if (is_array($write_array) AND count($write_array) > 0) fwrite($store_file,json_encode($write_array)."\n");
         }
-        fclose($store_file);		
+        fclose($store_file);	
     }
 }
 ?>
