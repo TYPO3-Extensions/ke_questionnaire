@@ -531,8 +531,8 @@ Event.observe(window, 'load', function() {
 	}
 
 	function getCSVDownload(){
-		t3lib_div::devLog('getCSVInfos GET', 'ke_questionnaire Export Mod', 0, $_GET);
-		t3lib_div::devLog('getCSVInfos POST', 'ke_questionnaire Export Mod', 0, $_POST);
+		//t3lib_div::devLog('getCSVInfos GET', 'ke_questionnaire Export Mod', 0, $_GET);
+		//t3lib_div::devLog('getCSVInfos POST', 'ke_questionnaire Export Mod', 0, $_POST);
 
 		$csvdata = '';
 		$parter = $this->extConf['CSV_parter'];
@@ -541,7 +541,7 @@ Event.observe(window, 'load', function() {
 			$myVars = $GLOBALS['BE_USER']->getSessionData('tx_kequestionnaire');
 			$type = $myVars['download_type'];
 		}
-		t3lib_div::devLog('getCSVDownload session', 'ke_questionnaire Export Mod', 0, $myVars);
+		//t3lib_div::devLog('getCSVDownload session', 'ke_questionnaire Export Mod', 0, $myVars);
 		
 		switch ($type){
 			case 'simple':
@@ -689,7 +689,7 @@ Event.observe(window, 'load', function() {
 						case 'semantic':
 								$lineset .= "\n";
 								//t3lib_div::devLog('getCSVQBase '.$question['type'], 'ke_questionnaire Export Mod', 0, $question);
-								foreach ($question['subquestions'] as $sub_id => $sub_values){
+								/*foreach ($question['subquestions'] as $sub_id => $sub_values){
 									$line = array();
 									for ($i = 0;$i < ($free_cells+1);$i ++){
 										$line[] = '';
@@ -701,8 +701,8 @@ Event.observe(window, 'load', function() {
 										$column = t3lib_BEfunc::getRecord('tx_kequestionnaire_columns',$c_id);
 										$lineset .= $this->getQBaseLine($free_cells+2,$question,array(),$subquestion['uid'],$column);
 									}
-								}
-								/*$columns = array();
+								}*/
+								$columns = array();
 								$where = 'question_uid='.$question['uid'].' and hidden=0 and deleted=0';
 								$res_columns = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*','tx_kequestionnaire_columns',$where,'','sorting');
 								if ($res_columns){
@@ -714,28 +714,31 @@ Event.observe(window, 'load', function() {
 								if ($res_sublines){
 									while ($subline = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res_sublines)){
 										$line = array();
-										for ($i = 0;$i < ($free_cells-1);$i ++){
+										for ($i = 0;$i < ($free_cells+2);$i ++){
 											$line[] = '';
 										}
 										$line[] = $subline['start'].' - '.$subline['end'];
 										$lineset .= $delimeter.implode($parter,$line).$delimeter."\n";
 										foreach ($columns as $column){
-											$lineset .= $this->getQBaseLine($free_cells,$question,array(),$subline['uid'],$column);
+											$lineset .= $this->getQBaseLine($free_cells+2,$question,array(),$subline['uid'],$column);
 										}
 									}
-								}*/
+								}
 							break;
 						case 'demographic':
+								$lineadd = '';
 								if (is_array($question['fe_users'])){
 									foreach ($question['fe_users'] as $field => $f_values){
-										$lineset .= $this->getQBaseLine($free_cells,$question,array(),0,array(),$field);
+										$lineadd .= $this->getQBaseLine($free_cells,$question,array(),0,array(),$field);
 									}
 								}
 								if (is_array($question['tt_address'])){
 									foreach ($question['tt_address'] as $field => $f_values){
-										$lineset .= $this->getQBaseLine($free_cells,$question,array(),0,array(),$field);
+										$lineadd .= $this->getQBaseLine($free_cells,$question,array(),0,array(),$field);
 									}
 								}
+								if ($lineadd == '') $lineadd .= "\n";
+								$lineset .= $lineadd;
 								//t3lib_div::devLog('getCSVQBase '.$question['type'], 'ke_questionnaire Export Mod', 0, $question);
 								/*$flex = t3lib_div::xml2array($question['demographic_fields']);
 								$fe_user_fields = explode(',',$flex['data']['sDEF']['lDEF']['FeUser_Fields']['vDEF']);
@@ -757,7 +760,9 @@ Event.observe(window, 'load', function() {
 								if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['ke_questionnaire']['CSVExportQBaseLine'])){
 									foreach($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['ke_questionnaire']['CSVExportQBaseLine'] as $_classRef){
 										$_procObj = & t3lib_div::getUserObj($_classRef);
-										$lineset .= $_procObj->CSVExportQBaseLine($free_cells,$question['type'],$question['uid'],$this->simpleResults,$delimeter,$parter);
+										$getit = $_procObj->CSVExportQBaseLine($free_cells,$question['type'],$question['uid'],$this->simpleResults,$delimeter,$parter);
+										//t3lib_div::devLog('getCSVQBase getit', 'ke_questionnaire Export Mod', 0, array($getit));
+										if ($getit != '') $lineset .= $getit;
 									}
 								}
 							break;
@@ -767,6 +772,7 @@ Event.observe(window, 'load', function() {
 			}
 		}
 		fclose($store_file);
+		t3lib_div::devLog('getCSVQBase lineset', 'ke_questionnaire Export Mod', 0, array($lineset));
 		$csvdata .= $lineset."\n";
 
 		//t3lib_div::devLog('getCSVQBase return', 'ke_questionnaire Export Mod', 0, array($csvheader,$csvdata));
@@ -1215,8 +1221,8 @@ Event.observe(window, 'load', function() {
 		
 		$csvheader = $this->q_data['header']."\n\n";
 		$this->simplifyResults();
-		t3lib_div::devLog('getCSVSimple simpleResults', 'ke_questionnaire Export Mod', 0, $this->simpleResults);
-		t3lib_div::devLog('getCSVSimple results', 'ke_questionnaire Export Mod', 0, $this->results);
+		//t3lib_div::devLog('getCSVSimple simpleResults', 'ke_questionnaire Export Mod', 0, $this->simpleResults);
+		//t3lib_div::devLog('getCSVSimple results', 'ke_questionnaire Export Mod', 0, $this->results);
 		
 		if (is_array($this->simpleResults)){
 			$headline = array();
@@ -1269,16 +1275,16 @@ Event.observe(window, 'load', function() {
 					//t3lib_div::devLog('read_line '.$file_path, 'ke_questionnaire Export Mod', 0, array($read_line));
 					$read_line = str_replace("\n",'',$read_line);
 					$read_line = json_decode($read_line,true);
-					t3lib_div::devLog('getCSVSimple q_data '.$values['title'], 'ke_questionnaire Export Mod', 0, $values);
-					t3lib_div::devLog('read line', 'ke_questionnaire Export Mod', 0, $read_line);
+					//t3lib_div::devLog('getCSVSimple q_data '.$values['title'], 'ke_questionnaire Export Mod', 0, $values);
+					//t3lib_div::devLog('read line', 'ke_questionnaire Export Mod', 0, $read_line);
 						
 					//t3lib_div::devLog('r_values', 'ke_questionnaire Export Mod', 0, $r_values);
 					$nr = $r_values['uid'];
 					if ($values['title'] != ''){
 						switch ($values['type']){
 							case 'closed':
-								t3lib_div::devLog('read line closed', 'ke_questionnaire Export Mod', 0, $read_line);
-								t3lib_div::devLog('values closed', 'ke_questionnaire Export Mod', 0, $values);
+								//t3lib_div::devLog('read line closed', 'ke_questionnaire Export Mod', 0, $read_line);
+								//t3lib_div::devLog('values closed', 'ke_questionnaire Export Mod', 0, $values);
 								foreach ($values['answers'] as $a_id => $a_values){
 									//t3lib_div::devLog('read line closed ansers '.$a_id, 'ke_questionnaire Export Mod', 0, $a_values);
 									if ($read_line['answers'][$a_id]['results'][$nr]) $result_line[] = $read_line['answers'][$a_id]['results'][$nr];
@@ -1289,10 +1295,12 @@ Event.observe(window, 'load', function() {
 									else $result_line[] = '';
 								}*/
 							break;
-							case 'matrix':
-							case 'sematic':
+							case 'semantic':
+								t3lib_div::devLog('read line', 'ke_questionnaire Export Mod', 0, $read_line);
+								t3lib_div::devLog('values semantic', 'ke_questionnaire Export Mod', 0, $values);
+							case 'matrix':								
 								//t3lib_div::devLog('getCSVSimple matrix', 'ke_questionnaire Export Mod', 0, $read_line);
-								foreach ($read_line['subquestions'] as $sub_id => $sub_values){
+								foreach ($values['subquestions'] as $sub_id => $sub_values){
 									foreach ($sub_values['columns'] as $col_id => $col_values){
 										if ($read_line['subquestions'][$sub_id]['columns'][$col_id]['results'][$nr]) $result_line[] = $read_line['subquestions'][$sub_id]['columns'][$col_id]['results'][$nr];
 										else $result_line[] = '';
@@ -1316,7 +1324,7 @@ Event.observe(window, 'load', function() {
 				
 				$csvdata .= $delimeter.implode($parter,$result_line).$delimeter."\n";
 				
-				t3lib_div::devLog('result line', 'ke_questionnaire Export Mod', 0, $result_line);
+				//t3lib_div::devLog('result line', 'ke_questionnaire Export Mod', 0, $result_line);
 			}
 		}
 	
