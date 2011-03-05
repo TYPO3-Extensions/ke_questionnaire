@@ -188,6 +188,9 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 	function moduleContent(){
 		global $LANG;
 		//set_time_limit(240);
+		
+		//t3lib_div::debug($_GET,'get');
+		//t3lib_div::debug($this->MOD_SETTINGS,'settings');
 		if ($this->q_id == 0){
 			$title = $LANG->getLL('none_selected');
 			$content = $LANG->getLL('none_selected');
@@ -210,12 +213,19 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 							}
 						}
 					} else {
+						//t3lib_div::devLog('moduleContent _POST', 'ke_questionnaire Export Mod', 0, $_POST);
 						//t3lib_div::debug($_POST,'post');
 						//$pointer = $GLOBALS['BE_USER']->getModuleData("tools_beuser/index.php/pointer","ses");
 						//$this->results = $GLOBALS['BE_USER']->getModuleData("tools_beuser/index.php/results","ses");
 						$myVars = $GLOBALS['BE_USER']->getSessionData('tx_kequestionnaire');
 						$pointer = $myVars['pointer'];
+						if (t3lib_div::_GP('download_type') != '') {
+							$myVars['download_type'] = t3lib_div::_GP('download_type');
+							//t3lib_div::devLog('ein Download Type', 'ke_questionnaire Export Mod', 0, $_POST);
+							$GLOBALS['BE_USER']->setAndSaveSessionData('tx_kequestionnaire',$myVars);
+						}
 						$this->results = $myVars['results'];
+						//t3lib_div::debug($_POST,'post');
 						//t3lib_div::debug($myVars,'myVars');
 						if ($myVars['giveDownload'] == 1){
 							$content .= $this->getCSVDownload();
@@ -360,7 +370,12 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 		$myVars['q_id'] = $this->q_id;
 		$myVars['pid'] = $this->pid;
 		$myVars['ff_data'] = $this->ff_data;
-		$myVars['download_type'] = t3lib_div::_GP('download_type');
+		//t3lib_div::devLog('session', 'ke_questionnaire Export Mod', 0, $myVars);
+		if (t3lib_div::_GP('download_type') != '') {
+			$myVars['download_type'] = t3lib_div::_GP('download_type');
+			//t3lib_div::devLog('ein Download Type', 'ke_questionnaire Export Mod', 0, $_POST);
+		}
+		//else t3lib_div::devLog('kein Download Type', 'ke_questionnaire Export Mod', 0, $_POST);
 		$myVars['results'] = $this->results;
 		if ($counters['counting'] > $this->extConf['exportParter']){
 			$content .= '<div style="color:red">'.$LANG->getLL('download_parts').'</div><br />';
@@ -370,7 +385,9 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 		} else {
 			$content .= '<input type="submit" name="get_csv" value="'.$LANG->getLL('download_button').'" />';	
 		}
-		t3lib_div::devLog('session', 'ke_questionnaire Export Mod', 0, $myVars);
+		//t3lib_div::devLog('session', 'ke_questionnaire Export Mod', 0, $myVars);
+		//t3lib_div::devLog('_POST', 'ke_questionnaire Export Mod', 0, $_POST);
+		//t3lib_div::devLog('_GET', 'ke_questionnaire Export Mod', 0, $_GET);
 		$GLOBALS['BE_USER']->setAndSaveSessionData('tx_kequestionnaire',$myVars);
 		$content .= '</p>';
 
@@ -514,8 +531,8 @@ Event.observe(window, 'load', function() {
 	}
 
 	function getCSVDownload(){
-		//t3lib_div::devLog('getCSVInfos GET', 'ke_questionnaire Export Mod', 0, $_GET);
-		//t3lib_div::devLog('getCSVInfos POST', 'ke_questionnaire Export Mod', 0, $_POST);
+		t3lib_div::devLog('getCSVInfos GET', 'ke_questionnaire Export Mod', 0, $_GET);
+		t3lib_div::devLog('getCSVInfos POST', 'ke_questionnaire Export Mod', 0, $_POST);
 
 		$csvdata = '';
 		$parter = $this->extConf['CSV_parter'];
@@ -524,7 +541,7 @@ Event.observe(window, 'load', function() {
 			$myVars = $GLOBALS['BE_USER']->getSessionData('tx_kequestionnaire');
 			$type = $myVars['download_type'];
 		}
-		t3lib_div::devLog('session', 'ke_questionnaire Export Mod', 0, $myVars);
+		t3lib_div::devLog('getCSVDownload session', 'ke_questionnaire Export Mod', 0, $myVars);
 		
 		switch ($type){
 			case 'simple':
@@ -1578,17 +1595,19 @@ Event.observe(window, 'load', function() {
 					case 'closed':
 							$base_row[$row['uid']]['subtype'] = $row['closed_type'];
 							//t3lib_div::devLog('getCSVQBase '.$question['type'], 'ke_questionnaire Export Mod', 0, $row);
-
+			    
 							//if there are Inputfields in the closed answers spss needs to know
+							$base_row[$row['uid']]['inputs'] = 0;
 							$base_row[$row['uid']]['inputs'] = $row['closed_inputfield'];
-
+			    
 							$where = 'question_uid='.$row['uid'].' and hidden=0 and deleted=0';
 							$res_answers = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*','tx_kequestionnaire_answers',$where,'','sorting');
 							//t3lib_div::devLog('getSPSSBase '.$row['type'], 'ke_questionnaire Export Mod', 0, array($GLOBALS['TYPO3_DB']->SELECTquery('*','tx_kequestionnaire_answers',$where,'','sorting')));
 							if ($res_answers){
-								while ($answer = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res_answers)){
-									$base_row[$row['uid']]['possible_answers'][$answer['uid']] = $answer['title'];
-								}
+							    while ($answer = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res_answers)){
+								$base_row[$row['uid']]['possible_answers'][$answer['uid']] = $answer['title'];
+								if ($answer['show_input'] == 1) $base_row[$row['uid']]['inputs'] ++;
+							    }
 							}
 						break;
 					case 'matrix':
