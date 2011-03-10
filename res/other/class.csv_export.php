@@ -19,6 +19,8 @@ class csv_export {
                 $this->q_data = $q_data;
                 $this->ff_data = $ff_data;
                 $this->temp_file = $temp_file;
+                
+                //t3lib_div::devLog('extConf', 'ke_questionnaire Export Mod', 0, $this->extConf);
         }
         
         function getCSVQBased(){

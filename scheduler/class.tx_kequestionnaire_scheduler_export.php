@@ -34,8 +34,7 @@ class tx_kequestionnaire_scheduler_export extends tx_scheduler_Task {
 	function execute() {
                 $myVars = $GLOBALS['BE_USER']->getSessionData('tx_kequestionnaire');
                 if (!$this->pointer) $this->pointer = 0;
-                //t3lib_div::devLog('test cron', 'export cron', 0, array($this->mailTo, $this->q_id, $this->pid, $this->pointer, $this->export_type, $this->results, $this->temp_file));
-                
+                                
                 $this->createDataFile();
                 //t3lib_div::debug($this);
                 
@@ -70,9 +69,10 @@ class tx_kequestionnaire_scheduler_export extends tx_scheduler_Task {
         }
         
         function sendTheFile(){
-                $LOCAL_LANG = t3lib_div::readLLfile(t3lib_extMgm::extPath('ke_questionnaire').'scheduler/locallang.xml');
-		//t3lib_div::devLog('cron '.$this->pointer, 'ke_questionnaire Export Mod', 0, $LOCAL_LANG);
-                $LOCAL_LANG = $LOCAL_LANG['default'];
+                $LOCAL_LANG = t3lib_div::readLLfile(t3lib_extMgm::extPath('ke_questionnaire').'scheduler/locallang.xml','default');
+		$LOCAL_LANG = $LOCAL_LANG['default'];
+                //t3lib_div::devLog('cron '.$this->pointer, 'ke_questionnaire Export Mod', 0, $LOCAL_LANG);
+                
                 $mailTexts['subject'] = $LOCAL_LANG['export_subject'];
                 $mailTexts['fromName'] = $LOCAL_LANG['export_fromName'];
                 $mailTexts['fromEmail'] = $LOCAL_LANG['export_fromEmail'];
@@ -80,14 +80,14 @@ class tx_kequestionnaire_scheduler_export extends tx_scheduler_Task {
                 
                 //create the file to send
                 $file = $this->createMailFile();
-                $this->sendMail($this->mailTo,$mailText,$file);
+                $this->sendMail($this->mailTo,$mailTexts,$file);
         }
         
         function createMailFile(){
                 require_once(t3lib_extMgm::extPath('ke_questionnaire').'res/other/class.csv_export.php');
-		$csv_export = new csv_export($this->extConf,$this->results,$this->q_data,$this->ff_data,$this->temp_file);
+		$csv_export = new csv_export(unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['ke_questionnaire']),$this->results,$this->q_data,$this->ff_data,$this->temp_file);
 		
-		switch ($type){
+		switch ($this->export_type){
 			case 'simple':
 				//$csvdata = $this->getCSVSimple();
 				$csvdata = $csv_export->getCSVSimple();
@@ -111,10 +111,11 @@ class tx_kequestionnaire_scheduler_export extends tx_scheduler_Task {
 		    unlink($file_path);
 		}
                 $file = fopen($file_path,'w');
+                //t3lib_div::devLog('csvdata', 'scheduler', 0, array($csvdata));
                 fwrite($file,$csvdata);
                 fclose($file);
                 
-                return $file_path;
+                return 'typo3temp/'.$this->temp_file.'.csv';
         }
         
 	function sendMail($email,$mailTexts,$file){
@@ -139,7 +140,7 @@ class tx_kequestionnaire_scheduler_export extends tx_scheduler_Task {
 		foreach ($mails as $mail){
 			$out .= $this->htmlMail->send($mail).'<br />';
 		}
-		//t3lib_div::devLog('sendMail out', $this->prefixId, 0, array($out,$mails,$mailTexts));
+		//t3lib_div::devLog('sendMail out', 'scheduler', 0, array($out,$mails,$mailTexts,$file));
 		return $out;
 	}
 }
