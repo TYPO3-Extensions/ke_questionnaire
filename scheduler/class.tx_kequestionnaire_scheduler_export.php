@@ -35,8 +35,6 @@ class tx_kequestionnaire_scheduler_export extends tx_scheduler_Task {
                 $myVars = $GLOBALS['BE_USER']->getSessionData('tx_kequestionnaire');
                 if (!$this->pointer) $this->pointer = 0;
                 //t3lib_div::devLog('test cron', 'export cron', 0, array($this->mailTo, $this->q_id, $this->pid, $this->pointer, $this->export_type, $this->results, $this->temp_file));
-                $LOCAL_LANG = t3lib_div::readLLfile(t3lib_extMgm::extPath('ke_questionnaire').'scheduler/locallang.xml','default');
-		t3lib_div::devLog('cron '.t3lib_extMgm::extPath('ke_questionnaire').'scheduler/locallang.xml', 'ke_questionnaire Export Mod', 0, $LOCAL_LANG);
                 
                 $this->createDataFile();
                 //t3lib_div::debug($this);
@@ -112,7 +110,7 @@ class tx_kequestionnaire_scheduler_export extends tx_scheduler_Task {
                 if (file_exists($file_path)) {
 		    unlink($file_path);
 		}
-                $file = fopen($file_path);
+                $file = fopen($file_path,'w');
                 fwrite($file,$csvdata);
                 fclose($file);
                 
