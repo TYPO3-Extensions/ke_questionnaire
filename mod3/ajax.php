@@ -432,12 +432,12 @@ class  tx_kequestionnaire_module3_ajax extends t3lib_SCbase {
                                                 $flex = t3lib_div::xml2array($question['demographic_addressfields']);
                                                 if ($flex['data']['sDEF']['lDEF']['FeUser_Fields'])$fe_user_addressfields = explode(',',$flex['data']['sDEF']['lDEF']['FeUser_Fields']['vDEF']);
                                                 //t3lib_div::devLog('getCSVQBase flex', 'ke_questionnaire Export Mod', 0, array($fe_user_fields,$fe_user_addressfields));
-                                                if (is_array($fe_user_fields){
+                                                if (is_array($fe_user_fields)){
                                                     foreach ($fe_user_fields as $field){
                                                         $fill_array[$question['uid']]['fe_users'][$field] = array();
                                                     }
                                                 }
-                                                if (is_array($fe_user_addressfields){
+                                                if (is_array($fe_user_addressfields)){
                                                     foreach ($fe_user_addressfields as $field){
                                                             $fill_array[$question['uid']]['tt_address'][$field] = array();
                                                     }
