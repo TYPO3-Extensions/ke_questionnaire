@@ -16,7 +16,13 @@
 			<label index="finished_count">Count of finished results</label>
 			<label index="error_no_kedompdf">You need to install the ke_dompdf-Extension first.</label>
 			<label index="kedompdf_fpdf">Both extensions are installed, ke_dompdf will be used</label>
-
+			
+			<label index="create_with_task">Export mittels Scheduler-Task generieren.</label>
+			<label index="create_export_button">Export generieren.</label>
+			<label index="create_export_mail">Scheduler-Mail-Versand an:</label>
+			<label index="task_created">Scheduler-Task erstellt</label>
+			<label index="task_no_mail">Es wurde keine Email-Adresse für den Versand angegeben, der Export kann nicht gestartet werden!</label>
+			
 			<label index="download_button">Download</label>
 			<label index="download_count"> Es wurde Datensatz &lt;span id="pointer"&gt;%s&lt;/span&gt; von %s verarbeitet</label>
 			<label index="download_parts">Es sind zu viele Datensätze vorhanden, um diese auf einmal zu exportieren. Der Export wird generiert, dies kann eine Weile dauern.</label>

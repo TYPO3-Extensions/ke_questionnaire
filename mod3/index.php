@@ -213,10 +213,6 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 							}
 						}
 					} else {
-						//t3lib_div::devLog('moduleContent _POST', 'ke_questionnaire Export Mod', 0, $_POST);
-						//t3lib_div::debug($_POST,'post');
-						//$pointer = $GLOBALS['BE_USER']->getModuleData("tools_beuser/index.php/pointer","ses");
-						//$this->results = $GLOBALS['BE_USER']->getModuleData("tools_beuser/index.php/results","ses");
 						$myVars = $GLOBALS['BE_USER']->getSessionData('tx_kequestionnaire');
 						$pointer = $myVars['pointer'];
 						if (t3lib_div::_GP('download_type') != '') {
@@ -231,7 +227,17 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 							$content .= $this->getCSVDownload();
 							exit;
 						} else {
-							$content = $this->createDataFile($pointer);
+							//t3lib_div::debug(t3lib_div::_GP('createTask'));
+							if (t3lib_div::_GP('createTask')){
+								if (t3lib_div::_GP('mailExportTo') == ''){
+									$content = $LANG->getLL('task_no_mail');
+								} else {
+									$this->createSchedulerTask();
+									$content = $LANG->getLL('task_created');
+								}
+							} else {
+								$content = $this->createDataFile($pointer);
+							}
 						}
 					}
 				break;
@@ -381,7 +387,9 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 			$content .= '<div style="color:red">'.$LANG->getLL('download_parts').'</div><br />';
 			//t3lib_div::devLog('session', 'ke_questionnaire Export Mod', 0, $myVars);
 			$myVars['pointer'] = 0;
-			$content .= '<input type="submit" name="get_csv_parted" value="'.$LANG->getLL('download_button').'" />';	
+			$content .= '<input type="checkbox" name="createTask"/> '.$LANG->getLL('create_with_task').'<br />';
+			$content .= $LANG->getLL('create_export_mail').' <input type="text" name="mailExportTo" style="width:200px"/><br /><br /><br />';
+			$content .= '<input type="submit" name="get_csv_parted" value="'.$LANG->getLL('create_export_button').'" />';
 		} else {
 			$content .= '<input type="submit" name="get_csv" value="'.$LANG->getLL('download_button').'" />';	
 		}
@@ -468,6 +476,45 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 		return $content;
 	}
 	
+	function createSchedulerTask(){
+		$file_path = PATH_site.'typo3temp/'.$this->temp_file;
+		if (file_exists($file_path)) {
+		    unlink($file_path);
+		}
+		//instance of scheduler
+		$scheduler = t3lib_div::makeInstance('tx_scheduler');
+		//instance of task-class
+		$task = t3lib_div::makeInstance('tx_kequestionnaire_scheduler_export');
+		//make it recurrent
+		//$task->registerSingleExecution(time());
+		$task->registerRecurringExecution(time(),'2');
+		
+		//add Mail Address
+		$task->mailTo = t3lib_div::_GP('mailExportTo');
+		//add Question id
+		$task->q_id = $this->q_id;
+		//add pid
+		$task->pid = $this->pid;
+		//add result-array
+		$task->results = $this->results;
+		//add download-type
+		$type = t3lib_div::_GP('download_type');
+		if ($type == ''){
+			$myVars = $GLOBALS['BE_USER']->getSessionData('tx_kequestionnaire');
+			$type = $myVars['download_type'];
+		}
+		$task->export_type = $type;
+		//file-name for export
+		$task->temp_file = $this->temp_file;
+		//ffdata
+		$task->ff_data = $this->ff_data;
+		//q_data
+		$task->q_data = $this->q_data;
+		
+		//add to database
+		$scheduler->addTask($task);
+	}
+	
 	function createDataFileAtOnce(){
 		include_once('ajax.php');
 		$creator = t3lib_div::makeInstance('tx_kequestionnaire_module3_ajax');
@@ -485,7 +532,7 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 		    unlink($file_path);
 		}
 		
-		t3lib_div::devLog('atOnce', 'ke_questionnaire Export Mod', 0, $this->results);
+		//t3lib_div::devLog('atOnce', 'ke_questionnaire Export Mod', 0, $this->results);
 		foreach ($this->results as $nr => $result){
 			if ($type == 'questions') $creator->createDataFile($nr);
 			elseif ($type == 'simple2') $creator->createDataFileType2($nr);
@@ -557,15 +604,21 @@ Event.observe(window, 'load', function() {
 		}
 		//t3lib_div::devLog('getCSVDownload session', 'ke_questionnaire Export Mod', 0, $myVars);
 		
+		require_once(t3lib_extMgm::extPath('ke_questionnaire').'res/other/class.csv_export.php');
+		$csv_export = new csv_export($this->extConf,$this->results,$this->q_data,$this->ff_data,$this->temp_file);
+		
 		switch ($type){
 			case 'simple':
-				$csvdata = $this->getCSVSimple();
+				//$csvdata = $this->getCSVSimple();
+				$csvdata = $csv_export->getCSVSimple();
 				break;
 			case 'simple2':
-				$csvdata = $this->getCSVSimple2();
+				//$csvdata = $this->getCSVSimple2();
+				$csvdata = $csv_export->getCSVSimple2();
 				break;
 			case 'questions':
-				$csvdata = $this->getCSVQBased();
+				//$csvdata = $this->getCSVQBased();
+				$csvdata = $csv_export->getCSVQBased();
 				break;
 			default:
 				break;
@@ -579,345 +632,7 @@ Event.observe(window, 'load', function() {
 		print $csvdata;
 	}
 
-	function getCSVQBased(){
-		global $LANG;
-
-		$csvdata = '';
-		$csvheader = '';
-		$delimeter = $this->extConf['CSV_qualifier'];
-		$pure_parter = $this->extConf['CSV_parter'];
-		$parter = $delimeter.$this->extConf['CSV_parter'].$delimeter;
-
-		$csvheader = $this->getQBaseHeaderLine();
-		/*foreach ($this->results as $nr => $values){
-			$result_array[$values['uid']] = t3lib_div::xml2array($values['xmldata']);
-		}*/
-
-		$storage_pid = $this->ff_data['sDEF']['lDEF']['storage_pid']['vDEF'];
-		$where = 'pid='.$storage_pid.' and hidden=0 and deleted=0 and type!="blind"';
-		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*','tx_kequestionnaire_questions',$where,'','sorting');
-		//t3lib_div::devLog('getCSVQBase res', 'ke_questionnaire Export Mod', 0, array($GLOBALS['TYPO3_DB']->SELECTquery('*'.'tx_kequestionnaire_questions',$where,'','sorting')));
-		
-		$lineset = ''; //stores the CSV-data
-		$line = array(); //single line, will be imploded
-		$free_cells = 0;
-		$result_line = $this->getQBaseResultLine($free_cells);
-		
-		$lineset .= $pure_parter.$pure_parter.$pure_parter.$result_line."\n";
-		$file_path = PATH_site.'/typo3temp/'.$this->temp_file;
-		$store_file = fopen($file_path,'r');
-		//t3lib_div::devLog('path', 'ke_questionnaire Export Mod', 0, array($file_path));
-		//foreach ($questiona as $q_id => $question){
-		if ($res){
-			while($question = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)){
-				/*$line = array();
-				$line[] = $question['uid'];
-				$line[] = $this->stripString($question['title']);
-				$lineset .= $delimeter.implode($parter,$line).$delimeter;
-				$lineset .= $pure_parter.$result_line."\n";
-				*/
-				//t3lib_div::devLog('getCSVQBase '.$question['type'], 'ke_questionnaire Export Mod', 0, '');
-				//read the data from the file
-				$read_line = fgets($store_file);
-				$read_line = str_replace("\n",'',$read_line);
-				//t3lib_div::devLog('read_line '.$q_id, 'ke_questionnaire Export Mod', 0, array($read_line));
-				$read_line = json_decode($read_line,true);
-				$question['data'] = array();
-				$question['data'] = $read_line;
-				//t3lib_div::devLog('getCSVSimple q_data', 'ke_questionnaire Export Mod', 0, $question);
-				$line = array();
-				$line[] = $question['uid'];
-				$line[] = $this->stripString($question['title']);
-				if ($question['type']){
-					$lineset .= $delimeter.implode($parter,$line).$delimeter;
-					//$lineset .= $pure_parter.$result_line."\n";
-					$lineset .= $pure_parter;
-					//t3lib_div::devLog('getCSVQBase '.$question['type'], 'ke_questionnaire Export Mod', 0, $question);
-					//t3lib_div::devLog('lineset '.$question['type'], 'ke_questionnaire Export Mod', 0, array($lineset));
-					switch ($question['type']){
-						case 'authcode':	$lineset .= $this->getQBaseLine($free_cells,$question);
-							break;
-						case 'start_tstamp':	$lineset .= $this->getQBaseLine($free_cells,$question);
-							break;
-						case 'finished_tstamp':	$lineset .= $this->getQBaseLine($free_cells,$question);
-							break;
-						case 'open':	$lineset .= $this->getQBaseLine($free_cells,$question);
-							break;
-						case 'closed':
-								$lineset .= "\n";
-								/*foreach ($question['answers'] as $a_id => $a_values){
-									$answer = t3lib_BEfunc::getRecord('tx_kequestionnaire_answers',$a_id);
-									$lineset .= $this->getQBaseLine($free_cells+2,$question,$answer);
-								}*/
-								$where = 'question_uid='.$question['uid'].' and hidden=0 and deleted=0';
-								$res_answers = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*','tx_kequestionnaire_answers',$where,'','sorting');
-								//t3lib_div::devLog('getCSVQBase '.$question['type'], 'ke_questionnaire Export Mod', 0, array($GLOBALS['TYPO3_DB']->SELECTquery('*','tx_kequestionnaire_answers',$where,'','sorting')));
-								if ($res_answers){
-									while ($answer = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res_answers)){
-										$lineset .= $this->getQBaseLine($free_cells+2,$question,$answer);
-									}
-								}
-							break;
-						case 'matrix':
-								$lineset .= "\n";
-								/*foreach ($question['subquestions'] as $sub_id => $sub_values){
-									$line = array();
-									for ($i = 0;$i < ($free_cells+1);$i ++){
-										$line[] = '';
-									}
-									$subquestion = t3lib_BEfunc::getRecord('tx_kequestionnaire_subquestions',$sub_id);
-									//t3lib_div::devLog('getCSVQBase '.$question['type'], 'ke_questionnaire Export Mod', 0, $subquestion);
-									$line[] = $subquestion['title'];
-									$lineset .= $delimeter.implode($parter,$line).$delimeter."\n";
-									foreach ($sub_values['columns'] as $c_id => $c_values){
-										$column = t3lib_BEfunc::getRecord('tx_kequestionnaire_columns',$c_id);
-										$lineset .= $this->getQBaseLine($free_cells+2,$question,array(),$subquestion['uid'],$column);
-									}
-								}*/
-								$columns = array();
-								$where = 'question_uid='.$question['uid'].' and hidden=0 and deleted=0';
-								$res_columns = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*','tx_kequestionnaire_columns',$where,'','sorting');
-								if ($res_columns){
-									while ($column = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res_columns)){
-										$columns[] = $column;
-									}
-								}
-								$res_subquestions = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*','tx_kequestionnaire_subquestions',$where,'','sorting');
-								if ($res_subquestions){
-									while ($subquestion = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res_subquestions)){
-										if ($subquestion['title_line'] == 1){
-										} else {
-											$line = array();
-											for ($i = 0;$i < ($free_cells+1);$i ++){
-												$line[] = '';
-											}
-											$line[] = $subquestion['title'];
-											$lineset .= $delimeter.implode($parter,$line).$delimeter."\n";
-											foreach ($columns as $column){
-												$lineset .= $this->getQBaseLine($free_cells+2,$question,array(),$subquestion['uid'],$column);
-											}
-										}
-									}
-								}
-							break;
-						case 'semantic':
-								$lineset .= "\n";
-								//t3lib_div::devLog('getCSVQBase '.$question['type'], 'ke_questionnaire Export Mod', 0, $question);
-								/*foreach ($question['subquestions'] as $sub_id => $sub_values){
-									$line = array();
-									for ($i = 0;$i < ($free_cells+1);$i ++){
-										$line[] = '';
-									}
-									$subquestion = t3lib_BEfunc::getRecord('tx_kequestionnaire_sublines',$sub_id);
-									$line[] = $subquestion['title'];
-									$lineset .= $delimeter.implode($parter,$line).$delimeter."\n";
-									foreach ($sub_values['columns'] as $c_id => $c_values){
-										$column = t3lib_BEfunc::getRecord('tx_kequestionnaire_columns',$c_id);
-										$lineset .= $this->getQBaseLine($free_cells+2,$question,array(),$subquestion['uid'],$column);
-									}
-								}*/
-								$columns = array();
-								$where = 'question_uid='.$question['uid'].' and hidden=0 and deleted=0';
-								$res_columns = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*','tx_kequestionnaire_columns',$where,'','sorting');
-								if ($res_columns){
-									while ($column = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res_columns)){
-										$columns[] = $column;
-									}
-								}
-								$res_sublines = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*','tx_kequestionnaire_sublines',$where,'','sorting');
-								if ($res_sublines){
-									while ($subline = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res_sublines)){
-										$line = array();
-										for ($i = 0;$i < ($free_cells+2);$i ++){
-											$line[] = '';
-										}
-										$line[] = $subline['start'].' - '.$subline['end'];
-										$lineset .= $delimeter.implode($parter,$line).$delimeter."\n";
-										foreach ($columns as $column){
-											$lineset .= $this->getQBaseLine($free_cells+2,$question,array(),$subline['uid'],$column);
-										}
-									}
-								}
-							break;
-						case 'demographic':
-								$lineadd = '';
-								if (is_array($question['fe_users'])){
-									foreach ($question['fe_users'] as $field => $f_values){
-										$lineadd .= $this->getQBaseLine($free_cells,$question,array(),0,array(),$field);
-									}
-								}
-								if (is_array($question['tt_address'])){
-									foreach ($question['tt_address'] as $field => $f_values){
-										$lineadd .= $this->getQBaseLine($free_cells,$question,array(),0,array(),$field);
-									}
-								}
-								if ($lineadd == '') $lineadd .= "\n";
-								$lineset .= $lineadd;
-								//t3lib_div::devLog('getCSVQBase '.$question['type'], 'ke_questionnaire Export Mod', 0, $question);
-								/*$flex = t3lib_div::xml2array($question['demographic_fields']);
-								$fe_user_fields = explode(',',$flex['data']['sDEF']['lDEF']['FeUser_Fields']['vDEF']);
-								$flex = t3lib_div::xml2array($question['demographic_addressfields']);
-								$fe_user_addressfields = explode(',',$flex['data']['sDEF']['lDEF']['FeUser_Fields']['vDEF']);
-								//t3lib_div::devLog('getCSVQBase flex', 'ke_questionnaire Export Mod', 0, array($fe_user_fields,$fe_user_addressfields));
-								foreach ($fe_user_fields as $field){
-									$lineset .= $this->getQBaseLine($free_cells,$question,array(),0,array(),$field);
-								}
-								foreach ($fe_user_addressfields as $field){
-									$lineset .= $this->getQBaseLine($free_cells,$question,array(),0,array(),$field);
-								}*/
-								//$lineset .= $this->getQBaseLine($free_cells,$question);
-							break;
-						default:
-								$delimeter = $this->extConf['CSV_qualifier'];
-								$parter = $delimeter.$this->extConf['CSV_parter'].$delimeter;
-								// Hook to make other types available for export
-								if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['ke_questionnaire']['CSVExportQBaseLine'])){
-									foreach($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['ke_questionnaire']['CSVExportQBaseLine'] as $_classRef){
-										$_procObj = & t3lib_div::getUserObj($_classRef);
-										$getit = $_procObj->CSVExportQBaseLine($free_cells,$question['type'],$question['uid'],$this->simpleResults,$delimeter,$parter);
-										//t3lib_div::devLog('getCSVQBase getit', 'ke_questionnaire Export Mod', 0, array($getit));
-										if ($getit != '') $lineset .= $getit;
-									}
-								}
-							break;
-						
-					}
-				}
-			}
-		}
-		fclose($store_file);
-		t3lib_div::devLog('getCSVQBase lineset', 'ke_questionnaire Export Mod', 0, array($lineset));
-		$csvdata .= $lineset."\n";
-
-		//t3lib_div::devLog('getCSVQBase return', 'ke_questionnaire Export Mod', 0, array($csvheader,$csvdata));
-		return $csvheader.$csvdata;
-	}
 	
-	function createFillArray(){
-		//get the questions
-		$storage_pid = $this->ff_data['sDEF']['lDEF']['storage_pid']['vDEF'];
-		$where = 'pid='.$storage_pid.' and hidden=0 and deleted=0 and type!="blind"';
-		if (htmlentities(t3lib_div::_GP('only_this_lang'))){
-			$lang = explode('_',htmlentities(t3lib_div::_GP('only_this_lang')));
-			$where .= ' AND sys_language_uid='.$lang[1];
-		}
-		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*','tx_kequestionnaire_questions',$where,'','sorting');
-	
-		//create the question structure
-		$fill_array = array();
-		if ($res){
-			/*if (t3lib_div::_GP('with_authcode')) {
-				$fill_array['authcode'] = array();
-				$fill_array['authcode']['uid'] = 'authcode';
-				$fill_array['authcode']['title'] = 'authcode';
-				$fill_array['authcode']['type'] = 'authcode';
-			}
-			$fill_array['start_tstamp'] = array();
-			$fill_array['start_tstamp']['uid'] = 'start_tstamp';
-			$fill_array['start_tstamp']['title'] = 'start tstamp';
-			$fill_array['start_tstamp']['type'] = 'start_tstamp';
-			$fill_array['finished_tstamp'] = array();
-			$fill_array['finished_tstamp']['uid'] = 'finished_tstamp';
-			$fill_array['finished_tstamp']['title'] = 'finished tstamp';
-			$fill_array['finished_tstamp']['type'] = 'finished_tstamp';*/
-			while($question = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)){
-				$fill_array[$question['uid']] = array();
-				$fill_array[$question['uid']]['uid'] = $question['uid'];
-				$fill_array[$question['uid']]['title'] = $question['title'];
-				$fill_array[$question['uid']]['type'] = $question['type'];
-				switch ($question['type']){
-					case 'closed':
-							$where = 'question_uid='.$question['uid'].' and hidden=0 and deleted=0';
-							$res_answers = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*','tx_kequestionnaire_answers',$where,'','sorting');
-							//t3lib_div::devLog('getCSVQBase '.$question['type'], 'ke_questionnaire Export Mod', 0, array($GLOBALS['TYPO3_DB']->SELECTquery('*','tx_kequestionnaire_answers',$where,'','sorting')));
-							if ($res_answers){
-								$fill_array[$question['uid']]['answers'] = array();
-								while ($answer = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res_answers)){
-									$fill_array[$question['uid']]['answers'][$answer['uid']] = array();
-									//$fill_array[$question['uid']]['answers'][$answer['uid']]['uid'] = $answer['uid'];
-								}
-							}
-						break;
-					case 'matrix':
-							$columns = array();
-							$where = 'question_uid='.$question['uid'].' and hidden=0 and deleted=0';
-							$res_columns = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*','tx_kequestionnaire_columns',$where,'','sorting');
-							if ($res_columns){
-								while ($column = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res_columns)){
-									$columns[] = $column;
-									$fill_array[$question['uid']]['columns'][$column['uid']] = array();
-									$fill_array[$question['uid']]['columns'][$column['uid']]['different_type'] = $column['different_type'];
-									//$fill_array[$question['uid']]['columns'][$column['uid']]['uid'] = $column['uid'];
-								}
-							}
-							$res_subquestions = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*','tx_kequestionnaire_subquestions',$where,'','sorting');
-							if ($res_subquestions){
-								while ($subquestion = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res_subquestions)){
-									if ($subquestion['title_line'] == 1){
-									} else {
-										$fill_array[$question['uid']]['subquestions'][$subquestion['uid']] = array();
-										$fill_array[$question['uid']]['subquestions'][$subquestion['uid']]['columns'] = array();
-										if (is_array($columns)){
-											foreach ($columns as $column){
-												$fill_array[$question['uid']]['subquestions'][$subquestion['uid']]['columns'][$column['uid']] = array();
-												//$fill_array[$question['uid']][$subline['uid']][$column['uid']] = 1;
-											}
-										}
-									}
-								}
-							}
-						break;
-					case 'semantic':
-							$columns = array();
-							$where = 'question_uid='.$question['uid'].' and hidden=0 and deleted=0';
-							$res_columns = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*','tx_kequestionnaire_columns',$where,'','sorting');
-							if ($res_columns){
-								while ($column = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res_columns)){
-									$columns[] = $column;
-									$fill_array[$question['uid']]['columns'][$column['uid']] = array();
-									$fill_array[$question['uid']]['columns'][$column['uid']]['different_type'] = $column['different_type'];
-									//$fill_array[$question['uid']]['columns'][$column['uid']]['uid'] = $column['uid'];
-								}
-							}
-							$res_subquestions = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*','tx_kequestionnaire_sublines',$where,'','sorting');
-							if ($res_subquestions){
-								while ($subquestion = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res_subquestions)){
-									if ($subquestion['title_line'] == 1){
-									} else {
-										$fill_array[$question['uid']]['subquestions'][$subquestion['uid']] = array();
-										$fill_array[$question['uid']]['subquestions'][$subquestion['uid']]['columns'] = array();
-										if (is_array($columns)){
-											foreach ($columns as $column){
-												$fill_array[$question['uid']]['subquestions'][$subquestion['uid']]['columns'][$column['uid']] = array();
-												//$fill_array[$question['uid']][$subline['uid']][$column['uid']] = 1;
-											}
-										}
-									}
-								}
-							}
-						break;
-					case 'demographic':
-							//t3lib_div::devLog('getCSVQBase '.$question['type'], 'ke_questionnaire Export Mod', 0, $question);
-							$flex = t3lib_div::xml2array($question['demographic_fields']);
-							$fe_user_fields = explode(',',$flex['data']['sDEF']['lDEF']['FeUser_Fields']['vDEF']);
-							$flex = t3lib_div::xml2array($question['demographic_addressfields']);
-							$fe_user_addressfields = explode(',',$flex['data']['sDEF']['lDEF']['FeUser_Fields']['vDEF']);
-							//t3lib_div::devLog('getCSVQBase flex', 'ke_questionnaire Export Mod', 0, array($fe_user_fields,$fe_user_addressfields));
-							foreach ($fe_user_fields as $field){
-								$fill_array[$question['uid']]['fe_users'][$field] = array();
-							}
-							foreach ($fe_user_addressfields as $field){
-								$fill_array[$question['uid']]['tt_address'][$field] = array();
-							}
-							//$lineset .= $this->getQBaseLine($free_cells,$question);
-						break;
-				}
-			}
-		}
-		
-		return $fill_array;
-	}
-
 /**
  * old function, will be deleted soon
 	function simplifyResults(){
@@ -1191,426 +906,8 @@ Event.observe(window, 'load', function() {
 		//t3lib_div::devLog('getCSVQBase fill_array', 'ke_questionnaire Export Mod', 0, $fill_array);
 		//t3lib_div::devLog('getCSVQBase simple results', 'ke_questionnaire Export Mod', 0, $this->simpleResults);
 	}
-*/
-
-	function getQBaseLine($free_cells,$question,$answer=array(),$subquestion=0,$column=array(),$dem_field=''){
-		//t3lib_div::devLog('getQBaseLine', 'ke_questionnaire Export Mod', 0, array('free'=>$free_cells,'q'=>$question,'type'=>$type,'answer'=>$answer,'subq'=>$subquestion,'col'=>$column,$dem_field));
-		global $LANG;
-		$type = $question['type'];
-
-		$delimeter = $this->extConf['CSV_qualifier'];
-		$parter = $delimeter.$this->extConf['CSV_parter'].$delimeter;
-		$line = array();
-		for ($i = 0;$i < $free_cells;$i ++){
-			$line[] = '';
-		}
-
-		$line_add = '';
-		$take = $this->simpleResults[$question];
-		if (is_array($question['data'])) $take = $question['data'];
-		//$results = $this->simpleResults['result_nrs'];
-		//t3lib_div::devLog('getCSVQBase question', 'ke_questionnaire Export Mod', 0, $question);
-		//t3lib_div::devLog('getCSVQBase take', 'ke_questionnaire Export Mod', 0, $take);
-		//t3lib_div::devLog('getCSVQBase results '.$type, 'ke_questionnaire Export Mod', 0, $this->results);
-		$question = $question['uid'];
-		switch($type){
-			case 'authcode': $line[] = '';
-					foreach ($this->results as $nr => $result_id){
-						$take['results'][$result_id] = str_replace($delimeter,$delimeter.$delimeter,$take['results'][$result_id]);
-						$line[] = $take['results'][$result_id];
-					}
-					//t3lib_div::devLog('simplify results value_arrays '.$q_nr, 'ke_questionnaire Export Mod', 0, $line);
-				break;
-			case 'start_tstamp': $line[] = '';
-					foreach ($this->results as $nr => $result_id){
-						$take['results'][$result_id] = str_replace($delimeter,$delimeter.$delimeter,$take['results'][$result_id]);
-						$line[] = $take['results'][$result_id];
-					}
-				break;
-			case 'finished_tstamp': $line[] = '';
-					foreach ($this->results as $nr => $result_id){
-						$take['results'][$result_id] = str_replace($delimeter,$delimeter.$delimeter,$take['results'][$result_id]);
-						$line[] = $take['results'][$result_id];
-					}
-				break;
-			case 'open':	$line[] = '';
-					foreach ($this->results as $nr => $r_data){
-						$result_id = $r_data['uid'];
-						$take['results'][$result_id] = str_replace($delimeter,$delimeter.$delimeter,$take['results'][$result_id]);
-						$line[] = $take['results'][$result_id];
-					}
-				break;
-			case 'closed':  $line[] = $answer['title'];
-					if (is_array($take)){
-						//t3lib_div::devLog('getQbaseLine take '.$question, 'ke_questionnaire Export Mod', 0, $take);
-						foreach ($this->results as $nr => $r_data){
-							$result_id = $r_data['uid'];
-							//t3lib_div::devLog('getQbaseLine take '.$result_id, 'ke_questionnaire Export Mod', 0, $take['answers'][$answer['uid']]['results']);
-							if ($take['answers'][$answer['uid']]['results'][$result_id]){
-								$take['answers'][$answer['uid']]['results'][$result_id] = str_replace($delimeter,$delimeter.$delimeter,$take['answers'][$answer['uid']]['results'][$result_id]);
-								$line[] = $take['answers'][$answer['uid']]['results'][$result_id];
-							} else {
-								$line[] = '';
-							}
-						}
-					} else {
-						$line[] = '';
-					}
-					/*if (is_array($take['answers'][$answer['uid']]['results'])){
-						//t3lib_div::devLog('getQbaseLine take '.$question, 'ke_questionnaire Export Mod', 0, $take);
-						foreach ($results as $nr => $result_id){
-							//t3lib_div::devLog('getQbaseLine take '.$result_id, 'ke_questionnaire Export Mod', 0, $take['answers'][$answer['uid']]['results']);
-							if ($take['answers'][$answer['uid']]['results'][$result_id]){
-								$take['answers'][$answer['uid']]['results'][$result_id] = str_replace($delimeter,$delimeter.$delimeter,$take['answers'][$answer['uid']]['results'][$result_id]);
-								$line[] = $take['answers'][$answer['uid']]['results'][$result_id];
-							} else {
-								$line[] = '';
-							}
-						}
-					} else {
-						$line[] = '';
-					}*/
-				break;
-			case 'semantic':
-			case 'matrix': $line[] = $column['title'];
-					if(is_array($take['subquestions'][$subquestion]['columns'][$column['uid']]['results'])){
-						foreach ($this->results as $nr => $r_data){
-							$result_id = $r_data['uid'];
-							if ($take['subquestions'][$subquestion]['columns'][$column['uid']]['results'][$result_id]){
-								$take['subquestions'][$subquestion]['columns'][$column['uid']]['results'][$result_id] = str_replace($delimeter,$delimeter.$delimeter,$take['subquestions'][$subquestion]['columns'][$column['uid']]['results'][$result_id]);
-								$line[] = $take['subquestions'][$subquestion]['columns'][$column['uid']]['results'][$result_id];
-							} else {
-								$line[] = '';
-							}
-						}
-					} else {
-						$line[] = '';
-					}
-				break;
-			case 'demographic': $line[] = $dem_field;
-					if (is_array($take['fe_users'][$dem_field]['results'])){
-						foreach ($this->results as $nr => $r_data){
-							$result_id = $r_data['uid'];
-							if ($take['fe_users'][$dem_field]['results'][$result_id]){
-								$take['fe_users'][$dem_field]['results'][$result_id] = str_replace($delimeter,$delimeter.$delimeter,$take['fe_users'][$dem_field]['results'][$result_id]);
-								$line[] = $take['fe_users'][$dem_field]['results'][$result_id];
-							} else {
-								$line[] = '';
-							}
-						}
-					}
-					if (is_array($take['tt_address'][$dem_field]['results'])){
-						foreach ($this->results as $nr => $r_data){
-							$result_id = $r_data['uid'];
-							if ($take['tt_address'][$dem_field]['results'][$result_id]){
-								$take['tt_address'][$dem_field]['results'][$result_id] = str_replace($delimeter,$delimeter.$delimeter,$take['tt_address'][$dem_field]['results'][$result_id]);
-								$line[] = $take['tt_address'][$dem_field]['results'][$result_id];
-							} else {
-								$line[] = '';
-							}
-						}
-					}
-				break;
-			default: 	
-				break;
-		}
-		
-		//t3lib_div::devLog('getCSVQBase line '.$type, 'ke_questionnaire Export Mod', 0, $line);
-		return $delimeter.implode($parter,$line).$delimeter."\n";
-	}
-
-	function getQBaseHeaderLine(){
-		global $LANG;
-		$delimeter = $this->extConf['CSV_qualifier'];
-		$parter = $delimeter.$this->extConf['CSV_parter'].$delimeter;
-
-		$csvheader = $delimeter.$this->q_data['uid'].$parter.$this->q_data['header'].$delimeter."\n\n";
-
-		$csvheader .= $delimeter;
-		$csvheader .= $LANG->getLL('CSV_questionId').$parter;
-		$csvheader .= $LANG->getLL('CSV_questionPlus').$parter;
-		$csvheader .= $LANG->getLL('CSV_answer').$parter;
-		$csvheader .= $LANG->getLL('CSV_resultIdPlus').$parter;
-		$csvheader .= $parter;
-		$csvheader .= $delimeter."\n";
-
-		return $csvheader;
-	}
-
-	function getQBaseResultLine($free_cells){
-		global $LANG;
-
-		$delimeter = $this->extConf['CSV_qualifier'];
-		$parter = $delimeter.$this->extConf['CSV_parter'].$delimeter;
-		$line = array();
-		for ($i = 0;$i < $free_cells;$i ++){
-			$line[] = '';
-		}
-		foreach ($this->results as $nr => $values){
-			//t3lib_div::devLog('getQbaseResultLine values', 'ke_questionnaire Export Mod', 0, $values);
-			$line[] = $values['uid'];
-		}
-		return $delimeter.implode($parter,$line).$delimeter;
-	}
+	 */
 	
-	function getCSVSimple2(){
-		global $LANG;
-
-		$csvdata = '';
-		$csvheader = '';
-		$delimeter = $this->extConf['CSV_qualifier'];
-		$parter = $delimeter.$this->extConf['CSV_parter'].$delimeter;
-		
-		$csvheader = $this->q_data['header']."\n\n";
-		//$this->simplifyResults();
-		//t3lib_div::devLog('getCSVSimple simpleResults', 'ke_questionnaire Export Mod', 0, $this->simpleResults);
-		//t3lib_div::devLog('getCSVSimple results', 'ke_questionnaire Export Mod', 0, $this->results);
-		
-		$fill_array = $this->createFillArray();
-		
-		if (is_array($fill_array)){
-			$headline = array();
-			foreach ($fill_array as $question_id => $values){
-				if ($values['title'] != ''){
-					switch ($values['type']){
-						case 'closed':
-							foreach ($values['answers'] as $a_id => $a_values){
-								$answer = t3lib_BEfunc::getRecord('tx_kequestionnaire_answers',$a_id);
-								$headline[] = $values['title'].'_'.$answer['title'];
-							}
-						break;
-						case 'matrix':
-							//t3lib_div::devLog('getCSVSimple matrix', 'ke_questionnaire Export Mod', 0, $values);
-							foreach ($values['subquestions'] as $sub_id => $sub_values){
-								$subl = t3lib_BEfunc::getRecord('tx_kequestionnaire_subquestions',$sub_id);
-								foreach ($sub_values['columns'] as $col_id => $col_values){
-									$col = t3lib_BEfunc::getRecord('tx_kequestionnaire_columns',$col_id);
-									$headline[] = $values['title'].'_'.$subl['title'].'_'.$col['title'];
-								}
-							}
-						break;
-						case 'semantic':
-							foreach ($values['subquestions'] as $sub_id => $sub_values){
-								$subl = t3lib_BEfunc::getRecord('tx_kequestionnaire_sublines',$sub_id);
-								foreach ($sub_values['columns'] as $col_id => $col_values){
-									$col = t3lib_BEfunc::getRecord('tx_kequestionnaire_columns',$col_id);
-									$headline[] = $values['title'].'_'.$subl['title'].'_'.$col['title'];
-								}
-							}
-						break;
-						default:
-							$headline[] = $values['title'];
-						break;
-					}
-				}
-			}
-		}
-		$csvheader .= $delimeter.implode($parter,$headline).$delimeter."\n";
-		if (is_array($this->results)){
-			$file_path = PATH_site.'typo3temp/'.$this->temp_file;
-			$store_file = fopen($file_path,'r');
-			//t3lib_div::devLog('simple 2 results', 'ke_questionnaire Export Mod', 0, $this->results);
-			foreach ($this->results as $r_id => $r_values){
-				$read_line = fgets($store_file);
-				$csvdata .= $read_line;
-				//t3lib_div::devLog('simple 2 '.$r_id, 'ke_questionnaire Export Mod', 0, array($read_line,$r_values));
-			}
-			fclose($store_file);
-		}
-	
-		return $csvheader.$csvdata;
-	}
-
-	function getCSVSimple(){
-		global $LANG;
-
-		$csvdata = '';
-		$csvheader = '';
-		$delimeter = $this->extConf['CSV_qualifier'];
-		$parter = $delimeter.$this->extConf['CSV_parter'].$delimeter;
-
-		$csvheader = $this->q_data['header']."\n\n";
-		//t3lib_div::devLog('getCSVSimple q_data', 'ke_questionnaire Export Mod', 0, $this->q_data);
-
-		foreach ($this->results as $nr => $values){
-			$result_array[$values['uid']] = t3lib_div::xml2array($values['xmldata']);
-		}
-		//t3lib_div::devLog('getCSVSimple result_array', 'ke_questionnaire Export Mod', 0, $result_array);
-
-		foreach ($result_array as $nr => $result){
-			$lineset = ''; //stores the CSV-data
-			$line = array(); //single line, will be imploded
-			$line[] = $LANG->getLL('CSV_resultId');
-			$line[] = $nr;
-			if (t3lib_div::_GP('with_authcode')) {
-				$auth = t3lib_BEfunc::getRecord('tx_kequestionnaire_authcodes',$result['auth']);
-				$line[] = 'AuthCode: '.$auth['authcode'];;
-			}
-			$lineset .= $delimeter.implode($parter,$line).$delimeter."\n";
-			if (is_array($result)){
-				foreach ($result as $question_id => $values){
-					if ($values['type'] != ''){
-						//t3lib_div::devLog('getCSVSimple values '.$question_id, 'ke_questionnaire Export Mod', 0, $values);
-						//make a line with the question name and id
-						$line = array();
-						$line[] = $LANG->getLL('CSV_question').' ('.$values['type'].')';
-						$line[] = $values['question_id'];
-	
-						$quest_text = $this->stripString($values['question']);
-	
-						$line[] = $quest_text;
-						$lineset .= $delimeter.implode($parter,$line).$delimeter."\n";
-						switch ($values['type']){
-							case 'open':
-								$line = array();
-								$line[] = $LANG->getLL('CSV_answer');
-								$line[] = '';
-								$line[] = $values['answer'];
-								$lineset .= $delimeter.implode($parter,$line).$delimeter."\n";
-								break;
-							case 'closed':
-								if (is_array($values['answer']['options'])){
-									foreach ($values['answer']['options'] as $option => $value){
-										$line = array();
-										$line[] = '';
-										$line[] = $value;
-										if ($values['answer']['text'][$value]){
-											$temp_text = '';
-											$temp_text = $this->stripString($values['answer']['text'][$value]);
-											$line[] = $temp_text;
-										} elseif ($values['possible_answers'][$value]){
-											$temp_text = '';
-											$temp_text = $this->stripString($values['possible_answers'][$value]);
-											$line[] = $temp_text;
-										} else {
-											$line[] = $this->getPossibleAnswersData($values['type'],$value);
-										}
-										$lineset .= $delimeter.implode($parter,$line).$delimeter."\n";
-									}
-								}
-								break;
-							case 'matrix':
-								//t3lib_div::devLog('getCSVSimple matrix '.$question_id, 'ke_questionnaire Export Mod', 0, $values);
-								if (is_array($values['answer']['options'])){
-									foreach ($values['answer']['options'] as $option => $value){
-										$line = array();
-										$line[] = '';
-										$line[] = $option;
-										$temp = '';
-										$temp_text = '';
-										$temp_text = $this->stripString($values['possible_answers']['lines'][$option]);
-										$temp = $temp_text;
-										if ($temp == '') $temp = $this->getPossibleAnswersData($values['type'].'_line',$option);
-										$line[] = $temp;
-										//t3lib_div::devLog('getCSVSimple matrix '.$question_id, 'ke_questionnaire Export Mod', 0, $line);
-										$lineset .= $delimeter.implode($parter,$line).$delimeter."\n";
-										if (is_array($value)){
-											foreach($value as $c_option => $c_value){
-												$line = array();
-												$line[] = '';
-												$line[] = '';
-												$temp = '';
-												$temp_text = '';
-												$temp_text = $this->stripString($values['possible_answers'][$c_option]);
-												$temp = $temp_text;
-												if ($temp == '') $temp = $this->getPossibleAnswersData($values['type'].'_column',$c_option);
-												$line[] = $temp;
-												$line[] = $c_value;
-												$lineset .= $delimeter.implode($parter,$line).$delimeter."\n";
-											}
-										} else {
-											$line = array();
-											$line[] = '';
-											$line[] = '';
-											$line[] = $c_value;
-											$temp = '';
-											$temp = $values['possible_answers'][$value];
-											if ($temp == '') $temp = $this->getPossibleAnswersData($values['type'].'_column',$c_option);
-											$line[] = $temp;
-											$lineset .= $delimeter.implode($parter,$line).$delimeter."\n";
-										}
-									}
-								}
-								break;
-							case 'demographic':
-								if (is_array($values['answer']['fe_users'])){
-									foreach ($values['answer']['fe_users'] as $field => $value){
-										$line = array();
-										$line[] = '';
-										$line[] = $field;
-										$line[] = $value;
-										$lineset .= $delimeter.implode($parter,$line).$delimeter."\n";
-									}
-								}
-								if (is_array($values['answer']['tt_address'])){
-									foreach ($values['answer']['tt_address'] as $field => $value){
-										$line = array();
-										$line[] = '';
-										$line[] = $field;
-										$line[] = $value;
-										$lineset .= $delimeter.implode($parter,$line).$delimeter."\n";
-									}
-								}
-								break;
-							case 'sematic':
-								//t3lib_div::devLog('getCSVSimple semantic '.$question_id, 'ke_questionnaire Export Mod', 0, $values);
-								//Muss auf Basis der "Possible Answers" gerendert werden.
-								if (is_array($values['answer']['options'])){
-									foreach ($values['answer']['options'] as $option => $value){
-										$line = array();
-										$line[] = '';
-										$line[] = $option;
-										$temp = '';
-										$temp = $values['possible_answers']['lines'][$value]['start'].'...'.$values['possible_answers']['lines'][$value]['end'];
-										if ($temp == '') $temp = $this->getPossibleAnswersData($values['type'].'_line',$option);
-										$line[] = $temp;
-										$lineset .= $delimeter.implode($parter,$line).$delimeter."\n";
-										if (is_array($value)){
-											foreach($value as $c_option => $c_value){
-												$line = array();
-												$line[] = '';
-												$line[] = '';
-												$temp = '';
-												$temp = $values['possible_answers'][$value];
-												if ($temp == '') $temp = $this->getPossibleAnswersData($values['type'].'_column',$c_option);
-												$line[] = $temp;
-												$line[] = $c_value;
-												$lineset .= $delimeter.implode($parter,$line).$delimeter."\n";
-											}
-										} else {
-											$line = array();
-											$line[] = '';
-											$line[] = '';
-											$line[] = $c_value;
-											$temp = '';
-											$temp = $values['possible_answers'][$value];
-											if ($temp == '') $temp = $this->getPossibleAnswersData($values['type'].'_column',$c_option);
-											$line[] = $temp;
-											$lineset .= $delimeter.implode($parter,$line).$delimeter."\n";
-										}
-									}
-								}
-								break;
-							default:
-								// Hook to make other types available for export
-								if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['ke_questionnaire']['CSVExportSimple'])){
-									foreach($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['ke_questionnaire']['CSVExportSimple'] as $_classRef){
-										$_procObj = & t3lib_div::getUserObj($_classRef);
-										$lineset .= $_procObj->CSVSimpleExport($values,$delimeter);
-									}
-								}
-								break;
-						}
-					}
-				}
-			}
-			$csvdata .= $lineset."\n";
-		}
-
-		//t3lib_div::devLog('getCSVSimple return', 'ke_questionnaire Export Mod', 0, array($csvheader,$csvdata));
-		return $csvheader.$csvdata;
-	}
-
 	function getSPSSDownload($type){
 		require_once(t3lib_extMgm::extPath('ke_questionnaire_premium').'res/other/class.spss_export.php');
 		$csvdata = '';
@@ -1644,33 +941,7 @@ Event.observe(window, 'load', function() {
 
 	function getSPSSBase($data_filename){
 		$base_row = array();
-		/*$selectFields = '*';
-		$where = 'pid='.$this->ff_data['sDEF']['lDEF']['storage_pid']['vDEF'];
-		$where .= ' AND hidden=0 AND deleted=0';
-		$orderBy = 'sorting';
-
-		//t3lib_div::devLog('SPSS res', 'ke_questionnaire Export Mod', 0, array($GLOBALS['TYPO3_DB']->SELECTquery($selectFields,'tx_kequestionnaire_questions',$where,'',$orderBy)));
-		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery($selectFields,'tx_kequestionnaire_questions',$where,$orderBy);
-		if ($res){
-			while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)){
-				if ($row['type'] != 'blind'){
-					$base_row[$row['uid']]['question_id'] = $row['uid'];
-					$temp_text = $row['text'];
-					if ($temp_text == '') $temp_text=$row['title'];
-					$temp_text = strip_tags($temp_text);
-					$temp_text = html_entity_decode($temp_text);
-					$temp_text = preg_replace("/\r|\n/s", "", $temp_text);
-					$base_row[$row['uid']]['question'] = $temp_text;
-					$base_row[$row['uid']]['type'] = $row['type'];
-					switch ($row['type']){
-						case 'closed': $base_row[$row['uid']]['subtype'] = $row['closed_type'];
-							break;
-						case 'matrix': $base_row[$row['uid']]['subtype'] = $row['matrix_type'];
-							break;
-					}
-				}
-			}
-		}*/
+		
 		$storage_pid = $this->ff_data['sDEF']['lDEF']['storage_pid']['vDEF'];
 		$where = 'pid='.$storage_pid.' and hidden=0 and deleted=0 and type!="blind"';
 		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*','tx_kequestionnaire_questions',$where,'','sorting');
@@ -1847,39 +1118,6 @@ Event.observe(window, 'load', function() {
 	
 			print $pdfdata;	
 		}*/		
-	}
-
-	function getPossibleAnswersData($q_type,$answer_id){
-		$data = '';
-
-		switch ($q_type){
-			case 'closed':
-					$answer = t3lib_BEfunc::getRecord('tx_kequestionnaire_answers',$answer_id);
-					$data = $answer['title'];
-					if ($data == '') $data = $answer['text'];
-				break;
-			case 'matrix_line':
-					$line = t3lib_BEfunc::getRecord('tx_kequestionnaire_subquestions',$answer_id);
-					//t3lib_div::devLog('getCSVSimple line', 'ke_questionnaire Export Mod', 0, $line);
-					$data = $line['title'];
-					if ($data == '') $data = $line['text'];
-				break;
-			case 'matrix_column':
-			case 'semantic_column':
-					$column = t3lib_BEfunc::getRecord('tx_kequestionnaire_columns',$answer_id);
-					//t3lib_div::devLog('getCSVSimple column', 'ke_questionnaire Export Mod', 0, $column);
-					$data = $column['title'];
-				break;
-			case 'semantic_line':
-					$line = t3lib_BEfunc::getRecord('tx_kequestionnaire_sublines',$answer_id);
-					//t3lib_div::devLog('getCSVSimple column', 'ke_questionnaire Export Mod', 0, $column);
-					$data = $line['start'].'...'.$line['end'];
-				break;
-		}
-
-		$temp_text = $this->stripString($data);
-
-		return $temp_text;
 	}
 
 	/**

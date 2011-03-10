@@ -93,9 +93,9 @@ class tx_kequestionnaire_scheduler extends tx_scheduler_Task {
         
         function sendMails($questionnaires){
             foreach ($questionnaires as $quest){
-                $ff_data = t3lib_div::xml2array($quest['pi_flexform']);
-		$ff_data = $ff_data['data'];
-                if ($this->ffdata['mailing'] == 1 AND $this->ffdata['mail_turn'] == 'SCHEDULER'){
+                $ffdata = t3lib_div::xml2array($quest['pi_flexform']);
+		$ffdata = $ffdata['data'];
+                if ($this->ffdata['mailing'] == 1 AND $ffdata['mail_turn'] == 'SCHEDULER'){
                     $email_adresses = $ffdata['emails'];
                     $mail_texts = array();
                     $mail_texts['subject'] = $ffdata['inform_mail_subject'];
@@ -133,7 +133,7 @@ class tx_kequestionnaire_scheduler extends tx_scheduler_Task {
 	}
 }
 
-if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/ke_questionnaire/scheduler/class.tx_kequestionnaire_schedulerTask.php']) {
-	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/ke_questionnaire/scheduler/class.tx_kequestionnaire_schedulerTask.php']);
+if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/ke_questionnaire/scheduler/class.tx_kequestionnaire_scheduler.php']) {
+	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/ke_questionnaire/scheduler/class.tx_kequestionnaire_scheduler.php']);
 }
 ?>

@@ -129,6 +129,12 @@ $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['scheduler']['tasks']['tx_kequestionna
 	'description' => 'LLL:EXT:'.$_EXTKEY.'/locallang_db.xml:schedulerTask.description', // Die Beschreibung der Aufgabe
 	//'additionalFields' => 'tx_kersssimulatettnews_scheduleradd' // Zusätzliche Felder
 );
+$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['scheduler']['tasks']['tx_kequestionnaire_scheduler_export'] = array(
+	'extension' => $_EXTKEY, // Selbsterklärend
+	'title' => 'LLL:EXT:'.$_EXTKEY.'/locallang_db.xml:schedulerExportTask.name', // Der Titel der Aufgabe
+	'description' => 'LLL:EXT:'.$_EXTKEY.'/locallang_db.xml:schedulerExportTask.description', // Die Beschreibung der Aufgabe
+	//'additionalFields' => 'tx_kersssimulatettnews_scheduleradd' // Zusätzliche Felder
+);
 
 //Ajax support for BE-Module
 $TYPO3_CONF_VARS['BE']['AJAX']['tx_kequestionnaire::csv_createDataFile'] = 'EXT:ke_questionnaire/mod3/ajax.php:tx_kequestionnaire_module3_ajax->ajaxCreateDataFile';

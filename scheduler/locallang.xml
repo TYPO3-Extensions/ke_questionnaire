@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<T3locallang>
+	<meta type="array">
+		<type>module</type>
+		<description>Language labels for module &quot;web_txkequestionnaireM3&quot;</description>
+	</meta>
+	<data type="array">
+		<languageKey index="default" type="array">
+			<label index="export_subject">Export from ke_questionnaire</label>
+                        <label index="export_body">Your Export from ke_questionnaire</label>
+                        <label index="export_fromName">ke_questionnaire</label>
+                        <label index="export_fromEmail">ke_questionnaire</label>
+		</languageKey>
+	</data>
+</T3locallang>

@@ -8,6 +8,8 @@
 		<languageKey index="default" type="array">
 			<label index="schedulerTask.name">Scheduler Task for Notifications</label>
 			<label index="schedulerTask.description">Send Email notifications for Questionnaire-Participations</label>
+			<label index="schedulerExportTask.name">Scheduler Task for Export (Don't create in Scheduler!)</label>
+			<label index="schedulerExportTask.description">Export Task. Create Only through BE-Export-Module!</label>
 			
 			<label index="tx_kequestionnaire_questions">Question</label>
 			<label index="tx_kequestionnaire_questions.type.I.open">open question</label>
