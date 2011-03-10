@@ -35,6 +35,8 @@ class tx_kequestionnaire_scheduler_export extends tx_scheduler_Task {
                 $myVars = $GLOBALS['BE_USER']->getSessionData('tx_kequestionnaire');
                 if (!$this->pointer) $this->pointer = 0;
                 //t3lib_div::devLog('test cron', 'export cron', 0, array($this->mailTo, $this->q_id, $this->pid, $this->pointer, $this->export_type, $this->results, $this->temp_file));
+                $LOCAL_LANG = t3lib_div::readLLfile(t3lib_extMgm::extPath('ke_questionnaire').'scheduler/locallang.xml','default');
+		t3lib_div::devLog('cron '.t3lib_extMgm::extPath('ke_questionnaire').'scheduler/locallang.xml', 'ke_questionnaire Export Mod', 0, $LOCAL_LANG);
                 
                 $this->createDataFile();
                 //t3lib_div::debug($this);
@@ -70,9 +72,9 @@ class tx_kequestionnaire_scheduler_export extends tx_scheduler_Task {
         }
         
         function sendTheFile(){
-                $LOCAL_LANG = t3lib_div::readLLfile(t3lib_extMgm::extPath('ke_questionnaire').'scheduler/locallang.xml', $GLOBALS['TSFE']->lang);
-		//t3lib_div::devLog('local_lang der pi1 init pi2', $this->prefixId, 0, $pi1LOCAL_LANG);
-		t3lib_div::devLog('cron '.$this->pointer, 'ke_questionnaire Export Mod', 0, $LOCAL_LANG);
+                $LOCAL_LANG = t3lib_div::readLLfile(t3lib_extMgm::extPath('ke_questionnaire').'scheduler/locallang.xml');
+		//t3lib_div::devLog('cron '.$this->pointer, 'ke_questionnaire Export Mod', 0, $LOCAL_LANG);
+                $LOCAL_LANG = $LOCAL_LANG['default'];
                 $mailTexts['subject'] = $LOCAL_LANG['export_subject'];
                 $mailTexts['fromName'] = $LOCAL_LANG['export_fromName'];
                 $mailTexts['fromEmail'] = $LOCAL_LANG['export_fromEmail'];
@@ -106,7 +108,15 @@ class tx_kequestionnaire_scheduler_export extends tx_scheduler_Task {
 	
 		$csvdata = mb_convert_encoding($csvdata, "Windows-1252", "UTF-8");
                 
-                return $csvdata;
+                $file_path = PATH_site.'typo3temp/'.$this->temp_file.'.csv';
+                if (file_exists($file_path)) {
+		    unlink($file_path);
+		}
+                $file = fopen($file_path);
+                fwrite($file,$csvdata);
+                fclose($file);
+                
+                return $file_path;
         }
         
 	function sendMail($email,$mailTexts,$file){
