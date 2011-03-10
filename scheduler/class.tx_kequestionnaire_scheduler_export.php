@@ -115,7 +115,7 @@ class tx_kequestionnaire_scheduler_export extends tx_scheduler_Task {
                 fwrite($file,$csvdata);
                 fclose($file);
                 
-                return 'typo3temp/'.$this->temp_file.'.csv';
+                return $file_path;
         }
         
 	function sendMail($email,$mailTexts,$file){
