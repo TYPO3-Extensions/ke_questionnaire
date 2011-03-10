@@ -24,3 +24,6 @@ maxAuthCodeLength = 0
 
 # cat=basic/enable; type=integer; label=Number of results bevor parting of export-generation starts
 exportParter = 100
+
+# cat=basic/enable; type=integer; label=Number of results exported with every Scheduler-Turn
+exportInterval = 50

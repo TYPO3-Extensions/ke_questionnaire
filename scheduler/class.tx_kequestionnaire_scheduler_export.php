@@ -32,17 +32,17 @@ class tx_kequestionnaire_scheduler_export extends tx_scheduler_Task {
 	 * @return	void
 	 */
 	function execute() {
-                $myVars = $GLOBALS['BE_USER']->getSessionData('tx_kequestionnaire');
                 if (!$this->pointer) $this->pointer = 0;
+                $this->extConf = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['ke_questionnaire']);
                                 
                 $this->createDataFile();
                 //t3lib_div::debug($this);
                 
-                if ($this->pointer == count($this->results)) {
+                if ($this->pointer >= count($this->results)) {
                     $this->sendTheFile();
                     $this->remove();
                 } else {
-                    $this->pointer ++;
+                    //$this->pointer ++;
                     $this->save();
                 }
                 return true;
@@ -63,9 +63,19 @@ class tx_kequestionnaire_scheduler_export extends tx_scheduler_Task {
 		//delete the old generated file
 		$file_path = PATH_site.'typo3temp/'.$this->temp_file;
 		
-                //t3lib_div::devLog('cron '.$this->pointer, 'ke_questionnaire Export Mod', 0, array($file_path));
-		if ($this->export_type == 'questions') $creator->createDataFile($this->pointer);
-		elseif ($this->export_type == 'simple2') $creator->createDataFileType2($this->pointer);
+                //t3lib_div::devLog('cron '.$this->pointer, 'ke_questionnaire Export Mod', 0, $this->extConf);
+                if ($this->pointer < count($this->results)) {
+                    for ($i = 0; $i < $this->extConf['exportInterval']; $i++){
+                        if ($this->pointer < count($this->results)) {
+                            if ($this->export_type == 'questions') $creator->createDataFile($this->pointer);
+                            elseif ($this->export_type == 'simple2') $creator->createDataFileType2($this->pointer);
+                            $this->pointer ++;
+                            //t3lib_div::devLog('cron '.$this->pointer, 'ke_questionnaire Export Mod', 0, $this->extConf);
+                        } else {
+                            break;
+                        }
+                    }
+                }		
         }
         
         function sendTheFile(){
@@ -85,7 +95,7 @@ class tx_kequestionnaire_scheduler_export extends tx_scheduler_Task {
         
         function createMailFile(){
                 require_once(t3lib_extMgm::extPath('ke_questionnaire').'res/other/class.csv_export.php');
-		$csv_export = new csv_export(unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['ke_questionnaire']),$this->results,$this->q_data,$this->ff_data,$this->temp_file);
+		$csv_export = new csv_export($this->extConf,$this->results,$this->q_data,$this->ff_data,$this->temp_file);
 		
 		switch ($this->export_type){
 			case 'simple':
