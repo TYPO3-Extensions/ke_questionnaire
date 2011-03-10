@@ -714,16 +714,20 @@ class csv_export {
 					case 'demographic':
 							//t3lib_div::devLog('getCSVQBase '.$question['type'], 'ke_questionnaire Export Mod', 0, $question);
 							$flex = t3lib_div::xml2array($question['demographic_fields']);
-							$fe_user_fields = explode(',',$flex['data']['sDEF']['lDEF']['FeUser_Fields']['vDEF']);
+							if (is_array($flex) $fe_user_fields = explode(',',$flex['data']['sDEF']['lDEF']['FeUser_Fields']['vDEF']);
 							$flex = t3lib_div::xml2array($question['demographic_addressfields']);
-							$fe_user_addressfields = explode(',',$flex['data']['sDEF']['lDEF']['FeUser_Fields']['vDEF']);
+							if (is_array($flex) $fe_user_addressfields = explode(',',$flex['data']['sDEF']['lDEF']['FeUser_Fields']['vDEF']);
 							//t3lib_div::devLog('getCSVQBase flex', 'ke_questionnaire Export Mod', 0, array($fe_user_fields,$fe_user_addressfields));
-							foreach ($fe_user_fields as $field){
+							if (is_array($fe_user_fields)){
+                                                            foreach ($fe_user_fields as $field){
 								$fill_array[$question['uid']]['fe_users'][$field] = array();
+                                                            }
 							}
-							foreach ($fe_user_addressfields as $field){
-								$fill_array[$question['uid']]['tt_address'][$field] = array();
-							}
+                                                        if (is_array($fe_user_addressfields)){
+                                                            foreach ($fe_user_addressfields as $field){
+                                                            	$fill_array[$question['uid']]['tt_address'][$field] = array();
+                                                            }
+                                                        }
 							//$lineset .= $this->getQBaseLine($free_cells,$question);
 						break;
 				}
