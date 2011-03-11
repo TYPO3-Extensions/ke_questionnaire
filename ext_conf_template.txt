@@ -27,3 +27,9 @@ exportParter = 100
 
 # cat=basic/enable; type=integer; label=Number of results exported with every Scheduler-Turn
 exportInterval = 50
+
+# cat=basic/enable; type=boolean; label=Export tstamps as Date in CSV-Export
+exportNoTimestamp = 0
+
+# cat=basic/enable; type=string; label=date-Format for Export tstamps as Date in CSV-Export 
+exportNoTimestampFormat = d.m.Y H:i:s
