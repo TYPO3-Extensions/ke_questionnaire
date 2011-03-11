@@ -165,7 +165,7 @@ class csv_export {
 							if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['ke_questionnaire']['CSVExportQBaseLine'])){
 								foreach($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['ke_questionnaire']['CSVExportQBaseLine'] as $_classRef){
 									$_procObj = & t3lib_div::getUserObj($_classRef);
-									$getit = $_procObj->CSVExportQBaseLine($free_cells,$question['type'],$question['uid'],$this->simpleResults,$delimeter,$parter);
+									$getit = $_procObj->CSVExportQBaseLine($free_cells,$question,$this->results,$delimeter,$parter);
 									//t3lib_div::devLog('getCSVQBase getit', 'ke_questionnaire Export Mod', 0, array($getit));
 									if ($getit != '') $lineset .= $getit;
 								}
@@ -418,6 +418,7 @@ class csv_export {
 		return $csvheader.$csvdata;
 	}
 
+/* old simple export, not supported anymore
 	function getCSVSimple(){
 		global $LANG;
 
@@ -607,7 +608,8 @@ class csv_export {
 		//t3lib_div::devLog('getCSVSimple return', 'ke_questionnaire Export Mod', 0, array($csvheader,$csvdata));
 		return $csvheader.$csvdata;
 	}
-        
+*/
+
         function createFillArray(){
 		//get the questions
 		$storage_pid = $this->ff_data['sDEF']['lDEF']['storage_pid']['vDEF'];
@@ -733,10 +735,19 @@ class csv_export {
 				}
 			}
 		}
+                
+                // Hook to make other types available for export
+                if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['ke_questionnaire']['CSVExportFillArray'])){
+                        foreach($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['ke_questionnaire']['CSVExportFillArray'] as $_classRef){
+                                $_procObj = & t3lib_div::getUserObj($_classRef);
+                                $fill_array = $_procObj->CSVExportFillArray($fill_array);
+                        }
+                }
 		
 		return $fill_array;
 	}
-        
+    
+/* part of old simple export, not supported anymore    
         function getPossibleAnswersData($q_type,$answer_id){
 		$data = '';
 
@@ -769,7 +780,7 @@ class csv_export {
 
 		return $temp_text;
 	}
-
+*/
         
         function stripString($temp){
 		$temp = strip_tags($temp);

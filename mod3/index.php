@@ -67,12 +67,6 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 			$ff_data = t3lib_div::xml2array($this->q_data['pi_flexform']);
 			$this->ff_data = $ff_data['data'];
 		}
-		//t3lib_div::devLog('getCSVInfos ffdata', 'ke_questionnaire Export Mod', 0, $this->ff_data);
-		/*
-		if (t3lib_div::_GP('clear_all_cache'))	{
-			$this->include_once[] = PATH_t3lib.'class.t3lib_tcemain.php';
-		}
-		*/
 	}
 
 	/**
@@ -487,7 +481,7 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 		$task = t3lib_div::makeInstance('tx_kequestionnaire_scheduler_export');
 		//make it recurrent
 		//$task->registerSingleExecution(time());
-		$task->registerRecurringExecution(time(),'2');
+		$task->registerRecurringExecution(time(),'1');
 		
 		//add Mail Address
 		$task->mailTo = t3lib_div::_GP('mailExportTo');
@@ -534,8 +528,14 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 		
 		//t3lib_div::devLog('atOnce', 'ke_questionnaire Export Mod', 0, $this->results);
 		foreach ($this->results as $nr => $result){
-			if ($type == 'questions') $creator->createDataFile($nr);
-			elseif ($type == 'simple2') $creator->createDataFileType2($nr);
+			switch ($type){
+				case 'questions': $creator->createDataFile($nr);
+					break;
+				case 'simple2': $creator->createDataFileType2($nr);
+					break;
+				default: $creator->createHookedDataFileType($nr);
+					break;
+			}
 		}
 	}
 	
@@ -608,10 +608,10 @@ Event.observe(window, 'load', function() {
 		$csv_export = new csv_export($this->extConf,$this->results,$this->q_data,$this->ff_data,$this->temp_file);
 		
 		switch ($type){
-			case 'simple':
+			/*case 'simple':
 				//$csvdata = $this->getCSVSimple();
 				$csvdata = $csv_export->getCSVSimple();
-				break;
+				break;*/
 			case 'simple2':
 				//$csvdata = $this->getCSVSimple2();
 				$csvdata = $csv_export->getCSVSimple2();
@@ -621,6 +621,13 @@ Event.observe(window, 'load', function() {
 				$csvdata = $csv_export->getCSVQBased();
 				break;
 			default:
+				// Hook for other CSV-Export-Types
+				if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['ke_questionnaire']['CSVExportTypeDownload'])){
+					foreach($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['ke_questionnaire']['CSVExportTypeDownload'] as $_classRef){
+						$_procObj = & t3lib_div::getUserObj($_classRef);
+						$csvdata = $_procObj->CSVExportTypeDownload($this);
+					}
+				}
 				break;
 		}
 	
@@ -1117,7 +1124,7 @@ Event.observe(window, 'load', function() {
 			header("content-disposition: attachment; filename=\"".$this->q_id."_blank.pdf\"");
 	
 			print $pdfdata;	
-		}*/		
+		}*/
 	}
 
 	/**
