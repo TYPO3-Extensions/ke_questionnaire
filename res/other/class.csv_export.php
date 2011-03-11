@@ -1,16 +1,5 @@
 <?php
-/*
- * PDF Export Class for ke_questionnaire
- *
- * Copyright (C) 2010 kennziffer.com / Nadine Schwingler
- * All rights reserved.
- * License: GNU/GPL License
- *
- * $Id: class.dompdf_export.php 40939 2010-12-07 17:49:05Z marble $
- *
- */
-
-require_once(PATH_tslib . 'class.tslib_content.php'); // load content file
+//require_once(PATH_tslib . 'class.tslib_content.php'); // load content file
 
 class csv_export {
         function csv_export($extConf,$results,$q_data,$ff_data,$temp_file){
