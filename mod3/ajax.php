@@ -235,12 +235,12 @@ class  tx_kequestionnaire_module3_ajax extends t3lib_SCbase {
                                     break;
                                 case 'start_tstamp':
                                         if ($this->extConf['exportNoTimestamp']){
-                                            date($this->extConf['exportNoTimestampFormat'],$result['start_tstamp']);
+                                            $result_line[] = date($this->extConf['exportNoTimestampFormat'],intval($result['start_tstamp']));
                                         } else $result_line[] = $result['start_tstamp'];    
                                     break;
                                 case 'finished_tstamp':
                                         if ($this->extConf['exportNoTimestamp']){
-                                            date($this->extConf['exportNoTimestampFormat'],intval($result['finished_tstamp']);
+                                             $result_line[] = date($this->extConf['exportNoTimestampFormat'],intval($result['finished_tstamp']));
                                         } else $result_line[] = $result['finished_tstamp'];    
                                     break;
 				case 'open':
