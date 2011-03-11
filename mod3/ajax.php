@@ -240,7 +240,7 @@ class  tx_kequestionnaire_module3_ajax extends t3lib_SCbase {
                                     break;
                                 case 'finished_tstamp':
                                         if ($this->extConf['exportNoTimestamp']){
-                                             $result_line[] = date($this->extConf['exportNoTimestampFormat'],intval($result['finished_tstamp']));
+                                            $result_line[] = date($this->extConf['exportNoTimestampFormat'],intval($result['finished_tstamp']));
                                         } else $result_line[] = $result['finished_tstamp'];    
                                     break;
 				case 'open':
@@ -310,7 +310,7 @@ class  tx_kequestionnaire_module3_ajax extends t3lib_SCbase {
 				    break;
 				default:
 					// Hook to make other types available for export
-                                        if (is_array($act_v) AND is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['ke_questionnaire']['CSVExportCreateDataType2FileQType'])){
+                                        if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['ke_questionnaire']['CSVExportCreateDataType2FileQType'])){
                                                 foreach($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['ke_questionnaire']['CSVExportCreateDataFileType2QType'] as $_classRef){
                                                         $_procObj = & t3lib_div::getUserObj($_classRef);
                                                         $result_line[] = $_procObj->CSVExportCreateDataFileType2QType($values,$result);
