@@ -214,13 +214,13 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 						if (t3lib_div::_GP('download_type') != '') {
 							$myVars['download_type'] = t3lib_div::_GP('download_type');
 							//t3lib_div::devLog('ein Download Type', 'ke_questionnaire Export Mod', 0, $_POST);
-							$GLOBALS['BE_USER']->setAndSaveSessionData('tx_kequestionnaire',$myVars);
 						}
 						if (t3lib_div::_GP('only_this_lang') != '') {
 							$myVars['only_this_lang'] = t3lib_div::_GP('only_this_lang');
-							t3lib_div::devLog('only_this_lang', 'ke_questionnaire Export Mod', 0, $_POST);
-							$GLOBALS['BE_USER']->setAndSaveSessionData('tx_kequestionnaire',$myVars);
+							t3lib_div::devLog('only_this_lang POST', 'ke_questionnaire Export Mod', 0, $_POST);
 						}
+						$GLOBALS['BE_USER']->setAndSaveSessionData('tx_kequestionnaire',$myVars);
+						
 						$this->results = $myVars['results'];
 						//t3lib_div::debug($_POST,'post');
 						//t3lib_div::debug($myVars,'myVars');
