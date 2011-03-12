@@ -218,7 +218,7 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 						}
 						if (t3lib_div::_GP('only_this_lang') != '') {
 							$myVars['only_this_lang'] = t3lib_div::_GP('only_this_lang');
-							//t3lib_div::devLog('ein Download Type', 'ke_questionnaire Export Mod', 0, $_POST);
+							t3lib_div::devLog('only_this_lang', 'ke_questionnaire Export Mod', 0, $_POST);
 							$GLOBALS['BE_USER']->setAndSaveSessionData('tx_kequestionnaire',$myVars);
 						}
 						$this->results = $myVars['results'];
