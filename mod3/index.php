@@ -608,10 +608,14 @@ Event.observe(window, 'load', function() {
 			$myVars = $GLOBALS['BE_USER']->getSessionData('tx_kequestionnaire');
 			$type = $myVars['download_type'];
 		}
+		$only_this_lang = t3lib_div::_GP('only_this_lang');
+		if ($only_this_lang == ''){
+			$only_this_lang = $myVars['only_this_lang'];
+		}
 		//t3lib_div::devLog('getCSVDownload session', 'ke_questionnaire Export Mod', 0, $myVars);
 		
 		require_once(t3lib_extMgm::extPath('ke_questionnaire').'res/other/class.csv_export.php');
-		$csv_export = new csv_export($this->extConf,$this->results,$this->q_data,$this->ff_data,$this->temp_file);
+		$csv_export = new csv_export($this->extConf,$this->results,$this->q_data,$this->ff_data,$this->temp_file,$only_this_lang);
 		
 		switch ($type){
 			/*case 'simple':

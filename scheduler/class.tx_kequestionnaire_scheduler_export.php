@@ -97,7 +97,7 @@ class tx_kequestionnaire_scheduler_export extends tx_scheduler_Task {
         
         function createMailFile(){
                 require_once(t3lib_extMgm::extPath('ke_questionnaire').'res/other/class.csv_export.php');
-		$csv_export = new csv_export($this->extConf,$this->results,$this->q_data,$this->ff_data,$this->temp_file);
+		$csv_export = new csv_export($this->extConf,$this->results,$this->q_data,$this->ff_data,$this->temp_file, $this->only_this_lang);
 		
 		switch ($this->export_type){
 			case 'simple':
