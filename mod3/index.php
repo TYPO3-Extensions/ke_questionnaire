@@ -68,7 +68,7 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 			$this->ff_data = $ff_data['data'];
 		}
 		
-		t3lib_div::devLog('getCSVInfos POST', 'ke_questionnaire Export Mod', 0, $_POST);
+		//t3lib_div::devLog('getCSVInfos POST', 'ke_questionnaire Export Mod', 0, $_POST);
 	}
 
 	/**
@@ -376,7 +376,7 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 		$myVars['ff_data'] = $this->ff_data;
 		$myVars['q_lang'] = $this->q_data['sys_language_uid'];
 		$myVars['only_this_lang'] = t3lib_div::_GP('only_this_lang');
-		//t3lib_div::devLog('session', 'ke_questionnaire Export Mod', 0, $myVars);
+		t3lib_div::devLog('session', 'ke_questionnaire Export Mod', 0, $myVars);
 		if (t3lib_div::_GP('download_type') != '') {
 			$myVars['download_type'] = t3lib_div::_GP('download_type');
 			//t3lib_div::devLog('ein Download Type', 'ke_questionnaire Export Mod', 0, $_POST);
