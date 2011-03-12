@@ -341,9 +341,12 @@ class  tx_kequestionnaire_module3_ajax extends t3lib_SCbase {
 		//get the questions
 		$storage_pid = $this->ff_data['sDEF']['lDEF']['storage_pid']['vDEF'];
 		$where = 'pid='.$storage_pid.' and hidden=0 and deleted=0 and type!="blind"';
-		$where .= ' AND sys_language_uid='.$this->q_lang;
+		if (htmlentities(t3lib_div::_GP('only_this_lang'))){
+			$lang = explode('_',htmlentities(t3lib_div::_GP('only_this_lang')));
+			$where .= ' AND sys_language_uid='.$lang[1];
+		}
+		//$where .= ' AND sys_language_uid='.$this->q_lang;
 		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*','tx_kequestionnaire_questions',$where,'','sorting');
-		t3lib_div::devLog('getCSVQBase '.$question['type'], 'ke_questionnaire Export Mod', 0, array($GLOBALS['TYPO3_DB']->SELECTquery('*','tx_kequestionnaire_questions',$where,'','sorting')));
 	
 		//create the question structure
 		$fill_array = array();

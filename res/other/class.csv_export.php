@@ -603,7 +603,11 @@ class csv_export {
 		//get the questions
 		$storage_pid = $this->ff_data['sDEF']['lDEF']['storage_pid']['vDEF'];
 		$where = 'pid='.$storage_pid.' and hidden=0 and deleted=0 and type!="blind"';
-		$where .= ' AND sys_language_uid='.$this->q_data['sys_language_uid'];
+		if (htmlentities(t3lib_div::_GP('only_this_lang'))){
+			$lang = explode('_',htmlentities(t3lib_div::_GP('only_this_lang')));
+			$where .= ' AND sys_language_uid='.$lang[1];
+		}
+		//$where .= ' AND sys_language_uid='.$this->q_data['sys_language_uid'];
 		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*','tx_kequestionnaire_questions',$where,'','sorting');
 	
 		//create the question structure
