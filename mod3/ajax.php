@@ -346,7 +346,7 @@ class  tx_kequestionnaire_module3_ajax extends t3lib_SCbase {
 			$lang = explode('_',$this->only_this_lang);
 			$where .= ' AND sys_language_uid='.$lang[1];
 		}
-		t3lib_div::devLog('where', 'ke_questionnaire Export Mod', 0, array($where));
+		//t3lib_div::devLog('where', 'ke_questionnaire Export Mod', 0, array($where));
 		//$where .= ' AND sys_language_uid='.$this->q_lang;
 		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*','tx_kequestionnaire_questions',$where,'','sorting');
 	
