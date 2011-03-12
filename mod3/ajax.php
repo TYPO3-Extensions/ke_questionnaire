@@ -21,7 +21,7 @@ class  tx_kequestionnaire_module3_ajax extends t3lib_SCbase {
 	$this->only_this_lang = $myVars['only_this_lang'];
         
         //t3lib_div::devLog('ajax vars', 'ke_questionnaire Export Mod', 0, array($this->q_id,$this->pid,$this->ff_data));
-        //t3lib_div::devLog('ajax vars', 'ke_questionnaire Export Mod', 0, $myVars);
+        t3lib_div::devLog('ajax vars', 'ke_questionnaire Export Mod', 0, $myVars);
         
         $this->results = $myVars['results'];
     }
@@ -346,6 +346,7 @@ class  tx_kequestionnaire_module3_ajax extends t3lib_SCbase {
 			$lang = explode('_',$this->only_this_lang);
 			$where .= ' AND sys_language_uid='.$lang[1];
 		}
+		t3lib_div::devLog('where', 'ke_questionnaire Export Mod', 0, array($where));
 		//$where .= ' AND sys_language_uid='.$this->q_lang;
 		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*','tx_kequestionnaire_questions',$where,'','sorting');
 	
