@@ -2,12 +2,13 @@
 //require_once(PATH_tslib . 'class.tslib_content.php'); // load content file
 
 class csv_export {
-        function csv_export($extConf,$results,$q_data,$ff_data,$temp_file){
+        function csv_export($extConf,$results,$q_data,$ff_data,$temp_file,$only_this_lang){
                 $this->extConf = $extConf;
                 $this->results = $results;
                 $this->q_data = $q_data;
                 $this->ff_data = $ff_data;
                 $this->temp_file = $temp_file;
+		$this->only_this_lang = $only_this_lang;
                 
                 //t3lib_div::devLog('extConf', 'ke_questionnaire Export Mod', 0, $this->extConf);
         }
@@ -603,8 +604,8 @@ class csv_export {
 		//get the questions
 		$storage_pid = $this->ff_data['sDEF']['lDEF']['storage_pid']['vDEF'];
 		$where = 'pid='.$storage_pid.' and hidden=0 and deleted=0 and type!="blind"';
-		if (htmlentities(t3lib_div::_GP('only_this_lang'))){
-			$lang = explode('_',htmlentities(t3lib_div::_GP('only_this_lang')));
+		if ($this->only_this_lang != ''){
+			$lang = explode('_',$this->only_this_lang);
 			$where .= ' AND sys_language_uid='.$lang[1];
 		}
 		//$where .= ' AND sys_language_uid='.$this->q_data['sys_language_uid'];

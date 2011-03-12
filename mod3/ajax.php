@@ -18,6 +18,7 @@ class  tx_kequestionnaire_module3_ajax extends t3lib_SCbase {
 
         $this->ff_data = $myVars['ff_data'];
 	$this->type = $myVars['download_type'];
+	$this->only_this_lang = $myVars['only_this_lang'];
         
         //t3lib_div::devLog('ajax vars', 'ke_questionnaire Export Mod', 0, array($this->q_id,$this->pid,$this->ff_data));
         //t3lib_div::devLog('ajax vars', 'ke_questionnaire Export Mod', 0, $myVars);
@@ -341,8 +342,8 @@ class  tx_kequestionnaire_module3_ajax extends t3lib_SCbase {
 		//get the questions
 		$storage_pid = $this->ff_data['sDEF']['lDEF']['storage_pid']['vDEF'];
 		$where = 'pid='.$storage_pid.' and hidden=0 and deleted=0 and type!="blind"';
-		if (htmlentities(t3lib_div::_GP('only_this_lang'))){
-			$lang = explode('_',htmlentities(t3lib_div::_GP('only_this_lang')));
+		if ($this->only_this_lang != ''){
+			$lang = explode('_',$this->only_this_lang);
 			$where .= ' AND sys_language_uid='.$lang[1];
 		}
 		//$where .= ' AND sys_language_uid='.$this->q_lang;

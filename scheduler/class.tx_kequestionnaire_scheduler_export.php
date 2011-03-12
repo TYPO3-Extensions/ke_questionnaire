@@ -60,6 +60,7 @@ class tx_kequestionnaire_scheduler_export extends tx_scheduler_Task {
                 $creator->results = $this->results;
                 $creator->ff_data = $this->ff_data;
 		$creator->q_lang = $this->q_data['sys_language_uid'];
+		$creator->only_this_lang = $this->only_this_lang;
 		
 		//delete the old generated file
 		$file_path = PATH_site.'typo3temp/'.$this->temp_file;

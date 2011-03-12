@@ -373,6 +373,7 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 		$myVars['pid'] = $this->pid;
 		$myVars['ff_data'] = $this->ff_data;
 		$myVars['q_lang'] = $this->q_data['sys_language_uid'];
+		$myVars['only_this_lang'] = t3lib_div::_GP('only_this_lang');
 		//t3lib_div::devLog('session', 'ke_questionnaire Export Mod', 0, $myVars);
 		if (t3lib_div::_GP('download_type') != '') {
 			$myVars['download_type'] = t3lib_div::_GP('download_type');
@@ -507,6 +508,8 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 		$task->ff_data = $this->ff_data;
 		//q_data
 		$task->q_data = $this->q_data;
+		//download only this lang
+		$task->only_this_lang = t3lib_div::_GP('only_this_lang');
 		
 		//add to database
 		$scheduler->addTask($task);
