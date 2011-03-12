@@ -21,7 +21,7 @@ class  tx_kequestionnaire_module3_ajax extends t3lib_SCbase {
 	$this->only_this_lang = $myVars['only_this_lang'];
         
         //t3lib_div::devLog('ajax vars', 'ke_questionnaire Export Mod', 0, array($this->q_id,$this->pid,$this->ff_data));
-        t3lib_div::devLog('ajax vars', 'ke_questionnaire Export Mod', 0, $myVars);
+        //t3lib_div::devLog('ajax vars', 'ke_questionnaire Export Mod', 0, $myVars);
         
         $this->results = $myVars['results'];
     }
