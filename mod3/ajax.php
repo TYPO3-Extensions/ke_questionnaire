@@ -10,6 +10,7 @@ class  tx_kequestionnaire_module3_ajax extends t3lib_SCbase {
         //get the given Parameters
         $this->q_id = $myVars['q_id'];
         $this->pid = $myVars['pid'];
+	$this->q_lang = $myVars['q_lang'];
         $this->temp_file = 'tx_kequestionnaire_temp_'.$this->q_id.'_'.$GLOBALS['BE_USER']->user['uid'];
                 
         $this->extConf = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['ke_questionnaire']);
@@ -310,7 +311,7 @@ class  tx_kequestionnaire_module3_ajax extends t3lib_SCbase {
 				    break;
 				default:
 					// Hook to make other types available for export
-                                        if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['ke_questionnaire']['CSVExportCreateDataType2FileQType'])){
+                                        if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['ke_questionnaire']['CSVExportCreateDataFileType2QType'])){
                                                 foreach($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['ke_questionnaire']['CSVExportCreateDataFileType2QType'] as $_classRef){
                                                         $_procObj = & t3lib_div::getUserObj($_classRef);
                                                         $result_line[] = $_procObj->CSVExportCreateDataFileType2QType($values,$result);
@@ -340,11 +341,9 @@ class  tx_kequestionnaire_module3_ajax extends t3lib_SCbase {
 		//get the questions
 		$storage_pid = $this->ff_data['sDEF']['lDEF']['storage_pid']['vDEF'];
 		$where = 'pid='.$storage_pid.' and hidden=0 and deleted=0 and type!="blind"';
-		if (htmlentities(t3lib_div::_GP('only_this_lang'))){
-			$lang = explode('_',htmlentities(t3lib_div::_GP('only_this_lang')));
-			$where .= ' AND sys_language_uid='.$lang[1];
-		}
+		$where .= ' AND sys_language_uid='.$this->q_lang;
 		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*','tx_kequestionnaire_questions',$where,'','sorting');
+		t3lib_div::devLog('getCSVQBase '.$question['type'], 'ke_questionnaire Export Mod', 0, array($GLOBALS['TYPO3_DB']->SELECTquery('*','tx_kequestionnaire_questions',$where,'','sorting')));
 	
 		//create the question structure
 		$fill_array = array();

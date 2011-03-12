@@ -335,6 +335,7 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 
 		$content = '';
 		$counters = $this->loadResults();
+		$langs = $counters['langs'];
 		
 		$content = $LANG->getLL('result_count').': '.$counters['counting'].'<br />';
 		$content .= $LANG->getLL('finished_count').': '.$counters['finished'];
@@ -365,11 +366,13 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 			}
 		}
 		$content .= '<br />';
+		
 		//set some vars in the session
 		$myVars = $GLOBALS['BE_USER']->getSessionData('tx_kequestionnaire');
 		$myVars['q_id'] = $this->q_id;
 		$myVars['pid'] = $this->pid;
 		$myVars['ff_data'] = $this->ff_data;
+		$myVars['q_lang'] = $this->q_data['sys_language_uid'];
 		//t3lib_div::devLog('session', 'ke_questionnaire Export Mod', 0, $myVars);
 		if (t3lib_div::_GP('download_type') != '') {
 			$myVars['download_type'] = t3lib_div::_GP('download_type');
