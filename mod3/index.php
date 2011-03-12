@@ -67,6 +67,8 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 			$ff_data = t3lib_div::xml2array($this->q_data['pi_flexform']);
 			$this->ff_data = $ff_data['data'];
 		}
+		
+		t3lib_div::devLog('getCSVInfos POST', 'ke_questionnaire Export Mod', 0, $_POST);
 	}
 
 	/**
@@ -329,7 +331,7 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 	}
 
 	function getCSVInfos(){
-		//t3lib_div::devLog('getCSVInfos POST', 'ke_questionnaire Export Mod', 0, $_POST);
+		t3lib_div::devLog('getCSVInfos POST', 'ke_questionnaire Export Mod', 0, $_POST);
 		//t3lib_div::devLog('extconf', 'ke_questionnaire Export Mod', 0, $this->extConf);
 		global $LANG;
 
@@ -380,7 +382,7 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 			//t3lib_div::devLog('ein Download Type', 'ke_questionnaire Export Mod', 0, $_POST);
 		}
 		//else
-		t3lib_div::devLog('hmm', 'ke_questionnaire Export Mod', 0, $_POST);
+		//t3lib_div::devLog('hmm', 'ke_questionnaire Export Mod', 0, $_POST);
 		$myVars['results'] = $this->results;
 		if ($counters['counting'] > $this->extConf['exportParter']){
 			$content .= '<div style="color:red">'.$LANG->getLL('download_parts').'</div><br />';
