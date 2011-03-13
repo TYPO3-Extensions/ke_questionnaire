@@ -348,7 +348,7 @@ class csv_export {
 		//t3lib_div::devLog('getCSVSimple results', 'ke_questionnaire Export Mod', 0, $this->results);
 		
 		$fill_array = $this->createFillArray();
-		t3lib_div::devLog('getCSVSimple2 fill_array', 'ke_questionnaire Export Mod', 0, $fill_array);
+		//t3lib_div::devLog('getCSVSimple2 fill_array', 'ke_questionnaire Export Mod', 0, $fill_array);
 		
 		if (is_array($fill_array)){
 			$headline = array();

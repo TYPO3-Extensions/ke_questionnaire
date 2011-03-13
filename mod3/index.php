@@ -340,7 +340,7 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 	}
 
 	function getCSVInfos(){
-		t3lib_div::devLog('getCSVInfos POST', 'ke_questionnaire Export Mod', 0, $_POST);
+		//t3lib_div::devLog('getCSVInfos POST', 'ke_questionnaire Export Mod', 0, $_POST);
 		//t3lib_div::devLog('extconf', 'ke_questionnaire Export Mod', 0, $this->extConf);
 		global $LANG;
 
@@ -493,6 +493,7 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 	}
 	
 	function createSchedulerTask(){
+		$myVars = $GLOBALS['BE_USER']->getSessionData('tx_kequestionnaire');
 		$file_path = PATH_site.'typo3temp/'.$this->temp_file;
 		if (file_exists($file_path)) {
 		    unlink($file_path);
@@ -516,7 +517,6 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 		//add download-type
 		$type = t3lib_div::_GP('download_type');
 		if ($type == ''){
-			$myVars = $GLOBALS['BE_USER']->getSessionData('tx_kequestionnaire');
 			$type = $myVars['download_type'];
 		}
 		$task->export_type = $type;
@@ -529,14 +529,12 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 		//download only this lang
 		$only_this_lang = t3lib_div::_GP('only_this_lang');
 		if ($only_this_lang == ''){
-			$myVars = $GLOBALS['BE_USER']->getSessionData('tx_kequestionnaire');
 			$only_this_lang = $myVars['only_this_lang'];
 		}
 		$task->only_this_lang = $only_this_lang;
 		//download only finished
 		$only_finished = t3lib_div::_GP('only_finished');
 		if ($only_this_lang == ''){
-			$myVars = $GLOBALS['BE_USER']->getSessionData('tx_kequestionnaire');
 			$only_finished = $myVars['only_finished'];
 		}
 		$task->only_finished = $only_finished;
@@ -633,9 +631,9 @@ Event.observe(window, 'load', function() {
 
 		$csvdata = '';
 		$parter = $this->extConf['CSV_parter'];
+		$myVars = $GLOBALS['BE_USER']->getSessionData('tx_kequestionnaire');
 		$type = t3lib_div::_GP('download_type');
 		if ($type == ''){
-			$myVars = $GLOBALS['BE_USER']->getSessionData('tx_kequestionnaire');
 			$type = $myVars['download_type'];
 		}
 		$only_this_lang = t3lib_div::_GP('only_this_lang');
@@ -646,7 +644,7 @@ Event.observe(window, 'load', function() {
 		if ($only_finished == ''){
 			$only_finished = $myVars['only_finished'];
 		}
-		t3lib_div::devLog('getCSVDownload session '.$only_this_lang, 'ke_questionnaire Export Mod', 0, $myVars);
+		//t3lib_div::devLog('getCSVDownload session '.$only_this_lang, 'ke_questionnaire Export Mod', 0, $myVars);
 		
 		require_once(t3lib_extMgm::extPath('ke_questionnaire').'res/other/class.csv_export.php');
 		$csv_export = new csv_export($this->extConf,$this->results,$this->q_data,$this->ff_data,$this->temp_file,$only_this_lang,$only_finished);
