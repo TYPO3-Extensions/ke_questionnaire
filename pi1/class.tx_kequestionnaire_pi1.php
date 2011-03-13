@@ -998,12 +998,12 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 		$validation = true;
 		
 		$val_questions = $this->getQuestionsOfPage($page_nr,$this->pageCount);
-		t3lib_div::devLog('val_queston', $this->prefixId, 0, $val_questions);
-		t3lib_div::devLog('PIVars', $this->prefixId, 0, $this->piVars);
+		//t3lib_div::devLog('val_queston', $this->prefixId, 0, $val_questions);
+		//t3lib_div::devLog('PIVars', $this->prefixId, 0, $this->piVars);
 		foreach ($val_questions as $question){
 			$question_obj = $this->getQuestionTypeObject($question);
 			if (is_object($question_obj)) {
-				t3lib_div::devLog('question '.$question['type'], $this->prefixId, 0, $question);
+				//t3lib_div::devLog('question '.$question['type'], $this->prefixId, 0, $question);
 				$question_obj->validate();
 			}
 			if ($question_obj->error == 1) {
