@@ -219,6 +219,10 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 							$myVars['only_this_lang'] = t3lib_div::_GP('only_this_lang');
 							t3lib_div::devLog('only_this_lang POST', 'ke_questionnaire Export Mod', 0, $_POST);
 						}
+						if (t3lib_div::_GP('only_finished') != '') {
+							$myVars['only_finished'] = t3lib_div::_GP('only_finished');
+							t3lib_div::devLog('only_finished POST', 'ke_questionnaire Export Mod', 0, $_POST);
+						}
 						$GLOBALS['BE_USER']->setAndSaveSessionData('tx_kequestionnaire',$myVars);
 						
 						$this->results = $myVars['results'];
@@ -380,8 +384,14 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 		$myVars['pid'] = $this->pid;
 		$myVars['ff_data'] = $this->ff_data;
 		$myVars['q_lang'] = $this->q_data['sys_language_uid'];
-		$myVars['only_this_lang'] = t3lib_div::_GP('only_this_lang');
-		t3lib_div::devLog('session', 'ke_questionnaire Export Mod', 0, $myVars);
+		if (t3lib_div::_GP('only_this_lang') != '') {
+			$myVars['only_this_lang'] = t3lib_div::_GP('only_this_lang');
+			//t3lib_div::devLog('ein Download Type', 'ke_questionnaire Export Mod', 0, $_POST);
+		}
+		if (t3lib_div::_GP('only_finished') != '') {
+			$myVars['only_finished'] = t3lib_div::_GP('only_finished');
+			//t3lib_div::devLog('ein Download Type', 'ke_questionnaire Export Mod', 0, $_POST);
+		}
 		if (t3lib_div::_GP('download_type') != '') {
 			$myVars['download_type'] = t3lib_div::_GP('download_type');
 			//t3lib_div::devLog('ein Download Type', 'ke_questionnaire Export Mod', 0, $_POST);
@@ -517,8 +527,19 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 		//q_data
 		$task->q_data = $this->q_data;
 		//download only this lang
-		$task->only_this_lang = t3lib_div::_GP('only_this_lang');
-		
+		$only_this_lang = t3lib_div::_GP('only_this_lang');
+		if ($only_this_lang == ''){
+			$myVars = $GLOBALS['BE_USER']->getSessionData('tx_kequestionnaire');
+			$only_this_lang = $myVars['only_this_lang'];
+		}
+		$task->only_this_lang = $only_this_lang;
+		//download only finished
+		$only_finished = t3lib_div::_GP('only_finished');
+		if ($only_this_lang == ''){
+			$myVars = $GLOBALS['BE_USER']->getSessionData('tx_kequestionnaire');
+			$only_finished = $myVars['only_finished'];
+		}
+		$task->only_finished = $only_finished;
 		//add to database
 		$scheduler->addTask($task);
 	}
@@ -621,10 +642,14 @@ Event.observe(window, 'load', function() {
 		if ($only_this_lang == ''){
 			$only_this_lang = $myVars['only_this_lang'];
 		}
+		$only_finished = t3lib_div::_GP('only_finished');
+		if ($only_finished == ''){
+			$only_finished = $myVars['only_finished'];
+		}
 		t3lib_div::devLog('getCSVDownload session '.$only_this_lang, 'ke_questionnaire Export Mod', 0, $myVars);
 		
 		require_once(t3lib_extMgm::extPath('ke_questionnaire').'res/other/class.csv_export.php');
-		$csv_export = new csv_export($this->extConf,$this->results,$this->q_data,$this->ff_data,$this->temp_file,$only_this_lang);
+		$csv_export = new csv_export($this->extConf,$this->results,$this->q_data,$this->ff_data,$this->temp_file,$only_this_lang,$only_finished);
 		
 		switch ($type){
 			/*case 'simple':

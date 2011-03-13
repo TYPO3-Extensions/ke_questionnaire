@@ -2,13 +2,14 @@
 //require_once(PATH_tslib . 'class.tslib_content.php'); // load content file
 
 class csv_export {
-        function csv_export($extConf,$results,$q_data,$ff_data,$temp_file,$only_this_lang){
+        function csv_export($extConf,$results,$q_data,$ff_data,$temp_file,$only_this_lang,$only_finished){
                 $this->extConf = $extConf;
                 $this->results = $results;
                 $this->q_data = $q_data;
                 $this->ff_data = $ff_data;
                 $this->temp_file = $temp_file;
 		$this->only_this_lang = $only_this_lang;
+		$this->only_finished = $only_finished;
                 
                 //t3lib_div::devLog('extConf', 'ke_questionnaire Export Mod', 0, $this->extConf);
         }
@@ -347,6 +348,7 @@ class csv_export {
 		//t3lib_div::devLog('getCSVSimple results', 'ke_questionnaire Export Mod', 0, $this->results);
 		
 		$fill_array = $this->createFillArray();
+		t3lib_div::devLog('getCSVSimple2 fill_array', 'ke_questionnaire Export Mod', 0, $fill_array);
 		
 		if (is_array($fill_array)){
 			$headline = array();
@@ -608,7 +610,7 @@ class csv_export {
 			$lang = explode('_',$this->only_this_lang);
 			$where .= ' AND sys_language_uid='.$lang[1];
 		}
-		t3lib_div::devLog('where', 'ke_questionnaire Export Mod', 0, array($where));
+		//t3lib_div::devLog('where', 'ke_questionnaire Export Mod', 0, array($where));
 		//$where .= ' AND sys_language_uid='.$this->q_data['sys_language_uid'];
 		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*','tx_kequestionnaire_questions',$where,'','sorting');
 	
