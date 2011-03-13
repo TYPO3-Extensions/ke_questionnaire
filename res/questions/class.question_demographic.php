@@ -197,14 +197,26 @@ class question_demographic extends question{
 	 *
 	 */
     function validate(){
-	return;
-		foreach($this->fields as $key=>&$field){
+		//t3lib_div::debug($this->fields,"fields");
+		//t3lib_div::debug($this->demographicOptions,"demo options");
+		foreach($this->fields as $key=>$field){
+			$key_infos = explode('__',$key);
+			$table = $key_infos[0];
+			$key = $key_infos[1];
 			$validationTypes=array();
-			if(!isset($this->demographicOptions["validation"][$key])) continue;
-
-			switch($field->type){
+			
+			if(!$this->question['mandatory']){
+				if(!isset($this->demographicOptions[$table]["validation"][$key])) continue;
+			} else {
+				$validationTypes[]="required"; // required?
+			}
+			
+			$field_info = $this->demographicOptions[$table]["fields"][$key];
+			//t3lib_div::debug($field_info,"field info");
+			
+			switch($field_info){
 				case "input":
-					$validationTypes[]=$this->demographicOptions["validation"][$key];
+					$validationTypes[]=$this->demographicOptions[$table]["validation"][$key];
 				break;
 				case "selectbox":
 
@@ -215,13 +227,12 @@ class question_demographic extends question{
 					// $value=$this->answer["options"];
 					// $validationTypes[]="matrix_required_option";
 				break;
-
 				default:
 					$out= "Templatetype ".$this->type." not defined!";
 
 				break;
 			}
-
+			//t3lib_div::debug($validationTypes,"$validationTypes");
 
 			$errors=$field->validate($validationTypes);
 			if (!$this->checkDependancies()){
@@ -231,7 +242,6 @@ class question_demographic extends question{
 				$this->errorFields[] = $key;
 			};
 		}
-
 	}
 
 }

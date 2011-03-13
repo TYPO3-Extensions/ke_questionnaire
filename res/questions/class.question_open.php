@@ -116,7 +116,7 @@ class question_open extends question{
 			$this->error=0;
 		} elseif(count($errors) > 0) {
 		    $this->error=1;
-            $this->errorFields[] = $key;
+		    $this->errorFields[] = $key;
 		}
 
 	}

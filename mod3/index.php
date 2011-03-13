@@ -307,6 +307,12 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 			$where .= ' AND sys_language_uid='.$only_lang[1];
 		}
 		
+		//Check if only the finished should be exported
+		$langs = array();
+		if (htmlentities(t3lib_div::_GP('only_finished'))){
+			$where .= ' AND finished_tstamp>0';
+		}
+		
 		//t3lib_div::devLog('getCSVInfos', 'ke_questionnaire Export Mod', 0, $only_lang);
 		
 		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*','tx_kequestionnaire_results',$where,'','uid');
