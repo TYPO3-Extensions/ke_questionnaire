@@ -567,7 +567,8 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 		//if (t3lib_div::_GP('get_csv_parted') != 1) $content .= '<script type="text/javascript">window.location.href=window.location.href+"&get_csv_parted=1"</script>';
 		//else $content .= '<script type="text/javascript">window.location.href=window.location.href</script>';
 		$content .= "<script type=\"text/javascript\">
-var max = $counted;
+//var max = $counted;
+var max = 3;
 var pointer = $pointer;
  function callFileCreate () {
 	new Ajax.Request('../../../../typo3/ajax.php', {
@@ -620,7 +621,7 @@ Event.observe(window, 'load', function() {
 		if ($only_this_lang == ''){
 			$only_this_lang = $myVars['only_this_lang'];
 		}
-		//t3lib_div::devLog('getCSVDownload session', 'ke_questionnaire Export Mod', 0, $myVars);
+		t3lib_div::devLog('getCSVDownload session '.$only_this_lang, 'ke_questionnaire Export Mod', 0, $myVars);
 		
 		require_once(t3lib_extMgm::extPath('ke_questionnaire').'res/other/class.csv_export.php');
 		$csv_export = new csv_export($this->extConf,$this->results,$this->q_data,$this->ff_data,$this->temp_file,$only_this_lang);
