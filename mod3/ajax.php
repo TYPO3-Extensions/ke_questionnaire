@@ -2,6 +2,7 @@
 require_once(PATH_t3lib.'class.t3lib_scbase.php');
 
 class  tx_kequestionnaire_module3_ajax extends t3lib_SCbase {
+
     function init() {
         $myVars = $GLOBALS['BE_USER']->getSessionData('tx_kequestionnaire');
         $myVars['pointer'] = $pointer + 1;
