@@ -254,7 +254,7 @@ class  tx_kequestionnaire_module3_ajax extends t3lib_SCbase {
 				case 'closed':
 					foreach ($values['answers'] as $a_id => $a_values){
 						//t3lib_div::devLog('read line closed ansers '.$a_id, 'ke_questionnaire Export Mod', 0, $a_values);
-                                                if (is_array($result['data'][$q_nr]['answer']['options']) AND in_array($a_nr,$result['data'][$q_nr]['answer']['options'])){
+                                                if (is_array($result['data'][$q_nr]['answer']['options']) AND in_array($a_id,$result['data'][$q_nr]['answer']['options'])){
 						    if ($result['data'][$q_nr]['answer']['text'][$a_id]) $result_line[] = '('.$result['data'][$q_nr]['answer']['text'][$a_id].') '.$marker;
 						    else $result_line[] = $marker;
 						} elseif ($result['data'][$q_nr]['answer']['options'] == $a_id) {
