@@ -158,8 +158,6 @@ class question_dd_words extends question {
 	 * Validate if words are set correctly
 	 */
 	function validate() {
-		t3lib_div::devLog('Questions', 'ke_questionnaire', -1, array($this->question, $this->answer));
-		
 		if(!$this->question['mandatory']) return;
 
 		$value = $this->answer['options'];
