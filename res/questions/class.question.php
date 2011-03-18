@@ -389,7 +389,7 @@ class question{
 	function checkDependancies(){
 		$content = false;
 
-		//t3lib_div::devLog('check dependancies '.$this->question['uid'], 'question base class', 0, $this->dependancies);
+		t3lib_div::devLog('check dependancies '.$this->question['uid'], 'question base class', 0, $this->dependancies);
 		//t3lib_div::devLog('check parent->piVars '.$this->question['uid'], 'question base class', 0, $this->obj->piVars);
 
 		//if the dependancy is simple

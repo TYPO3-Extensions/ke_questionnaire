@@ -158,7 +158,12 @@ class question_dd_words extends question {
 	 * Validate if words are set correctly
 	 */
 	function validate() {
-		return true;
+		if (!$this->checkDependancies()){
+			$this->error = 0;
+		} else {
+			$this->error = 1;
+			$this->errorMsg = $this->obj->pi_getLL("error_required");
+		}
 	}
 }
 
