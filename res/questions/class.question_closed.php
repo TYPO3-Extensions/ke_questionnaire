@@ -211,6 +211,7 @@ class question_closed extends question {
 	function validate(){
 		//t3lib_div::devLog('validate', 'question_closed', 0, array('type'=>$this->type));
 		//t3lib_div::devLog('mist', 'test', 0, array($this->checkDependancies));
+		t3lib_div::devLog('Questions', 'ke_questionnaire', -1, array($this->question, $this->answer));
 
 		$value=null;$doValidationForField=0;
 		$errors=array();

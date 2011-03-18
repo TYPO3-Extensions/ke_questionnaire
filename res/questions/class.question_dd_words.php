@@ -73,13 +73,13 @@ class question_dd_words extends question {
 	 */
 	function buildFieldArray(){
 		// put JS to header
-		$GLOBALS['TSFE']->additionalHeaderData['keq_dd_words'] = '
-			<script src="typo3conf/ext/ke_questionnaire/res/jquery/jquery-1.4.4.min.js" type="text/javascript"></script>
-	        <script src="typo3conf/ext/ke_questionnaire/res/jquery/jquery.ui.core.min.js" type="text/javascript"></script>
-	        <script src="typo3conf/ext/ke_questionnaire/res/jquery/jquery.ui.widget.min.js" type="text/javascript"></script>
-	        <script src="typo3conf/ext/ke_questionnaire/res/jquery/jquery.ui.mouse.min.js" type="text/javascript"></script>
-	        <script src="typo3conf/ext/ke_questionnaire/res/jquery/jquery.ui.draggable.min.js" type="text/javascript"></script>
-	        <script src="typo3conf/ext/ke_questionnaire/res/jquery/jquery.ui.droppable.min.js" type="text/javascript"></script>
+		$GLOBALS['TSFE']->additionalHeaderData['keq-js-core'] = '<script src="'.t3lib_extMgm::siteRelPath('ke_questionnaire').'res/jquery/jquery-1.4.4.min.js" type="text/javascript"></script>';
+		$GLOBALS['TSFE']->additionalHeaderData['keq-js-ui-core'] = '<script src="'.t3lib_extMgm::siteRelPath('ke_questionnaire').'res/jquery/jquery.ui.core.min.js" type="text/javascript"></script>';
+		$GLOBALS['TSFE']->additionalHeaderData['keq-js-ui-widget'] = '<script src="'.t3lib_extMgm::siteRelPath('ke_questionnaire').'res/jquery/jquery.ui.widget.min.js" type="text/javascript"></script>';
+		$GLOBALS['TSFE']->additionalHeaderData['keq-js-ui-mouse'] = '<script src="'.t3lib_extMgm::siteRelPath('ke_questionnaire').'res/jquery/jquery.ui.mouse.min.js" type="text/javascript"></script>';
+		$GLOBALS['TSFE']->additionalHeaderData['keq-js-ui-draggable'] = '<script src="'.t3lib_extMgm::siteRelPath('ke_questionnaire').'res/jquery/jquery.ui.draggable.min.js" type="text/javascript"></script>';
+		$GLOBALS['TSFE']->additionalHeaderData['keq-js-ui-droppable'] = '<script src="'.t3lib_extMgm::siteRelPath('ke_questionnaire').'res/jquery/jquery.ui.droppable.min.js" type="text/javascript"></script>';
+		$GLOBALS['TSFE']->additionalHeaderData['keq-js-ui-dd-words'] = '
 	        <script type="text/javascript">
 			$(document).ready(function() {
 				$("select#keq_' . $this->question['uid'] . '").hide();
@@ -158,11 +158,18 @@ class question_dd_words extends question {
 	 * Validate if words are set correctly
 	 */
 	function validate() {
+		t3lib_div::devLog('Questions', 'ke_questionnaire', -1, array($this->question, $this->answer));
+		
+		if(!$this->question['mandatory']) return;
+
+		$value = $this->answer['options'];
+		if(!empty($value)) return;
+		
 		if (!$this->checkDependancies()){
 			$this->error = 0;
 		} else {
 			$this->error = 1;
-			$this->errorMsg = $this->obj->pi_getLL("error_required");
+			$this->errorMsg = $this->obj->pi_getLL('error_required');
 		}
 	}
 }

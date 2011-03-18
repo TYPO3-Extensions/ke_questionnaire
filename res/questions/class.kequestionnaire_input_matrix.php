@@ -363,14 +363,13 @@ class kequestionnaire_input_matrix extends kequestionnaire_input{
 							}
 						});
 					';
-					$GLOBALS['TSFE']->additionalHeaderData['kequestionnaire'] = '
-						<link rel="stylesheet" type="text/css" href="'.t3lib_extMgm::siteRelPath('ke_questionnaire').'res/jquery/jquery-ui-1.8.7.custom.css" media="all" />
-						<script src="'.t3lib_extMgm::siteRelPath('ke_questionnaire').'res/jquery/jquery-1.4.4.min.js" type="text/javascript"></script>
-						<script src="'.t3lib_extMgm::siteRelPath('ke_questionnaire').'res/jquery/jquery.ui.core.min.js" type="text/javascript"></script>
-						<script src="'.t3lib_extMgm::siteRelPath('ke_questionnaire').'res/jquery/jquery.ui.widget.min.js" type="text/javascript"></script>
-						<script src="'.t3lib_extMgm::siteRelPath('ke_questionnaire').'res/jquery/jquery.ui.mouse.min.js" type="text/javascript"></script>
-						<script src="'.t3lib_extMgm::siteRelPath('ke_questionnaire').'res/jquery/jquery.ui.slider.min.js" type="text/javascript"></script>
-						<script type="text/javascript">
+					$GLOBALS['TSFE']->additionalHeaderData['keq-css-slider'] = '<link rel="stylesheet" type="text/css" href="'.t3lib_extMgm::siteRelPath('ke_questionnaire').'res/jquery/jquery-ui-1.8.7.custom.css" media="all" />';
+					$GLOBALS['TSFE']->additionalHeaderData['keq-js-core'] = '<script src="'.t3lib_extMgm::siteRelPath('ke_questionnaire').'res/jquery/jquery-1.4.4.min.js" type="text/javascript"></script>';
+					$GLOBALS['TSFE']->additionalHeaderData['keq-js-ui-core'] = '<script src="'.t3lib_extMgm::siteRelPath('ke_questionnaire').'res/jquery/jquery.ui.core.min.js" type="text/javascript"></script>';
+					$GLOBALS['TSFE']->additionalHeaderData['keq-js-ui-widget'] = '<script src="'.t3lib_extMgm::siteRelPath('ke_questionnaire').'res/jquery/jquery.ui.widget.min.js" type="text/javascript"></script>';
+					$GLOBALS['TSFE']->additionalHeaderData['keq-js-ui-mouse'] = '<script src="'.t3lib_extMgm::siteRelPath('ke_questionnaire').'res/jquery/jquery.ui.mouse.min.js" type="text/javascript"></script>';
+					$GLOBALS['TSFE']->additionalHeaderData['keq-js-ui-slider'] = '<script src="'.t3lib_extMgm::siteRelPath('ke_questionnaire').'res/jquery/jquery.ui.slider.min.js" type="text/javascript"></script>';
+					$GLOBALS['TSFE']->additionalHeaderData['keq-js-slider'] = '<script type="text/javascript">
 						'.$GLOBALS['TSFE']->register['kequestionnaire'].'
 						</script>
 					';
