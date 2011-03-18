@@ -714,7 +714,7 @@ function keq_disable(idy,par_id) {
     input.disabled = true;
   }
 }";
-			$maxAnswers_error = $this->obj->pi_getLL('error_maxAnswers');
+			$maxAnswers_error = addslashes($this->obj->pi_getLL('error_maxAnswers'));
 			$maxAnswers_error = str_replace('###MAX###',$maxAnswers,$maxAnswers_error);
 			$js_maxAnswers_checkbox = "
 function keq_checkMax(namy,idy) {
