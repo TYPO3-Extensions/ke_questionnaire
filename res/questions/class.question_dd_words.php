@@ -141,7 +141,7 @@ class question_dd_words extends question {
 			'###BLIND###',
 			$this
 		);
-		t3lib_div::devLog('buildFieldArray', 'ke_questionnaire', -1, array($this->fields, $markerArray));
+		//t3lib_div::devLog('buildFieldArray', 'ke_questionnaire', -1, array($this->fields, $markerArray));
 	}
 
 	/**

@@ -120,7 +120,6 @@ class question{
 
 		// Read Subparts
 		$this->tmpl = $this->cObj->fileResource($this->template);
-		t3lib_div::devLog('Template', 'ke_questionnaire', -1, array($this->tmpl));
 		
 		//Template not found in base extension? Check premium!
 		if($this->tmpl == '' && t3lib_extMgm::isLoaded('ke_questionnaire_premium')) {
@@ -389,7 +388,7 @@ class question{
 	function checkDependancies(){
 		$content = false;
 
-		t3lib_div::devLog('check dependancies '.$this->question['uid'], 'question base class', 0, $this->dependancies);
+		//t3lib_div::devLog('check dependancies '.$this->question['uid'], 'question base class', 0, $this->dependancies);
 		//t3lib_div::devLog('check parent->piVars '.$this->question['uid'], 'question base class', 0, $this->obj->piVars);
 
 		//if the dependancy is simple

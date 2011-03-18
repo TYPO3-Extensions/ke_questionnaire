@@ -312,13 +312,6 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 			$diff = $chk_time - $GLOBALS['TSFE']->fe_user->getKey('ses', 'kequestionnaire_start_tstamp');
 			$secs = ceil($seconds - $diff);			
 		}
-		t3lib_div::devLog('timer', 'ke_questionnaire', -1, array(
-			'chk_time' => $chk_time,
-			'diff' => $diff,
-			'secs' => $secs,
-			'timer' => $timer,
-			'sess' => $GLOBALS['TSFE']->fe_user->getKey('ses', 'kequestionnaire_start_tstamp')
-		));
 		
 		$markerArray['###MINS###'] = floor($secs/60);
 		$markerArray['###SECS###'] = $secs%60;
@@ -529,7 +522,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 				}
 			}
 		}
-		t3lib_div::devLog('getResults saveArray', $this->prefixId, 0, array($this->saveArray));
+		//t3lib_div::devLog('getResults saveArray', $this->prefixId, 0, array($this->saveArray));
 	}
 
 	/**
