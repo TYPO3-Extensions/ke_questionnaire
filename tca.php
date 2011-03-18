@@ -111,7 +111,7 @@ $TCA["tx_kequestionnaire_questions"] = array (
 					Array("LLL:EXT:ke_questionnaire/locallang_db.xml:tx_kequestionnaire_questions.type.I.privacy", "privacy"),
 					Array("LLL:EXT:ke_questionnaire/locallang_db.xml:tx_kequestionnaire_questions.type.I.blind", "blind"),*/
 				),
-                                'default' => 'blind',
+				'default' => 'blind',
 				"itemsProcFunc" => "tx_kequestionnaire_tx_kequestionnaire_questions_type->main",
 				"size" => 1,
 				"maxitems" => 1,
@@ -962,6 +962,35 @@ $TCA["tx_kequestionnaire_questions"] = array (
                                 dependant_show,
                                 dependancy_simple,
                                 dependancy"),
+                "dd_words" => array(
+                             "showitem" => "
+                                --div--;LLL:EXT:ke_questionnaire/locallang.xml:tx_kequestionnaire.base,
+                                sys_language_uid;;;;1-1-1,
+                                l18n_parent,
+                                l18n_diffsource,
+                                hidden;;1,
+                                type,
+                                title;;;;2-2-2,
+                                show_title;;;;3-3-3,
+                                text;;;richtext[cut|copy|paste|formatblock|textcolor|bold|italic|underline|left|center|right|orderedlist|unorderedlist|outdent|indent|link|table|image|line|chMode]:rte_transform[mode=ts_css|imgpath=uploads/tx_kequestionnaire/rte/],
+                                helptext;;;richtext[cut|copy|paste|formatblock|textcolor|bold|italic|underline|left|center|right|orderedlist|unorderedlist|outdent|indent|link|table|image|line|chMode]:rte_transform[mode=ts_css|imgpath=uploads/tx_kequestionnaire/rte/],
+                                image,
+                                image_position,
+                                --div--;LLL:EXT:ke_questionnaire/locallang.xml:tx_kequestionnaire.flow,
+                                mandatory,
+                                mandatory_correct,".
+                                //"time,".
+                                "dependant_show,
+                                dependancy_simple,
+                                dependancy,
+                                --div--;LLL:EXT:ke_questionnaire/locallang.xml:tx_kequestionnaire.type_based,
+                                closed_type,
+                                closed_selectsize,
+                                closed_maxanswers,
+                                closed_randomanswers,
+                                --div--;LLL:EXT:ke_questionnaire/locallang.xml:tx_kequestionnaire.answers,"
+                                //closed_inputfield,
+                                ."answers"),
 		  "refusal" => array(
                              "showitem" => "
                                 --div--;LLL:EXT:ke_questionnaire/locallang.xml:tx_kequestionnaire.base,

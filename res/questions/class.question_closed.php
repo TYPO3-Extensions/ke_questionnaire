@@ -146,7 +146,7 @@ class question_closed extends question {
 	 *
 	 * @return Javascript String
 	 */
-	function getSpecialJS(){
+	function getSpecialJS() {
 		$js = 'test';
 		
 		if ($this->question['closed_type'] == 'check_multi' OR $this->question['closed_type'] == 'select_multi'){

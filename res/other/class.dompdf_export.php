@@ -325,6 +325,13 @@ class dompdf_export {
 		$this->templates['closed_options'] = t3lib_parsehtml::getSubpart($temp, '###DOMPDF_OPTION###');
 		$this->templates['closed_compare'] = t3lib_parsehtml::getSubpart($temp, '###DOMPDF_COMPARE###');
 
+		//drag 'n drop words
+		$templateName = 'question_dd_words.html';
+		$temp = file_get_contents($templateFolder.$templateName);
+		$this->templates['dd_words'] = t3lib_parsehtml::getSubpart($temp, '###DOMPDF###');
+		$this->templates['dd_words_options'] = t3lib_parsehtml::getSubpart($temp, '###DOMPDF_OPTION###');
+		$this->templates['dd_words_compare'] = t3lib_parsehtml::getSubpart($temp, '###DOMPDF_COMPARE###');
+
 		//semantic questions
 		$templateName = 'question_semantic.html';
 		$temp = file_get_contents($templateFolder.$templateName);
@@ -580,6 +587,32 @@ class dompdf_export {
 				}
 				$html = $this->renderContent($this->templates['closed'],$markerArray);
 				break;
+			case 'dd_words':
+				$options = $this->getOptions($question['uid']);
+				$markerArray['###OPTIONS###'] = '';
+				foreach ($options as $option){
+					$o_markerArray = array();
+					$o_markerArray['###VALUE###'] = $value;
+					$o_markerArray['###INPUT_TEXT###'] = '';
+					if (is_array($answered['options'])){
+						if (in_array($option['uid'],$answered['options'])){
+							$o_markerArray['###VALUE###'] = 'X';
+						}
+					} else {
+						if ($answered['options'] == $option['uid']) {
+							$o_markerArray['###VALUE###'] = 'X';
+						}
+					}
+					if (is_array($answered['text'])){
+						if ($answered['text'][$option['uid']] != '') $o_markerArray['###INPUT_TEXT###'] = '['.$answered['text'][$option['uid']].']';
+					}
+					$text = $option['title'];
+					if ($option['text'] != '') $text = $option['text'];
+					$o_markerArray['###TEXT###'] = $text;
+					$markerArray['###OPTIONS###'] .= $this->renderContent($this->templates['dd_words_options'],$o_markerArray);
+				}
+				$html = $this->renderContent($this->templates['dd_words'],$markerArray);
+				break;
 			case 'matrix':
 				$html = $this->renderMatrixQuestion($question,$markerArray,$answered);
 				break;
@@ -636,6 +669,23 @@ class dompdf_export {
 					$markerArray['###OPTIONS###'] .= $this->renderContent($this->templates['closed_options'],$o_markerArray);
 				}
 				if ($markerArray['###OPTIONS###'] != '') $content .= $this->renderContent($this->templates['closed_compare'],$markerArray);
+				break;
+			case 'dd_words':
+				$options = $this->getOptions($question['uid']);
+				$markerArray['###OPTIONS###'] = '';
+				foreach ($options as $option){
+					$o_markerArray = array();
+					$o_markerArray['###VALUE###'] = $value;
+					$o_markerArray['###INPUT_TEXT###'] = '';
+					if ($option['correct_answer']){
+						$o_markerArray['###VALUE###'] = 'X';
+					}
+					$text = $option['title'];
+					if ($option['text'] != '') $text = $option['text'];
+					$o_markerArray['###TEXT###'] = $text;
+					$markerArray['###OPTIONS###'] .= $this->renderContent($this->templates['dd_words_options'],$o_markerArray);
+				}
+				if ($markerArray['###OPTIONS###'] != '') $content .= $this->renderContent($this->templates['dd_words_compare'],$markerArray);
 				break;
 		}
 

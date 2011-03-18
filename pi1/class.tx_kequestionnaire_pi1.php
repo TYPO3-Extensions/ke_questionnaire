@@ -146,7 +146,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 
 	function mainAskQuestions() {
 		// if there are no questions made for the questionnaire
-		if (count($this->questions) == 0){
+		if (count($this->questions) == 0) {
 			$content = $this->pi_getLL('no_questions');
 			//Hook to manipulate the Error-Message for no questions
 			if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$this->extKey]['pi1_noQuestions'])){
@@ -1681,7 +1681,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 	 */
 	function getQuestionTypeObject($question,$validate = 0){
 		$uid = $question['uid'];
-		//t3lib_div::devLog('question '.$question['title'], $this->prefixId, 0, $question);
+		//3lib_div::devLog('question '.$question['title'], $this->prefixId, 0, $question);
 		$content = '';
 		$saveArray = array();
 
@@ -1706,7 +1706,19 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 					}
 				}
 				$answer = $this->piVars[$question['uid']];
-				$question_obj->init($uid,$this,$answer,$validate);
+				$question_obj->init($uid, $this, $answer, $validate);
+			break;
+			case 'dd_words':
+				$question_obj = new question_dd_words();
+				if (is_array($this->saveArray[$question['uid']]) AND !$this->piVars[$question['uid']] AND $this->saveArray[$question['uid']]){
+					if (!is_array($this->saveArray[$question['uid']]['answer']) AND stristr($this->saveArray[$question['uid']]['answer'],'<phparray>')){
+						$this->piVars[$question['uid']]['options'] = $this->saveArray[$question['uid']]['answer'];
+					} else {
+						$this->piVars[$question['uid']] = $this->saveArray[$question['uid']]['answer'];
+					}
+				}
+				$answer = $this->piVars[$question['uid']];
+				$question_obj->init($uid, $this, $answer, $validate);
 			break;
 			case 'matrix':
 				$question_obj = new question_matrix();
@@ -1822,7 +1834,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 		
 		//questionnaire Type
 		$this->type = $this->ffdata['type'];
-
+		
 		//t3lib_div::devLog('ffdata', $this->prefixId, 0, $this->ffdata);
 		$this->pid = $this->ffdata['storage_pid'];
 
@@ -1938,11 +1950,16 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 		if (!$questions){
 			// $selectFields = 'uid,type,title,demographic_type,open_in_text,open_validation';
 			$selectFields = '*';
-			$where = 'pid='.$this->pid;
-			$where .= ' AND sys_language_uid='.$GLOBALS['TSFE']->sys_language_uid;
+			$where = 'pid = ' . $this->pid;
+			$where .= ' AND sys_language_uid = ' . $GLOBALS['TSFE']->sys_language_uid;
 			$where .= $this->cObj->enableFields('tx_kequestionnaire_questions');
 			$orderBy = 'sorting';
-			$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery($selectFields,'tx_kequestionnaire_questions',$where,'',$orderBy);
+			$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
+				$selectFields,
+				'tx_kequestionnaire_questions',
+				$where,
+				'',$orderBy, ''
+			);
 			if ($res){
 				while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)){
 					$questions[] = $row;

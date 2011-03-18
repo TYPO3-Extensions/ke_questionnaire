@@ -12,6 +12,7 @@
 require_once(t3lib_extMgm::extPath('ke_questionnaire').'res/questions/class.kequestionnaire_input.php');
 require_once(t3lib_extMgm::extPath('ke_questionnaire').'res/questions/class.question_open.php');
 require_once(t3lib_extMgm::extPath('ke_questionnaire').'res/questions/class.question_closed.php');
+require_once(t3lib_extMgm::extPath('ke_questionnaire').'res/questions/class.question_dd_words.php');
 require_once(t3lib_extMgm::extPath('ke_questionnaire').'res/questions/class.question_matrix.php');
 require_once(t3lib_extMgm::extPath('ke_questionnaire').'res/questions/class.question_semantic.php');
 require_once(t3lib_extMgm::extPath('ke_questionnaire').'res/questions/class.question_demographic.php');
@@ -62,7 +63,7 @@ class question{
 	function init($uid,$parent,$answer,$validateInput=0,$errorClass="error",$dateFormat="m-d-y",$numberDivider=".",$addOptions=array()){
 		$this->conf = $parent->conf;
 		$this->cObj = $parent->cObj;
-		$this->obj=$parent;
+		$this->obj = $parent;
 		$this->validateInput=$validateInput;
 		$this->dateFormat=$dateFormat;
 		$this->numberDivider=$numberDivider;
@@ -95,7 +96,7 @@ class question{
 			    $this->question[$name] = isset($addOptions["question"][$name])?$addOptions["question"][$name]:$value;
 			}
 		}
-		$this->type=$this->question["closed_type"];
+		$this->type = $this->question["closed_type"];
 
 		//t3lib_div::devLog('test '.$uid, 'questions', 0, array('test'));
 		
@@ -119,6 +120,7 @@ class question{
 
 		// Read Subparts
 		$this->tmpl = $this->cObj->fileResource($this->template);
+		t3lib_div::devLog('Template', 'ke_questionnaire', -1, array($this->tmpl));
 		
 		//Template not found in base extension? Check premium!
 		if($this->tmpl == '' && t3lib_extMgm::isLoaded('ke_questionnaire_premium')) {
@@ -127,9 +129,9 @@ class question{
 		}
 			
 		$mainSubpartName=$this->getTemplateName();
-		$this->tmplMain=$this->cObj->getSubpart($this->tmpl,$mainSubpartName);
-		$this->tmplFields=$this->cObj->getSubpart($this->tmplMain,"###FIELDS###");
-		$this->tmplHelp = $this->cObj->fileResource($this->obj->tmpl_path.'helpbox.html');
+		$this->tmplMain = $this->cObj->getSubpart($this->tmpl, $mainSubpartName);
+		$this->tmplFields = $this->cObj->getSubpart($this->tmplMain, '###FIELDS###');
+		$this->tmplHelp = $this->cObj->fileResource($this->obj->tmpl_path. 'helpbox.html');
 
 		// Prepare Fields
 		$this->buildFieldArray();
@@ -254,11 +256,11 @@ class question{
 	 */
 
 	function generateFieldTemplates(){
-		foreach($this->fields as $key=>$field){
-			$tmpl = $this->cObj->getSubpart($this->tmplFields,$field->subpart);
-			$this->fields[$key]->tmpl=$tmpl;
-			$this->fields[$key]->tmplHead=$this->cObj->getSubpart($this->tmplMain,"###HEAD###");
-			$this->fields[$key]->tmplError=$this->cObj->getSubpart($tmpl,"ERROR_MESSAGE");
+		foreach($this->fields as $key => $field){
+			$tmpl = $this->cObj->getSubpart($this->tmplFields, $field->subpart);
+			$this->fields[$key]->tmpl = $tmpl;
+			$this->fields[$key]->tmplHead = $this->cObj->getSubpart($this->tmplMain,"###HEAD###");
+			$this->fields[$key]->tmplError = $this->cObj->getSubpart($tmpl,"ERROR_MESSAGE");
 			//t3lib_div::devLog('tmpl '.$key, 'input->MatrixElement', 0, array($tmpl,$this->tmplMain));
 		}
 	}
@@ -446,8 +448,8 @@ class question{
 		return $content;
 	}
 
-    function getSpecialJS(){
-	return '';
+    function getSpecialJS() {
+		return '';
     }
 
     function getActivatingQuestion($uid){
@@ -479,32 +481,32 @@ class question{
 		
 		return $out;
     }
-    /**
+    
+	/**
 	 * Render HTML for each Field
 	 *
 	 *
 	 */
-
     function renderFields(){
-		$out=array();
-		$odd=0;
-		foreach($this->fields as $key=>$field){
+		$out = array();
+		$odd = 0;
+		foreach($this->fields as $key => $field){
 			if (!$this->checkDependancies()) {
 			    $this->fields[$key]->value = FALSE;
 			}
-			$marker=$field->subpart=="###HEAD###"?"head":"fields";
+			$marker = $field->subpart=="###HEAD###"?"head":"fields";
 			//#############################################
 			// KENNZIFFER Nadine Schwingler 03.11.2009
 			// Anpassung Title Line
 			if ($this->fields[$key]->type != 'matrix_title_line'){
-			    $this->fields[$key]->odd=$odd; $odd=!$odd;
+			    $this->fields[$key]->odd = $odd; $odd=!$odd;
 			}
 			//#############################################
 			$render_temp = $this->fields[$key]->render();
 			if ($this->fields[$key]->closed_onchange) {
 			    $out['closed_onchangejs'] .= $this->fields[$key]->closed_onchange;
 			}
-			$out[$marker].= $render_temp;
+			$out[$marker] .= $render_temp;
 		}
 		return $out;
 	}
@@ -937,19 +939,19 @@ class question{
 			// for Matrix
 			if (count($this->subquestions) > 0){
 				$saveArray[$this->question['uid']]['possible_answers']['lines'] = array();
-				foreach ($this->subquestions as $nr => $subquestion){
-				if ($subquestion['title_line'] == 0){
-					$text=($subquestion['text'] != '')?$subquestion['text']:$subquestion['title'];
-					$saveArray[$this->question['uid']]['possible_answers']['lines'][$nr] = $text;
-				}
+				foreach ($this->subquestions as $nr => $subquestion) {
+					if ($subquestion['title_line'] == 0){
+						$text=($subquestion['text'] != '')?$subquestion['text']:$subquestion['title'];
+						$saveArray[$this->question['uid']]['possible_answers']['lines'][$nr] = $text;
+					}
 				}
 			}
 			// for Semantic
 			if (count($this->sublines) > 0){
 				$saveArray[$this->question['uid']]['possible_answers']['lines'] = array();
-				foreach ($this->sublines as $nr => $subline){
-				$saveArray[$this->question['uid']]['possible_answers']['lines'][$nr]['start'] = $subline['start'];
-				$saveArray[$this->question['uid']]['possible_answers']['lines'][$nr]['end'] = $subline['end'];
+				foreach ($this->sublines as $nr => $subline) {
+					$saveArray[$this->question['uid']]['possible_answers']['lines'][$nr]['start'] = $subline['start'];
+					$saveArray[$this->question['uid']]['possible_answers']['lines'][$nr]['end'] = $subline['end'];
 				}
 			}
 			//t3lib_div::devLog('answer '.$this->question['uid'], 'class.question', 0, $this->answer);

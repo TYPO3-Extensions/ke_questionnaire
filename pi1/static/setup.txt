@@ -548,5 +548,35 @@ plugin.tx_kequestionnaire_pi1 {
 		  height: 50px;
 		  margin-right: 3px;
 		}
+		
+		span.keq-placeholder,
+		div.keq-moveable {
+			background-color: #efeb8a;
+			border: 2px solid #eae327;
+			display: inline-block;
+			font-size: 11px;
+			height: 20px;
+			line-height: 20px;
+			margin: 0 5px 8px;
+			padding: 0 10px;
+			text-align: center;
+			width: 180px;
+		}
+
+		span.keq-possible {
+			background-color: #f8dc91;
+		}
+		
+		span.keq-hover {
+			background-color: #8ce880;
+			border: 2px solid #3cd228;
+		}
+		
+		div.keq-moveable {
+			background-color: #bfbfbf;
+			border: 2px solid #6d6d6d;
+			padding: 0 10px;
+			width: 180px;
+		}
 	)
 }

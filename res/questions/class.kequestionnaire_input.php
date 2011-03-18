@@ -35,7 +35,7 @@
 		/**
 		 * Select rendering method depending on type
 		 */
-		function render(){
+		function render() {
 			switch($this->type){
 				case "input":
 					$out=$this->renderInput();
@@ -124,9 +124,9 @@
 
 			}
 			//St3lib_div::devLog('markerArraySub marker', 'input', 0, array($out,$markerArray));
-			$out=$this->cObj->substituteMarkerArrayCached($out, $markerArray,$subpartArray);
+			$out=$this->cObj->substituteMarkerArrayCached($out, $markerArray, $subpartArray);
 
-			$this->html=$out;
+			$this->html = $out;
 			return $out;
 		}
 		
@@ -676,7 +676,7 @@
 		
 		function renderBlind(){
 
-			$this->html=$this->value["text"];
+			$this->html = $this->value['text'];
 			return $this->html;
 
 		}

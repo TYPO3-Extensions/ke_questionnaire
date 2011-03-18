@@ -1,0 +1,68 @@
+<html>
+<head>
+<link rel="stylesheet" href="styles.css" type="text/css" />
+</head>
+<body>
+
+
+
+<!-- ###QUESTION_DD_WORDS### begin-->
+<div class="keq_unit" id="question_###NAME###" ###DEPENDANT_STYLE###>
+    <div class="keq_img_left">###IMG_LEFT###</div>
+    <div class="keq_img_right">###IMG_RIGHT###</div>
+    <div class="keq_img_top">###IMG_TOP###</div>
+    <div class="keq_question">
+	###TITLE######TEXT###
+	###HELPBOX###
+    </div>
+    <div class="keq_img_bottom">###IMG_BOTTOM###</div>
+    <div class="keq_cleaner">&nbsp;</div>
+    <div class="keq_selection">
+	<!-- ###ERROR_MESSAGE### begin--><div class="keq_error">###ERROR###</div><!-- ###ERROR_MESSAGE### end-->
+	<!-- ###FIELDS### begin-->
+		<!-- ###BLIND### begin-->
+		    Ein bisschen Freitext.
+		<!-- ###BLIND### end-->
+		<!-- ###LIST### begin--><span class="###ODD_EVEN###">
+		<div class="keq_img_left">###IMG_LEFT###</div>
+		<div class="keq_img_right">###IMG_RIGHT###</div>
+		<div class="keq_img_top">###IMG_TOP###</div>
+		<!-- ###ERROR_MESSAGE### begin--><div class="keq_error">###ERROR###</div><!-- ###ERROR_MESSAGE### end-->
+		<select ###DEPENDANT### name="###PI###[###NAME###][options][]" id="keq_###NAME###" multiple ###CLOSED_SIZE###  ###DEPENDANT_AJAX###>
+		    <!-- ###OPTIONS### begin-->
+			<option>lorem ipsum</option>
+			<option>lorem ipsum</option>
+		    <!-- ###OPTIONS### end-->
+		</select></span>
+		<div class="keq_img_bottom">###IMG_BOTTOM###</div>
+		<!-- ###LIST### end-->
+	<!-- ###FIELDS### end-->
+    </div>
+</div>
+<!-- ###QUESTION_DD_WORDS### end-->
+
+<!-- ###DOMPDF### begin-->
+<div class="question">
+    <div class="question_title">###QUESTION_TITLE######QUESTION###</div>
+    ###OPTIONS###
+</div>
+<div class="question">
+	###COMPARE###
+</div>
+<!-- ###DOMPDF### end-->
+<!-- ###DOMPDF_OPTION### begin-->
+    <div class="closed_question_element">
+	<div class="closed_question_option">###VALUE###</div> ###TEXT### ###INPUT_TEXT###
+    </div>
+<!-- ###DOMPDF_OPTION### end-->
+
+<!-- ###DOMPDF_COMPARE### begin-->
+<div class="compare">
+	###COMPARE_TITLE###
+	###OPTIONS###
+</div>
+<!-- ###DOMPDF_COMPARE### end-->
+
+
+</body>
+</html>

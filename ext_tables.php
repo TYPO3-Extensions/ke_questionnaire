@@ -7,6 +7,7 @@ if (TYPO3_MODE=="BE")	include_once(t3lib_extMgm::extPath("ke_questionnaire")."re
 if (TYPO3_MODE=="BE")	include_once(t3lib_extMgm::extPath("ke_questionnaire")."res/class.tx_kequestionnaire_tx_kequestionnaire_questions_open_type.php");
 if (TYPO3_MODE=="BE")	include_once(t3lib_extMgm::extPath("ke_questionnaire")."res/class.tx_kequestionnaire_tx_kequestionnaire_questions_open_validation.php");
 if (TYPO3_MODE=="BE")	include_once(t3lib_extMgm::extPath("ke_questionnaire")."res/class.tx_kequestionnaire_tx_kequestionnaire_questions_closed_type.php");
+if (TYPO3_MODE=="BE")	include_once(t3lib_extMgm::extPath("ke_questionnaire")."res/class.tx_kequestionnaire_tx_kequestionnaire_questions_dd_words_type.php");
 if (TYPO3_MODE=="BE")	include_once(t3lib_extMgm::extPath("ke_questionnaire")."res/class.tx_kequestionnaire_tx_kequestionnaire_questions_matrix_type.php");
 if (TYPO3_MODE=="BE")	include_once(t3lib_extMgm::extPath("ke_questionnaire")."res/class.tx_kequestionnaire_tx_kequestionnaire_questions_matrix_validation.php");
 if (TYPO3_MODE=="BE")	include_once(t3lib_extMgm::extPath("ke_questionnaire")."res/class.tx_kequestionnaire_tx_kequestionnaire_questions_demographic_fields.php");
