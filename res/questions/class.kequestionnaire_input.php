@@ -717,7 +717,7 @@ function keq_disable(idy,par_id) {
 			$maxAnswers_error = addslashes($this->obj->pi_getLL('error_maxAnswers'));
 			$maxAnswers_error = str_replace('###MAX###',$maxAnswers,$maxAnswers_error);
 			$js_maxAnswers_checkbox = "
-function keq_checkMax(namy,idy) {
+function keq_checkMax" . $maxAnswers . "(namy,idy) {
   var amount = 0;
   var max = ".($maxAnswers).";
   
@@ -732,7 +732,7 @@ function keq_checkMax(namy,idy) {
 }";
 
 			$js_maxAnswers_select = "
-function keq_selectMax(namy) {
+function keq_selectMax" . $maxAnswers . "(namy) {
   var amount = 0;
   var max = ".($maxAnswers).";
   
@@ -766,11 +766,11 @@ function keq_selectMax(namy) {
 			}
 			if ($maxAnswers > 0){
 				if ($this->type == 'checkbox'){
-					$onchange .= "keq_checkMax('tx_kequestionnaire_pi1[###NAME###][options][]','###NAME###_$value');";
-					$GLOBALS['TSFE']->setJS('ke_questionnaire_checkMax',$js_maxAnswers_checkbox);
+					$onchange .= "keq_checkMax" . $maxAnswers . "('tx_kequestionnaire_pi1[###NAME###][options][]','###NAME###_$value');";
+					$GLOBALS['TSFE']->setJS('ke_questionnaire_checkMax' . $maxAnswers, $js_maxAnswers_checkbox);
 				} else {
-					$onchange .= "keq_selectMax('tx_kequestionnaire_pi1[###NAME###][options][]');";
-					$GLOBALS['TSFE']->setJS('ke_questionnaire_selectMax',$js_maxAnswers_select);
+					$onchange .= "keq_selectMax" . $maxAnswers . "('tx_kequestionnaire_pi1[###NAME###][options][]');";
+					$GLOBALS['TSFE']->setJS('ke_questionnaire_selectMax' . $maxAnswers, $js_maxAnswers_select);
 				}
 				$js .= $onchange;
 			}
