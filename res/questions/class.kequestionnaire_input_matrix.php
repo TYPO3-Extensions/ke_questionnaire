@@ -329,12 +329,14 @@ class kequestionnaire_input_matrix extends kequestionnaire_input{
 				function renderMatrixSlider(){
 					$question = $type=="semantic" ? $this->sublines[$this->fieldName] : $this->subquestions[$this->fieldName];
 					$temp = count($this->columns);
-					foreach($this->columns as $key => $value) {
+					$i = 1;
+					foreach($this->columns as $value) {
 						$jsCase .= '
-							case ' . $key . ':
+							case ' . $i . ':
 							value = "' . $value['title'] . '";
 							break;
 						';
+						$i++;
 					}
 					
 					$tmplCol=$this->cObj->getSubpart($this->tmpl, '###SLIDER###');
