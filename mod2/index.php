@@ -291,7 +291,7 @@ class  tx_kequestionnaire_module2 extends t3lib_SCbase {
 		$templ = file_get_contents('res/OF_questions.html');
 		$markerArray = array();
 		
-		$types = array('\'open\'','\'closed\'','\'semantic\'','\'matrix\'');
+		$types = array('\'open\'','\'closed\'','\'dd_words\'','\'semantic\'','\'matrix\'');
 		$markerArray['###QUESTION_SELECT###'] = $this->getQuestionSelect($types);
 		
 		$q_id = t3lib_div::GPvar('question');
@@ -350,6 +350,7 @@ class  tx_kequestionnaire_module2 extends t3lib_SCbase {
 					$markerArray['###DIV###'] .= $list;
 					break;
 				case 'closed':
+				case 'dd_words':
 					$markerArray['###DIV###'] = '<h2 style="width:600px;">'.$question['title'].'</h2>';
 					$markerArray['###DIV###'] .= '<div id="pie"> </div>';
 					$res_answers = $GLOBALS['TYPO3_DB']->exec_SELECTquery('uid,title','tx_kequestionnaire_answers','question_uid='.$q_id.' and hidden=0 and deleted=0','','sorting');
@@ -541,11 +542,11 @@ class  tx_kequestionnaire_module2 extends t3lib_SCbase {
 	function getOFQClosedPieChart($answers, $results, $question){
 		global $LANG;
 		$label = $question['title'];
-		
+
 		$data = array();
 		$colours = array();
 		$values = array();
-		
+
 		if (is_array($answers)){
 			foreach ($answers as $ans){
 				$data[$ans['uid']]['label'] = $ans['title'];
@@ -567,13 +568,49 @@ class  tx_kequestionnaire_module2 extends t3lib_SCbase {
 		foreach ($data as $key => $values){
 			$transfer[] = $values;
 		}
-		
+
 		$label = '';
 		if (count($data) > 0) $chart .= $this->charts->getPieChart('pie',$label,$transfer,$colours);
-		
+
 		return $chart;
 	}
-	
+
+	function getOFQDDWordsPieChart($answers, $results, $question){
+		global $LANG;
+		$label = $question['title'];
+
+		$data = array();
+		$colours = array();
+		$values = array();
+
+		if (is_array($answers)){
+			foreach ($answers as $ans){
+				$data[$ans['uid']]['label'] = $ans['title'];
+				$data[$ans['uid']]['value'] = 0;
+			}
+		}
+		if (is_array($results)){
+			foreach ($results as $result){
+				if (is_array($data) AND is_array($result)){
+					foreach ($data as $nr => $value){
+						if ($result[$question['uid']]['answer']['options'] == $nr) $data[$nr]['value'] ++;
+						elseif (is_array($result[$question['uid']]['answer']['options']) AND in_array($nr,$result[$question['uid']]['answer']['options'])) $data[$nr]['value'] ++;
+					}
+				}
+			}
+		}
+		//t3lib_div::devLog('results '.$label, 'OF data closed pie', 0, $data);
+		$transfer = array();
+		foreach ($data as $key => $values){
+			$transfer[] = $values;
+		}
+
+		$label = '';
+		if (count($data) > 0) $chart .= $this->charts->getPieChart('pie',$label,$transfer,$colours);
+
+		return $chart;
+	}
+
 	function getOFParticipationChart($marker,$parted,$finished){
 		global $LANG;
 		$chart = '';
@@ -796,7 +833,7 @@ class  tx_kequestionnaire_module2 extends t3lib_SCbase {
 		$templ = file_get_contents('res/questions.html');
 		$charts = '';
 		$markerArray = array();
-		$types = array('\'open\'','\'closed\'','\'semantic\'','\'matrix\'');
+		$types = array('\'open\'','\'closed\'','\'dd_words\'','\'semantic\'','\'matrix\'');
 		$markerArray['###QUESTION_SELECT###'] = $this->getQuestionSelect($types);
 
 		$q_id = t3lib_div::GPvar('question');
@@ -861,6 +898,7 @@ class  tx_kequestionnaire_module2 extends t3lib_SCbase {
 					$markerArray['###DIV2###'] = $list;
 					break;
 				case 'closed':
+				case 'dd_words':
 					//$markerArray['###DIV1###'] = '<div id="chart" style="height:300px; width:600px;"> </div>';
 					$markerArray['###DIV1###'] = '<h2>'.$question['title'].'</h2>';
 					$markerArray['###DIV2###'] = '<div id="pie" style="height:450px; width:600px;"> </div>';

@@ -1477,6 +1477,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 							}
 						}
 					}
+					t3lib_div::devLog('points', $this->extKey, -1, array($answers));
 					$total_points = 0;
 					foreach ($results as $rid => $result){
 						switch ($question['closed_type']){
@@ -1499,7 +1500,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 						}
 					}
 					$bars['total'][$qid] = $total_points/count($results);
-					
+
 					switch ($question['closed_type']){
 						case 'sbm_button':
 						case 'radio_single':
@@ -1515,6 +1516,42 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 								}
 							}
 							break;
+					}
+
+					$own_total += $bars['own'][$qid];
+					$max_points += $answer_max_points;
+					break;
+				case 'dd_words':
+					$answers = array();
+					// get all answers
+					$where = 'question_uid='.$qid.$this->cObj->enableFields('tx_kequestionnaire_answers');
+					$res_answers = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*','tx_kequestionnaire_answers',$where);
+					$answer_max_points = 0;
+					if ($res_answers){
+						// create array with points of each answer
+						while ($answer = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res_answers)){
+							$answers[$answer['uid']]['points'] = $answer['value'];
+							$answer_max_points += $answer['value'];
+						}
+					}
+					
+					// sum points of all answers of each question
+					$total_points = 0;
+					foreach ($results as $rid => $result){
+						if (is_array($result[$qid]['answer']['options'])){
+							foreach ($result[$qid]['answer']['options'] as $item){
+								$total_points += $answers[$item]['points'];
+							}
+						}
+					}
+					// calculate average points
+					$bars['total'][$qid] = $total_points/count($results);
+					
+					//t3lib_div::devLog('piVar', $this->prefixId, 0, array($this->piVars[$qid]['options']));
+					if (is_array($this->piVars[$qid]['options'])){
+						foreach ($this->piVars[$qid]['options'] as $item){
+							$bars['own'][$qid] += $answers[$item]['points'];
+						}
 					}
 					
 					$own_total += $bars['own'][$qid];
