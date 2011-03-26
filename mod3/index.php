@@ -592,8 +592,7 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 		//if (t3lib_div::_GP('get_csv_parted') != 1) $content .= '<script type="text/javascript">window.location.href=window.location.href+"&get_csv_parted=1"</script>';
 		//else $content .= '<script type="text/javascript">window.location.href=window.location.href</script>';
 		$content .= "<script type=\"text/javascript\">
-//var max = $counted;
-var max = 5;
+var max = $counted;
 var pointer = $pointer;
  function callFileCreate () {
 	new Ajax.Request('../../../../typo3/ajax.php', {

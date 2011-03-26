@@ -387,6 +387,9 @@ class csv_export {
 								}
 							}
 						break;
+						case 'demographic':
+							t3lib_div::devLog('getCSVSimple2 demo', 'ke_questionnaire Export Mod', 0, $values);
+						break;
 						default:
 							$headline[] = $values['title'];
 						break;
