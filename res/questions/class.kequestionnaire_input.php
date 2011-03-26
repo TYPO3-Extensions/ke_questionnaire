@@ -704,7 +704,7 @@
 			$dependant_ids = array();
 
 			$js_disable = "
-function keq_disable(idy,par_id) {
+ function keq_disable(idy,par_id) {
   input = document.getElementById(idy);
   par = document.getElementById(par_id);
 
@@ -717,7 +717,7 @@ function keq_disable(idy,par_id) {
 			$maxAnswers_error = addslashes($this->obj->pi_getLL('error_maxAnswers'));
 			$maxAnswers_error = str_replace('###MAX###',$maxAnswers,$maxAnswers_error);
 			$js_maxAnswers_checkbox = "
-function keq_checkMax" . $maxAnswers . "(namy,idy) {
+ function keq_checkMax" . $maxAnswers . "(namy,idy) {
   var amount = 0;
   var max = ".($maxAnswers).";
   
@@ -732,7 +732,7 @@ function keq_checkMax" . $maxAnswers . "(namy,idy) {
 }";
 
 			$js_maxAnswers_select = "
-function keq_selectMax" . $maxAnswers . "(namy) {
+ function keq_selectMax" . $maxAnswers . "(namy) {
   var amount = 0;
   var max = ".($maxAnswers).";
   
@@ -806,6 +806,7 @@ function keq_selectMax" . $maxAnswers . "(namy) {
 		 */
 		function validate($validationTypes,$value=NULL,$validationOptions=array()){
 			//t3lib_div::debug($validationTypes,'valTypes');
+			//t3lib_div::debug($validationOptions,'valOptions');
 
 			if(!is_array($validationTypes)) $validationTypes=array($validationTypes);
 			if(is_null($value)) $value=$this->value;
@@ -833,9 +834,8 @@ function keq_selectMax" . $maxAnswers . "(namy) {
 
 		function validateType($value,$validationType,$validationOptions){
 			$out=1;
+			//t3lib_div::debug($validationOptions);
 			//t3lib_div::devLog('validate '.$value, 'input->MatrixElement', 0, array('type'=>$validationType,'options'=>$validationOptions));
-
-
 			switch ($validationType){
 				case "required":
 					$out=$value!="";
@@ -874,6 +874,23 @@ function keq_selectMax" . $maxAnswers . "(namy) {
 					foreach ($validationOptions['textOptions'] as $option){
 						if ($value == $option) $out = 1;
 					}
+				break;
+				case 'keys':
+				case 'keys_all':
+					$out = 0;
+					$all = count($validationOptions['textOptions']);
+					$counter = 0;
+					foreach ($validationOptions['textOptions'] as $option){
+						$pos = strpos($value,$option);
+						//t3lib_div::debug($pos,$value);
+						if (!($pos===false)) $counter ++;
+					}
+					if ($validationOptions['matchAll'] == 1) {
+						if ($counter == $all) $out = 1;
+					} else {
+						if ($counter > 0) $out = 1;
+					}
+					//t3lib_div::debug($counter.' '.$all,'hmpf');
 				break;
 				case "semantic_required":
 					foreach($this->sublines as $key=>$subline){

@@ -238,7 +238,7 @@ $TCA['tx_kequestionnaire_questions'] = array (
 			'label' => 'LLL:EXT:ke_questionnaire/locallang_db.xml:tx_kequestionnaire_questions.dependant_show',
 			'config' => Array (
 				'type' => 'check',
-								'default' => '1'
+				'default' => '1'
 			)
 		),
 		'open_type' => Array (
@@ -287,10 +287,11 @@ $TCA['tx_kequestionnaire_questions'] = array (
 				'items' => Array (
 					Array('LLL:EXT:ke_questionnaire/locallang_db.xml:tx_kequestionnaire_questions.open_validation.I.0', '0'),
 					Array('LLL:EXT:ke_questionnaire/locallang_db.xml:tx_kequestionnaire_questions.open_validation.I.1', 'numeric'),
-										Array('LLL:EXT:ke_questionnaire/locallang_db.xml:tx_kequestionnaire_questions.open_validation.I.1a', 'integer'),
+					Array('LLL:EXT:ke_questionnaire/locallang_db.xml:tx_kequestionnaire_questions.open_validation.I.1a', 'integer'),
 					Array('LLL:EXT:ke_questionnaire/locallang_db.xml:tx_kequestionnaire_questions.open_validation.I.2', 'date'),
 					Array('LLL:EXT:ke_questionnaire/locallang_db.xml:tx_kequestionnaire_questions.open_validation.I.3', 'email'),
-										Array('LLL:EXT:ke_questionnaire/locallang_db.xml:tx_kequestionnaire_questions.open_validation.I.4', 'text'),
+					Array('LLL:EXT:ke_questionnaire/locallang_db.xml:tx_kequestionnaire_questions.open_validation.I.4', 'text'),
+                                        Array('LLL:EXT:ke_questionnaire/locallang_db.xml:tx_kequestionnaire_questions.open_validation.I.5', 'keys'),
 				),
 				//'itemsProcFunc' => 'res/tx_kequestionnaire_tx_kequestionnaire_questions_open_validation->main',
 				'size' => 1,
@@ -304,6 +305,25 @@ $TCA['tx_kequestionnaire_questions'] = array (
 			'config' => Array (
 				'type' => 'input',
 				'size' => '30',
+			)
+		),
+                'open_validation_keywords' => Array (
+			'displayCond' => 'FIELD:open_validation:=:keys',
+			'exclude' => 1,
+			'label' => 'LLL:EXT:ke_questionnaire/locallang_db.xml:tx_kequestionnaire_questions.open_validation_keywords',
+			'config' => Array (
+				'type' => 'text',
+				'cols' => '30',
+                                'rows' => '5',
+			)
+		),
+                'open_validation_keywords_all' => Array (
+                        'displayCond' => 'FIELD:open_validation:=:keys',
+			'exclude' => 1,
+			'label' => 'LLL:EXT:ke_questionnaire/locallang_db.xml:tx_kequestionnaire_questions.open_validation_keywords_all',
+			'config' => Array (
+				'type' => 'check',
+				'default' => '1'
 			)
 		),
 		'open_compare_text' => Array (
@@ -792,6 +812,8 @@ $TCA['tx_kequestionnaire_questions'] = array (
 				open_post_text,
 				open_validation,
 				open_validation_text,
+                                open_validation_keywords,
+                                open_validation_keywords_all,
 				open_compare_text'
 		),
 		'closed' => array(

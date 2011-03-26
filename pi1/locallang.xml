@@ -25,6 +25,8 @@
 			<label index="error_date">Please insert Date</label>
 			<label index="error_email">Please insert Email</label>
 			<label index="error_text">You must answer according to the question</label>
+			<label index="error_keys">You have to answer according to the question</label>
+			<label index="error_keys_all">You have to answer according to the question and match all keywords</label>
 			<label index="error_required">required</label>
 			<label index="error_semantic_required">required</label>
 			<label index="error_required_option">required</label>
@@ -45,6 +47,7 @@
 			<label index="no_authcode">This questionnaire can only be called with an AuthCode. Please insert your AuthCode</label>
 			<label index="authcode_submit_label">submit AuthCode</label>
 
+			<label index="mandatory_marker">*</label>
 			<label index="name">Name</label>
 			<label index="fax">Fax</label>
 			<label index="age">Age</label>
@@ -123,6 +126,8 @@
 			<label index="error_date">Bitte Datum eingeben</label>
 			<label index="error_email">Bitte Email eingeben</label>
 			<label index="error_text">Sie müssen der Fragestellung entsprechend antworten</label>
+			<label index="error_keys">Sie müssen der Fragestellung entsprechend antworten</label>
+			<label index="error_keys_all">Sie müssen der Fragestellung entsprechend antworten und alle Schlüsselwörter verwenden.</label>
 			<label index="error_required">Dies ist eine Pflichtfrage.</label>
 			<label index="error_semantic_required">Pflichtfeld</label>
 			<label index="error_required_option">Pflichtfeld</label>

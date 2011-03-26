@@ -99,17 +99,27 @@ class question_open extends question{
     function validate(){
 		//t3lib_div::devLog('validate', 'question_open', 0, array('question'=>$this->question,'answer'=>$this->answer['text']));
 		//t3lib_div::devLog('extConf', 'question_open', 0, $this->obj->extConf);
+		//t3lib_div::devLog('this->question', 'question_open', 0, $this->question);
 		$value=$this->answer['text'];
 
 		// Collect all types of required validation
 		$validationTypes=array();
-		$validationOptions["dateFormat"]=$this->dateFormat;
-		$validationOptions["numberDivider"]=$this->numberDivider;
-		$validationOptions["textOptions"]=explode($this->obj->extConf['oq_validation_parter'],$this->question['open_validation_text']);
-
 		if($this->question['open_validation']) $validationTypes[]=$this->question['open_validation']; // validation for special type?
 		if($this->question['mandatory']) $validationTypes[]="required"; // required?
-
+		
+		$validationOptions["dateFormat"]=$this->dateFormat;
+		$validationOptions["numberDivider"]=$this->numberDivider;
+		if ($this->question['open_validation'] == 'text') $validationOptions["textOptions"]=explode($this->obj->extConf['oq_validation_parter'],$this->question['open_validation_text']);
+		if ($this->question['open_validation'] == 'keys') {
+		    $validationOptions["textOptions"]=explode($this->obj->extConf['oq_validation_parter'],$this->question['open_validation_keywords']);
+		    $validationOptions["matchAll"] = $this->question['open_validation_keywords_all'];
+		    if ($this->question['open_validation_keywords_all']){
+			foreach ($validationTypes as $key => $vvalue){
+			    //t3lib_div::debug('test', $key);
+			    if ($vvalue == 'keys') $validationTypes[$key] = $vvalue.'_all';
+			}
+		    }
+		}
 		// Get all validation errors
 		$errors=$this->fields["text"]->validate($validationTypes,$value,$validationOptions);
 		if (!$this->checkDependancies()){
