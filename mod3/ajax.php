@@ -285,10 +285,14 @@ class  tx_kequestionnaire_module3_ajax extends t3lib_SCbase {
 									    $result_line[] = $marker;
 								    } elseif ($c_nr == $result['data'][$q_nr]['answer']['options'][$sub_nr]['single']) {
 									    $result_line[] = $marker;
+								    } else {
+									$result_line[] = '';
 								    }
 							    } else {
 								    if ($c_nr == $result['data'][$q_nr]['answer']['options'][$sub_nr]){
 									    $result_line[] = $marker;
+								    }  else {
+									$result_line[] = '';
 								    }
 							    }
 							    /* für Text-Zeilen anderes verhalten
