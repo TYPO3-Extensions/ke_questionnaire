@@ -55,14 +55,15 @@ class question_demographic extends question{
 				$tables=array("fe_users");
 			break;
 		}
+		
 		if (is_array($tables)){
 			foreach($tables as $table){
 				$this->demographicOptions[$table]=$this->getOptionsForDemographic($this->question,$table);
-				$options=$this->demographicOptions[$table];
-				if(!isset($options["fields"])) return;
+				$doptions=$this->demographicOptions[$table];
+				if(!isset($doptions["fields"])) return;	
 	
-	
-				foreach($options["fields"] as $fieldName=>$type){
+				foreach($doptions["fields"] as $fieldName=>$type){
+					//t3lib_div::debug($doptions['validation'],$fieldName);
 					$answer=isset($this->answer[$table][$fieldName])?$this->answer[$table][$fieldName]:"";
 					$marker="###DEFAULT###";
 	
@@ -71,19 +72,19 @@ class question_demographic extends question{
 					$marker=$html==""?"###DEMO_DEFAULT###":"###".strtoupper($fieldName)."###";
 	
 					$label=$this->obj->pi_getLL($fieldName,$fieldName);
+					if ($doptions['validation'][$fieldName] == 'required') $label .= ' '.$this->obj->pi_getLL('mandatory_marker','mandatory_marker');
 	
 					$options=array();
 					switch($type){
 						case "selectbox":
 						case "demographic_radio":
-							if(isset($options["options"][$fieldName])){
-								foreach($options["options"][$fieldName] as $key=>$val){
+							if(isset($doptions["options"][$fieldName])){
+								foreach($doptions["options"][$fieldName] as $key=>$val){
 									$options[]=array("uid"=>$key,"title"=>$val);
 								}
 							}
 						break;
-						default:
-	
+						default:	
 							$options=array();
 	
 					}
