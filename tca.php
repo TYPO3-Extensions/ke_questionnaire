@@ -1020,6 +1020,33 @@ $TCA['tx_kequestionnaire_questions'] = array (
 				//closed_inputfield,
 				.'answers'
 		),
+		'dd_area' => array(
+			'showitem' => '
+				--div--;LLL:EXT:ke_questionnaire/locallang.xml:tx_kequestionnaire.base,
+				sys_language_uid;;;;1-1-1,
+				l18n_parent,
+				l18n_diffsource,
+				hidden;;1,
+				type,
+				title;;;;2-2-2,
+				show_title;;;;3-3-3,
+				text;;;richtext[cut|copy|paste|formatblock|textcolor|bold|italic|underline|left|center|right|orderedlist|unorderedlist|outdent|indent|link|table|image|line|chMode]:rte_transform[mode=ts_css|imgpath=uploads/tx_kequestionnaire/rte/],
+				helptext;;;richtext[cut|copy|paste|formatblock|textcolor|bold|italic|underline|left|center|right|orderedlist|unorderedlist|outdent|indent|link|table|image|line|chMode]:rte_transform[mode=ts_css|imgpath=uploads/tx_kequestionnaire/rte/],
+				image,
+				image_position,
+				--div--;LLL:EXT:ke_questionnaire/locallang.xml:tx_kequestionnaire.flow,
+				mandatory,
+				mandatory_correct,'.
+				//'time,'.
+				'dependant_show,
+				dependancy_simple,
+				dependancy,
+				--div--;LLL:EXT:ke_questionnaire/locallang.xml:tx_kequestionnaire.type_based,
+				closed_randomanswers,
+				--div--;LLL:EXT:ke_questionnaire/locallang.xml:tx_kequestionnaire.answers,'
+				//closed_inputfield,
+				.'answers'
+		),
 		'refusal' => array(
 			'showitem' => '
 				--div--;LLL:EXT:ke_questionnaire/locallang.xml:tx_kequestionnaire.base,
@@ -1041,7 +1068,7 @@ $TCA['tx_kequestionnaire_questions'] = array (
 $TCA['tx_kequestionnaire_answers'] = array (
 	'ctrl' => $TCA['tx_kequestionnaire_answers']['ctrl'],
 	'interface' => array (
-		'showRecordFieldList' => 'sys_language_uid,l18n_parent,l18n_diffsource,hidden,starttime,endtime,fe_group,title,value,correct_answer,text,helptext,image'
+		'showRecordFieldList' => 'sys_language_uid,l18n_parent,l18n_diffsource,hidden,starttime,endtime,fe_group,title,value,correct_answer,text,helptext,image,coordtop,coordbottom'
 	),
 	'feInterface' => $TCA['tx_kequestionnaire_answers']['feInterface'],
 	'columns' => array (
@@ -1266,9 +1293,31 @@ $TCA['tx_kequestionnaire_answers'] = array (
 				'maxitems' => 1,
 			)
 		),
+		'coordtop' => Array (
+			//'displayCond' => 'FIELD:tx_kequestionnaire_questions.type:=:dd_area',
+			'exclude' => 1,
+			'label' => 'LLL:EXT:ke_questionnaire/locallang_db.xml:tx_kequestionnaire_answers.coordtop',
+			'config' => Array (
+				'type'	 => 'input',
+				'size'	 => '11',
+				'max'	  => '11',
+				'default' => '0,0'
+			)
+		),
+		'coordbottom' => Array (
+			//'displayCond' => 'FIELD:type:EQ:dd_area',
+			'exclude' => 1,
+			'label' => 'LLL:EXT:ke_questionnaire/locallang_db.xml:tx_kequestionnaire_answers.coordbottom',
+			'config' => Array (
+				'type'	 => 'input',
+				'size'	 => '11',
+				'max'	  => '11',
+				'default' => '0,0'
+			)
+		),
 	),
 	'types' => array (
-		'0' => array('showitem' => 'sys_language_uid;;;;1-1-1, l18n_parent,question_uid, title;;;;2-2-2, show_input, validate_input, value;;;;3-3-3, correct_answer, text;;;richtext[paste|bold|italic|underline|formatblock|class|left|center|right|orderedlist|unorderedlist|outdent|indent|link|image]:rte_transform[mode=ts];4-4-4, helptext;;;richtext[paste|bold|italic|underline|formatblock|class|left|center|right|orderedlist|unorderedlist|outdent|indent|link|image]:rte_transform[mode=ts], image;;;;5-5-5, image_position,finish_page_uid')
+		'0' => array('showitem' => 'sys_language_uid;;;;1-1-1, l18n_parent,question_uid, title;;;;2-2-2, show_input, validate_input, value;;;;3-3-3, correct_answer, text;;;richtext[paste|bold|italic|underline|formatblock|class|left|center|right|orderedlist|unorderedlist|outdent|indent|link|image]:rte_transform[mode=ts];4-4-4, helptext;;;richtext[paste|bold|italic|underline|formatblock|class|left|center|right|orderedlist|unorderedlist|outdent|indent|link|image]:rte_transform[mode=ts], image;;;;5-5-5, image_position,finish_page_uid,coordtop,coordbottom')
 				//'0' => array('showitem' => 'sys_language_uid;;;;1-1-1, l18n_parent, l18n_diffsource, hidden;;1, question_uid, title;;;;2-2-2, value;;;;3-3-3, correct_answer, text;;;richtext[paste|bold|italic|underline|formatblock|class|left|center|right|orderedlist|unorderedlist|outdent|indent|link|image]:rte_transform[mode=ts], helptext;;;richtext[paste|bold|italic|underline|formatblock|class|left|center|right|orderedlist|unorderedlist|outdent|indent|link|image]:rte_transform[mode=ts], image')
 	),
 	'palettes' => array (

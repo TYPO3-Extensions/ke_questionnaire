@@ -80,6 +80,9 @@
 				case "blind":
 					$out=$this->renderBlind();
 				break;
+				case "ddarea":
+					$out=$this->renderDdArea();
+				break;
 				case "sbm_button":
 					$out=$this->renderSubmit();
 				break;
@@ -130,6 +133,14 @@
 			return $out;
 		}
 		
+		function renderDdArea() {
+			$subpartArray = array();
+			$markerArray = array('###DDIMAGE###' => $this->value['ddimage'], '###DROPAREAS###' => $this->value['dropareas']);
+			
+			$this->html=$this->cObj->substituteMarkerArrayCached($this->tmpl, $markerArray, $subpartArray);
+			return $this->html;
+		}
+		
 		/**
 		 * Rendering of an Input Field
 		 */
@@ -157,7 +168,7 @@
 			return $this->html;
 
 		}
-
+		
 		function renderRadiobutton(){
 			$markerArray['###STYLE###'] = '';
 			//t3lib_div::devLog('renderRadio Button '.$this->fieldName, 'input', 0, $this->options[$this->fieldName]);

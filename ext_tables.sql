@@ -104,6 +104,8 @@ CREATE TABLE tx_kequestionnaire_answers (
 	finish_page_uid int(11) DEFAULT '0' NOT NULL,
 	show_input tinyint(3) DEFAULT '0' NOT NULL,
 	validate_input tinyint(3) DEFAULT '0' NOT NULL,
+	coordtop text NOT NULL,
+	coordbottom text NOT NULL,
 	
 	PRIMARY KEY (uid),
 	KEY parent (pid)

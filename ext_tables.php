@@ -14,6 +14,7 @@ if (TYPO3_MODE=="BE")	include_once(t3lib_extMgm::extPath("ke_questionnaire")."re
 if (TYPO3_MODE=="BE")	include_once(t3lib_extMgm::extPath("ke_questionnaire")."res/class.tx_kequestionnaire_tx_kequestionnaire_dependancies_activating_value.php");
 if (TYPO3_MODE=="BE")	include_once(t3lib_extMgm::extPath("ke_questionnaire")."res/class.tx_kequestionnaire_tx_kequestionnaire_dependancies_activating_question.php");
 if (TYPO3_MODE=="BE")	include_once(t3lib_extMgm::extPath("ke_questionnaire")."res/class.tx_kequestionnaire_tx_kequestionnaire_redirect.php");
+if (TYPO3_MODE=="BE")	include_once(t3lib_extMgm::extPath("ke_questionnaire")."res/class.tx_kequestionnaire_tx_kequestionnaire_questions_dd_area_type.php");
 if (TYPO3_MODE=="BE")	include_once(t3lib_extMgm::extPath("ke_questionnaire")."res/class.tx_kequestionnaire_type.php");
 
 // CSH Definitions
@@ -79,7 +80,7 @@ $TCA["tx_kequestionnaire_answers"] = array (
 		'iconfile'          => t3lib_extMgm::extRelPath($_EXTKEY).'icon_tx_kequestionnaire_answers.gif',
 	),
 	"feInterface" => array (
-		"fe_admin_fieldList" => "sys_language_uid, l18n_parent, l18n_diffsource, hidden, starttime, endtime, fe_group, question_uid, title, value, correct_answer, text, helptext, image, finish_page_uid",
+		"fe_admin_fieldList" => "sys_language_uid, l18n_parent, l18n_diffsource, hidden, starttime, endtime, fe_group, question_uid, title, value, correct_answer, text, helptext, image, finish_page_uid, coordtop, coordbottom",
 	)
 );
 

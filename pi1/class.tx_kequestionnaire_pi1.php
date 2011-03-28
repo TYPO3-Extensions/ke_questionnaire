@@ -1757,6 +1757,18 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 				$answer = $this->piVars[$question['uid']];
 				$question_obj->init($uid, $this, $answer, $validate);
 			break;
+			case 'dd_area':
+				$question_obj = new question_dd_area();
+				if (is_array($this->saveArray[$question['uid']]) AND !$this->piVars[$question['uid']] AND $this->saveArray[$question['uid']]){
+					if (!is_array($this->saveArray[$question['uid']]['answer']) AND stristr($this->saveArray[$question['uid']]['answer'],'<phparray>')){
+						$this->piVars[$question['uid']]['options'] = $this->saveArray[$question['uid']]['answer'];
+					} else {
+						$this->piVars[$question['uid']] = $this->saveArray[$question['uid']]['answer'];
+					}
+				}
+				$answer = $this->piVars[$question['uid']];
+				$question_obj->init($uid, $this, $answer, $validate);
+			break;
 			case 'matrix':
 				$question_obj = new question_matrix();
 				if (is_array($this->saveArray[$question['uid']]) AND !$this->piVars[$question['uid']] AND $this->saveArray[$question['uid']]){

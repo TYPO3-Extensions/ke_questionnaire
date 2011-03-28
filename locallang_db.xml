@@ -92,6 +92,8 @@
 			<label index="tx_kequestionnaire_questions.subquestions">subquestions</label>
 			<label index="tx_kequestionnaire_questions.sublines">sublines</label>
 			
+			<label index="tx_kequestionnaire_answers.coordtop">Coordinate top</label>
+			<label index="tx_kequestionnaire_answers.coordbottom">Coordinate bottom</label>
 			<label index="tx_kequestionnaire_answers">Answer</label>
 			<label index="tx_kequestionnaire_answers.title">title</label>
 			<label index="tx_kequestionnaire_answers.value">value</label>
@@ -173,6 +175,7 @@
 			<label index="tt_content.list_type_pi1">keq questionnaire</label>
 			<label index="tt_content.list_type_pi2">keq fe data mining</label>
 			<label index="tt_content.list_type_pi3">keq participation list</label>
+			<label index="tx_kequestionnaire_questions.type.I.dd_area">Drag and Drop - Area</label>
 		</languageKey>
 		<languageKey index="de" type="array">
 			<label index="schedulerTask.name">Scheduler Task für Teilnahme-Benachrichtigungen</label>
@@ -188,6 +191,7 @@
 			<label index="tx_kequestionnaire_questions.type.I.privacy">Datenschutzerklärung</label>
 			<label index="tx_kequestionnaire_questions.type.I.blind">Textelement</label>
 			<label index="tx_kequestionnaire_questions.type.I.dd_words">Verschieben von Wörtern</label>
+			<label index="tx_kequestionnaire_questions.type.I.dd_area">Drag and Drop - Bereiche</label>
 			<label index="tx_kequestionnaire_questions.type.I.refusal">Verstecktes Feld</label>
 			<label index="tx_kequestionnaire_questions.type">Fragetyp</label>
 			<label index="tx_kequestionnaire_questions.title">Titel</label>
@@ -262,6 +266,8 @@
 			<label index="tx_kequestionnaire_submatrix">Submatrix (erweiterte Matrix)</label>
 			<label index="tx_kequestionnaire_submatrix.text">Sub Matrix Überschrift</label>
 			
+			<label index="tx_kequestionnaire_answers.coordtop">Koordinate oben</label>
+			<label index="tx_kequestionnaire_answers.coordbottom">Koordinate unten</label>
 			<label index="tx_kequestionnaire_answers">Antwort</label>
 			<label index="tx_kequestionnaire_answers.title">Titel</label>
 			<label index="tx_kequestionnaire_answers.value">Wert</label>
