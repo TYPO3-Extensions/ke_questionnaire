@@ -77,8 +77,16 @@ class question_dd_area extends question {
 		$GLOBALS['TSFE']->additionalHeaderData['keq-js-ui'] = '<script src="'.t3lib_extMgm::siteRelPath('ke_questionnaire').'res/jquery/jquery-ui-1.8.11.custom.min.js" type="text/javascript"></script>';
 		$GLOBALS['TSFE']->register['kequestionnaire'][$this->question['uid']] = '
 			$("select#keq_' . $this->question['uid'] . '").hide();
+			$("div#question_' . $this->question['uid'] . '").css("padding-bottom", "25px");
 			
-			offset = $("div#question_' . $this->question['uid'] . '").find("div.keq-moveable").css("position", "absolute").find(":first").offset();
+			offset = $("div#question_' . $this->question['uid'] . '").find("div.keq-moveable").css({
+				"position": "absolute",
+				"border": 0,
+				"backgroundColor": "transparent",
+				"width": "auto",
+				"padding": 0,
+				"margin": 0
+			}).find(":first").offset();
 			$("div#question_' . $this->question['uid'] . '").find("div.keq-moveable").draggable({
 				revert: true
 			}).offset(offset);
@@ -128,7 +136,10 @@ class question_dd_area extends question {
 		$count = count($this->answers);
 		$dropAreas = '';
 		foreach($this->answers as $key => $value) {
-			$answers .= $this->cObj->wrap($value['text'], '<div style="z-index: 10' . ($count - $i) . ';" id="keq-moveable' . $key . '-' . $value['answerarea'] . '" class="keq-moveable">|</div>');
+			//$answers .= $this->cObj->wrap($value['text'], '<div style="z-index: 10' . ($count - $i) . ';" id="keq-moveable' . $key . '-' . $value['answerarea'] . '" class="keq-moveable">|</div>');
+			$conf['file'] = 'uploads/tx_kequestionnaire/' . $value['image'];
+			$conf['wrap'] = '<div style="z-index: 10' . ($count - $i) . ';" id="keq-moveable' . $key . '-' . $value['answerarea'] . '" class="keq-moveable">|</div>';
+			$answers .= $this->cObj->IMAGE($conf);
 			$checkboxes .= '<div id="keq-ddarea-checkbox' . $key . '" class="keq-ddarea-checkbox">&nbsp;</div>';
 			
 			// there can be more answers than areas
