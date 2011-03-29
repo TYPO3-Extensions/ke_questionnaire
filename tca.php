@@ -763,6 +763,15 @@ $TCA['tx_kequestionnaire_questions'] = array (
 					'showRemovedLocalizationRecords' => 1,
 				),
 			)
+		),
+		'coords' => Array (
+			'exclude' => 1,
+			'label' => 'LLL:EXT:ke_questionnaire/locallang_db.xml:tx_kequestionnaire_questions.coords',
+			'config' => Array (
+				'type' => 'text',
+				'cols' => '30',
+				'rows' => '5'
+			)
 		)
 	),
 	'types' => array (
@@ -1037,15 +1046,13 @@ $TCA['tx_kequestionnaire_questions'] = array (
 				--div--;LLL:EXT:ke_questionnaire/locallang.xml:tx_kequestionnaire.flow,
 				mandatory,
 				mandatory_correct,'.
-				//'time,'.
 				'dependant_show,
 				dependancy_simple,
 				dependancy,
 				--div--;LLL:EXT:ke_questionnaire/locallang.xml:tx_kequestionnaire.type_based,
 				closed_randomanswers,
 				--div--;LLL:EXT:ke_questionnaire/locallang.xml:tx_kequestionnaire.answers,'
-				//closed_inputfield,
-				.'answers'
+				.'coords,answers'
 		),
 		'refusal' => array(
 			'showitem' => '
@@ -1293,31 +1300,25 @@ $TCA['tx_kequestionnaire_answers'] = array (
 				'maxitems' => 1,
 			)
 		),
-		'coordtop' => Array (
-			//'displayCond' => 'FIELD:tx_kequestionnaire_questions.type:=:dd_area',
+		'answerarea' => Array (
 			'exclude' => 1,
-			'label' => 'LLL:EXT:ke_questionnaire/locallang_db.xml:tx_kequestionnaire_answers.coordtop',
+			'label' => 'LLL:EXT:ke_questionnaire/locallang_db.xml:tx_kequestionnaire_answers.answerarea',
 			'config' => Array (
 				'type'	 => 'input',
-				'size'	 => '11',
-				'max'	  => '11',
-				'default' => '0,0'
-			)
-		),
-		'coordbottom' => Array (
-			//'displayCond' => 'FIELD:type:EQ:dd_area',
-			'exclude' => 1,
-			'label' => 'LLL:EXT:ke_questionnaire/locallang_db.xml:tx_kequestionnaire_answers.coordbottom',
-			'config' => Array (
-				'type'	 => 'input',
-				'size'	 => '11',
-				'max'	  => '11',
-				'default' => '0,0'
+				'size'	 => '4',
+				'max'	  => '4',
+				'eval'	 => 'int',
+				'checkbox' => '0',
+				'range'	=> Array (
+					'upper' => '1000',
+					'lower' => '0'
+				),
+				'default' => 0
 			)
 		),
 	),
 	'types' => array (
-		'0' => array('showitem' => 'sys_language_uid;;;;1-1-1, l18n_parent,question_uid, title;;;;2-2-2, show_input, validate_input, value;;;;3-3-3, correct_answer, text;;;richtext[paste|bold|italic|underline|formatblock|class|left|center|right|orderedlist|unorderedlist|outdent|indent|link|image]:rte_transform[mode=ts];4-4-4, helptext;;;richtext[paste|bold|italic|underline|formatblock|class|left|center|right|orderedlist|unorderedlist|outdent|indent|link|image]:rte_transform[mode=ts], image;;;;5-5-5, image_position,finish_page_uid,coordtop,coordbottom')
+		'0' => array('showitem' => 'sys_language_uid;;;;1-1-1, l18n_parent,question_uid, title;;;;2-2-2, show_input, validate_input, value;;;;3-3-3, correct_answer, text;;;richtext[paste|bold|italic|underline|formatblock|class|left|center|right|orderedlist|unorderedlist|outdent|indent|link|image]:rte_transform[mode=ts];4-4-4, helptext;;;richtext[paste|bold|italic|underline|formatblock|class|left|center|right|orderedlist|unorderedlist|outdent|indent|link|image]:rte_transform[mode=ts], image;;;;5-5-5, image_position,finish_page_uid,answerarea')
 				//'0' => array('showitem' => 'sys_language_uid;;;;1-1-1, l18n_parent, l18n_diffsource, hidden;;1, question_uid, title;;;;2-2-2, value;;;;3-3-3, correct_answer, text;;;richtext[paste|bold|italic|underline|formatblock|class|left|center|right|orderedlist|unorderedlist|outdent|indent|link|image]:rte_transform[mode=ts], helptext;;;richtext[paste|bold|italic|underline|formatblock|class|left|center|right|orderedlist|unorderedlist|outdent|indent|link|image]:rte_transform[mode=ts], image')
 	),
 	'palettes' => array (

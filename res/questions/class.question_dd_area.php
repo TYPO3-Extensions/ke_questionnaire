@@ -73,68 +73,81 @@ class question_dd_area extends question {
 	 */
 	function buildFieldArray(){
 		// put JS to header
-		$GLOBALS['TSFE']->additionalHeaderData['keq-js-core'] = '<script src="'.t3lib_extMgm::siteRelPath('ke_questionnaire').'res/jquery/jquery-1.4.4.min.js" type="text/javascript"></script>';
-		$GLOBALS['TSFE']->additionalHeaderData['keq-js-ui-core'] = '<script src="'.t3lib_extMgm::siteRelPath('ke_questionnaire').'res/jquery/jquery.ui.core.min.js" type="text/javascript"></script>';
-		$GLOBALS['TSFE']->additionalHeaderData['keq-js-ui-widget'] = '<script src="'.t3lib_extMgm::siteRelPath('ke_questionnaire').'res/jquery/jquery.ui.widget.min.js" type="text/javascript"></script>';
-		$GLOBALS['TSFE']->additionalHeaderData['keq-js-ui-mouse'] = '<script src="'.t3lib_extMgm::siteRelPath('ke_questionnaire').'res/jquery/jquery.ui.mouse.min.js" type="text/javascript"></script>';
-		$GLOBALS['TSFE']->additionalHeaderData['keq-js-ui-draggable'] = '<script src="'.t3lib_extMgm::siteRelPath('ke_questionnaire').'res/jquery/jquery.ui.draggable.min.js" type="text/javascript"></script>';
-		$GLOBALS['TSFE']->additionalHeaderData['keq-js-ui-droppable'] = '<script src="'.t3lib_extMgm::siteRelPath('ke_questionnaire').'res/jquery/jquery.ui.droppable.min.js" type="text/javascript"></script>';
-		$GLOBALS['TSFE']->additionalHeaderData['keq-js-ui-dd-words'] = '
-	        <script type="text/javascript">	
-				$(document).ready(function() {
-				$("select#keq_' . $this->question['uid'] . '").hide();
-				$("div.keq-moveable").draggable({
-					revert: true,
-					helper: "clone",
-					opacity: 0.7
-				});
-	
-				$("div.keq-placeholder").droppable({
-					activeClass: "keq-possible",
-					hoverClass: "keq-hover",
-					accept: ":not(.ui-sortable-helper)",
-					drop: function( event, ui ) {
-						if($(".keq-moveable:contains(" + $(this).text() + ")").length) {
-							$( "div.keq-moveable3" ).draggable( "disable" );
-							answerIdOld = $(".keq-moveable:contains(" + $(this).text() + ")").attr("id").replace(/keq-moveable/g, "");
-							alert(answerIdOld);
-							$("#keq-moveable" + answerIdOld).show();
-							$("select#keq_' . $this->question['uid'] . ' option[value=" + answerIdOld + "]").attr("selected", false);
-						}
-						answerIdNew = $(".keq-moveable:contains(" + ui.draggable.text() + ")").attr("id").replace(/keq-moveable/g, "");
-						placeholderId = $(this).attr("id").replace(/keq-placeholder/g, "");
-
-						//$("#keq-moveable" + answerIdNew).hide();
-						
-						// Set only if answer is correct
-						if(answerIdNew != placeholderId) {
-							$("select#keq_' . $this->question['uid'] . ' option[value=" + answerIdNew + "]").attr("selected", true);						
-						}
-
-						$(this).text(ui.draggable.text());
+		$GLOBALS['TSFE']->additionalHeaderData['keq-js-core'] = '<script src="'.t3lib_extMgm::siteRelPath('ke_questionnaire').'res/jquery/jquery-1.5.1.min.js" type="text/javascript"></script>';
+		$GLOBALS['TSFE']->additionalHeaderData['keq-js-ui'] = '<script src="'.t3lib_extMgm::siteRelPath('ke_questionnaire').'res/jquery/jquery-ui-1.8.11.custom.min.js" type="text/javascript"></script>';
+		$GLOBALS['TSFE']->register['kequestionnaire'][$this->question['uid']] = '
+			$("select#keq_' . $this->question['uid'] . '").hide();
+			
+			offset = $("div#question_' . $this->question['uid'] . '").find("div.keq-moveable").css("position", "absolute").find(":first").offset();
+			$("div#question_' . $this->question['uid'] . '").find("div.keq-moveable").draggable({
+				revert: true
+			}).offset(offset);
+			
+			$("div#question_' . $this->question['uid'] . '").find("div.keq-placeholder").css("opacity", .7).droppable({
+				accept: "div#question_' . $this->question['uid'] . ' div.keq-moveable",	
+				activeClass: "keq-possible",
+				hoverClass: "keq-hover",
+				drop: function( event, ui ) {
+					answerId = ui.draggable.attr("id").replace(/keq-moveable/g, "");
+					answerId = answerId.split("-");
+					placeholderId = $(this).attr("id").replace(/keq-placeholder' . $this->question['uid'] . '-/g, "");
+					
+					// moveable was moved. So first of all deselect option in selectbox
+					$("select#keq_' . $this->question['uid'] . ' option[value=" + answerId[0] + "]").attr("selected", false);
+					
+					// If answer is correct
+					if(answerId[1] == placeholderId) {
+						$("select#keq_' . $this->question['uid'] . ' option[value=" + answerId[0] + "]").attr("selected", true);
+						$("#keq-moveable" + answerId[0] + "-" + answerId[1]).fadeOut();
+						$("#keq-ddarea-checkbox" + answerId[0]).css("backgroundColor", "#00FF00");
+					} else {
+						$("#keq-ddarea-checkbox" + answerId[0]).css("backgroundColor", "#DDDDDD");
+						var moveItem = $("#keq-moveable" + answerId[0] + "-" + answerId[1]);
+						var index = $("div#question_' . $this->question['uid'] . '").find("div.keq-moveable").index(moveItem);
+						$("div#question_' . $this->question['uid'] . '").find("div.keq-moveable:eq(" + index + ")").css({
+							top: 0,
+							left: 0
+						});
 					}
-				});
+				}
 			});
-			</script>
 		';
-
+		
+		// get coords of answerareas
+		$coordRow = t3lib_div::trimExplode("\n", $this->question['coords']);
+		foreach($coordRow as $keyRow => $row) {
+			$coordParts = t3lib_div::trimExplode("|", $row);
+			foreach($coordParts as $keyPart => $part) {
+				$coords[($keyRow + 1)][$keyPart] = t3lib_div::trimExplode(":", $part);
+			}
+		}
+		
 		// create the answers for each question
 		// create also hidden fields to save the answer
-		$i = 2;
+		$i = 0;
+		$count = count($this->answers);
 		$dropAreas = '';
 		foreach($this->answers as $key => $value) {
-			$value['text'] = strip_tags($value['text']);
-			$answers .= $this->cObj->wrap($value['text'], '<div style="z-index: 10'.$i.';" id="keq-moveable' . $key . '" class="keq-moveable">|</div>');
-			$markerArray['###WORD_' . strtoupper($value['text']) . '###'] = '<span id="keq-placeholder' . $key . '" class="keq-placeholder">Add the correct word here</span>';
-			$coord['top'] = explode(',',$value['coordtop']);
-			$coord['bottom'] = explode(',',$value['coordbottom']);
-			//t3lib_div::debug($coord);
-			$dropAreas .= '<div id="keq-placeholder' . $key . '" class="keq-placeholder" style="z-index: '.$i.'; position: absolute; top: '.$coord['top'][1].'px; left: '.$coord['top'][0].'px;height: '.($coord['bottom'][1]-$coord['top'][1]).'px; width: '.($coord['bottom'][0]-$coord['top'][0]).'px; border: 1px solid red;">&nbsp;TEST&nbsp;</div>';
+			$answers .= $this->cObj->wrap($value['text'], '<div style="z-index: 10' . ($count - $i) . ';" id="keq-moveable' . $key . '-' . $value['answerarea'] . '" class="keq-moveable">|</div>');
+			$checkboxes .= '<div id="keq-ddarea-checkbox' . $key . '" class="keq-ddarea-checkbox">&nbsp;</div>';
+			
+			// there can be more answers than areas
+			// don't make more areas than needed
+			$dropAreas[$value['answerarea']] = '
+				<div id="keq-placeholder' . $this->question['uid'] . '-' . $value['answerarea'] . '" class="keq-placeholder" style="
+					z-index: '.$i.';
+					position: absolute;
+					top: ' . $coords[$value['answerarea']][0][1] . 'px;
+					left: ' . $coords[$value['answerarea']][0][0] . 'px;
+					height: ' . ($coords[$value['answerarea']][1][1] - $coords[$value['answerarea']][0][1]) . 'px;
+					width: ' . ($coords[$value['answerarea']][1][0] - $coords[$value['answerarea']][0][0]).'px;
+				">&nbsp;</div>';
 			$i++;
 		}
 		
+		$dropAreas = implode('', $dropAreas);
 		
-		$this->question['text'] = $this->cObj->substituteMarkerArray($this->question['text'], $markerArray);
+		$checkboxes = $checkboxes . '<div style="clear: left;"></div>';
 		
 		//$imgSource = '<div class="keq_img_bottom" style="position: relative; z-index: 1;">'.$this->renderImage(array('title' => $this->question['title'],'image' => $this->question['image'],'image_position' => $this->question['image_position'])).'<div style="z-index: 2; position: absolute; top: 10px; left: 10px; border: 1px solid red;">&nbsp;TEST&nbsp;</div></div>';
 		$imgSource = $this->renderImage(array('title' => $this->question['title'],'image' => $this->question['image'],'image_position' => $this->question['image_position']));
@@ -157,6 +170,14 @@ class question_dd_area extends question {
 			'', $this->dependants
 		);
 		
+		$this->fields['checkboxes'] = new kequestionnaire_input(
+			'text',
+			'blind',
+			array('text' => $checkboxes),
+			'###CHECKBOXES###',
+			$this
+		);
+		
 		$this->fields['answers'] = new kequestionnaire_input(
 			'text',
 			'blind',
@@ -164,6 +185,7 @@ class question_dd_area extends question {
 			'###BLIND###',
 			$this
 		);
+		
 		//t3lib_div::devLog('buildFieldArray', 'ke_questionnaire', -1, array($this->fields, $markerArray));
 	}
 	

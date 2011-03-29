@@ -14,7 +14,7 @@ plugin.tx_kequestionnaire_pi1 {
 		.keq_blindunit p.bodytext{
 			color: #ffffff;
 		}
-		
+
 		.keq_question_blind p.bodytext{
 			color: #000000;
 		}
@@ -54,7 +54,7 @@ plugin.tx_kequestionnaire_pi1 {
 		.keq_error {
 			color: red;
 		}
-		
+
 		.keq_pagecounter_barbox {
 			width: 300px;
 			height: 20px;
@@ -62,7 +62,7 @@ plugin.tx_kequestionnaire_pi1 {
 			margin-bottom: 6px;
 			position: relative;
 		}
-		
+
 		.keq_pagecounter_bar {
 			background: #dadada;
 			height: 100%;
@@ -213,15 +213,15 @@ plugin.tx_kequestionnaire_pi1 {
 			border-left: 1px solid black;
 			padding: 0;
 		}
-		
+
 		.keq_q_part_text {
 			color: #005500;
 		}
-		
+
 		.keq_q_no_part_text {
 			color: #550000;
 		}
-		
+
 		.keq_timer .timer_clock {
 			-moz-background-clip:border;
 			-moz-background-inline-policy:continuous;
@@ -238,34 +238,34 @@ plugin.tx_kequestionnaire_pi1 {
 			text-align:center;
 			width:62px;
 		}
-		
+
 		.keq_timer #mins {
 			margin-left: 15px;
 			float: left;
 		}
-		
+
 		.keq_timer #parter {
 			float: left;
 		}
-		
+
 		.keq_timer #secs {
 			float: left;
 		}
-		
+
 		.keq_timer .clearer {
 			height: 1px;
 			line-height: 1px;
 			font-size: 1px;
 			clear: both;
 		}
-		
+
 		/*From Content.css*/
 		.keq_unit {
 			background-color:#EEEEEE;
 			padding:0 3px 3px;
 			width:700px;
 		}
-		
+
 		.keq_question {
 			padding: 3px;
 			background: #DADADA;
@@ -273,41 +273,41 @@ plugin.tx_kequestionnaire_pi1 {
 			margin-bottom: 4px;
 			width: 691px;
 		}
-		
+
 		.keq_inp_large{
 			width: 98%;
 		}
-		
+
 		.keq_inp_textarea{
 			width: 98%;
 		}
-		
+
 		.keq_question_blind{
 			width: 500px;
 		}
-		
+
 		.keq_selection select {
 			width: 300px;
 		}
-		
+
 		.keq_selection thead{
 			color: black;
 		}
-		
+
 		.keq_selection thead th{
 			background-color: #404040;
 		}
-		
+
 		.keq_demographic label {
 			width: 150px;
 			display: block;
 			float: left;
 		}
-		
+
 		.keq_navigation {
 			margin-top: 20px;
 		}
-		
+
 		.keq_navigation a {
 			padding: 3px;
 			text-decoration: none;
@@ -320,13 +320,13 @@ plugin.tx_kequestionnaire_pi1 {
 			float: left;
 			color: #000000;
 		}
-		
-		.keq_navigation a:hover 
+
+		.keq_navigation a:hover
 		{
-			color: #000000; 
+			color: #000000;
 			background-color: #808080;
 		}
-		
+
 		/**
 		* Fragebogen-Modul
 		*/
@@ -345,12 +345,12 @@ plugin.tx_kequestionnaire_pi1 {
 	        }
 	        .keq_selection .keq_inp_large { width:600px; }
 	        .keq_input input { width:600px; }
-	       
+
 	        .keq_input input#keq_66,
 	        .keq_input input#keq_68{
 			width: 30px;
 		}
-	       
+
 	        .keq_unit {
 			background: transparent;
 			margin-bottom:15px;
@@ -368,7 +368,7 @@ plugin.tx_kequestionnaire_pi1 {
 			display:block;
 			margin-bottom: 0;
 			padding: 4px 6px;
-			width:auto;		 
+			width:auto;
 	        }
 	        tr.title_line td{
 			background: #F2F2F2;
@@ -378,20 +378,20 @@ plugin.tx_kequestionnaire_pi1 {
 			background:#0098A1;
 			color: #fff;
 		}
-	     
+
 	    .tx-kequestionnaire-pi1 .odd {
 			background-color: transparent;
 			line-height:1.5em;
 			padding:3px;
 	    }
-		
+
 		.tx-kequestionnaire-pi1 .title_line {
 		 	background-color: #d9d9d9;
 			line-height:1.5em;
 			padding:3px;
 			border: 0;
 	    }
-	     
+
 	    .keq_navigation {
 			margin:20px auto 0 auto;
 			padding: 0 0 10px 0;
@@ -438,7 +438,7 @@ plugin.tx_kequestionnaire_pi1 {
 			font-style: italic;
 			color:#333;
         }
-		
+
 		.keq_selection .semantic_td {
 			text-align: center;
 		}
@@ -446,6 +446,7 @@ plugin.tx_kequestionnaire_pi1 {
 		.keq_selection, .keq_input {
 			margin: 0 0 0 19px;
 			padding:3px 0 3px 4px;
+			position: relative;
 			border-left: 1px solid #0098A1;
 			border-right: 0;
 			border-top: 0;
@@ -462,36 +463,36 @@ plugin.tx_kequestionnaire_pi1 {
         }
 
 		.keq_other{ padding:0.45em; }
-	
+
 		.keq_img_left { float: left }
 		.keq_img_right { float: right }
-		
+
 		.keq_input_error { display: block;}
-		
+
 		.keq_matrix_th img {
 			width: 50px;
 			height: 50px;
 		}
-		
+
 		.keq_matrix_th .keq_img_th_left{
 			margin-right: 5px;
 		}
 		.keq_matrix_th .keq_img_th_right {
 			margin-left: 5px;
 		}
-		
+
 		.keq_matrix_table img {
 			width: 50px;
 			height: 50px;
 		}
-		
+
 		.keq_matrix_table .keq_img_td_left{
 			margin-right: 5px;
 		}
 		.keq_matrix_table .keq_img_td_right {
 			margin-left: 5px;
 		}
-		
+
 		div.keq_tooltip
 		{
 		  position: relative;
@@ -500,18 +501,18 @@ plugin.tx_kequestionnaire_pi1 {
 		  border-bottom:0px dotted #4dbcf3;
 		  display:inline;
 		}
-			  
-	   
+
+
 		div.keq_tooltip:hover {
 		  background: transparent;
 		  z-index: 100;
 		}
-			  
+
 		div.keq_tooltip div.keq_tip {
 		  display: none;
 		  text-decoration: none;
 		}
-			  
+
 		div.keq_tooltip:hover div.keq_tip {
 		  display: block;
 		  position: absolute;
@@ -526,31 +527,31 @@ plugin.tx_kequestionnaire_pi1 {
 		  font-family: Verdana, Arial, Helvetica, Sans-serif;
 		  text-align: left;
 		}
-		
+
 		table.keq_matrix_table .keq_matrix_th img{
 		  width: 50px;
 		  height: 50px;
 		}
-		
+
 		table.keq_matrix_table .keq_matrix_td img{
 		  width: 50px;
 		  height: 50px;
 		}
-		
+
 		.keq_img_opt_right img {
 		  width: 50px;
 		  height: 50px;
 		  margin-left: 3px;
 		}
-		
+
 		.keq_img_opt_left img {
 		  width: 50px;
 		  height: 50px;
 		  margin-right: 3px;
 		}
-		
+
 		span.keq-placeholder,
-		div.keq-moveable {
+		.keq-moveable {
 			background-color: #efeb8a;
 			border: 2px solid #eae327;
 			display: inline-block;
@@ -563,20 +564,42 @@ plugin.tx_kequestionnaire_pi1 {
 			width: 180px;
 		}
 
-		span.keq-possible {
-			background-color: #f8dc91;
+		div.keq-placeholder {
+			position: absolute;
 		}
 		
+		span.keq-possible,
+		div.keq-possible {
+			background-color: #f8dc91;
+		}
+
 		span.keq-hover {
 			background-color: #8ce880;
 			border: 2px solid #3cd228;
 		}
-		
+
+		div.keq-hover {
+			background-color: #8ce880;
+		}
+
 		div.keq-moveable {
 			background-color: #bfbfbf;
 			border: 2px solid #6d6d6d;
 			padding: 0 10px;
 			width: 180px;
+		}
+		
+		div.keq-ddarea-checkbox {
+			background-color: #DDDDDD;
+			border: 1px solid #C0C0C0;
+			float: left;
+			height: 20px;
+			margin: 10px 10px 10px 0;
+			width: 20px;
+		}
+		
+		div.clearer {
+			clear: left;
 		}
 	)
 }

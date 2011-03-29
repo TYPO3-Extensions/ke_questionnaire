@@ -125,6 +125,15 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 			default:
 				$content = 'unknown task \'' . $this->mainTask . '\'';
 		}
+		
+		// add collected JavaScript to header
+		$GLOBALS['TSFE']->additionalHeaderData['keq-js-slider'] = '
+			<script type="text/javascript">
+				$(document).ready(function() {' . 
+				implode('', $GLOBALS['TSFE']->register['kequestionnaire']) . '
+				});
+			</script>
+		';
 		return $content;
 	}
 
@@ -1522,6 +1531,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 					$max_points += $answer_max_points;
 					break;
 				case 'dd_words':
+				case 'dd_area':
 					$answers = array();
 					// get all answers
 					$where = 'question_uid='.$qid.$this->cObj->enableFields('tx_kequestionnaire_answers');

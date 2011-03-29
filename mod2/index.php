@@ -291,7 +291,7 @@ class  tx_kequestionnaire_module2 extends t3lib_SCbase {
 		$templ = file_get_contents('res/OF_questions.html');
 		$markerArray = array();
 		
-		$types = array('\'open\'','\'closed\'','\'dd_words\'','\'semantic\'','\'matrix\'');
+		$types = array('\'open\'','\'closed\'','\'dd_words\'','\'dd_area\'','\'semantic\'','\'matrix\'');
 		$markerArray['###QUESTION_SELECT###'] = $this->getQuestionSelect($types);
 		
 		$q_id = t3lib_div::GPvar('question');
@@ -351,6 +351,7 @@ class  tx_kequestionnaire_module2 extends t3lib_SCbase {
 					break;
 				case 'closed':
 				case 'dd_words':
+				case 'dd_area':
 					$markerArray['###DIV###'] = '<h2 style="width:600px;">'.$question['title'].'</h2>';
 					$markerArray['###DIV###'] .= '<div id="pie"> </div>';
 					$res_answers = $GLOBALS['TYPO3_DB']->exec_SELECTquery('uid,title','tx_kequestionnaire_answers','question_uid='.$q_id.' and hidden=0 and deleted=0','','sorting');
@@ -833,7 +834,7 @@ class  tx_kequestionnaire_module2 extends t3lib_SCbase {
 		$templ = file_get_contents('res/questions.html');
 		$charts = '';
 		$markerArray = array();
-		$types = array('\'open\'','\'closed\'','\'dd_words\'','\'semantic\'','\'matrix\'');
+		$types = array('\'open\'','\'closed\'','\'dd_words\'','\'dd_area\'','\'semantic\'','\'matrix\'');
 		$markerArray['###QUESTION_SELECT###'] = $this->getQuestionSelect($types);
 
 		$q_id = t3lib_div::GPvar('question');
@@ -899,6 +900,7 @@ class  tx_kequestionnaire_module2 extends t3lib_SCbase {
 					break;
 				case 'closed':
 				case 'dd_words':
+				case 'dd_area':
 					//$markerArray['###DIV1###'] = '<div id="chart" style="height:300px; width:600px;"> </div>';
 					$markerArray['###DIV1###'] = '<h2>'.$question['title'].'</h2>';
 					$markerArray['###DIV2###'] = '<div id="pie" style="height:450px; width:600px;"> </div>';

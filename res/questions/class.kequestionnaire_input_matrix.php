@@ -85,7 +85,7 @@ class kequestionnaire_input_matrix extends kequestionnaire_input{
         
                 //#############################################
                 // KENNZIFFER Nadine Schwingler 03.11.2009
-                // Anpassungen Title-Line für Matrix
+                // Anpassungen Title-Line fï¿½r Matrix
                 if ($this->type == 'matrix_title_line'){
                         $markerArray["###ODD_EVEN###"]='title_line';
                 } else {
@@ -95,7 +95,7 @@ class kequestionnaire_input_matrix extends kequestionnaire_input{
 
                 //#############################################
                 // KENNZIFFER Stefan Froemken 15.12.2010
-                // Anpassungen Slider für Matrix
+                // Anpassungen Slider fï¿½r Matrix
                 if ($this->type == 'matrix_slider'){
                         $markerArray["###ODD_EVEN###"]='slider';
                 } else {
@@ -341,40 +341,30 @@ class kequestionnaire_input_matrix extends kequestionnaire_input{
 					
 					$tmplCol=$this->cObj->getSubpart($this->tmpl, '###SLIDER###');
 					$header = $this->cObj->getSubpart($this->cObj->fileResource($this->template), '###HEADER_ADDITIONS###');
-					$GLOBALS['TSFE']->register['kequestionnaire'] .= '
-						$(function() {
-							$( "#keq_'.$question['question_uid'].'_'.$question['uid'].'" ).val(1);
-							$( "#span_'.$question['question_uid'].'_'.$question['uid'].'" ).text(id2title(1));
-							$( "#slider_'.$question['question_uid'].'_'.$question['uid'].'" ).slider({
-								value: 1,
-								min: 1,
-								max: '.$temp.',
-								step: 1,
-								slide: function( event, ui ) {
-									$( "#keq_'.$question['question_uid'].'_'.$question['uid'].'" ).val(ui.value);
-									$( "#span_'.$question['question_uid'].'_'.$question['uid'].'" ).text(id2title(ui.value));
-								}
-							});
-							
-							function id2title(id) {
-								switch(id) {
-									' . $jsCase . '
-								}
-								
-								return value;
+					$GLOBALS['TSFE']->register['kequestionnaire'][$question['question_uid']] = '
+						$( "#keq_'.$question['question_uid'].'_'.$question['uid'].'" ).val(1);
+						$( "#span_'.$question['question_uid'].'_'.$question['uid'].'" ).text(id2title(1));
+						$( "#slider_'.$question['question_uid'].'_'.$question['uid'].'" ).slider({
+							value: 1,
+							min: 1,
+							max: '.$temp.',
+							step: 1,
+							slide: function( event, ui ) {
+								$( "#keq_'.$question['question_uid'].'_'.$question['uid'].'" ).val(ui.value);
+								$( "#span_'.$question['question_uid'].'_'.$question['uid'].'" ).text(id2title(ui.value));
 							}
 						});
-					';
-					$GLOBALS['TSFE']->additionalHeaderData['keq-css-slider'] = '<link rel="stylesheet" type="text/css" href="'.t3lib_extMgm::siteRelPath('ke_questionnaire').'res/jquery/jquery-ui-1.8.7.custom.css" media="all" />';
-					$GLOBALS['TSFE']->additionalHeaderData['keq-js-core'] = '<script src="'.t3lib_extMgm::siteRelPath('ke_questionnaire').'res/jquery/jquery-1.4.4.min.js" type="text/javascript"></script>';
-					$GLOBALS['TSFE']->additionalHeaderData['keq-js-ui-core'] = '<script src="'.t3lib_extMgm::siteRelPath('ke_questionnaire').'res/jquery/jquery.ui.core.min.js" type="text/javascript"></script>';
-					$GLOBALS['TSFE']->additionalHeaderData['keq-js-ui-widget'] = '<script src="'.t3lib_extMgm::siteRelPath('ke_questionnaire').'res/jquery/jquery.ui.widget.min.js" type="text/javascript"></script>';
-					$GLOBALS['TSFE']->additionalHeaderData['keq-js-ui-mouse'] = '<script src="'.t3lib_extMgm::siteRelPath('ke_questionnaire').'res/jquery/jquery.ui.mouse.min.js" type="text/javascript"></script>';
-					$GLOBALS['TSFE']->additionalHeaderData['keq-js-ui-slider'] = '<script src="'.t3lib_extMgm::siteRelPath('ke_questionnaire').'res/jquery/jquery.ui.slider.min.js" type="text/javascript"></script>';
-					$GLOBALS['TSFE']->additionalHeaderData['keq-js-slider'] = '<script type="text/javascript">
-						'.$GLOBALS['TSFE']->register['kequestionnaire'].'
-						</script>
-					';
+						function id2title(id) {
+							switch(id) {
+								' . $jsCase . '
+							}
+							
+							return value;
+						}
+						';
+					$GLOBALS['TSFE']->additionalHeaderData['keq-css-slider'] = '<link rel="stylesheet" type="text/css" href="'.t3lib_extMgm::siteRelPath('ke_questionnaire').'res/jquery/jquery-ui-1.8.11.custom.css" media="all" />';
+					$GLOBALS['TSFE']->additionalHeaderData['keq-js-core'] = '<script src="'.t3lib_extMgm::siteRelPath('ke_questionnaire').'res/jquery/jquery-1.5.1.min.js" type="text/javascript"></script>';
+					$GLOBALS['TSFE']->additionalHeaderData['keq-js-ui'] = '<script src="'.t3lib_extMgm::siteRelPath('ke_questionnaire').'res/jquery/jquery-ui-1.8.11.custom.min.js" type="text/javascript"></script>';
 					
 					$markerArray["###COLSPAN###"] = $temp;
 					

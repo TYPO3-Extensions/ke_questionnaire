@@ -296,7 +296,7 @@ class  tx_kequestionnaire_module4 extends t3lib_SCbase {
 
 					$this->error=0;
 					if($out["body"]=="") $this->error="error_missing_text";
-					elseif(substr_count($out["body"],"###LINK###")==0) $this->error="error_missing_marker";
+					elseif(substr_count($out["body"],"###LINK###") == 0 && substr_count($out["body"], "###URL###") == 0) $this->error="error_missing_marker";
 					if($out["subject"]=="") $this->error="error_missing_subject";
 					if($out["fromName"]=="" || $out["fromEmail"]=="") $this->error="error_missing_sender";
 
@@ -304,11 +304,13 @@ class  tx_kequestionnaire_module4 extends t3lib_SCbase {
 
 				}
 				function sendMail($email,$authcode,$mailTexts,$markerArray=array()){
-					$link="http://".$_SERVER["HTTP_HOST"]."/index.php?id=".$this->pid."&tx_kequestionnaire_pi1[auth_code]=".$authcode;
-					$html_link = "<a href=\"http://".$_SERVER["HTTP_HOST"]."/index.php?id=".$this->pid."&tx_kequestionnaire_pi1[auth_code]=".$authcode.'">'.$link.'</a>';
+					$link = t3lib_div::getIndpEnv('TYPO3_SITE_URL') . 'index.php?id=' . $this->pid . '&tx_kequestionnaire_pi1[auth_code]=' . $authcode;
+					$html_link = '<a href="' . $link . '">' . $link . '</a>';
 
-					$markerArray["###AUTHCODE###"]=$authcode;
-					$markerArray["###LINK###"]='<'.$link.'>';
+					$markerArray["###AUTHCODE###"] = $authcode;
+					$markerArray["###LINK###"] = '<' . $link . '>';
+					$markerArray["###ID###"] = $this->pid;
+					$markerArray["###URL###"] = $link;
 
 					$body=$mailTexts["body"];
 					$html_body=$mailTexts["body"];
@@ -404,7 +406,7 @@ class  tx_kequestionnaire_module4 extends t3lib_SCbase {
 						$authCode=$this->generateSingleCode($email,$feuser);
 						//t3lib_div::devLog('test', 'Einlade-Mod', 0, array($email, $authCode));
 						if(!$authCode) continue;
-						$success=$this->sendMail($email,$authCode,$mailTexts);
+						$success=$this->sendMail($email, $authCode, $mailTexts);
 						if(!$success) return $this->LL("error_send");
 
 

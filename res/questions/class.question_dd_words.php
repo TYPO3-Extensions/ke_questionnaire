@@ -73,47 +73,39 @@ class question_dd_words extends question {
 	 */
 	function buildFieldArray(){
 		// put JS to header
-		$GLOBALS['TSFE']->additionalHeaderData['keq-js-core'] = '<script src="'.t3lib_extMgm::siteRelPath('ke_questionnaire').'res/jquery/jquery-1.4.4.min.js" type="text/javascript"></script>';
-		$GLOBALS['TSFE']->additionalHeaderData['keq-js-ui-core'] = '<script src="'.t3lib_extMgm::siteRelPath('ke_questionnaire').'res/jquery/jquery.ui.core.min.js" type="text/javascript"></script>';
-		$GLOBALS['TSFE']->additionalHeaderData['keq-js-ui-widget'] = '<script src="'.t3lib_extMgm::siteRelPath('ke_questionnaire').'res/jquery/jquery.ui.widget.min.js" type="text/javascript"></script>';
-		$GLOBALS['TSFE']->additionalHeaderData['keq-js-ui-mouse'] = '<script src="'.t3lib_extMgm::siteRelPath('ke_questionnaire').'res/jquery/jquery.ui.mouse.min.js" type="text/javascript"></script>';
-		$GLOBALS['TSFE']->additionalHeaderData['keq-js-ui-draggable'] = '<script src="'.t3lib_extMgm::siteRelPath('ke_questionnaire').'res/jquery/jquery.ui.draggable.min.js" type="text/javascript"></script>';
-		$GLOBALS['TSFE']->additionalHeaderData['keq-js-ui-droppable'] = '<script src="'.t3lib_extMgm::siteRelPath('ke_questionnaire').'res/jquery/jquery.ui.droppable.min.js" type="text/javascript"></script>';
-		$GLOBALS['TSFE']->additionalHeaderData['keq-js-ui-dd-words'] = '
-	        <script type="text/javascript">
-			$(document).ready(function() {
-				$("select#keq_' . $this->question['uid'] . '").hide();
-				$("div.keq-moveable").draggable({
-					revert: true,
-					helper: "clone",
-					opacity: 0.7
-				});
-	
-				$("span.keq-placeholder").droppable({
-					activeClass: "keq-possible",
-					hoverClass: "keq-hover",
-					accept: ":not(.ui-sortable-helper)",
-					drop: function( event, ui ) {
-						if($(".keq-moveable:contains(" + $(this).text() + ")").length) {
-							answerIdOld = $(".keq-moveable:contains(" + $(this).text() + ")").attr("id").replace(/keq-moveable/g, "");
-							$("#keq-moveable" + answerIdOld).show();
-							$("select#keq_' . $this->question['uid'] . ' option[value=" + answerIdOld + "]").attr("selected", false);
-						}
-						answerIdNew = $(".keq-moveable:contains(" + ui.draggable.text() + ")").attr("id").replace(/keq-moveable/g, "");
-						placeholderId = $(this).attr("id").replace(/keq-placeholder/g, "");
-
-						$("#keq-moveable" + answerIdNew).hide();
-						
-						// Set only if answer is correct
-						if(answerIdNew == placeholderId) {
-							$("select#keq_' . $this->question['uid'] . ' option[value=" + answerIdNew + "]").attr("selected", true);						
-						}
-
-						$(this).text(ui.draggable.text());
-					}
-				});
+		$GLOBALS['TSFE']->additionalHeaderData['keq-js-core'] = '<script src="'.t3lib_extMgm::siteRelPath('ke_questionnaire').'res/jquery/jquery-1.5.1.min.js" type="text/javascript"></script>';
+		$GLOBALS['TSFE']->additionalHeaderData['keq-js-ui'] = '<script src="'.t3lib_extMgm::siteRelPath('ke_questionnaire').'res/jquery/jquery-ui-1.8.11.custom.min.js" type="text/javascript"></script>';
+		$GLOBALS['TSFE']->register['kequestionnaire'][$this->question['uid']] = '
+			$("select#keq_' . $this->question['uid'] . '").hide();
+			$("div#question_' . $this->question['uid'] . ' div.keq-moveable").draggable({
+				revert: true,
+				helper: "clone",
+				opacity: 0.7
 			});
-			</script>
+
+			$("div#question_' . $this->question['uid'] . ' span.keq-placeholder").droppable({
+				accept: "div#question_' . $this->question['uid'] . ' div.keq-moveable",	
+				activeClass: "keq-possible",
+				hoverClass: "keq-hover",
+				drop: function( event, ui ) {
+					if($("div#question_' . $this->question['uid'] . ' .keq-moveable:contains(" + $(this).text() + ")").length) {
+						answerIdOld = $("div#question_' . $this->question['uid'] . ' .keq-moveable:contains(" + $(this).text() + ")").attr("id").replace(/keq-moveable/g, "");
+						$("#keq-moveable" + answerIdOld).show();
+						$("select#keq_' . $this->question['uid'] . ' option[value=" + answerIdOld + "]").attr("selected", false);
+					}
+					answerIdNew = $("div#question_' . $this->question['uid'] . ' .keq-moveable:contains(" + ui.draggable.text() + ")").attr("id").replace(/keq-moveable/g, "");
+					placeholderId = $(this).attr("id").replace(/keq-placeholder/g, "");
+
+					$("#keq-moveable" + answerIdNew).hide();
+					
+					// Set only if answer is correct
+					if(answerIdNew == placeholderId) {
+						$("select#keq_' . $this->question['uid'] . ' option[value=" + answerIdNew + "]").attr("selected", true);						
+					}
+
+					$(this).text(ui.draggable.text());
+				}
+			});
 		';
 
 		// create the answers for each question
