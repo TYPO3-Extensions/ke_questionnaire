@@ -550,7 +550,7 @@ plugin.tx_kequestionnaire_pi1 {
 		  margin-right: 3px;
 		}
 
-		span.keq-placeholder,
+		.keq-placeholder,
 		.keq-moveable {
 			background-color: #efeb8a;
 			border: 2px solid #eae327;
@@ -564,12 +564,16 @@ plugin.tx_kequestionnaire_pi1 {
 			width: 180px;
 		}
 
-		div.keq-placeholder {
+		div.keq-ddarea-placeholder {
 			position: absolute;
 		}
 		
-		span.keq-possible,
-		div.keq-possible {
+		div.keq-moveable {
+			background-color: #bfbfbf;
+			border: 2px solid #6d6d6d;
+		}
+		
+		.keq-possible {
 			background-color: #f8dc91;
 		}
 
@@ -582,13 +586,6 @@ plugin.tx_kequestionnaire_pi1 {
 			background-color: #8ce880;
 		}
 
-		div.keq-moveable {
-			background-color: #bfbfbf;
-			border: 2px solid #6d6d6d;
-			padding: 0 10px;
-			width: 180px;
-		}
-		
 		div.keq-ddarea-checkbox {
 			background-color: #DDDDDD;
 			border: 1px solid #C0C0C0;
@@ -596,6 +593,10 @@ plugin.tx_kequestionnaire_pi1 {
 			height: 20px;
 			margin: 10px 10px 10px 0;
 			width: 20px;
+		}
+		
+		div.keq-ddarea-moveable {
+			display: inline;
 		}
 		
 		div.clearer {

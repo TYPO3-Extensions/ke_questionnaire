@@ -42,8 +42,8 @@ CREATE TABLE tx_kequestionnaire_questions (
 	open_post_text tinytext NOT NULL,
 	open_validation varchar(7) DEFAULT '' NOT NULL,
 	open_validation_text tinytext NOT NULL,
-        open_validation_keywords text NOT NULL,
-        open_validation_keywords_all tinyint(3) DEFAULT '0' NOT NULL,
+	open_validation_keywords text NOT NULL,
+	open_validation_keywords_all tinyint(3) DEFAULT '0' NOT NULL,
 	open_compare_text text NOT NULL,
 	closed_type varchar(13) DEFAULT '' NOT NULL,
 	closed_selectsize int(11) DEFAULT '0' NOT NULL,
@@ -68,6 +68,7 @@ CREATE TABLE tx_kequestionnaire_questions (
 	sublines blob NOT NULL,
 	submatrix blob NOT NULL,
 	coords text NOT NULL,
+	ddarea_drop_once tinyint(4) DEFAULT '0' NOT NULL,
 	
 	PRIMARY KEY (uid),
 	KEY parent (pid),

@@ -772,7 +772,16 @@ $TCA['tx_kequestionnaire_questions'] = array (
 				'cols' => '30',
 				'rows' => '5'
 			)
-		)
+		),
+		'ddarea_drop_once' => array (
+			'displayCond' => 'FIELD:type:=:dd_area',
+			'exclude' => 1,
+			'label'   => 'LLL:EXT:ke_questionnaire/locallang_db.xml:tx_kequestionnaire_questions.ddarea_drop_once',
+			'config'  => array (
+				'type'	=> 'check',
+				'default' => '0'
+			)
+		),
 	),
 	'types' => array (
 		'0' => array(
@@ -1037,6 +1046,7 @@ $TCA['tx_kequestionnaire_questions'] = array (
 				l18n_diffsource,
 				hidden;;1,
 				type,
+				ddarea_drop_once,
 				title;;;;2-2-2,
 				show_title;;;;3-3-3,
 				text;;;richtext[cut|copy|paste|formatblock|textcolor|bold|italic|underline|left|center|right|orderedlist|unorderedlist|outdent|indent|link|table|image|line|chMode]:rte_transform[mode=ts_css|imgpath=uploads/tx_kequestionnaire/rte/],

@@ -92,6 +92,7 @@
 			<label index="tx_kequestionnaire_questions.subquestions">subquestions</label>
 			<label index="tx_kequestionnaire_questions.sublines">sublines</label>
 			<label index="tx_kequestionnaire_questions.coords">Coordinates for answersections. Each line represents one area. Devide x and y coord with :. Devide upper left and lower right with |. Sample: 0:0|100:150</label>
+			<label index="tx_kequestionnaire_questions.ddarea_drop_once">Checked: If the answer was false it doesn't revert to its position and was marked as false.</label>
 			
 			<label index="tx_kequestionnaire_answers">Answer</label>
 			<label index="tx_kequestionnaire_answers.title">title</label>
@@ -263,6 +264,7 @@
 			<label index="tx_kequestionnaire_questions.sublines">Angaben Zeilen</label>
 			<label index="tx_kequestionnaire_questions.submatrix">Sub Matrix</label>
 			<label index="tx_kequestionnaire_questions.coords">Koordinaten für die Antwortbereiche. Jede Zeile = Ein Antwortbereich. Trenne x und y mit Doppelpunkt (:). Trenne obere linke Ecke und untere rechte Ecke mit Pipe (|). Beispiel: 0:0|100:150</label>
+			<label index="tx_kequestionnaire_questions.ddarea_drop_once">Markiert: Wenn die Antwort falsch ist, dann wird diese nicht mehr an Ihre Ursprungsposition gesetzt und die Antwort wird als Falsch gesetzt.</label>
 			
 			<label index="tx_kequestionnaire_submatrix">Submatrix (erweiterte Matrix)</label>
 			<label index="tx_kequestionnaire_submatrix.text">Sub Matrix Überschrift</label>

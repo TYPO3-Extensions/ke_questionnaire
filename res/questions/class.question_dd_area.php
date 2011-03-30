@@ -72,50 +72,43 @@ class question_dd_area extends question {
 	 * Defines all fields in Template
 	 */
 	function buildFieldArray(){
+ 		// check if frong answers should be maked as wrong
+		if($this->question['ddarea_drop_once']) {
+ 			$jsForWrongAnswers = '
+ 				$("#keq-ddarea-checkbox" + answerId[0]).css("backgroundColor", "#DD0000");
+ 				$("#keq-ddarea-moveable" + answerId[0] + "-" + answerId[1]).fadeOut();
+ 			';
+ 		}		
+		
 		// put JS to header
 		$GLOBALS['TSFE']->additionalHeaderData['keq-js-core'] = '<script src="'.t3lib_extMgm::siteRelPath('ke_questionnaire').'res/jquery/jquery-1.5.1.min.js" type="text/javascript"></script>';
 		$GLOBALS['TSFE']->additionalHeaderData['keq-js-ui'] = '<script src="'.t3lib_extMgm::siteRelPath('ke_questionnaire').'res/jquery/jquery-ui-1.8.11.custom.min.js" type="text/javascript"></script>';
 		$GLOBALS['TSFE']->register['kequestionnaire'][$this->question['uid']] = '
 			$("select#keq_' . $this->question['uid'] . '").hide();
-			$("div#question_' . $this->question['uid'] . '").css("padding-bottom", "25px");
 			
-			offset = $("div#question_' . $this->question['uid'] . '").find("div.keq-moveable").css({
-				"position": "absolute",
-				"border": 0,
-				"backgroundColor": "transparent",
-				"width": "auto",
-				"padding": 0,
-				"margin": 0
-			}).find(":first").offset();
-			$("div#question_' . $this->question['uid'] . '").find("div.keq-moveable").draggable({
+			$("div#question_' . $this->question['uid'] . '").find("div.keq-ddarea-moveable").draggable({
 				revert: true
-			}).offset(offset);
+			});
 			
-			$("div#question_' . $this->question['uid'] . '").find("div.keq-placeholder").css("opacity", .7).droppable({
-				accept: "div#question_' . $this->question['uid'] . ' div.keq-moveable",	
+			$("div#question_' . $this->question['uid'] . '").find("div.keq-ddarea-placeholder").css("opacity", .7).droppable({
+				accept: "div#question_' . $this->question['uid'] . ' div.keq-ddarea-moveable",	
 				activeClass: "keq-possible",
 				hoverClass: "keq-hover",
 				drop: function( event, ui ) {
-					answerId = ui.draggable.attr("id").replace(/keq-moveable/g, "");
+					answerId = ui.draggable.attr("id").replace(/keq-ddarea-moveable/g, "");
 					answerId = answerId.split("-");
-					placeholderId = $(this).attr("id").replace(/keq-placeholder' . $this->question['uid'] . '-/g, "");
+					placeholderId = $(this).attr("id").replace(/keq-ddarea-placeholder' . $this->question['uid'] . '-/g, "");
 					
-					// moveable was moved. So first of all deselect option in selectbox
+					// ddarea-moveable was moved. So first of all deselect option in selectbox
 					$("select#keq_' . $this->question['uid'] . ' option[value=" + answerId[0] + "]").attr("selected", false);
 					
 					// If answer is correct
 					if(answerId[1] == placeholderId) {
 						$("select#keq_' . $this->question['uid'] . ' option[value=" + answerId[0] + "]").attr("selected", true);
-						$("#keq-moveable" + answerId[0] + "-" + answerId[1]).fadeOut();
+						$("#keq-ddarea-moveable" + answerId[0] + "-" + answerId[1]).fadeOut();
 						$("#keq-ddarea-checkbox" + answerId[0]).css("backgroundColor", "#00FF00");
 					} else {
-						$("#keq-ddarea-checkbox" + answerId[0]).css("backgroundColor", "#DDDDDD");
-						var moveItem = $("#keq-moveable" + answerId[0] + "-" + answerId[1]);
-						var index = $("div#question_' . $this->question['uid'] . '").find("div.keq-moveable").index(moveItem);
-						$("div#question_' . $this->question['uid'] . '").find("div.keq-moveable:eq(" + index + ")").css({
-							top: 0,
-							left: 0
-						});
+						' . $jsForWrongAnswers . '
 					}
 				}
 			});
@@ -136,16 +129,16 @@ class question_dd_area extends question {
 		$count = count($this->answers);
 		$dropAreas = '';
 		foreach($this->answers as $key => $value) {
-			//$answers .= $this->cObj->wrap($value['text'], '<div style="z-index: 10' . ($count - $i) . ';" id="keq-moveable' . $key . '-' . $value['answerarea'] . '" class="keq-moveable">|</div>');
+			//$answers .= $this->cObj->wrap($value['text'], '<div style="z-index: 10' . ($count - $i) . ';" id="keq-ddarea-moveable' . $key . '-' . $value['answerarea'] . '" class="keq-ddarea-moveable">|</div>');
 			$conf['file'] = 'uploads/tx_kequestionnaire/' . $value['image'];
-			$conf['wrap'] = '<div style="z-index: 10' . ($count - $i) . ';" id="keq-moveable' . $key . '-' . $value['answerarea'] . '" class="keq-moveable">|</div>';
+			$conf['wrap'] = '<div style="z-index: 10' . ($count - $i) . ';" id="keq-ddarea-moveable' . $key . '-' . $value['answerarea'] . '" class="keq-ddarea-moveable">|</div>';
 			$answers .= $this->cObj->IMAGE($conf);
 			$checkboxes .= '<div id="keq-ddarea-checkbox' . $key . '" class="keq-ddarea-checkbox">&nbsp;</div>';
 			
 			// there can be more answers than areas
 			// don't make more areas than needed
 			$dropAreas[$value['answerarea']] = '
-				<div id="keq-placeholder' . $this->question['uid'] . '-' . $value['answerarea'] . '" class="keq-placeholder" style="
+				<div id="keq-ddarea-placeholder' . $this->question['uid'] . '-' . $value['answerarea'] . '" class="keq-ddarea-placeholder" style="
 					z-index: '.$i.';
 					position: absolute;
 					top: ' . $coords[$value['answerarea']][0][1] . 'px;
