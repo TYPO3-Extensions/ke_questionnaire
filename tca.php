@@ -333,6 +333,17 @@ $TCA['tx_kequestionnaire_questions'] = array (
 				'type' => 'text',
 				'cols' => '30',
 				'rows' => '5',
+				'wizards' => Array(
+					'_PADDING' => 2,
+					'RTE' => array(
+						'notNewRecords' => 1,
+						'RTEonly' => 1,
+						'type' => 'script',
+						'title' => 'Full screen Rich Text Editing|Formatteret redigering i hele vinduet',
+						'icon' => 'wizard_rte2.gif',
+						'script' => 'wizard_rte.php',
+					),
+				),
 			)
 		),
 		'closed_type' => Array (
@@ -832,7 +843,7 @@ $TCA['tx_kequestionnaire_questions'] = array (
 				open_validation_text,
                                 open_validation_keywords,
                                 open_validation_keywords_all,
-				open_compare_text'
+				open_compare_text;;;richtext[cut|copy|paste|formatblock|textcolor|bold|italic|underline|left|center|right|orderedlist|unorderedlist|outdent|indent|link|table|image|line|chMode]:rte_transform[mode=ts_css|imgpath=uploads/tx_kequestionnaire/rte/]'
 		),
 		'closed' => array(
 			'showitem' => '
