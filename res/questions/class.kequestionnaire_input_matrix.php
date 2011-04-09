@@ -386,7 +386,7 @@ class kequestionnaire_input_matrix extends kequestionnaire_input{
         		$maxAnswers_error = str_replace('###MAX###',$this->maxAnswers,$maxAnswers_error);
 
                         $js_maxAnswers_matrix = "
-function keq_checkMaxMatrix(qid,subqs,cols,idy,max) {
+ function keq_checkMaxMatrix(qid,subqs,cols,idy,max) {
   var amount = 0;
   var subqs = subqs.split(',');
   var cols = cols.split(',');
@@ -424,7 +424,7 @@ function keq_checkMaxMatrix(qid,subqs,cols,idy,max) {
         		$maxAnswers_error = str_replace('###MAX###',$act_col['maxanswers'],$maxAnswers_error);
 
                         $js_maxAnswers_column = "
-function keq_checkMaxColumn(qid,subqs,colid,idy,max,title) {
+ function keq_checkMaxColumn(qid,subqs,colid,idy,max,title) {
   var amount = 0;
   var subqs = subqs.split(',');
   
@@ -465,9 +465,8 @@ function keq_checkMaxColumn(qid,subqs,colid,idy,max,title) {
 
         function validateType($value,$validationType,$validationOptions){
                 $out=1;
-                //t3lib_div::devLog('validate '.$value, 'input->MatrixElement', 0, array('type'=>$validationType,'options'=>$validationOptions));
-
-
+                //t3lib_div::devLog('validate '.$value, 'input->MatrixElement', 0, array('type'=>$validationType,'options'=>$validationOptions, 'value'=>$value));
+                //t3lib_div::debug($this->subquestions);
                 switch ($validationType){
                         case "required":
                                 $out=$value!="";
@@ -482,6 +481,7 @@ function keq_checkMaxColumn(qid,subqs,colid,idy,max,title) {
                         case "matrix_required_option":
                                 foreach($this->subquestions as $key=>$subquestion){
                                         if(isset($value[$key])) continue;
+                                        elseif($subquestion['title_line'] == 1) continue;
                                         $out=0;
                                         $this->subquestions[$key]["error"]=$validationType;
                                 }

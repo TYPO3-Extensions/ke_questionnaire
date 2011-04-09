@@ -172,9 +172,11 @@ class question_matrix  extends question{
 	function validate(){
 		//t3lib_div::devLog('validate', 'question_matrix', 0,array($this->question["matrix_validation"]));
 		foreach($this->fields as $key=>$field){
+			if ($field->type == 'matrix_title_line') continue;
 			$validationTypes=array();
 			if(in_array($key,$this->lastOptionKeys)) continue; // no validation for martix inputfield rows
-			if($key=="head") continue;
+			if($key=="head") continue;			
+			
 			switch($this->type){
 				case "radio":
 				case "check":
@@ -207,9 +209,9 @@ class question_matrix  extends question{
 
 			$validationOptions["dateFormat"]=$this->dateFormat;
 			$validationOptions["numberDivider"]=$this->numberDivider;
-
+			
 			$errors=$field->validate($validationTypes,$value,$validationOptions);
-			//t3lib_div::devLog('validate '.$this->question['uid'], 'question_matrix', 0, array('errors'=>$errors));
+			//t3lib_div::devLog('validate '.$field->type, 'question_matrix', 0, array('errors'=>$errors));
 			if (!$this->checkDependancies()){
 				$this->error=0;
 			} elseif(count($errors) > 0) {
