@@ -36,7 +36,7 @@ require_once(PATH_tslib.'class.tslib_pibase.php');
  * */
 
 class question_dd_area extends question {
-	var $templateName           = "question_dd_area.html";              //Name of default Templatefile
+	var $templateName           = 'question_dd_area.html';              //Name of default Templatefile
 
 	/**
 	 * The initiation method of the PlugIn
@@ -88,6 +88,9 @@ class question_dd_area extends question {
 			
 			$("div#question_' . $this->question['uid'] . '").find("div.keq-ddarea-moveable").draggable({
 				revert: true
+			});
+			$("div#question_' . $this->question['uid'] . ' p.bodytext").css({
+				display: "inline-block"
 			});
 			
 			$("div#question_' . $this->question['uid'] . '").find("div.keq-ddarea-placeholder").css("opacity", .7).droppable({

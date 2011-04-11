@@ -36,7 +36,14 @@ require_once(PATH_tslib.'class.tslib_pibase.php');
  * */
 
 class question_dd_words extends question {
-	var $templateName           = "question_dd_words.html";              //Name of default Templatefile
+	var $templateName = "question_dd_words.html";              //Name of default Templatefile
+	
+	/**
+	 * Saves the language object
+	 * 
+	 * @var language
+	 */
+	var $lang;
 
 	/**
 	 * The initiation method of the PlugIn
@@ -47,6 +54,11 @@ class question_dd_words extends question {
 	 *
 	 */
 	function base_init($uid){
+		// initialize language
+		$language = $GLOBALS['TSFE']->tmpl->setup['config.']['language'];
+		$this->lang = t3lib_div::makeInstance('language');
+		$this->lang->init($language ? $language : 'default');
+		
 		$this->options = array();
 		$where = 'question_uid = ' . $uid;
 		$where .= ' AND sys_language_uid = ' . $GLOBALS['TSFE']->sys_language_uid;
@@ -82,7 +94,10 @@ class question_dd_words extends question {
 				helper: "clone",
 				opacity: 0.7
 			});
-
+			$("div#question_' . $this->question['uid'] . ' p.bodytext").css({
+				display: "inline-block"
+			});
+			
 			$("div#question_' . $this->question['uid'] . ' span.keq-placeholder").droppable({
 				accept: "div#question_' . $this->question['uid'] . ' div.keq-moveable",	
 				activeClass: "keq-possible",
@@ -113,7 +128,7 @@ class question_dd_words extends question {
 		foreach($this->answers as $key => $value) {
 			$value['text'] = strip_tags($value['text']);
 			$answers .= $this->cObj->wrap($value['text'], '<div id="keq-moveable' . $key . '" class="keq-moveable">|</div>');
-			$markerArray['###WORD_' . strtoupper($value['text']) . '###'] = '<span id="keq-placeholder' . $key . '" class="keq-placeholder">Add the correct word here</span>';
+			$markerArray['###WORD_' . strtoupper($value['text']) . '###'] = '<span id="keq-placeholder' . $key . '" class="keq-placeholder">' . $this->lang->sL('LLL:EXT:ke_questionnaire/pi1/locallang.xml:question_ddwords_placeholder') . '</span>';
 		}
 
 		$this->question['text'] = $this->cObj->substituteMarkerArray($this->question['text'], $markerArray);

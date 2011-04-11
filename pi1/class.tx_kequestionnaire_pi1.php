@@ -127,13 +127,15 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 		}
 		
 		// add collected JavaScript to header
-		$GLOBALS['TSFE']->additionalHeaderData['keq-js-slider'] = '
-			<script type="text/javascript">
-				$(document).ready(function() {' . 
-				implode('', $GLOBALS['TSFE']->register['kequestionnaire']) . '
-				});
-			</script>
-		';
+		if(count($GLOBALS['TSFE']->register['kequestionnaire'])) {
+			$GLOBALS['TSFE']->additionalHeaderData['keq-js-slider'] = '
+				<script type="text/javascript">
+					$(document).ready(function() {' .
+					implode(CHR(10), $GLOBALS['TSFE']->register['kequestionnaire']) . '
+					});
+				</script>
+			';			
+		}
 		return $content;
 	}
 

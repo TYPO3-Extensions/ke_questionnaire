@@ -105,6 +105,8 @@
 			
 			<label index="pdf_compare_title">korrekte Antwort</label>
 			<label index="pdf_title">Ihre Auswertung vom </label>
+
+			<label index="question_ddwords_placeholder">Add the correct word here</label>
 		</languageKey>
 		<languageKey index="de" type="array">
 			<label index="test">Test</label>
@@ -205,6 +207,8 @@
 			
 			<label index="pdf_compare_title">korrekte Antwort</label>
 			<label index="pdf_title">Ihre Auswertung vom </label>
+
+			<label index="question_ddwords_placeholder">Passendes Wort?</label>
 		</languageKey>
 	</data>
 </T3locallang>
