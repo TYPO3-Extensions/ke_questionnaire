@@ -21,6 +21,7 @@
 			<label index="tt_content.pi_flexform.sheet_texts">Texts</label>
 			<label index="tt_content.pi_flexform.sheet_design">Appearance</label>
 			<label index="tt_content.pi_flexform.sheet_mailing">Mailing</label>
+			<label index="tt_content.pi_flexform.sheet_mailing_torecipient">Mail to recipient</label>
 			<label index="tt_content.pi_flexform.sheet_invite">Invite Texts for BE</label>
 
 			<label index="tt_content.pi_flexform.type">Type of questionnaire</label>
@@ -103,6 +104,11 @@
 			
 			<label index="tt_content.pi_flexform.redirect_save">Save your settings to use this.</label>
 			<label index="tt_content.pi_flexform.redirect_no">---</label>
+			
+			<label index="tt_content.pi_flexform.send_finish_mail">Send mail to recipient after finishing</label>
+			<label index="tt_content.pi_flexform.send_finish_mail_email">Sender e-mail adress</label>
+			<label index="tt_content.pi_flexform.send_finish_mail_subject">Subject of e-mail</label>
+			<label index="tt_content.pi_flexform.send_finish_mail_emailhead">Introduction text in e-mail</label>
 		</languageKey>
 		<languageKey index="de" type="array">
 			<label index="pi1_title">keq Fragebogen</label>
@@ -126,6 +132,7 @@
 			<label index="tt_content.pi_flexform.sheet_texts">Texte</label>
 			<label index="tt_content.pi_flexform.sheet_design">Aussehen</label>
 			<label index="tt_content.pi_flexform.sheet_mailing">Benachrichtungen</label>
+			<label index="tt_content.pi_flexform.sheet_mailing_torecipient">Mail an Teilnehmer</label>
 			<label index="tt_content.pi_flexform.sheet_invite">Einladungstexte für BE</label>
 
 			<label index="tt_content.pi_flexform.type">Typ des Fragebogens</label>
@@ -210,6 +217,11 @@
 			
 			<label index="tt_content.pi_flexform.redirect_save">Speichern Sie zunächst Ihre Einstellungen.</label>
 			<label index="tt_content.pi_flexform.redirect_no">---</label>
+			
+			<label index="tt_content.pi_flexform.send_finish_mail">E-Mailversand an den Teilnehmer nach Beendigung</label>
+			<label index="tt_content.pi_flexform.send_finish_mail_email">E-Mailadresse FROM/REPLY-TO</label>
+			<label index="tt_content.pi_flexform.send_finish_mail_subject">Betreff der E-Mail</label>
+			<label index="tt_content.pi_flexform.send_finish_mail_emailhead">Text vor Auswertung in E-Mail</label>
 		</languageKey>
 	</data>
 </T3locallang>

@@ -418,6 +418,55 @@
 				</el>
 			</ROOT>
 		</iDEF>
+		<rDEF>
+			<ROOT>
+				<TCEforms>
+					<sheetTitle>LLL:EXT:ke_questionnaire/locallang.xml:tt_content.pi_flexform.sheet_mailing_torecipient</sheetTitle>
+					<cshFile>LLL:EXT:ke_questionnaire/locallang_csh_flexform.xml</cshFile>
+				</TCEforms>
+				<el>
+				<send_finish_mail>
+					<TCEforms>
+						<exclude>1</exclude>
+						<label>LLL:EXT:ke_questionnaire/locallang.xml:tt_content.pi_flexform.send_finish_mail</label>
+						<config>
+							<type>check</type>
+							<default>0</default>
+						</config>
+					</TCEforms>
+				</send_finish_mail>
+				<send_finish_mail_email>
+					<TCEforms>
+						<exclude>1</exclude>
+						<label>LLL:EXT:ke_questionnaire/locallang.xml:tt_content.pi_flexform.send_finish_mail_email</label>
+						<config>
+							<type>input</type>
+						</config>
+					</TCEforms>
+				</send_finish_mail_email>
+				<send_finish_mail_subject>
+					<TCEforms>
+						<exclude>1</exclude>
+						<label>LLL:EXT:ke_questionnaire/locallang.xml:tt_content.pi_flexform.send_finish_mail_subject</label>
+						<config>
+							<type>input</type>
+						</config>
+					</TCEforms>
+				</send_finish_mail_subject>
+				<send_finish_mail_emailhead>
+					<TCEforms>
+						<exclude>1</exclude>
+						<label>LLL:EXT:ke_questionnaire/locallang.xml:tt_content.pi_flexform.send_finish_mail_emailhead</label>
+						<config>
+							<type>text</type>
+							<size>10</size>
+							<rows>5</rows>
+						</config>
+					</TCEforms>
+				</send_finish_mail_emailhead>
+				</el>
+			</ROOT>
+		</rDEF>
 		<mDEF>
 			<ROOT>
 				<TCEforms>

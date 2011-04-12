@@ -111,7 +111,11 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 		//   mainAskQuestions OR mainGetResults
 		// First thing is to set a flag indicating what's needed
 		$this->mainTask = 'mainAskQuestions';
-		if ($this->piVars['pdf'] == 1) { $this->mainTask = 'mainGetResults'; }
+		if ($this->piVars['pdf'] == 1) {
+			$this->mainTask = 'mainGetResults';
+		} elseif (intval($this->piVars['sendemail']) == 1){
+			$this->mainTask = 'mainSendMail';
+		}
 
 		// now use the flag in the main task dispatcher
 		$content = '';
@@ -121,6 +125,9 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 				break;
 			case 'mainGetResults':
 				$content = $this->mainGetResults();
+				break;
+			case 'mainSendMail':
+				$content = $this->mainSendMail();
 				break;
 			default:
 				$content = 'unknown task \'' . $this->mainTask . '\'';
@@ -136,6 +143,21 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 				</script>
 			';			
 		}
+		return $content;
+	}
+	
+	function mainSendMail() {
+		if(t3lib_div::validEmail($this->piVars['email'])) {
+			$mailSent = $this->sendByMail($this->piVars['email']);
+			if($mailSent) {
+				$content = $this->pi_getLL('email_sent');
+			} else {
+				$content = $this->pi_getLL('email_not_sent').'<br /><a href="javascript: history.back();">'.$this->pi_getLL('email_back').'</a>';
+			}
+		} else {
+			$content = $this->pi_getLL('email_not_sent').'<br /><a href="javascript: history.back();">'.$this->pi_getLL('email_back').'</a>';
+		}
+		
 		return $content;
 	}
 
@@ -1240,6 +1262,20 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 			$markerArray['###PDF###'] = $pdf_links;	
 		}
 		
+		//send result as e-mail after finishing
+		if ($this->ffdata['send_finish_mail']){
+			//t3lib_div::debug($this->ffdata);
+			$emailLink = $this->pi_linkTP_keepPIvars_url(array('sendemail' => 1,'p_id' => $this->piVars['result_id']),0,1);
+			
+			$email_markerArray['###URL###'] = $emailLink;
+			$email_markerArray['###INTROTEXT###'] = $this->pi_getLL('intro_email_send');
+			$emailForm = $this->renderContent('###EMAILONFINISHFORM###',$email_markerArray);
+			
+			$markerArray['###EMAILONFINISH###'] = $emailForm;
+		} else {
+			$markerArray['###EMAILONFINISH###'] = '';	
+		}
+		
 		
 		$add_info = '';
 		switch ($this->type){
@@ -1688,6 +1724,46 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 		$content = $this->renderContent('###QUIZ_REPORT###',$markerArray);
 		
 		return $content;
+	}
+	
+	/**
+	 * E-Mail-Content
+	 * E-Mail-Content
+	 */
+	function sendByMail($email){
+		require_once(t3lib_extMgm::extPath('ke_questionnaire').'res/other/class.plain_export.php');
+
+		$plain_conf = $this->conf;
+		$storage_pid = $this->ffdata['storage_pid'];
+	
+		$plain = new plain_export($plain_conf,$storage_pid, 'test',$this->cObj->data['pi_flexform']['data']);
+		$this->getResults($this->piVars['p_id'],false);
+			
+		$mailData = $plain->getPlain($this->saveArray);
+		
+		$emailText .= $this->ffdata['send_finish_mail_subject']."\r\n";
+		$emailText .= $this->ffdata['send_finish_mail_emailhead']."\r\n";
+		foreach($mailData as $emailContent) {
+			if(is_array($emailContent) && count($emailContent) >= 2) {
+				$emailText .= $emailContent['title']."\r\n";
+				if(is_array($emailContent['value'])) {
+					foreach($emailContent['value'] as $answer) {
+						$emailText .= $answer."\r\n";
+						$emailText .= "\r\n";
+					}
+				} else {
+					$emailText .= $emailContent['value']."\r\n";
+				}
+				$emailText .= "\r\n";
+			}
+		}
+
+		$emailText = strip_tags($emailText);
+		if($this->cObj->sendNotifyEmail($emailText,$email,'',$this->ffdata['send_finish_mail_email'],$this->ffdata['send_finish_mail_email'],$this->ffdata['send_finish_mail_email'])) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 	
 	/**

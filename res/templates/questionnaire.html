@@ -59,6 +59,7 @@
     <div class="keq_questions">
         <div class="keq_other">###TEXT###</div>
         ###PDF###
+        ###EMAILONFINISH###
     </div>
     <form id="ke_questionnaire" name="ke_questionnaire" class="keq_form" method="post" target="_top" enctype="multipart/form-data" action="###FORM_ACTION###">
         ###NAV###
@@ -119,6 +120,18 @@
 <!-- ###HIDDEN_FIELD### begin-->
 <input type="hidden" name="###NAME###" id="keq_###ID###" value="###VALUE###" />
 <!-- ###HIDDEN_FIELD### end-->
+
+<!-- ###EMAILONFINISHFORM### begin -->
+<div class="keq_other">
+    <p>
+        <form name="sendmail" method="POST" action="###URL###" />
+            <p>###INTROTEXT###<p>
+            <input type="text" name="tx_kequestionnaire_pi1[email]" value="" />
+            <input type="button" name="sendemail" value="E-Mail versenden" onClick="javascript: document.sendmail.submit();" />
+        </form>
+    </p>
+</div>
+<!-- ###EMAILONFINISHFORM### end -->
 
 <!-- ###FE_DATAMINING### begin-->
 <div class="keq_dataminig">
