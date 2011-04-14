@@ -137,13 +137,15 @@ class csv_export {
 					case 'demographic':
 							$lineadd = '';
 							if (is_array($question['fe_users'])){
+								$lineadd .= "\n";
 								foreach ($question['fe_users'] as $field => $f_values){
-									$lineadd .= $this->getQBaseLine($free_cells,$question,array(),0,array(),$field);
+									$lineadd .= $this->getQBaseLine($free_cells+2,$question,array(),0,array(),$field);
 								}
 							}
 							if (is_array($question['tt_address'])){
+								$lineadd .= "\n";
 								foreach ($question['tt_address'] as $field => $f_values){
-									$lineadd .= $this->getQBaseLine($free_cells,$question,array(),0,array(),$field);
+									$lineadd .= $this->getQBaseLine($free_cells+2,$question,array(),0,array(),$field);
 								}
 							}
 							if ($lineadd == '') $lineadd .= "\n";
