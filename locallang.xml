@@ -75,7 +75,7 @@
 			<label index="tt_content.pi_flexform.mailing">Send Email Notification\nThis Email will be send to the given email-addresses here</label>
 			<label index="tt_content.pi_flexform.mail_turn">Mail Turn</label>
 			<label index="tt_content.pi_flexform.mail_turn.prompt">direct</label>
-			<label index="tt_content.pi_flexform.mail_turn.cron">with Cronjob</label>
+			<label index="tt_content.pi_flexform.mail_turn.cron">with Scheduler Task</label>
 			<label index="tt_content.pi_flexform.mail_turn.scheduler">with TYPO3 Scheduler</label>
 			<label index="tt_content.pi_flexform.emails">comma separated list of emails</label>
 			<label index="tt_content.pi_flexform.inform_mail_text">Text of Email</label>
@@ -184,7 +184,7 @@
 			<label index="tt_content.pi_flexform.end_page">Seite, die angezeigt werden soll, nachdem der Fragebogen fertig gestellt wurde\nIn diesem Fall wird der Abschlusstext NICHT angezeigt!</label>
 
 			<label index="tt_content.pi_flexform.mailing">Email Benachrichtigungen versenden\nDies ist eine Informationsmail an den Betreiber des Fragebogens, nicht an den Teilnehmer!</label>
-			<label index="tt_content.pi_flexform.mail_turn">Häufigkeit des Versands \nBei Versand durch Cronjob bitte darauf achten, dass dieser separat eingerichtet werden muss.</label>
+			<label index="tt_content.pi_flexform.mail_turn">Häufigkeit des Versands \nBei Versand durch den Scheduler bitte darauf achten, dass dieser separat eingerichtet werden muss.</label>
 			<label index="tt_content.pi_flexform.mail_turn.prompt">direkt</label>
 			<label index="tt_content.pi_flexform.mail_turn.daily">täglich, gesammelt</label>
 			<label index="tt_content.pi_flexform.mail_turn.weekly">wöchentlich, gesammelt</label>

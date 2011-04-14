@@ -678,7 +678,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 	 */
 	function getPageNr(){
 		$pageNr = $this->piVars['page'];
-
+		
 		//t3lib_div::devLog('getPageNr questions '.(string)$pageNr, $this->prefixId, 0, $this->questions);
 		//t3lib_div::devLog('getPageNr saveArray', $this->prefixId, 0, $this->saveArray);
 		if ($this->ffdata['linear'] == 1){
@@ -727,16 +727,18 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 			}
 			//t3lib_div::devLog('getPageNr lastAnswered '.$this->lastAnswered, 'test', 0, array('amount' => $amount,'pages'=>$pagecount, 'p Nr'=>$pageNr, 'qpp' =>$qpp, 'page-nr'=>$this->piVars['page'], 'q_nr'=>$q_nr));
 		}
-		// If page is not given, our sessions must be deleted.
-		if(!$pageNr) {
-			$GLOBALS['TSFE']->fe_user->setKey('ses', 'kequestionnaire_page', 0);
-			$GLOBALS['TSFE']->fe_user->setKey('ses', 'kequestionnaire_start_tstamp', time());
-		} else {
-			// If page is given we have to check if there are some modifications made in url
-			if($GLOBALS['TSFE']->fe_user->getKey('ses', 'kequestionnaire_page') && $GLOBALS['TSFE']->fe_user->getKey('ses', 'kequestionnaire_page') > $pageNr) {
-				$pageNr = $GLOBALS['TSFE']->fe_user->getKey('ses', 'kequestionnaire_page');
+		if ($this->ffdata['timer_type'] != 'FREE'){
+			// If page is not given, our sessions must be deleted.
+			if(!$pageNr) {
+				$GLOBALS['TSFE']->fe_user->setKey('ses', 'kequestionnaire_page', 0);
+				$GLOBALS['TSFE']->fe_user->setKey('ses', 'kequestionnaire_start_tstamp', time());
+			} else {
+				// If page is given we have to check if there are some modifications made in url
+				if($GLOBALS['TSFE']->fe_user->getKey('ses', 'kequestionnaire_page') && $GLOBALS['TSFE']->fe_user->getKey('ses', 'kequestionnaire_page') > $pageNr) {
+					$pageNr = $GLOBALS['TSFE']->fe_user->getKey('ses', 'kequestionnaire_page');
+				}
+				$GLOBALS['TSFE']->fe_user->setKey('ses', 'kequestionnaire_page', $pageNr);
 			}
-			$GLOBALS['TSFE']->fe_user->setKey('ses', 'kequestionnaire_page', $pageNr);
 		}
 		$this->piVars['page']=$pageNr;
 		return $pageNr;
