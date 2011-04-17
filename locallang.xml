@@ -113,13 +113,7 @@
 		<languageKey index="de" type="array">
 			<label index="pi1_title">keq Fragebogen</label>
 			<label index="pi1_plus_wiz_description">Fügt einen Fragebogen hinzu</label>
-			<label index="pi2_title">keq FE Datenerfassung</label>
-			<label index="pi2_plus_wiz_description">Fügt ein Plugin zur FE-Datenerfassung hinzu</label>
-			<label index="pi3_title">keq Anzeige der Teilnahmen</label>
-			<label index="pi3_plus_wiz_description">Zeigt eine Liste der Teilnahmen des aktuellen Nutzers</label>
-			<label index="pi4_title">keq Anonymisierte Auswertungen</label>
-			<label index="pi4_plus_wiz_description">Zeigt anonymisierte Auswertungen eines ausgewählten Fragebogens</label>
-
+			
 			<label index="tx_kequestionnaire.base">Basis</label>
 			<label index="tx_kequestionnaire.flow">Frageeigenschaften</label>
 			<label index="tx_kequestionnaire.type_based">Beantwortungsoptionen</label>
@@ -186,8 +180,6 @@
 			<label index="tt_content.pi_flexform.mailing">Email Benachrichtigungen versenden\nDies ist eine Informationsmail an den Betreiber des Fragebogens, nicht an den Teilnehmer!</label>
 			<label index="tt_content.pi_flexform.mail_turn">Häufigkeit des Versands \nBei Versand durch den Scheduler bitte darauf achten, dass dieser separat eingerichtet werden muss.</label>
 			<label index="tt_content.pi_flexform.mail_turn.prompt">direkt</label>
-			<label index="tt_content.pi_flexform.mail_turn.daily">täglich, gesammelt</label>
-			<label index="tt_content.pi_flexform.mail_turn.weekly">wöchentlich, gesammelt</label>
 			<label index="tt_content.pi_flexform.mail_turn.cron">per Cronjob</label>
 			<label index="tt_content.pi_flexform.mail_turn.scheduler">per TYPO3 Scheduler</label>
 			<label index="tt_content.pi_flexform.emails">Email-Adressen für den Empfang der Benachrichtigung \n(Komma-separierte Liste)</label>
