@@ -36,7 +36,63 @@ Die Premiumversion ermöglicht zusätzlich den Fragebogentyp „Zufallsfragen“
 			<label index="type.image_descr"></label>
 			<label index="type.image"></label>
 			<label index="type.seeAlso"></label>
-			
+			<label index="pdf_type.alttitle">PDF-Export nach Beendigung</label>
+			<label index="pdf_type.description">Es ist möglich dem Nutzer auf der Abschlussseite des Fragebogens die Möglichkeit zu bieten ein PDF des Fragebogens herunter zu laden.
+			Folgende PDFs sind möglich: leerer Fragebogen, gefüllt mit eigenem Ergebnis, als Vergleich mit richtigen Antworten (wenn Sie im Backend zu den jeweiligen geschlossenen Fragen die richtigen Antworten markiert haben, oder für offene Fragen einen Vergleichstext angegeben haben, so wird dieser im PDF zum Vergleich unterhalb der durch den Nutzer getroffenen Eingaben bereitgestellt.),
+			Ergebnis (nur für den Fragebogentyp: Punktewertung, die für die Punktewertung eingetragenen und durch die Antworten des Nutzers ausgewählten Ergebnisse werden im PDF dargestellt.)
+			</label>
+			<label index="pdf_type.details"></label>
+			<label index="pdf_type.syntax"></label>
+			<label index="max_participations.alttitle">Maximale Anzahl an Teilnahmen pro Nutzer</label>
+			<label index="max_participations.details"></label>
+			<label index="max_participations.syntax"></label>
+			<label index="max_participations.description">
+			(Nicht bei Zugriff = "Freier Zugriff") Es kann bestimmt werden, wie oft ein FE-Nutzer oder AuthCode den Fragebogen ausfüllen kann. Die Standard-Einstellung ist 1. Die Anzahl der Ausfüllmöglichkeiten kann jedoch auch individuell eingestellt werden.
+			</label>
+			<label index="restart_possible.details"></label>
+			<label index="restart_possible.syntax"></label>
+			<label index="restart_possible.alttitle">Neustart der Bearbeitung möglich</label>
+			<label index="restart_possible.description">Der Nutzer kann den Fragebogen noch einmal von vorne beginnen, wenn er die Bearbeitung wieder aufnimmt.</label>
+			<label index="history.details"></label>
+			<label index="history.syntax"></label>
+			<label index="history.alttitle">Änderungsverfolgung</label>
+			<label index="history.description">Sofern der Nutzer die Bearbeitung wieder aufnimmt, wird der alte Stand in einer Historie gespeichert.</label>
+			<label index="end_page.details"></label>
+			<label index="end_page.syntax"></label>
+			<label index="end_page.alttitle">Seite, die angezeigt werden soll, nachdem der Fragebogen fertig gestellt wurde. In diesem Fall wird der Abschlusstext NICHT angezeigt!</label>
+			<label index="end_page.description">Wenn hier eine Seite ausgewählt wurde, wird der Nutzer nach betätigen des "Absenden"-Buttons des Fragebogens auf diese Seite umgeleitet. Ein evtl. bei "Abschlusstext" eingetragener Text wird nicht mehr dargestellt.</label>
+			<label index="mailing.details"></label>
+			<label index="mailing.syntax"></label>
+			<label index="mailing.alttitle">Email Benachrichtigungen versenden. Dies ist eine Informationsmail an den Betreiber des Fragebogens, nicht an den Teilnehmer!</label>
+			<label index="mailing.description">Bei Aktivierung wird eine E-Mail an die eingetragenen Adressen versendet, sobald eine Teilnahme am Fragebogen abgeschlossen wurde.</label>
+			<label index="emails.details"></label>
+			<label index="emails.syntax"></label>
+			<label index="emails.alttitle">Email-Adressen für den Empfang der Benachrichtigung (Komma-separierte Liste)</label>
+			<label index="emails.description">Anlage mehrerer E-Mail-Adressen, die durch ein Komma getrennt werden.</label>
+			<label index="send_finish_mail.details"></label>
+			<label index="send_finish_mail.syntax"></label>
+			<label index="send_finish_mail.alttitle">E-Mailversand an den Teilnehmer nach Beendigung</label>
+			<label index="send_finish_mail.description">Die Option blendet auf der Abschlussseite des Fragebogens ein kleines Formular ein, in dem der Nutzer eine E-Mail-Adresse eintragen kann, an welche die vom Nutzer eingetragenen Antworten in einer einfachen Text-E-Mail verschickt werden.</label>
+			<label index="send_finish_mail_email.details"></label>
+			<label index="send_finish_mail_email.syntax"></label>
+			<label index="send_finish_mail_email.alttitle">E-Mailadresse FROM/REPLY-TO</label>
+			<label index="send_finish_mail_email.description">Absender Adresse der versendeten Email</label>
+			<label index="send_finish_mail_subject.details"></label>
+			<label index="send_finish_mail_subject.syntax"></label>
+			<label index="send_finish_mail_subject.alttitle">Betreff der E-Mail</label>
+			<label index="send_finish_mail_subject.description">Betreff der versendeten Email</label>
+			<label index="send_finish_mail_emailhead.details"></label>
+			<label index="send_finish_mail_emailhead.syntax"></label>
+			<label index="send_finish_mail_emailhead.alttitle">Text vor Auswertung in E-Mail</label>
+			<label index="send_finish_mail_emailhead.description">Dieser Text wird im Email-Text vor den Daten des Fragebogens ausgegeben.</label>
+			<label index="mail_sender.details"></label>
+			<label index="mail_sender.syntax"></label>
+			<label index="mail_sender.alttitle">Absender Email</label>
+			<label index="mail_sender.description">E-Mail, welche als Absender eingetragen wird.</label>
+			<label index="remind_mail_text.details"></label>
+			<label index="remind_mail_text.syntax"></label>
+			<label index="remind_mail_text.alttitle">Erinnerungstext der Email für das BE Modul Einladen</label>
+			<label index="remind_mail_text.description">Text der Erinnerungs-E-Mail</label>
 			<label index="user_reports.alttitle">Frontend-Auswertungen für Nutzer anzeigen</label>
 			<label index="user_reports.description">Die Option aktiviert die Anzeige der Fragebogenauswertungen für das FE auf der Abschlussseite des Fragebogens.</label>
 			<label index="user_reports.details">folgende Frontend-Auswertungen sind möglich für:

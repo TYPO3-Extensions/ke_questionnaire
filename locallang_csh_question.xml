@@ -235,6 +235,9 @@ sowie folgende weitere Informationstypen
 			<label index="closed_inputfield.image"></label>
 			<label index="closed_inputfield.seeAlso"></label>
 			
+			<label index="closed_randomanswers.alttitle">Antworten in zufälliger Reihenfolge ausgeben</label>
+			<label index="closed_randomanswers.description">Es ist möglich die Antworten einer geschlossenen Frage in zufälliger Reihenfolgen anzeigen zu lassen.</label>
+			
 			<label index="answers.alttitle">Antworten</label>
 			<label index="answers.description">Auflistung aller Antworten.</label>
 			<label index="answers.details"></label>
@@ -327,8 +330,11 @@ sowie folgende weitere Informationstypen
 			<label index="sublines.image_descr"></label>
 			<label index="sublines.image">EXT:ke_questionnaire/doc/img/subtypes.jpg</label>
 			<label index="sublines.seeAlso"></label>
+			<label index="matrix_type.alttitle">Beantwortungstypen</label>
+			<label index="matrix_type.description">Für die Matrix stehen folgenden Beantwortungstypen zur Verfügung: Radiobuttons (Einfachauswahl), Checkboxen (Mehrfachauswahl), Eingabefelder (Überprüfung möglich)</label>
 			
-			
+			<label index="coords.alttitle">Koordinaten für die Antwortbereiche. Jede Zeile = Ein Antwortbereich. Trenne x und y mit Doppelpunkt (:). Trenne obere linke Ecke und untere rechte Ecke mit Pipe (|). Beispiel: 0:0|100:150</label>
+			<label index="coords.description">Jede Zeile in diesem Textfeld spiegelt einen Bereich auf dem Bild der Frage wieder. Jede Zeile muss ein bestimmtes Muster (Koordinatensystem) aufweisen, damit der Bereich auf dem Bild richtig platziert werden kann. Dazu müssen die x und y Koordinaten der linken oberen Ecke und die x und y Koordinaten der rechten unteren Ecke eines jeden Bereichs angegeben werden. Die Ecken werden mit Pipe (|) getrennt und die xy-Koordinaten mit einem Doppelpunkt (:).</label>
 			
 		</languageKey>
 	</data>

@@ -34,9 +34,11 @@
 			<label index="different_type.image_descr">Beispiel für den abweichenden Typ der Unterfrage</label>
 			<label index="different_type.image">EXT:ke_questionnaire/doc/img/column_different_type.jpg</label>
 			<label index="different_type.seeAlso"></label>
+			<label index="maxanswers.alttitle">Maximale Anzahl an Antworten, die dem Nutzer in der Spalte erlaubt sind (nur bei Matrix vom Typ Checkbox)</label>
+			<label index="maxanswers.description">Bei Checkbox-Matrixfragen kann zusätzlich noch die Anzahl der einzugebenden Antworten beschränkt werden.</label>
 			
-			
-			
+			<label index="title_line.alttitle">Titelzeile (Es werden keine Eingabefelder generiert)</label>
+			<label index="title_line.description">Wenn diese Option gewählt ist, werden keine Eingabefelder generiert. Diese Zeile dient dann nur der optischen Strukturierung der Matrix.</label>
 		</languageKey>
 	</data>
 </T3locallang>

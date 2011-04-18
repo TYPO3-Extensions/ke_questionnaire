@@ -34,6 +34,16 @@
 			<label index="title.image"></label>
 			<label index="title.seeAlso"></label>
 			
+			<label index="sys_language_uid.alttitle">Sprache</label>
+			<label index="sys_language_uid.description">Wählen Sie, wenn vorhanden, die Sprachversion der zu erstellenden Frage aus.</label>
+			<label index="show_input.alttitle">Eingabefeld hinter Antwort anzeigen (Nur bei Radioboxen oder Checkboxen)</label>
+			<label index="show_input.description">Es ist möglich hinter der jeweiligen Antwort mit den Darstellungen Radiobuttons oder Checkboxen ein Eingabefeld darstellen zu lassen, damit der Nutzer hier weitere Angaben machen kann.</label>
+			<label index="validate_input.alttitle">Eingabefeld hinter Antwort NICHT überprüfen (Nur bei Radioboxen oder Checkboxen)</label>
+			<label index="validate_input.description">Sofern ein Eingabefeld hinter Antwort-Optionen eingeblendet ist, wird es daraufhin überprüft, ob dort auch ein Wert eingetragen wurde. Diese Überprüfung wird mit Aktivierung dieser Option verhindert.</label>			
+			
+			<label index="answerarea.alttitle">Wenn Sie den Fragetyp Drag and Drop Area verwenden, dann tragen Sie hier bitte die Zeilennummer derangegebenen Koordinaten ein.</label>
+			<label index="answerarea.description">Hinterlegen Sie hier die Zeilennummer der Koordinaten aus der Frage (Feld: "Koordinaten für die Antwortbereiche."), die sich auf diese Antwort bezieht.</label>
+			
 			<label index="value.alttitle">Wert</label>
 			<label index="value.description">Relevant für Punktewertung und eLearning (Zertifikatserstellung => Nur Premiumversion).
 			Hier kann ein Zahlenwert eingegeben werden. Diese Werte werden summiert, um ein Gesamtergebnis zu ermitteln.
