@@ -1,5 +1,9 @@
 (add new changes on top of this file)
 
+11-04-20 Fabian Friedrich  <friedrich@kennziffer.com>
+	
+	* Raised to version 2.4.0
+
 2011-04-16 Fabian Friedrich <friedrich@kennziffer.com>
 
 	* Fixed compatibility of csh with TYPO3 4.5
