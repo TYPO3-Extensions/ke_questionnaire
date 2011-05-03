@@ -276,7 +276,9 @@ class csv_export {
 							$result_id = $r_data['uid'];
 							if ($take['fe_users'][$dem_field]['results'][$result_id]){
 								$take['fe_users'][$dem_field]['results'][$result_id] = str_replace($delimeter,$delimeter.$delimeter,$take['fe_users'][$dem_field]['results'][$result_id]);
-								$line[] = $take['fe_users'][$dem_field]['results'][$result_id];
+								$take['results'][$result_id] = preg_replace('#[\r\n\t]#', ' ', $take['results'][$result_id]);
+								$take['results'][$result_id] = preg_replace('# {2,}#', ' ', $take['results'][$result_id]);
+								$line[] = strip_tags(nl2br($take['results'][$result_id]));
 							} else {
 								$line[] = '';
 							}
