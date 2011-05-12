@@ -1180,6 +1180,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 		$markerArray['###PDF###'] = '';
 
 		$markerArray['###HIDDEN_FIELDS###'] = $this->renderHiddenFields();
+		$markerArray['###EMAILONFINISH###'] = '';
 		//t3lib_div::devLog('renderFirstPage', $this->prefixId, 0, $markerArray);
 		$content = $this->renderContent('###OTHER_PAGE###',$markerArray);
 
