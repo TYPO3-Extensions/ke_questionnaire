@@ -134,6 +134,7 @@ class question_dd_area extends question {
 		foreach($this->answers as $key => $value) {
 			//$answers .= $this->cObj->wrap($value['text'], '<div style="z-index: 10' . ($count - $i) . ';" id="keq-ddarea-moveable' . $key . '-' . $value['answerarea'] . '" class="keq-ddarea-moveable">|</div>');
 			$conf['file'] = 'uploads/tx_kequestionnaire/' . $value['image'];
+			$conf['altText'] = $value['title'];
 			$conf['wrap'] = '<div style="z-index: 10' . ($count - $i) . ';" id="keq-ddarea-moveable' . $key . '-' . $value['answerarea'] . '" class="keq-ddarea-moveable">|</div>';
 			$answers .= $this->cObj->IMAGE($conf);
 			$checkboxes .= '<div id="keq-ddarea-checkbox' . $key . '" class="keq-ddarea-checkbox">&nbsp;</div>';
@@ -156,8 +157,13 @@ class question_dd_area extends question {
 		
 		$checkboxes = $checkboxes . '<div style="clear: left;"></div>';
 		
-		//$imgSource = '<div class="keq_img_bottom" style="position: relative; z-index: 1;">'.$this->renderImage(array('title' => $this->question['title'],'image' => $this->question['image'],'image_position' => $this->question['image_position'])).'<div style="z-index: 2; position: absolute; top: 10px; left: 10px; border: 1px solid red;">&nbsp;TEST&nbsp;</div></div>';
-		$imgSource = $this->renderImage(array('title' => $this->question['title'],'image' => $this->question['image'],'image_position' => $this->question['image_position']));
+		$imgSource = $this->renderImage(
+			array(
+				'title' => $this->question['title'],
+				'image' => $this->question['image'],
+				'image_position' => $this->question['image_position']
+			)
+		);
 		
 		$this->fields['ddarea'] = new kequestionnaire_input(
 			'text',
@@ -197,15 +203,14 @@ class question_dd_area extends question {
 	}
 	
 	function renderImage($data=array()){
-			if ($data['image']){
-				$img_path = 'uploads/tx_kequestionnaire/';
-				$img_first = '<img alt="'.$data['title'].'" src="';
-				$img_last = '" />';
-				$img = '';
-				$img = $img_first.$img_path.$data['image'].$img_last;
-			}
-			return $img;
+		if($data['image']) {
+			$imgConf['file'] = 'uploads/tx_kequestionnaire/' . $data['image'];
+			$imgConf['altText'] = $data['title'];
+			return $this->cObj->IMAGE($imgConf);
+		} else {
+			return '';
 		}
+	}
 	
 	/**
 	 * Selects Subpartname depending on Qustiontype

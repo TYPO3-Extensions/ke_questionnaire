@@ -32,26 +32,31 @@ require_once (t3lib_extMgm::extPath('xajax') . 'class.tx_xajax.php');
 class question{
     var $conf           = array();              //configuration
     var $extKey         = 'ke_questionnaire';	// The extension key.
-    var $debug 		= TRUE;					// Debug Flag
-    var $template    	= '';                  	//Template of the Question
-    var $tmpl 	  		= '';                 	//Template of the Question
-    var $tmplInput 	  	= '';                 	//Template for Input
-    var $values		= array();		//Values for prefilling the answer
-    var $fields		= array();		//Fields to render
+    var $debug          = TRUE;					// Debug Flag
+    var $template       = '';                  	//Template of the Question
+    var $tmpl           = '';                 	//Template of the Question
+    var $tmplInput      = '';                 	//Template for Input
+    var $values         = array();		//Values for prefilling the answer
+    var $fields         = array();		//Fields to render
     var $xajax;
 
-    var $uid 		= 0;			//Question-ID
-    var $question	= array();		//Table-Fields of the Question
-    var $subquestions	= array();		//Questions for matrix
-    var $columns	= array();		//Columns for matrix
+    var $uid            = 0;			//Question-ID
+    var $question       = array();		//Table-Fields of the Question
+    var $subquestions   = array();		//Questions for matrix
+    var $columns        = array();		//Columns for matrix
     var $dependancies   = array();		//Dependancies for this Question
     var $dependants     = array();		//Dependant question from this Question
-    var $answers	= array();		//Answers and their table-fields
-    var $validateInput	=	0;		//Validate the User Input?
+    var $answers        = array();		//Answers and their table-fields
+    var $validateInput  =	0;		//Validate the User Input?
 
-    var $error		= false;		//Errorflag
-    var $errorMsg	= '';			//Errormessage
-    var $errorFields 	= array();
+    var $error          = false;		//Errorflag
+    var $errorMsg       = '';			//Errormessage
+    var $errorFields    = array();
+    
+    /**
+     * @var tslib_cObj
+     */
+    var $cObj;
     
 	/**
 	 * The initiation method of the PlugIn
