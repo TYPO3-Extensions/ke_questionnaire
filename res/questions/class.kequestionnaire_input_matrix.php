@@ -77,6 +77,7 @@ class kequestionnaire_input_matrix extends kequestionnaire_input{
                         $h_out = array();
                         $h_out['###HELPIMAGE###'] =  t3lib_extMgm::siteRelPath('ke_questionnaire').'/res/images/helpbubble.gif';
                         $h_out['###HELPTEXT###'] = $this->options[$this->fieldName]['helptext'];
+                        $h_out['###HELPTEXT_PLAIN###'] = substr(strip_tags($this->options[$this->fieldName]['helptext']),0,150);
                         $h_out['###A_ID###'] = $this->options[$this->fieldName]['uid'];
                         $h_out_subpart = $this->cObj->getSubpart($this->tmplHelp,'###HELPBOX_ANSWER###');
                         $h_out_content = $this->cObj->substituteMarkerArrayCached($h_out_subpart, $h_out, array(), array());
@@ -179,6 +180,9 @@ class kequestionnaire_input_matrix extends kequestionnaire_input{
                         $markerArraySub["###SUBQUESTION_ID###"]=$question["uid"];
                         $markerArraySub["###VALUE###"]=$column["uid"];
                         $markerArraySub["###COLUMN_ID###"]=$column["uid"];
+                        $markerArraySub['###LINE###']=$question['title'];
+                        $markerArraySub['###COL###']=$column['title'];
+                        //t3lib_div::debug($markerArraySub);
             
                         $value=isset($this->value["options"][$question["uid"]])?($this->value["options"][$question["uid"]]):($type=="matrix_checkbox"?array():0);
                         if ($column['different_type'] != ''){

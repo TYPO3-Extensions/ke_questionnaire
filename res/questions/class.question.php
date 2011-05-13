@@ -264,6 +264,7 @@ class question{
 		foreach($this->fields as $key => $field){
 			$tmpl = $this->cObj->getSubpart($this->tmplFields, $field->subpart);
 			$this->fields[$key]->tmpl = $tmpl;
+			$this->fields[$key]->tmplHelp = $this->tmplHelp;
 			$this->fields[$key]->tmplHead = $this->cObj->getSubpart($this->tmplMain,"###HEAD###");
 			$this->fields[$key]->tmplError = $this->cObj->getSubpart($tmpl,"ERROR_MESSAGE");
 			//t3lib_div::devLog('tmpl '.$key, 'input->MatrixElement', 0, array($tmpl,$this->tmplMain));
@@ -343,6 +344,7 @@ class question{
 		    $h_out = array();
 		    $h_out['###HELPIMAGE###'] = t3lib_extMgm::siteRelPath('ke_questionnaire').'/res/images/helpbubble.gif';
 		    $h_out['###HELPTEXT###'] = $this->question['helptext'];
+		    $h_out['###HELPTEXT_PLAIN###'] = substr(strip_tags($this->question['helptext']),0,150);
 		    $h_out['###Q_ID###'] = $this->question['uid'];
 		    $h_out_subpart = $this->cObj->getSubpart($this->tmplHelp,'###HELPBOX_QUESTION###');
 		    $h_out_content = $this->cObj->substituteMarkerArrayCached($h_out_subpart, $h_out, array(), array());

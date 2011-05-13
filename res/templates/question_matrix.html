@@ -473,6 +473,8 @@
     <div class="keq_img_bottom">###IMG_BOTTOM###</div>
     <div class="keq_cleaner">&nbsp;</div>
     <div class="keq_selection">
+	<fieldset>
+	    <legend>###TITLE###</legend>
 	<table class="keq_matrix_table">
 	    <thead>
 		<tr>
@@ -505,26 +507,31 @@
 			    <!-- ###RADIO_COLUMN### begin-->
 				<td class="keq_matrix_radio">
 				    <input ###DEPENDANT### type="radio" name="###PI###[###NAME###][options][###SUBQUESTION_ID###][single]" id="keq_###NAME###_###SUBQUESTION_ID###_###VALUE###" value="###VALUE###" ###CHECKED### />
+				    <label style="display:none" for="keq_###NAME###_###SUBQUESTION_ID###_###VALUE###">###COL###/###LINE###</label>
 				</td>
 			    <!-- ###RADIO_COLUMN### end-->
 			    <!-- ###CHECK_COLUMN### begin-->
 				<td class="keq_matrix_checkbox">
 				    <input ###DEPENDANT### type="checkbox" name="###PI###[###NAME###][options][###SUBQUESTION_ID###][###COLUMN_ID###][]" value="###VALUE###" id="keq_###NAME###_###SUBQUESTION_ID###_###VALUE###" ###CHECKED### ###ONCHANGE### />
+				    <label style="display:none" for="keq_###NAME###_###SUBQUESTION_ID###_###VALUE###">###COL###/###LINE###</label>
 				</td>
 			    <!-- ###CHECK_COLUMN### end-->
 			    <!-- ###INPUT_COLUMN### begin-->
 				<td class="keq_matrix_input">
-				    <input ###DEPENDANT### type="text" name="###PI###[###NAME###][options][###SUBQUESTION_ID###][###COLUMN_ID###][]" id="keq_###NAME###_###SUBQUESTION_ID###_###COLUMN_ID###" value="###VALUE###" />
+				    <input ###DEPENDANT### type="text" name="###PI###[###NAME###][options][###SUBQUESTION_ID###][###COLUMN_ID###][]" id="keq_###NAME###_###SUBQUESTION_ID###_###COLUMN_ID###_###VALUE###" value="###VALUE###" />
+				    <label style="display:none" for="keq_###NAME###_###SUBQUESTION_ID###_###VALUE###">###COL###/###LINE###</label>
 				</td>
 			    <!-- ###INPUT_COLUMN### end-->
 			    <!-- ###INPUT_TEXT_COLUMN### begin-->
 				<td class="keq_matrix_input">
-				    <input ###DEPENDANT### type="text" name="###PI###[###NAME###][options][###SUBQUESTION_ID###][###COLUMN_ID###][]" id="keq_###NAME###_###SUBQUESTION_ID###_###COLUMN_ID###" value="###VALUE###" />
+				    <input ###DEPENDANT### type="text" name="###PI###[###NAME###][options][###SUBQUESTION_ID###][###COLUMN_ID###][]" id="keq_###NAME###_###SUBQUESTION_ID###_###COLUMN_ID###_###VALUE###" value="###VALUE###" />
+				    <label style="display:none" for="keq_###NAME###_###SUBQUESTION_ID###_###VALUE###">###COL###/###LINE###</label>
 				</td>
 			    <!-- ###INPUT_TEXT_COLUMN### end-->
 			    <!-- ###INPUT_NUMERIC_COLUMN### begin-->
 				<td class="keq_matrix_input">
-				    <input ###DEPENDANT### type="text" name="###PI###[###NAME###][options][###SUBQUESTION_ID###][###COLUMN_ID###][]" id="keq_###NAME###_###SUBQUESTION_ID###_###COLUMN_ID###" value="###VALUE###" />
+				    <input ###DEPENDANT### type="text" name="###PI###[###NAME###][options][###SUBQUESTION_ID###][###COLUMN_ID###][]" id="keq_###NAME###_###SUBQUESTION_ID###_###COLUMN_ID###_###VALUE###" value="###VALUE###" />
+				    <label style="display:none" for="keq_###NAME###_###SUBQUESTION_ID###_###VALUE###">###COL###/###LINE###</label>
 				    <span class="keq_format">
 					###FORMAT_NUMERIC###
 				    </span>
@@ -532,7 +539,8 @@
 			    <!-- ###INPUT_NUMERIC_COLUMN### end-->
 			    <!-- ###INPUT_INTEGER_COLUMN### begin-->
 				<td class="keq_matrix_input">
-				    <input ###DEPENDANT### type="text" name="###PI###[###NAME###][options][###SUBQUESTION_ID###][###COLUMN_ID###][]" id="keq_###NAME###_###SUBQUESTION_ID###_###COLUMN_ID###" value="###VALUE###" />
+				    <input ###DEPENDANT### type="text" name="###PI###[###NAME###][options][###SUBQUESTION_ID###][###COLUMN_ID###][]" id="keq_###NAME###_###SUBQUESTION_ID###_###COLUMN_ID###_###VALUE###" value="###VALUE###" />
+				    <label style="display:none" for="keq_###NAME###_###SUBQUESTION_ID###_###VALUE###">###COL###/###LINE###</label>
 				    <span class="keq_format">
 					###FORMAT_INTEGER###
 				    </span>
@@ -540,7 +548,8 @@
 			    <!-- ###INPUT_INTEGER_COLUMN### end-->
 			    <!-- ###INPUT_DATE_COLUMN### begin-->
 				<td class="keq_matrix_input">
-				    <input ###DEPENDANT### type="text" name="###PI###[###NAME###][options][###SUBQUESTION_ID###][###COLUMN_ID###][]" id="keq_###NAME###_###SUBQUESTION_ID###_###COLUMN_ID###" value="###VALUE###" />
+				    <input ###DEPENDANT### type="text" name="###PI###[###NAME###][options][###SUBQUESTION_ID###][###COLUMN_ID###][]" id="keq_###NAME###_###SUBQUESTION_ID###_###COLUMN_ID###_###VALUE###" value="###VALUE###" />
+				    <label style="display:none" for="keq_###NAME###_###SUBQUESTION_ID###_###VALUE###">###COL###/###LINE###</label>
 				    <span class="keq_format">
 					###FORMAT_DATE###
 				    </span>
@@ -548,7 +557,8 @@
 			    <!-- ###INPUT_DATE_COLUMN### end-->
 			    <!-- ###INPUT_PERCENT_COLUMN### begin-->
 				<td class="keq_matrix_input">
-				    <input ###DEPENDANT### type="text" name="###PI###[###NAME###][options][###SUBQUESTION_ID###][###COLUMN_ID###][]" id="keq_###NAME###_###SUBQUESTION_ID###_###COLUMN_ID###" value="###VALUE###" /> %
+				    <input ###DEPENDANT### type="text" name="###PI###[###NAME###][options][###SUBQUESTION_ID###][###COLUMN_ID###][]" id="keq_###NAME###_###SUBQUESTION_ID###_###COLUMN_ID###_###VALUE###" value="###VALUE###" /> %
+				    <label style="display:none" for="keq_###NAME###_###SUBQUESTION_ID###_###VALUE###">###COL###/###LINE###</label>
 			  	</td>
 			    <!-- ###INPUT_PERCENT_COLUMN### end-->
 			    <!-- ###TITLELINE### begin-->
@@ -589,6 +599,7 @@
 	        <!-- ###FIELDS### end-->
 	    </tbody>
 	</table>
+	</fieldset>
     </div>
 </div>
 <!-- ###QUESTION_MATRIX_GENERAL### end-->

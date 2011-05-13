@@ -20,44 +20,35 @@
     <div class="keq_cleaner">&nbsp;</div>
     <div class="keq_selection">
 	<!-- ###ERROR_MESSAGE### begin--><div class="keq_error">###ERROR###</div><!-- ###ERROR_MESSAGE### end-->
+	<fieldset>
+	    <legend>###TITLE###</legend>
 	<!-- ###FIELDS### begin-->
 	    <!-- ###RADIO### begin-->
-	    <div class="###ODD_EVEN###">
-		<div class="keq_img_top">###IMG_TOP###</div>
-		<input ###STYLE### ###DEPENDANT### type="radio" name="###PI###[###NAME###][options]" id="keq_###NAME###_###VALUE###" value="###VALUE###" ###CHECKED### ###DEPENDANT_AJAX### ###ONCHANGE_JS### />
-		<span class="keq_img_opt_right">###IMG_LEFT###</span>###LABEL###<span class="keq_img_right">###IMG_RIGHT###</span>
-		<!-- ###HELP### begin-->
-		    <div class="keq_tooltip">
-			<img src="###HELPIMAGE###" alt="helpimage"/>
-			<div class="keq_tip">
-			    ###HELPTEXT###
-			</div>
-		    </div><!-- ###HELP### end-->
-		<div class="keq_img_bottom">###IMG_BOTTOM###</div>
-		<div class="keq_cleaner">&nbsp;</div>
-	    </div>
+		<div class="###ODD_EVEN###">
+		    <div class="keq_img_top">###IMG_TOP###</div>
+		    <input ###STYLE### ###DEPENDANT### type="radio" name="###PI###[###NAME###][options]" id="keq_###NAME###_###VALUE###" value="###VALUE###" ###CHECKED### ###DEPENDANT_AJAX### ###ONCHANGE_JS### />
+		    <span class="keq_img_opt_right">###IMG_LEFT###</span><label for="keq_###NAME###_###VALUE###">###LABEL###</label><span class="keq_img_right">###IMG_RIGHT###</span>
+		    ###A_HELPBOX###
+		    <div class="keq_img_bottom">###IMG_BOTTOM###</div>
+		    <div class="keq_cleaner">&nbsp;</div>
+		</div>
 	    <!-- ###RADIO### end-->
 	    <input type="radio" name="" value="" /> lorem ipsum<br>
 	    <input type="radio" name="" value="" /> lorem ipsum<br>
 	    <!-- ###RADIO_WITH_INPUT### begin-->
-	    <div class="###ODD_EVEN###">
-		<div class="keq_img_top">###IMG_TOP###</div>
-		<!-- ###ERROR_MESSAGE### begin--><div class="keq_error">###ERROR###</div><!-- ###ERROR_MESSAGE### end-->
-		<input ###STYLE### ###DEPENDANT###  type="radio" name="###PI###[###NAME###][options]" id="keq_###NAME###_###VALUE###" value="###VALUE_OPTION###" ###CHECKED### ###DEPENDANT_AJAX### />
-		<span class="keq_img_opt_right">###IMG_LEFT###</span>###LABEL###<span class="keq_img_right">###IMG_RIGHT###</span>
-		<input ###DEPENDANT_TEXT###  type="text" name="###PI###[###NAME###][text][###VALUE_OPTION###]" id="keq_###NAME###_###VALUE###_text" value="###VALUE_TEXT###" class="keq_inp_large" />
-		<!-- ###HELP### begin-->
-		    <div class="keq_tooltip">
-			<img src="###HELPIMAGE###" alt="helpimage"/>
-			<div class="keq_tip">
-			###HELPTEXT###
-			</div>
-		    </div><!-- ###HELP### end-->
-		<div class="keq_img_bottom">###IMG_BOTTOM###</div>
-		<div class="clearer">&nbsp;</div>
-	    </div>
-	    <!-- ###RADIO_WITH_INPUT### end-->
+		<div class="###ODD_EVEN###">
+		    <div class="keq_img_top">###IMG_TOP###</div>
+		    <!-- ###ERROR_MESSAGE### begin--><div class="keq_error">###ERROR###</div><!-- ###ERROR_MESSAGE### end-->
+		    <input ###STYLE### ###DEPENDANT###  type="radio" name="###PI###[###NAME###][options]" id="keq_###NAME###_###VALUE###" value="###VALUE_OPTION###" ###CHECKED### ###DEPENDANT_AJAX### />
+		    <span class="keq_img_opt_right">###IMG_LEFT###</span><label for="keq_###NAME###_###VALUE###">###LABEL###</label><span class="keq_img_right">###IMG_RIGHT###</span>
+		    <input ###DEPENDANT_TEXT###  type="text" name="###PI###[###NAME###][text][###VALUE_OPTION###]" id="keq_###NAME###_###VALUE###_text" value="###VALUE_TEXT###" class="keq_inp_large" /><label style="display:none" for="keq_###NAME###_###VALUE###_text">###LABEL###</label>
+		    ###A_HELPBOX###
+		    <div class="keq_img_bottom">###IMG_BOTTOM###</div>
+		    <div class="clearer">&nbsp;</div>
+		</div>
+	    <!-- ###RADIO_WITH_INPUT### end-->    
 	<!-- ###FIELDS### end-->
+	</fieldset>
     </div>
 </div>
 <!-- ###QUESTION_RADIO### end-->
@@ -78,19 +69,15 @@
     <div class="keq_cleaner">&nbsp;</div>
     <div class="keq_selection">
 	<!-- ###ERROR_MESSAGE### begin--><div class="keq_error">###ERROR###</div><!-- ###ERROR_MESSAGE### end-->
+	<fieldset>
+	    <legend>###TITLE###</legend>
 	<!-- ###FIELDS### begin-->
 	    <!-- ###CHECKBOX### begin-->
 	    <div class="###ODD_EVEN###">
 		<div class="keq_img_top">###IMG_TOP###</div>
 		<input class="checkbox" ###STYLE### ###DEPENDANT### type="checkbox" name="###PI###[###NAME###][options][]" id="keq_###NAME###_###VALUE###" value="###VALUE###" ###CHECKED### ###DEPENDANT_AJAX### />
-		<div class="checkbox_label"><span class="keq_img_opt_right">###IMG_LEFT###</span>###LABEL###<span class="keq_img_right">###IMG_RIGHT###</span></div>
-		<!-- ###HELP### begin-->
-		    <div class="keq_tooltip">
-			<img src="###HELPIMAGE###" alt="helpimage"/>
-			<div class="keq_tip">
-			###HELPTEXT###
-			</div>
-		    </div><!-- ###HELP### end-->
+		<span class="keq_img_opt_right">###IMG_LEFT###</span><label for="keq_###NAME###_###VALUE###">###LABEL###</label><span class="keq_img_right">###IMG_RIGHT###</span>
+		###A_HELPBOX###
 		<div class="keq_img_bottom">###IMG_BOTTOM###</div>
 		<div class="clearer">&nbsp;</div>
 	    </div>
@@ -102,21 +89,18 @@
 		<div class="keq_img_top">###IMG_TOP###</div>
 		<!-- ###ERROR_MESSAGE### begin--><div class="keq_error">###ERROR###</div><!-- ###ERROR_MESSAGE### end-->
 		<input class="checkbox" ###STYLE### ###DEPENDANT### type="checkbox" name="###PI###[###NAME###][options][]" id="keq_###NAME###_###VALUE###" value="###VALUE_OPTION###" ###CHECKED### ###DEPENDANT_AJAX### />
-		<div class="checkbox_label"><span class="keq_img_opt_right">###IMG_LEFT###</span>###LABEL###<span class="keq_img_right">###IMG_RIGHT###</span>
-		    <input ###DEPENDANT_TEXT### type="text" name="###PI###[###NAME###][text][###VALUE_OPTION###]" id="keq_###NAME###_###VALUE###_text" value="###VALUE_TEXT###" class="keq_inp_large" />
+		<div class="checkbox_label">
+		    <span class="keq_img_opt_right">###IMG_LEFT###</span><label for="keq_###NAME###_###VALUE###">###LABEL###</label><span class="keq_img_right">###IMG_RIGHT###</span>
+		    <input ###DEPENDANT_TEXT### type="text" name="###PI###[###NAME###][text][###VALUE_OPTION###]" id="keq_###NAME###_###VALUE###_text" value="###VALUE_TEXT###" class="keq_inp_large" /><label style="display:none" for="keq_###NAME###_###VALUE###_text">###LABEL###</label>
 		</div>
 		<div class="clearer">&nbsp;</div>
-		<!-- ###HELP### begin--><a class="keq_tooltip" href="#" onClick="return false;">
-		    <img src="###HELPIMAGE###" />
-		    <span class="keq_tip">
-		        ###HELPTEXT###
-		    </span>
-		</a><!-- ###HELP### end-->
+		###A_HELPBOX###
 		<div class="keq_img_bottom">###IMG_BOTTOM###</div>
 		<div class="clearer">&nbsp;</div>
 	    </div>
 	    <!-- ###CHECKBOX_WITH_INPUT### end-->
 	<!-- ###FIELDS### end-->
+	</fieldset>
     </div>
 </div>
 
@@ -131,8 +115,10 @@
     <div class="keq_img_right">###IMG_RIGHT###</div>
     <div class="keq_img_top">###IMG_TOP###</div>
     <div class="keq_question">
-        ###TITLE######TEXT###
-        ###HELPBOX###
+        <label for="keq_###NAME###">
+	    ###TITLE######TEXT###
+	    ###HELPBOX###
+	</label>
     </div>
     <div class="keq_img_bottom">###IMG_BOTTOM###</div>
     <div class="keq_cleaner">&nbsp;</div>
@@ -165,8 +151,10 @@
     <div class="keq_img_right">###IMG_RIGHT###</div>
     <div class="keq_img_top">###IMG_TOP###</div>
     <div class="keq_question">
-	###TITLE######TEXT###
-	###HELPBOX###
+	<label for="keq_###NAME###">
+	    ###TITLE######TEXT###
+	    ###HELPBOX###
+	</label>
     </div>
     <div class="keq_img_bottom">###IMG_BOTTOM###</div>
     <div class="keq_cleaner">&nbsp;</div>

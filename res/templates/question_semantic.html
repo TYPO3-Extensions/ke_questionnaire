@@ -17,7 +17,8 @@
 	<div class="keq_img_bottom">###IMG_BOTTOM###</div>
 	<div class="keq_cleaner">&nbsp;</div>
 	<div class="keq_selection">
-
+		<fieldset>
+			<legend>###TITLE###</legend>
 		<table>
 		<thead>
 			<tr>
@@ -41,7 +42,8 @@
 						<!-- ###COLUMN### begin-->
 							<td class="semantic_td">
 								<input ###DEPENDANT### id="keq_###NAME###_###SUBQUESTION_ID###_###VALUE###" type="radio" name="###PI###[###NAME###][options][###SUBQUESTION_ID###]" value="###VALUE###" ###CHECKED### />
-			    			</td>
+								<label style="display:none" for="keq_###NAME###_###SUBQUESTION_ID###_###VALUE###">###COL###/###FROMTO###</label>
+							</td>
 						<!-- ###COLUMN### end-->
 						<td><input type="radio" name="" /></td>
 						<td><input type="radio" name="" /></td>
@@ -63,7 +65,7 @@
 
 		</tbody>
 		</table>
-
+		</fieldset>
 	</div>
 </div>
 <!-- ###QUESTION_SEMANTIC### end-->
