@@ -244,6 +244,8 @@ class  tx_kequestionnaire_module2 extends t3lib_SCbase {
 	function getOFBasicCharts(){
 		global $LANG;
 		$templ = file_get_contents('res/OF_basic.html');
+		require_once(t3lib_extMgm::extPath('ke_questionnaire_premium').'res/other/class.keq_analysis.php');
+		$analyse = new keq_analysis(new open_flcharts2());
 		
 		$markerArray = array();
 
@@ -276,11 +278,11 @@ class  tx_kequestionnaire_module2 extends t3lib_SCbase {
 		
 		$content = $this->fillTemplate($templ, $markerArray);
 		//$script = $this->charts->testChart('timeline_chart');
-		if (t3lib_div::_GP('range_select') == 'day') $timeline = $this->getOFTimelineChartForDays('timeline_chart');
-		else $timeline = $this->getOFTimelineChartForWeeks('timeline_chart');
+		if (t3lib_div::_GP('range_select') == 'day') $timeline = $analyse->getOFTimelineChartForDays('timeline_chart',$this->ff_data);
+		else $timeline = $analyse->getOFTimelineChartForWeeks('timeline_chart', $this->ff_data);
 		//t3lib_div::devLog('getOFBasicCharts', 'BE Auswertungen', 0, array($timeline));
 		$content .= $timeline;
-		$content .= $this->getOFParticipationChart('parti_pie',$parted,$finished);
+		$content .= $analyse->getOFParticipationChart('parti_pie',$this->ff_data);
 		
 		return $content;
 	}
@@ -289,6 +291,8 @@ class  tx_kequestionnaire_module2 extends t3lib_SCbase {
 		global $LANG;
 		$chart = '';
 		$templ = file_get_contents('res/OF_questions.html');
+		require_once(t3lib_extMgm::extPath('ke_questionnaire_premium').'res/other/class.keq_analysis.php');
+		$analyse = new keq_analysis(new open_flcharts2());
 		$markerArray = array();
 		
 		$types = array('\'open\'','\'closed\'','\'dd_words\'','\'dd_area\'','\'semantic\'','\'matrix\'');
@@ -298,7 +302,7 @@ class  tx_kequestionnaire_module2 extends t3lib_SCbase {
 		$question = t3lib_BEfunc::getRecord('tx_kequestionnaire_questions',$q_id);
 
 		$storage_pid = $this->ff_data['sDEF']['lDEF']['storage_pid']['vDEF'];
-		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*','tx_kequestionnaire_results','pid='.$storage_pid.' AND hidden=0 AND deleted=0','','uid');
+		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('xmldata,finished_tstamp','tx_kequestionnaire_results','pid='.$storage_pid.' AND hidden=0 AND deleted=0','','uid');
 		if ($res){
 			while($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)){
 				if ($row['xmldata'] != '') {
@@ -326,27 +330,7 @@ class  tx_kequestionnaire_module2 extends t3lib_SCbase {
 				case 'open':
 					$markerArray['###DIV###'] = '<h2>'.$question['title'].'</h2>';
 					$list = '';
-					if (is_array($results)){
-						$alternate = false;
-						foreach ($results as $r_id => $r){
-							if ($r[$q_id]['answer'] != ''){
-								$list .= '<div style="display:block;';
-								if ($alternate){
-									$list .= 'background-color: #FAFAFA;';
-									$alternate = false;
-								} else {
-									$list .= 'background-color: #FFF6CC;';
-									$alternate = true;
-								}
-								$list .= 'margin: 4px;
-									border: 1px solid #D7DBE2;
-									width: 500px;
-									padding: 2px;">';
-								$list .= $r[$q_id]['answer'];
-								$list .= '</div>';
-							}
-						}
-					}
+					$list = $analyse->getOpenAnswers($results,$q_id);
 					$markerArray['###DIV###'] .= $list;
 					break;
 				case 'closed':
@@ -360,7 +344,7 @@ class  tx_kequestionnaire_module2 extends t3lib_SCbase {
 						while ($answer = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res_answers)){
 							$answers[] = $answer;
 						}
-						$charts .= $this->getOFQClosedPieChart($answers,$results,$question);
+						$charts .= $analyse->getOFQClosedPieChart($answers,$results,$question);
 					};
 					break;
 				case 'matrix':
@@ -371,7 +355,7 @@ class  tx_kequestionnaire_module2 extends t3lib_SCbase {
 						while($column = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res_cols)){
 							$columns[] = $column;
 						}
-						$markerArray['###DIV###'] = $this->getOFQMatrixPieCharts($columns,$results,$question);
+						$markerArray['###DIV###'] = $analyse->getOFQMatrixPieCharts($columns,$results,$question);
 					}
 					break;
 				case 'semantic':
@@ -381,7 +365,7 @@ class  tx_kequestionnaire_module2 extends t3lib_SCbase {
 						while($column = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res_cols)){
 							$columns[] = $column;
 						}
-						$markerArray['###DIV###'] = $this->getOFQSemanticPieCharts($columns,$results,$question);
+						$markerArray['###DIV###'] = $analyse->getOFQSemanticPieCharts($columns,$results,$question);
 					}
 					break;
 			}
@@ -399,427 +383,6 @@ class  tx_kequestionnaire_module2 extends t3lib_SCbase {
 		}
 		
 		return $content;
-	}
-	
-	function getOFQMatrixPieCharts($columns, $results, $question){
-		//t3lib_div::devLog('columns', 'ke_questionnaire auswert Mod', 0, $columns);
-		//t3lib_div::devLog('results', 'ke_questionnaire auswert Mod', 0, $results);
-		global $LANG;
-		$values = array();
-		$content = '';
-		$content .= '<h2 style="width:600px;">'.$question['title'].'</h2>';
-		
-		$templ = file_get_contents('res/OF_questions.html');
-		$charts = '';
-		
-		$q_id = $question['uid'];
-
-		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('uid,title','tx_kequestionnaire_subquestions','title_line != 1 AND question_uid='.$question['uid'].' and hidden=0 and deleted=0','','sorting');
-		if ($res){
-			while ($sub = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)){
-				$values = array();
-				$labels = array();
-				$colors = array();
-				$markerArray = array();
-				$markerArray['###QUESTION_SELECT###'] = '';
-				$markerArray['###DIV###'] = '<div id="pie_'.$sub['uid'].'"> </div>';
-				if (is_array($columns)){
-					foreach ($columns as $bar){
-						//t3lib_div::devLog('bar '.$sub['uid'], 'ke_questionnaire auswert Mod', 0, $bar);
-						if ($bar['different_type'] == 'input'){
-							if (is_array($results)){
-								$list = '<b>'.$bar['title'].'</b>';
-								foreach ($results as $result){
-									if (is_array($result)){
-										if ($result[$q_id]['answer']['options'][$sub['uid']][$bar['uid']][0] != ''){
-												//t3lib_div::devLog('result', 'ke_questionnaire auswert Mod', 0, $result);
-												$list .= '<div style="display:block;';
-												if ($alternate){
-													$list .= 'background-color: #FAFAFA;';
-													$alternate = false;
-												} else {
-													$list .= 'background-color: #FFF6CC;';
-													$alternate = true;
-												}
-												$list .= 'margin: 4px;
-													border: 1px solid #D7DBE2;
-													width: 500px;
-													padding: 2px;">';
-												$list .= $result[$q_id]['answer']['options'][$sub['uid']][$bar['uid']][0];
-												$list .= '</div>';
-										}
-									}
-								}								
-							}
-							$markerArray['###DIV###'] .= $list.'<hr style="width:600px;" >';
-						} else {
-							$values[$bar['uid']]['label'] = $bar['title'];
-							$values[$bar['uid']]['value'] = 0;
-							if (is_array($results)){
-								foreach ($results as $result){
-									if (is_array($result)){
-										switch ($question['matrix_type']){
-											case 'radio':	//t3lib_div::devLog('result radio matrix '.$sub['title'], 'ke_questionnaire auswert Mod', 0, array($result[$q_id]['answer']['options'][$sub['uid']]));
-													if ((string)$result[$q_id]['answer']['options'][$sub['uid']]['single'] == (string)$bar['uid']) $values[$bar['uid']]['value'] ++;
-												break;
-											case 'check':
-													//t3lib_div::devLog('result check matrix '.$sub['title'], 'ke_questionnaire auswert Mod', 0, array($result[$q_id]['answer']['options'][$sub['uid']]));
-													if (is_array($result[$q_id]['answer']['options'][$sub['uid']][$bar['uid']])) $values[$bar['uid']]['value'] ++;
-												break;
-										}
-									}
-								}
-							}
-						}
-					}
-				}
-				//t3lib_div::devLog('values '.$sub['uid'], 'ke_questionnaire auswert Mod', 0, $values);
-				
-				$transfer = array();
-				foreach ($values as $key => $val){
-					$transfer[] = $val;
-				}
-				$title = $sub['title'];
-				$charts .= $this->charts->getPieChart('pie_'.$sub['uid'],$title,$transfer);
-				$content .= $this->fillTemplate($templ, $markerArray);
-			}
-		}
-		$content .= $charts;
-		
-		return $content;
-	}
-	
-	function getOFQSemanticPieCharts($columns, $results, $question){
-		//t3lib_div::devLog('columns', 'ke_questionnaire auswert Mod', 0, $columns);
-		//t3lib_div::devLog('results', 'ke_questionnaire auswert Mod', 0, $results);
-		global $LANG;
-		$values = array();
-		$content = '';
-		$content .= '<h2 style="width:600px;">'.$question['title'].'</h2>';
-		
-		$templ = file_get_contents('res/OF_questions.html');
-		$charts = '';
-		
-		$q_id = $question['uid'];
-
-		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('uid,start,end','tx_kequestionnaire_sublines','question_uid='.$question['uid'],'','sorting');
-		//t3lib_div::devLog('res', 'ke_questionnaire auswert Mod', 0, array($GLOBALS['TYPO3_DB']->SELECTquery('uid,title','tx_kequestionnaire_sublines','question_uid='.$question['uid'],'','sorting')));
-		if ($res){
-			while ($sub = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)){
-				$values = array();
-				$labels = array();
-				$colors = array();
-				$markerArray = array();
-				$markerArray['###QUESTION_SELECT###'] = '';
-				$markerArray['###DIV###'] = '<div id="pie_'.$sub['uid'].'"> </div>';
-				if (is_array($columns)){
-					foreach ($columns as $bar){
-						$values[$bar['uid']]['label'] = $bar['title'];
-						$values[$bar['uid']]['value'] = 0;
-						if (is_array($results)){
-							foreach ($results as $result){
-								if ((string)$result[$q_id]['answer']['options'][$sub['uid']] == (string)$bar['uid']) $values[$bar['uid']]['value'] ++;
-								//t3lib_div::devLog('result '.$bar['uid'], 'ke_questionnaire auswert Mod', 0, array($result[$q_id]['answer']['options'][$sub['uid']]));
-							}
-						}
-					}
-				}
-				//t3lib_div::devLog('values '.$sub['uid'], 'ke_questionnaire auswert Mod', 0, $values);
-				
-				$transfer = array();
-				foreach ($values as $key => $val){
-					$transfer[] = $val;
-				}
-				$title = $sub['start'].' &#8658; '.$sub['end'];
-				$charts .= $this->charts->getPieChart('pie_'.$sub['uid'],$title,$transfer);
-				$content .= $this->fillTemplate($templ, $markerArray);
-			}
-		}
-		$content .= $charts;
-		
-		return $content;
-	}
-	
-	function getOFQClosedPieChart($answers, $results, $question){
-		global $LANG;
-		$label = $question['title'];
-
-		$data = array();
-		$colours = array();
-		$values = array();
-
-		if (is_array($answers)){
-			foreach ($answers as $ans){
-				$data[$ans['uid']]['label'] = $ans['title'];
-				$data[$ans['uid']]['value'] = 0;
-			}
-		}
-		if (is_array($results)){
-			foreach ($results as $result){
-				if (is_array($data) AND is_array($result)){
-					foreach ($data as $nr => $value){
-						if ($result[$question['uid']]['answer']['options'] == $nr) $data[$nr]['value'] ++;
-						elseif (is_array($result[$question['uid']]['answer']['options']) AND in_array($nr,$result[$question['uid']]['answer']['options'])) $data[$nr]['value'] ++;
-					}
-				}
-			}
-		}
-		//t3lib_div::devLog('results '.$label, 'OF data closed pie', 0, $data);
-		$transfer = array();
-		foreach ($data as $key => $values){
-			$transfer[] = $values;
-		}
-
-		$label = '';
-		if (count($data) > 0) $chart .= $this->charts->getPieChart('pie',$label,$transfer,$colours);
-
-		return $chart;
-	}
-
-	function getOFQDDWordsPieChart($answers, $results, $question){
-		global $LANG;
-		$label = $question['title'];
-
-		$data = array();
-		$colours = array();
-		$values = array();
-
-		if (is_array($answers)){
-			foreach ($answers as $ans){
-				$data[$ans['uid']]['label'] = $ans['title'];
-				$data[$ans['uid']]['value'] = 0;
-			}
-		}
-		if (is_array($results)){
-			foreach ($results as $result){
-				if (is_array($data) AND is_array($result)){
-					foreach ($data as $nr => $value){
-						if ($result[$question['uid']]['answer']['options'] == $nr) $data[$nr]['value'] ++;
-						elseif (is_array($result[$question['uid']]['answer']['options']) AND in_array($nr,$result[$question['uid']]['answer']['options'])) $data[$nr]['value'] ++;
-					}
-				}
-			}
-		}
-		//t3lib_div::devLog('results '.$label, 'OF data closed pie', 0, $data);
-		$transfer = array();
-		foreach ($data as $key => $values){
-			$transfer[] = $values;
-		}
-
-		$label = '';
-		if (count($data) > 0) $chart .= $this->charts->getPieChart('pie',$label,$transfer,$colours);
-
-		return $chart;
-	}
-
-	function getOFParticipationChart($marker,$parted,$finished){
-		global $LANG;
-		$chart = '';
-		$label = $LANG->getLL('participation_chart');
-		
-		$data = array();
-		$data[0]['label'] = $LANG->getLL('participation_finished') .' ('.$finished.')';
-		$data[0]['value'] = $finished;
-		$data[1]['label'] = $LANG->getLL('participation_parted') .' ('.$parted.')';;
-		$data[1]['value'] = $parted;
-			
-		$colours = array('#4E9A06','#A40000');
-		//$colours = array('#FF0000','#00FFFF');
-		
-		if ($parted > 0 OR $finished >0) $chart = $this->charts->getPieChart($marker,$label,$data,$colours);
-		
-		return $chart;
-	}
-	
-	function getOFTimelineChartForWeeks($marker){
-		global $LANG;
-		$label = $LANG->getLL('timeline_chart');
-		$labels = array();
-		
-		$data = array();
-		$data[0] = array();
-		$data[1] = array();
-		$data[2] = array();
-		
-		$storage_pid = $this->ff_data['sDEF']['lDEF']['storage_pid']['vDEF'];
-		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*','tx_kequestionnaire_results','pid='.$storage_pid.' AND hidden=0 AND deleted=0','','start_tstamp');
-		//t3lib_div::devLog('results', 'OF data timline', 0, array($GLOBALS['TYPO3_DB']->SELECTquery('*','tx_kequestionnaire_results','pid='.$storage_pid.' AND hidden=0 AND deleted=0','','start_tstamp')));
-		if ($res){
-			while($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)){
-				if ($row['xmldata'] != '') {
-					//t3lib_div::devLog('times', 'ke_questionnaire auswert Mod', 0, array('is'=>$row['start_tstamp'],$first_started));
-					if ($row['start_tstamp'] < $first_started OR $first_started == 0) $first_started = $row['start_tstamp'];
-					if ($row['start_tstamp'] > $last_started) $last_started = $row['start_tstamp'];
-					if ($row['finished_tstamp'] > 0 AND ($row['finished_tstamp'] < $first_finished OR $first_finished == 0)) $first_finished = $row['finished_tstamp'];
-					if ($row['finished_tstamp'] > $last_finished) $last_finished = $row['finished_tstamp'];
-					if ($row['last_tstamp'] < $first_edited OR $first_edited == 0) $first_edited = $row['last_tstamp'];
-					if ($row['last_tstamp'] > $last_edited) $last_edited = $row['last_tstamp'];
-					$results[] = $row;
-					if ($row['finished_tstamp'] > 0) {
-						$finished[] = $row;
-					} else {
-						$parted[] = $row;
-					}
-				}
-			}
-		}
-		//t3lib_div::devLog('results', 'OF data timline', 0, $data);
-		$first_started = mktime(0,0,0,date('m',$first_started),date('d',$first_started),date('Y',$first_started));
-		$first_finished = mktime(0,0,0,date('m',$first_finished),date('d',$first_finished),date('Y',$first_finished));
-		$first_edited = mktime(0,0,0,date('m',$first_edited),date('d',$first_edited),date('Y',$first_edited));
-		
-		$last_started = mktime(0,0,0,date('m',$last_started),date('d',$last_started),date('Y',$last_started));
-		$last_finished = mktime(0,0,0,date('m',$last_finished),date('d',$last_finished),date('Y',$last_finished));
-		$last_edited = mktime(0,0,0,date('m',$last_edited),date('d',$last_edited),date('Y',$last_edited));
-				
-		$check_tstmp = $first_finished;
-		$week_int = 86400 * 7;
-		$week_count = 1;
-		$max = 1;
-		if (count($results)>0){
-			if (is_array($finished)){
-				foreach ($finished as $fin){
-					while ($fin['finished_tstamp'] > ($check_tstmp + $week_int)){
-						$week_count ++;
-						$check_tstmp += $week_int;
-						if (!$data[0][$week_count]) $data[0][$week_count] = 0;
-						if (!$data[1][$week_count]) $data[1][$week_count] = 0;
-						if (!$data[2][$week_count]) $data[2][$week_count] = 0;
-					}
-					$data[0][$week_count] ++;
-					if ($data[0][$week_count] > $max) $max = $data[0][$week_count];
-					$data[1][$week_count] ++;
-				}
-			}
-			
-			$week_count = 1;
-			if (is_array ($parted)){
-				foreach ($parted as $fin){
-					while ($fin['finished_tstamp'] > ($check_tstmp + $week_int)){
-						$week_count ++;
-						$check_tstmp += $week_int;
-						if (!$data[0][$week_count]) $data[0][$week_count] = 0;
-						if (!$data[1][$week_count]) $data[1][$week_count] = 0;
-						if (!$data[2][$week_count]) $data[2][$week_count] = 0;
-					}
-					$data[0][$week_count] ++;
-					if ($data[0][$week_count] > $max) $max = $data[0][$week_count];
-					$data[2][$week_count] ++;
-				}
-			}
-		}
-		
-		if (!$data[0][0]) $data[0][0] = 0;
-		if (!$data[1][0]) $data[1][0] = 0;
-		if (!$data[2][0]) $data[2][0] = 0;
-		ksort($data[0]);
-		ksort($data[1]);
-		ksort($data[2]);
-		
-		$label_count = count($data[0]);
-		for ($key = 0; $key < $label_count; $key++){
-			$label_date = $first_edited + (($key-1) * $week_int);
-			//t3lib_div::devLog('label_date', 'OF data timline', 0, array($label_date));
-			$labels[] = date('W',$label_date).' KW';
-		}
-		//t3lib_div::devLog('results', 'OF data timline', 0, $data);
-		//t3lib_div::devLog('labels', 'OF data timline', 0, $labels);
-		
-		$tag_labels = array();
-		$tag_labels[0] = $LANG->getLL('tag_label_all');
-		$tag_labels[1] = $LANG->getLL('tag_label_finished');
-		$tag_labels[2] = $LANG->getLL('tag_label_parted');
-			
-		$colours = array('#000000','#4E9A06','#A40000');
-		
-		$step = 1;
-		if ($max > 20) $step = ceil($max/20);
-		$y_scale=array('max'=>$max,'step'=>$step);
-		if (count($results) > 0) $chart = $this->charts->getLineChartWithLabels($marker,$label,$data,$labels,$colours,$tag_labels,$y_scale);
-		return $chart;
-	}
-	
-	function getOFTimelineChartForDays($marker){
-		global $LANG;
-		$label = $LANG->getLL('timeline_chart_days');
-		
-		$data = array();
-		$data[0] = array();
-		$data[1] = array();
-		$data[2] = array();
-		
-		$max = 1;
-		
-		$storage_pid = $this->ff_data['sDEF']['lDEF']['storage_pid']['vDEF'];
-		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*','tx_kequestionnaire_results','pid='.$storage_pid.' AND hidden=0 AND deleted=0','','start_tstamp');
-		//t3lib_div::devLog('results', 'OF data timline', 0, array($GLOBALS['TYPO3_DB']->SELECTquery('*','tx_kequestionnaire_results','pid='.$storage_pid.' AND hidden=0 AND deleted=0','','start_tstamp')));
-		if ($res){
-			while($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)){
-				if ($row['xmldata'] != '') {
-					//t3lib_div::devLog('times', 'ke_questionnaire auswert Mod', 0, array('is'=>$row['start_tstamp'],$first_started));
-					if ($row['start_tstamp'] < $first_started OR $first_started == 0) $first_started = $row['start_tstamp'];
-					if ($row['start_tstamp'] > $last_started) $last_started = $row['start_tstamp'];
-					if ($row['finished_tstamp'] > 0 AND ($row['finished_tstamp'] < $first_finished OR $first_finished == 0)) $first_finished = $row['finished_tstamp'];
-					if ($row['finished_tstamp'] > $last_finished) $last_finished = $row['finished_tstamp'];
-					if ($row['last_tstamp'] < $first_edited OR $first_edited == 0) $first_edited = $row['last_tstamp'];
-					if ($row['last_tstamp'] > $last_edited) $last_edited = $row['last_tstamp'];
-					$results[] = $row;
-					$temp_date = mktime(0,0,0,date('m',$row['last_tstamp']),date('d',$row['last_tstamp']),date('Y',$row['last_tstamp']));
-					$data[0][$temp_date] ++;
-					if ($data[0][$temp_date] > $max) $max = $data[0][$temp_date];
-					if ($row['finished_tstamp'] > 0) {
-						$finished[] = $row;
-						$temp_date = mktime(0,0,0,date('m',$row['finished_tstamp']),date('d',$row['finished_tstamp']),date('Y',$row['finished_tstamp']));
-						$data[1][$temp_date] ++;
-					} else {
-						$parted[] = $row;
-						$temp_date = mktime(0,0,0,date('m',$row['last_tstamp']),date('d',$row['last_tstamp']),date('Y',$row['last_tstamp']));
-						$data[2][$temp_date] ++;
-					}
-				}
-			}
-		}
-		//t3lib_div::devLog('results', 'OF data timline', 0, $data);
-		$first_started = mktime(0,0,0,date('m',$first_started),date('d',$first_started),date('Y',$first_started));
-		$first_finished = mktime(0,0,0,date('m',$first_finished),date('d',$first_finished),date('Y',$first_finished));
-		$first_edited = mktime(0,0,0,date('m',$first_edited),date('d',$first_edited),date('Y',$first_edited));
-		
-		$last_started = mktime(0,0,0,date('m',$last_started),date('d',$last_started),date('Y',$last_started));
-		$last_finished = mktime(0,0,0,date('m',$last_finished),date('d',$last_finished),date('Y',$last_finished));
-		$last_edited = mktime(0,0,0,date('m',$last_edited),date('d',$last_edited),date('Y',$last_edited));
-		if (!$data[0][$first_edited]) $data[0][$first_edited] = 0;
-		if (!$data[1][$first_edited]) $data[1][$first_edited] = 0;
-		if (!$data[2][$first_edited]) $data[2][$first_edited] = 0;
-		for ($temp_date = $first_edited; $temp_date <= $last_edited; $temp_date += 86400){
-			if (!$data[0][$temp_date]) $data[0][$temp_date] = 0;
-			if (!$data[1][$temp_date]) $data[1][$temp_date] = 0;
-			if (!$data[2][$temp_date]) $data[2][$temp_date] = 0;
-		}
-		ksort($data[0]);
-		ksort($data[1]);
-		ksort($data[2]);
-		//t3lib_div::devLog('results', 'OF data timline', 0, $data);
-		
-		$dates = array();
-		$dates['start'] = $first_edited;
-		$dates['end'] = $last_edited;
-		$diff = $last_edited - $first_edited;
-		$days_diff = $diff / 86400;
-		//t3lib_div::devLog('results', 'OF data timline', 0, array($days_diff));
-		if ($days_diff > 10) $dates['step'] = ceil($days_diff/10);
-		else $dates['step'] = 1;
-		
-		$tag_labels = array();
-		$tag_labels[0] = $LANG->getLL('tag_label_all');
-		$tag_labels[1] = $LANG->getLL('tag_label_finished');
-		$tag_labels[2] = $LANG->getLL('tag_label_parted');
-			
-		$colours = array('#000000','#4E9A06','#A40000');
-		$step = 1;
-		if ($max > 20) $step = ceil($max/20);
-		$y_scale=array('max'=>$max,'step'=>$step);
-		if (count($results) > 0) $chart = $this->charts->getLineChartDayLabels($marker,$label,$data,$dates,$colours,$tag_labels,$y_scale);
-		return $chart;
 	}
 ##############################################################################################
 # g.Raphael Charts
