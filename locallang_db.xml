@@ -75,6 +75,7 @@
 			<label index="tx_kequestionnaire_questions.matrix_validation.I.2">percent</label>
 			<label index="tx_kequestionnaire_questions.matrix_validation">matrix validation types</label>
 			<label index="tx_kequestionnaire_questions.matrix_maxanswers">max answers allowed for user in whole matrix</label>
+			<label index="tx_kequestionnaire_questions.matrix_inputfield">Inputfield</label>
 			<label index="tx_kequestionnaire_questions.demographic_type.I.0">demographic data</label>
 			<label index="tx_kequestionnaire_questions.demographic_type.I.1">address Data</label>
 			<label index="tx_kequestionnaire_questions.demographic_type.I.2">both sets of Data</label>

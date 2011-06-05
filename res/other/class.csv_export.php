@@ -47,7 +47,7 @@ class csv_export {
 			//read the data from the file
 			$read_line = fgets($store_file);
 			$read_line = str_replace("\n",'',$read_line);
-			//t3lib_div::devLog('read_line '.$q_id, 'ke_questionnaire Export Mod', 0, array($read_line));
+			t3lib_div::devLog('read_line '.$question['title'], 'ke_questionnaire Export Mod', 0, array($read_line));
 			$read_line = json_decode($read_line,true);
 			$question['data'] = array();
 			$question['data'] = $read_line;

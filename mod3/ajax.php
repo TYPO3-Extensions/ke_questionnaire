@@ -96,10 +96,15 @@ class  tx_kequestionnaire_module3_ajax extends t3lib_SCbase {
                 switch ($q_values['type']){
                         case 'authcode': $write_array['results'][$v_nr] = $result['authcode'];
                                 break;
-                        case 'start_tstamp':
-                                    $write_array['results'][$v_nr] = $result['start_tstamp'];
+			case 'start_tstamp':
+				    if ($this->extConf['exportNoTimestamp']){
+                                        $write_array['results'][$v_nr] = date($this->extConf['exportNoTimestampFormat'],intval($result['start_tstamp']));
+                                    } else $write_array['results'][$v_nr] = $result['start_tstamp'];    
                                 break;
-                        case 'finished_tstamp': $write_array['results'][$v_nr] = $result['finished_tstamp'];
+                        case 'finished_tstamp':
+				    if ($this->extConf['exportNoTimestamp']){
+					$write_array['results'][$v_nr] = date($this->extConf['exportNoTimestampFormat'],intval($result['finished_tstamp']));
+                                    } else $write_array['results'][$v_nr] = $result['finished_tstamp'];
                                 break;
                         case 'open': $write_array['results'][$v_nr] = $act_v['answer'];
                                 break;
@@ -468,6 +473,15 @@ class  tx_kequestionnaire_module3_ajax extends t3lib_SCbase {
                                                         }
 							//$lineset .= $this->getQBaseLine($free_cells,$question);
 						break;
+					default:
+						    // Hook to make other types available for export
+						    if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['ke_questionnaire']['CSVExportCreateFillArray'])){
+							    foreach($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['ke_questionnaire']['CSVExportCreateFillArray'] as $_classRef){
+								    $_procObj = & t3lib_div::getUserObj($_classRef);
+								    $fill_array[$question['uid']] = $_procObj->CSVExportCreateFillArray($question);
+							    }
+						    }
+						break;
 				}
 			}
 		}
@@ -479,7 +493,7 @@ class  tx_kequestionnaire_module3_ajax extends t3lib_SCbase {
                                 $fill_array = $_procObj->CSVExportFillArray($fill_array);
                         }
                 }
-		
+		t3lib_div::devLog('fill_array', 'ke_questionnaire Export Mod', 0, $fill_array);
 		return $fill_array;
 	}
 
