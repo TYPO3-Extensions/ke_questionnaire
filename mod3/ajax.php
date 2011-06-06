@@ -326,14 +326,14 @@ class  tx_kequestionnaire_module3_ajax extends t3lib_SCbase {
                                         if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['ke_questionnaire']['CSVExportCreateDataFileType2QType'])){
                                                 foreach($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['ke_questionnaire']['CSVExportCreateDataFileType2QType'] as $_classRef){
                                                         $_procObj = & t3lib_div::getUserObj($_classRef);
-                                                        $result_line[] = $_procObj->CSVExportCreateDataFileType2QType($values,$result);
+                                                        $result_line = $_procObj->CSVExportCreateDataFileType2QType($q_nr,$values,$result,$marker,$result_line);
                                                 }
                                         }
 				    break;
 			}
 		    }
 	    }
-	    //t3lib_div::devLog('result_line '.$q_nr.'/'.$v_nr, 'ke_questionnaire Export Mod', 0, $result_line);
+	    t3lib_div::devLog('result_line '.$q_nr.'/'.$v_nr, 'ke_questionnaire Export Mod', 0, $result_line);
 	    fwrite($store_file,$delimeter.implode($parter,$result_line).$delimeter."\n");
 	    fclose($store_file);
 	}
@@ -478,7 +478,7 @@ class  tx_kequestionnaire_module3_ajax extends t3lib_SCbase {
 						    if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['ke_questionnaire']['CSVExportCreateFillArray'])){
 							    foreach($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['ke_questionnaire']['CSVExportCreateFillArray'] as $_classRef){
 								    $_procObj = & t3lib_div::getUserObj($_classRef);
-								    $fill_array[$question['uid']] = $_procObj->CSVExportCreateFillArray($question);
+								    $fill_array[$question['uid']] = $_procObj->CSVExportCreateFillArray($question,$fill_array[$question['uid']]);
 							    }
 						    }
 						break;

@@ -47,7 +47,7 @@ class csv_export {
 			//read the data from the file
 			$read_line = fgets($store_file);
 			$read_line = str_replace("\n",'',$read_line);
-			t3lib_div::devLog('read_line '.$question['title'], 'ke_questionnaire Export Mod', 0, array($read_line));
+			//t3lib_div::devLog('read_line '.$question['title'], 'ke_questionnaire Export Mod', 0, array($read_line));
 			$read_line = json_decode($read_line,true);
 			$question['data'] = array();
 			$question['data'] = $read_line;
@@ -159,7 +159,7 @@ class csv_export {
 								foreach($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['ke_questionnaire']['CSVExportQBaseLine'] as $_classRef){
 									$_procObj = & t3lib_div::getUserObj($_classRef);
 									$getit = $_procObj->CSVExportQBaseLine($free_cells,$question,$this->results,$delimeter,$parter);
-									//t3lib_div::devLog('getCSVQBase getit', 'ke_questionnaire Export Mod', 0, array($getit));
+									t3lib_div::devLog('getCSVQBase getit', 'ke_questionnaire Export Mod', 0, array($getit));
 									if ($getit != '') $lineset .= $getit;
 								}
 							}
@@ -170,7 +170,7 @@ class csv_export {
 		}
 	
 		fclose($store_file);
-		//t3lib_div::devLog('getCSVQBase lineset', 'ke_questionnaire Export Mod', 0, array($lineset));
+		t3lib_div::devLog('getCSVQBase lineset', 'ke_questionnaire Export Mod', 0, array($lineset));
 		$csvdata .= $lineset."\n";
 
 		//t3lib_div::devLog('getCSVQBase return', 'ke_questionnaire Export Mod', 0, array($csvheader,$csvdata));
@@ -392,10 +392,19 @@ class csv_export {
 							}
 						break;
 						case 'demographic':
-							t3lib_div::devLog('getCSVSimple2 demo', 'ke_questionnaire Export Mod', 0, $values);
+							//t3lib_div::devLog('getCSVSimple2 demo', 'ke_questionnaire Export Mod', 0, $values);
 						break;
 						default:
-							$headline[] = $values['title'];
+							// Hook to make other types available for export
+							if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['ke_questionnaire']['CSVExportType2Headline'])){
+								foreach($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['ke_questionnaire']['CSVExportType2Headline'] as $_classRef){
+									$_procObj = & t3lib_div::getUserObj($_classRef);
+									$headline = $_procObj->CSVExportType2Headline($headline,$values);
+                                                                        //t3lib_div::devLog('headline', 'ke_questionnaire Export Mod', 0, $headline);
+								}
+							} else {
+                                                            $headline[] = $values['title'];  
+                                                        }
 						break;
 					}
 				}
@@ -732,6 +741,15 @@ class csv_export {
                                                             }
                                                         }
 							//$lineset .= $this->getQBaseLine($free_cells,$question);
+						break;
+                                        default:
+						    // Hook to make other types available for export
+						    if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['ke_questionnaire']['CSVExportCreateFillArray'])){
+							    foreach($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['ke_questionnaire']['CSVExportCreateFillArray'] as $_classRef){
+								    $_procObj = & t3lib_div::getUserObj($_classRef);
+								    $fill_array[$question['uid']] = $_procObj->CSVExportCreateFillArray($question,$fill_array[$question['uid']]);
+							    }
+						    }
 						break;
 				}
 			}
