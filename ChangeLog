@@ -1,5 +1,11 @@
 (add new changes on top of this file)
 
+2011-06-07 Fabian Friedrich <friedrich@kennziffer.com>
+	
+	* Small bugfixes
+	* Feature: Added frontend evaluation plugin
+	* Raised to version 2.5.0
+
 11-04-20 Fabian Friedrich  <friedrich@kennziffer.com>
 	
 	* Raised to version 2.4.0
