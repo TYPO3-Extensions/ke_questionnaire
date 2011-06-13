@@ -400,7 +400,7 @@ class csv_export {
 								foreach($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['ke_questionnaire']['CSVExportType2Headline'] as $_classRef){
 									$_procObj = & t3lib_div::getUserObj($_classRef);
 									$headline = $_procObj->CSVExportType2Headline($headline,$values);
-                                                                        //t3lib_div::devLog('headline', 'ke_questionnaire Export Mod', 0, $headline);
+                                                                        t3lib_div::devLog('headline', 'ke_questionnaire Export Mod', 0, $headline);
 								}
 							} else {
                                                             $headline[] = $values['title'];  
@@ -418,7 +418,7 @@ class csv_export {
 			foreach ($this->results as $r_id => $r_values){
 				$read_line = fgets($store_file);
 				$csvdata .= $read_line;
-				//t3lib_div::devLog('simple 2 '.$r_id, 'ke_questionnaire Export Mod', 0, array($read_line,$r_values));
+				t3lib_div::devLog('simple 2 '.$r_id, 'ke_questionnaire Export Mod', 0, array($read_line,$r_values));
 			}
 			fclose($store_file);
 		}
