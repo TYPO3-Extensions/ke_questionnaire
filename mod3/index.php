@@ -1034,7 +1034,9 @@ Event.observe(window, 'load', function() {
 							}
 						break;
 					case 'matrix':
+							//t3lib_div::devLog('spssBase', 'ke_questionnaire Export Mod', 0, $row);
 							$base_row[$row['uid']]['subtype'] = $row['matrix_type'];
+							$base_row[$row['uid']]['inputs'] = $row['matrix_inputfield'];
 							$columns = array();
 							$where = 'question_uid='.$row['uid'].' and hidden=0 and deleted=0';
 							$res_columns = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*','tx_kequestionnaire_columns',$where,'','sorting');
