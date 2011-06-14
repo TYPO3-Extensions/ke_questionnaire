@@ -65,6 +65,7 @@
 			<label index="city">coty</label>
 			<label index="email">email</label>
 			<label index="phone">Phone</label>
+			<label index="telephone">Phone</label>
 
 			<label index="to_questionnaire">to questionnaire</label>
 			<label index="to_last">last page</label>
@@ -176,6 +177,7 @@
 			<label index="city">Ort</label>
 			<label index="email">E-Mail</label>
 			<label index="phone">Telefon</label>
+			<label index="telephone">Telefon</label>
 
 			<label index="to_questionnaire">Zum Fragebogen</label>
 			<label index="to_last">Vorherige Seite</label>
@@ -207,7 +209,7 @@
 				Verbleibende Sekunden: 
 			</label>
 
-			<label index="standard_endtext">Vielen Dank für ihre Teilnahme</label>
+			<label index="standard_endtext">Vielen Dank für Ihre Teilnahme</label>
 			<label index="privacy_link_label">Link Datenschutzerklärung</label>
 			<label index="pdf_empty">leeren Fragebogen herunterladen</label>
 			<label index="pdf_filled">ausgefüllten Fragebogen herunterladen</label>
