@@ -209,7 +209,7 @@
 				Verbleibende Sekunden: 
 			</label>
 
-			<label index="standard_endtext">Vielen Dank für Ihre Teilnahme</label>
+			<label index="standard_endtext">Vielen Dank für Ihre Teilnahme.</label>
 			<label index="privacy_link_label">Link Datenschutzerklärung</label>
 			<label index="pdf_empty">leeren Fragebogen herunterladen</label>
 			<label index="pdf_filled">ausgefüllten Fragebogen herunterladen</label>
