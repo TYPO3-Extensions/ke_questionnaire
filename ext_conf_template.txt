@@ -7,6 +7,9 @@ demographic_address_fields_exclude = hidden,addressgroup,image
 # cat=basic/enable; type=string; label=Parter for Answer-Options for Validation of open-text-questions
 oq_validation_parter = /
 
+# cat=basic/enable; type=string; label=Parter for Answer-Options for Validation of keywords in open-text-questions
+oq_keywords_validation_parter = ,
+
 # cat=basic/enable; type=boolean; label=Show the Page title in the BE-Module-Tree instead of the Plugin-Title
 BE_showPageTitle = 1
 

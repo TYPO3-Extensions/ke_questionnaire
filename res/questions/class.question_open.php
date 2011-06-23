@@ -111,7 +111,9 @@ class question_open extends question{
 		$validationOptions["numberDivider"]=$this->numberDivider;
 		if ($this->question['open_validation'] == 'text') $validationOptions["textOptions"]=explode($this->obj->extConf['oq_validation_parter'],$this->question['open_validation_text']);
 		if ($this->question['open_validation'] == 'keys') {
-		    $validationOptions["textOptions"]=explode($this->obj->extConf['oq_validation_parter'],$this->question['open_validation_keywords']);
+		    $parter = ',';
+		    if ($this->obj->extConf['oq_keywords_validation_parter']) $parter = $this->obj->extConf['oq_keywords_validation_parter'];
+		    $validationOptions["textOptions"]=explode($parter,$this->question['open_validation_keywords']);
 		    $validationOptions["matchAll"] = $this->question['open_validation_keywords_all'];
 		    if ($this->question['open_validation_keywords_all']){
 			foreach ($validationTypes as $key => $vvalue){
