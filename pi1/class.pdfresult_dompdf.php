@@ -550,7 +550,7 @@ class pdfresult_dompdf {
 				$answered = $this->result[$question['uid']]['answer'];
 			}
 		}
-		t3lib_div::devLog('answered', 'pdf_export', 0, array($answered));
+		//t3lib_div::devLog('answered', 'pdf_export', 0, array($answered));
 		//t3lib_div::devLog('question', 'pdf_export', 0, $question);
 		switch ($question['type']){
 			case 'blind':

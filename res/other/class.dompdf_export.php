@@ -30,6 +30,14 @@ class dompdf_export {
 
 	var $questions = array();  //Question-array
 
+        /**
+         * dompdf_export(): initialisation of the export object
+         *
+         * @param       array   $conf: configuration data
+         * @param       int     $pid: Page Id of the questionnaire Data
+         * @param       string  $title: title of the export
+         * @param       array   $ffdata: flexform data of the questionnaire
+         */
 	function dompdf_export($conf, $pid, $title, $ffdata){
 		spl_autoload_register('DOMPDF_autoload');
 		$this->title = $title;
@@ -42,11 +50,9 @@ class dompdf_export {
 			'../../../../'.trim($this->templateFolder);
 		}
 
-		//t3lib_div::devLog('conf', 'pdf_export', 0, $conf);
-		//t3lib_div::devLog('ffdata', 'pdf_export', 0, $ffdata);
-
 		$this->pdf = new DOMPDF();
 
+                //get the Locallang of the pi1 / the questionnaire
 		$basePath = t3lib_extMgm::extPath('ke_questionnaire').'pi1/locallang.php';
 		$tempLOCAL_LANG = t3lib_div::readLLfile($basePath,'default');
 		//array_merge with new array first, so a value in locallang (or typoscript) can overwrite values from ../locallang_db
@@ -55,8 +61,7 @@ class dompdf_export {
 	}
 
 	/**
-	 * Gather all the questions of this questionnaire ready for showing
-	 *
+	 * getQuestions(): Gather all the questions of this questionnaire ready for showing
 	 */
 	function getQuestions(){
 		$this->questionCount['total'] = 0; //total of questions
@@ -89,7 +94,10 @@ class dompdf_export {
 
 		//t3lib_div::devLog('questions', 'DOMPDF Export', 0, $this->questions);
 	}
-
+        
+        /**
+         * getOutcomes(): get the outcome-Data of the questionnaire (Point-Report)
+         */
 	function getOutcomes(){
 		$selectFields = '*';
 		$where = 'pid='.$this->pid.' AND hidden = 0 AND deleted = 0';
@@ -109,7 +117,14 @@ class dompdf_export {
 
 		//t3lib_div::devLog('outcomes', 'DOMPDF Export', 0, $this->outcomes);
 	}
-
+        
+        /**
+         * getOptions(): get the answer-options of the closed question
+         *
+         * @param       int     $uid: id of the question
+         *
+         * @return      array   answer-options of the question
+         */
 	function getOptions($uid){
 		$options = array();
 
@@ -126,6 +141,11 @@ class dompdf_export {
 		return $options;
 	}
 
+        /**
+         * getMatrixLines(): get the lines of the matrix
+         *
+         * @return      array   lines of the matrix
+         */
 	function getMatrixLines($uid){
 		$lines = array();
 
@@ -142,6 +162,11 @@ class dompdf_export {
 		return $lines;
 	}
 
+        /**
+         * getSematicLines(): get the lines of the semantic differential
+         *
+         * @return      array   lines
+         */
 	function getSemanticLines($uid){
 		$lines = array();
 
@@ -159,7 +184,11 @@ class dompdf_export {
 	}
 
 	/**
-	 * Find the Questions type and get the question-Object
+	 * getDependants(): Find the Questions type and get the question-Object
+	 *
+	 * @param       array   $question: array of question attributes
+	 *
+	 * @return      array   dependant questions of the given question
 	 */
 	function getDependants($question){
 		$dependants = array();
@@ -176,6 +205,13 @@ class dompdf_export {
 		return $dependants;
 	}
 
+        /**
+         * getColums(): get the columns of a matrix or sematic differential
+         *
+         * @param:      int     $uid: id of the question
+         *
+         * @return      array   the columns
+         */
 	function getColumns($uid){
 		$lines = array();
 
@@ -193,6 +229,9 @@ class dompdf_export {
 		return $lines;
 	}
 
+        /**
+         * getPDFBlank(): get a pdf with the empty questionnaire
+         */
 	function getPDFBlank(){
 		$this->getQuestions();
 		$html = $this->getHTML('blank');
@@ -206,6 +245,12 @@ class dompdf_export {
 		//return $html;
 	}
 
+        /**
+         * getPDFFilled(): get the pdf with the filled questionnaire
+         *
+         * @param       array   $result: result to be rendered into the pdf
+         * @param       string  $date: date to be rendered at the top of the questionnaire
+         */
 	function getPDFFilled($result,$date = ''){
 		$this->result = $result;
 		$this->getQuestions();
@@ -222,6 +267,12 @@ class dompdf_export {
 		//return $html;
 	}
 
+        /**
+         * getPDFCompare(): get the pdf filled and compared to the standard-answers
+         *
+         * @param       array   $result: result to be rendered and compared
+         * @date        string  $date: date to be rendered at the top of the questionnaire
+         */
 	function getPDFCompare($result,$date=''){
 		$this->result = $result;
 		$this->getQuestions();
@@ -238,6 +289,11 @@ class dompdf_export {
 		//return $html;
 	}
 
+        /**
+         * getPDFOutcomes(): get the pdf with the matched outcomes for the achieved points
+         *
+         * @param       array   $result: result the outcomes are rendered for
+         */
 	function getPDFOutcomes($result){
 		$this->result = $result;
 		$this->getQuestions();
@@ -255,6 +311,14 @@ class dompdf_export {
 		//return $html;
 	}
 
+        /**
+         * getHTML(): get the HMTL-Template for the PDF
+         *
+         * @param       string  $type: type of PDF to be rendered
+         * @param       string  $date: date to be rendered into the pdf
+         *
+         * @return      string  html-content
+         */
 	function getHTML($type, $date='') {
 		$content = '';
 
@@ -291,7 +355,7 @@ class dompdf_export {
 		$html = str_replace('###CONTENT###',$content,$this->templates['base']);
 		$html = str_replace('###PDF_TITLE###',$this->LOCAL_LANG['pdf_title'],$html);
 		$html = str_replace('###DATE###',$date,$html);
-		t3lib_div::devLog('getHTML html '.$type, 'pdf_export', 0,array($html,$content,$this->templates['base']));
+		//t3lib_div::devLog('getHTML html '.$type, 'pdf_export', 0,array($html,$content,$this->templates['base']));
 
 		$css = $this->getCSS();
 		$html = str_replace('###CSS###',$css,$html);
@@ -300,6 +364,9 @@ class dompdf_export {
 		return $html;
 	}
 
+        /**
+         * getTemplates(): get the templates for the pdf-rendering
+         */
 	function getTemplates(){
 		$templateFolder = $this->templateFolder;
 
@@ -370,17 +437,19 @@ class dompdf_export {
 		$this->templates['base'] = t3lib_parsehtml::getSubpart($temp, '###DOMPDF###');
 		$this->templates['outcomes'] = t3lib_parsehtml::getSubpart($temp, '###DOMPDF_OUTCOMES###');
 
+                //Hook to include other Templates for the pdf rendering
 		if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['ke_questionnaire']['dompdf_export_getTemplates'])){
 			foreach($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['ke_questionnaire']['dompdf_export_getTemplates'] as $_classRef){
 				$_procObj = & t3lib_div::getUserObj($_classRef);
 				$this->templates = $_procObj->dompdf_export_getTemplates($this,$templateFolder,$this->templates);
 			}
 		}
-
-		t3lib_div::devLog('templates', 'pdf', 0, $this->templates);
-
+		//t3lib_div::devLog('templates', 'pdf', 0, $this->templates);
 	}
 
+        /**
+         * getCSS(): get the CSS needed for the right display of the pdf. Stored in a file 
+         */
 	function getCSS(){
 		$css = '';
 
@@ -398,7 +467,11 @@ class dompdf_export {
 	}
 
 	/**
-	 * Calculate the points
+	 * calculatePoints(): Calculate the points for the result
+	 *
+	 * @param       array   $result: result to be calculated
+	 *
+	 * @return      array   point values
 	 */
 	function calculatePoints($result){
 		$returner = array();
@@ -460,6 +533,11 @@ class dompdf_export {
 		return $returner;
 	}
 
+        /**
+         * renderOutcomes(): render the outcomes for the result
+         *
+         * @return      string outcome content
+         */
 	function renderOutcomes(){
 		$content = '';
 		$answers = $this->result;
@@ -519,6 +597,14 @@ class dompdf_export {
 		return $content;
 	}
 
+        /**
+         * renderQuestion(): render the question
+         *
+         * @param       array   $question: question to be rendered
+         * @param       bool    $compare: compare the question or not
+         *
+         * @return      string  rendered question
+         */
 	function renderQuestion($question, $compare = false){
 		$markerArray = array();
 		$markerArray['###QUESTION_TITLE###'] = '';
@@ -543,7 +629,7 @@ class dompdf_export {
 				$answered = $this->result[$question['uid']]['answer'];
 			}
 		}
-		t3lib_div::devLog('answered', 'pdf_export', 0, array($answered));
+		//t3lib_div::devLog('answered', 'pdf_export', 0, array($answered));
 		//t3lib_div::devLog('question', 'pdf_export', 0, $question);
 		switch ($question['type']){
 			case 'blind':
@@ -639,6 +725,13 @@ class dompdf_export {
 		return $html;
 	}
 
+        /**
+         * renderCompare(): render the compare content for the question
+         *
+         * @param       array   $question: question to be compared
+         *
+         * @return      string  rendered compare
+         */
 	function renderCompare($question){
 		$content = '';
 		$markerArray = array();
@@ -691,7 +784,16 @@ class dompdf_export {
 
 		return $content;
 	}
-
+        
+        /**
+         * renderDemographicQuestion(): render the demographic question for the pdf
+         *
+         * @param       array   $question
+         * @param       array   $markerArray: prefilled markerArray
+         * @answered    array   $answered: answers given
+         *
+         * @return      string  content to be rendered
+         */
 	function renderDemographicQuestion($question,$markerArray,$answered){
 		//t3lib_div::devLog('answered', 'pdf_export', 0, $answered);
 		$html = '';
@@ -722,6 +824,15 @@ class dompdf_export {
 		return $html;
 	}
 
+        /**
+         * renderSemanticQuestion(): render a semantic question
+         *
+         * @param       array   $question
+         * @param       array   $markerArray: prefilled marker array for rendering
+         * @param       array   $answered: answers given
+         *
+         * @return      string  content to be rendered
+         */
 	function renderSemanticQuestion($question,$markerArray,$answered){
 		//t3lib_div::devLog('answered', 'pdf_export', 0, $answered);
 		$html = '';
@@ -771,6 +882,15 @@ class dompdf_export {
 		return $html;
 	}
 
+        /**
+         * renderMatrixQuestion(): render a matrix question for pdf
+         
+         * @param       array   $question
+         * @param       array   $markerArray: prefilled marker array for rendering
+         * @param       array   $answered: answers given
+         *
+         * @return      string  content to be rendered
+         */
 	function renderMatrixQuestion($question,$markerArray,$answered){
 		//t3lib_div::devLog('answered', 'pdf_export', 0, $answered);
 		$html = '';
@@ -844,7 +964,9 @@ class dompdf_export {
 	}
 
 	/**
-	 * renders the Start-Page for the Questionnaire
+	 * renderFirstPage(): renders the Start-Page for the Questionnaire
+	 *
+	 * @return      string   content
 	 */
 	function renderFirstPage(){
 		$content = '';
@@ -854,6 +976,14 @@ class dompdf_export {
 		return $content;
 	}
 
+        /**
+         * renderContent(): renders the content into the template
+         *
+         * @param       string  $content: rendered content
+         * @param       array   $markerArray: array of markers and values to be parsed into the content given
+         *
+         * @return      string  parsed content
+         */
 	function renderContent($content,$markerArray){
 		//t3lib_div::devLog('renderContent', 'pdf', 0, array($content,$markerArray));
 		if (is_array($markerArray)){
@@ -864,6 +994,9 @@ class dompdf_export {
 		return $content;
 	}
 
+        /**
+         * buildTSFE(): bild the TSFE-Functionality to be used in this class
+         */
 	function buildTSFE() {
 		#needed for TSFE
 		require_once(PATH_t3lib.'class.t3lib_timetrack.php');

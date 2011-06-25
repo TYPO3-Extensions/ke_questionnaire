@@ -1,7 +1,46 @@
 <?php
+/***************************************************************
+*  Copyright notice
+*
+*  (c) 2009 Nadine Schwingler <schwingler@kennziffer.com>
+*  All rights reserved
+*
+*  This script is part of the TYPO3 project. The TYPO3 project is
+*  free software; you can redistribute it and/or modify
+*  it under the terms of the GNU General Public License as published by
+*  the Free Software Foundation; either version 2 of the License, or
+*  (at your option) any later version.
+*
+*  The GNU General Public License can be found at
+*  http://www.gnu.org/copyleft/gpl.html.
+*
+*  This script is distributed in the hope that it will be useful,
+*  but WITHOUT ANY WARRANTY; without even the implied warranty of
+*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*  GNU General Public License for more details.
+*
+*  This copyright notice MUST APPEAR in all copies of the script!
+***************************************************************/
+
+/**
+ * Class to export the ke_questionnaire results in csv-format.
+ *
+ * @package 	TYPO3
+ * @subpackage 	tx_kequequestionnaire csv_export
+ */
 //require_once(PATH_tslib . 'class.tslib_content.php'); // load content file
 
 class csv_export {
+	/**
+	 * csv_export(): Initalisation of the class
+	 *
+	 * @param 	array	$extConf: extension configuration array => ext_conf_template.txt
+	 * @param	array	$results: base-array of the results to be exportet
+	 * @param	array	$ff_data: flexform data of the questionnaire
+	 * @param	string	$temp_file: name of the file with the temp data
+	 * @param	bool	$only_this_lang: export only the selected language
+	 * @param	vbool	$only_finished: export only finished results
+	 */
         function csv_export($extConf,$results,$q_data,$ff_data,$temp_file,$only_this_lang,$only_finished){
                 $this->extConf = $extConf;
                 $this->results = $results;
@@ -14,46 +53,51 @@ class csv_export {
                 //t3lib_div::devLog('extConf', 'ke_questionnaire Export Mod', 0, $this->extConf);
         }
         
+	/**
+	 * getCSVQBased(): get the CSV-Data based on Questions (one question per row, results as columns)
+	 *
+	 * @return	string	csv-Data
+	 */
         function getCSVQBased(){
 		global $LANG;
 
 		$csvdata = '';
 		$csvheader = '';
+		//defines the cell of the csv
 		$delimeter = $this->extConf['CSV_qualifier'];
+		//parts the cells of the csv
 		$pure_parter = $this->extConf['CSV_parter'];
+		//to be put between two values/cells
 		$parter = $delimeter.$this->extConf['CSV_parter'].$delimeter;
-
+		
+		//get the Header of the CSV-File
 		$csvheader = $this->getQBaseHeaderLine();
 		
 		$lineset = ''; //stores the CSV-data
 		$line = array(); //single line, will be imploded
 		$free_cells = 0;
+		//gets the line with the column definition: result-ids
 		$result_line = $this->getQBaseResultLine($free_cells);
-		
+		//add the result line to the csv-data
 		$lineset .= $pure_parter.$pure_parter.$pure_parter.$result_line."\n";
+		//get the temp-file the data is stored in
 		$file_path = PATH_site.'/typo3temp/'.$this->temp_file;
 		$store_file = fopen($file_path,'r');
 		
-		/*$storage_pid = $this->ff_data['sDEF']['lDEF']['storage_pid']['vDEF'];
-		$where = 'pid='.$storage_pid.' and hidden=0 and deleted=0 and type!="blind"';
-		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*','tx_kequestionnaire_questions',$where,'','sorting');
-		//t3lib_div::devLog('getCSVQBase res', 'ke_questionnaire Export Mod', 0, array($GLOBALS['TYPO3_DB']->SELECTquery('*'.'tx_kequestionnaire_questions',$where,'','sorting')));
-		
-		if ($res){
-			while($question = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)){*/
+		//definition array for the export
 		$fill_array = $this->createFillArray();
 		foreach ($fill_array as $q_nr => $question){
-			//t3lib_div::devLog('getCSVQBase '.$question['type'], 'ke_questionnaire Export Mod', 0, $question);
 			//read the data from the file
 			$read_line = fgets($store_file);
 			$read_line = str_replace("\n",'',$read_line);
-			//t3lib_div::devLog('read_line '.$question['title'], 'ke_questionnaire Export Mod', 0, array($read_line));
 			$read_line = json_decode($read_line,true);
 			$question['data'] = array();
 			$question['data'] = $read_line;
-			//t3lib_div::devLog('getCSVSimple q_data', 'ke_questionnaire Export Mod', 0, $question);
+			//create the line
 			$line = array();
+			//question id
 			$line[] = $question['uid'];
+			//title
 			$line[] = $this->stripString($question['title']);
 			if ($question['type']){
 				$lineset .= $delimeter.implode($parter,$line).$delimeter;
@@ -170,13 +214,24 @@ class csv_export {
 		}
 	
 		fclose($store_file);
-		t3lib_div::devLog('getCSVQBase lineset', 'ke_questionnaire Export Mod', 0, array($lineset));
+		//linebreak at the end of the line
 		$csvdata .= $lineset."\n";
 
-		//t3lib_div::devLog('getCSVQBase return', 'ke_questionnaire Export Mod', 0, array($csvheader,$csvdata));
 		return $csvheader.$csvdata;
 	}
         
+	/**
+	 *	getQBaseLine(): Get the Line for the QBased Export. After the free cells add the answer for every result to be exportet
+	 *
+	 *	@param	int	$free_cells: cells to be left without result
+	 *	@param	array	$question: data of the question
+	 *	@param	array	$answer: given answer
+	 *	@param	int	$subquestion: id of subquestion
+	 *	@param	array	$column: information of the column
+	 *	@param	string	$dem_field: demographic to be exportet
+	 *
+	 *	@return	string	Line ready to be exportet
+	 */
 	function getQBaseLine($free_cells,$question,$answer=array(),$subquestion=0,$column=array(),$dem_field=''){
 		//t3lib_div::devLog('getQBaseLine', 'ke_questionnaire Export Mod', 0, array('free'=>$free_cells,'q'=>$question,'type'=>$type,'answer'=>$answer,'subq'=>$subquestion,'col'=>$column,$dem_field));
 		global $LANG;
@@ -304,6 +359,11 @@ class csv_export {
 		return $delimeter.implode($parter,$line).$delimeter."\n";
 	}
 
+	/**
+	 *	getQBaseHeaderLine(): Get the Header Line for the Question Based CSV-Export
+	 *
+	 *	@return	string	Line reade to be exportet
+	 */
 	function getQBaseHeaderLine(){
 		global $LANG;
 		$delimeter = $this->extConf['CSV_qualifier'];
@@ -321,7 +381,14 @@ class csv_export {
 
 		return $csvheader;
 	}
-
+	
+	/**
+	 *	getQBaseResultLine(): get the Result-ID Line for the CSV-Export
+	 *
+	 *	@param	int	$free_cells: amount of cells left free at the beginning of the line
+	 *
+	 *	@return	string	line ready to be exportet
+	 */
 	function getQBaseResultLine($free_cells){
 		global $LANG;
 
@@ -338,6 +405,11 @@ class csv_export {
 		return $delimeter.implode($parter,$line).$delimeter;
 	}
 	
+	/**
+	 * 	getCSVSimple2(): get the result-based Export (one result per line)
+	 *	
+	 *	@return	string	ready to be send csv
+	 */
 	function getCSVSimple2(){
 		global $LANG;
 
@@ -347,9 +419,6 @@ class csv_export {
 		$parter = $delimeter.$this->extConf['CSV_parter'].$delimeter;
 		
 		$csvheader = $this->q_data['header']."\n\n";
-		//$this->simplifyResults();
-		//t3lib_div::devLog('getCSVSimple simpleResults', 'ke_questionnaire Export Mod', 0, $this->simpleResults);
-		//t3lib_div::devLog('getCSVSimple results', 'ke_questionnaire Export Mod', 0, $this->results);
 		
 		$fill_array = $this->createFillArray();
 		//t3lib_div::devLog('getCSVSimple2 fill_array', 'ke_questionnaire Export Mod', 0, $fill_array);
@@ -617,7 +686,11 @@ class csv_export {
 		return $csvheader.$csvdata;
 	}
 */
-
+	/**
+	 *	createFillArray(): creates the definition Array for the export.
+	 *
+	 *	@return	array	Array of defintions for the export. Created of the questions and other informations needed in the export
+	 */
         function createFillArray(){
 		//get the questions
 		$storage_pid = $this->ff_data['sDEF']['lDEF']['storage_pid']['vDEF'];

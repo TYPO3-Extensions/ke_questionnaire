@@ -477,9 +477,9 @@ class plain_export {
                                 break;
                         case 'open':
                                 if ($answered) {
-									$tmpOutput['value'] = $answered;
+					$tmpOutput['value'] = $answered;
                                 } else {
-									$tmpOutput['value'] = '';
+					$tmpOutput['value'] = '';
                                 }
                                 if ($question['open_type'] == 1){
                                         if ($answered) $tmpOutput['value'] = $answered;
