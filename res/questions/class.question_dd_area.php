@@ -108,7 +108,7 @@ class question_dd_area extends question {
 					// If answer is correct
 					if(answerId[1] == placeholderId) {
 						$("select#keq_' . $this->question['uid'] . ' option[value=" + answerId[0] + "]").attr("selected", true);
-						$("#keq-ddarea-moveable" + answerId[0] + "-" + answerId[1]).draggable({revert: false;}).fadeOut();
+						$("#keq-ddarea-moveable" + answerId[0] + "-" + answerId[1]).fadeOut();
 						$("#keq-ddarea-checkbox" + answerId[0]).css("backgroundColor", "#00FF00");
 					} else {
 						' . $jsForWrongAnswers . '

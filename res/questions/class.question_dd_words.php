@@ -111,7 +111,7 @@ class question_dd_words extends question {
 					answerIdNew = $("div#question_' . $this->question['uid'] . ' .keq-moveable:contains(" + ui.draggable.text() + ")").attr("id").replace(/keq-moveable/g, "");
 					placeholderId = $(this).attr("id").replace(/keq-placeholder/g, "");
 
-					$("#keq-moveable" + answerIdNew).hide();
+					$("#keq-moveable" + answerIdNew).draggable({revert:false}).hide();
 					
 					// Set only if answer is correct
 					if(answerIdNew == placeholderId) {
