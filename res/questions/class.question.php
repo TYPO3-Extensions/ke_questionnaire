@@ -284,7 +284,15 @@ class question{
 		// General
 		$out['###PI###'] = $this->prefixId;
 		$out['###NAME###'] = $this->uid;
-		$out['###TEXT###'] = $this->question['text'];
+		//check the text for <p style="bodytext">
+		$temp_text = $this->question['text'];
+		$check = substr($temp_text,0,20);
+		if ($check == '<p class="bodytext">'){
+		    $temp_text = substr_replace($temp_text,'',0,20);
+		    $temp_text = substr_replace($temp_text,'',-4,4);
+		}
+		//t3lib_div::debug($temp_text);
+		$out['###TEXT###'] = $temp_text;
 		
 		// dependancy related
 		$out['###DEPENDANT###'] = '';
