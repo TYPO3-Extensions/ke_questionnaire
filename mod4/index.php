@@ -92,9 +92,9 @@ class  tx_kequestionnaire_module4 extends t3lib_SCbase {
 
 					$this->maxAuthCodeLength=0;
 
-					$extConf = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']["ke_questionnaire"]);
-					if(isset($extConf["maxAuthCodeLength"]) && is_numeric($extConf["maxAuthCodeLength"]) && intval($extConf["maxAuthCodeLength"])>=0){
-						$this->maxAuthCodeLength=intval($extConf["maxAuthCodeLength"]);
+					$this->extConf = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']["ke_questionnaire"]);
+					if(isset($this->extConf["maxAuthCodeLength"]) && is_numeric($this->extConf["maxAuthCodeLength"]) && intval($this->extConf["maxAuthCodeLength"])>=0){
+						$this->maxAuthCodeLength=intval($this->extConf["maxAuthCodeLength"]);
 						if($this->maxAuthCodeLength < $this->minAuthCodeLength) $this->maxAuthCodeLength=$this->minAuthCodeLength;
 					}
 
@@ -267,7 +267,15 @@ class  tx_kequestionnaire_module4 extends t3lib_SCbase {
 					$out.=$this->formLabel("remind_users");
 					foreach($users as $user){
 						if($send){
-							$success=$this->sendMail($user["email"],$user["authcode"],$mailTexts);
+							$markerArray = array();
+							if ($this->extConf['sendMailWithFeUserData']){
+								$fe_user_data = t3lib_BEfunc::getRecord('fe_users',$user['feuser']);
+								foreach ($fe_user_data as $key => $value){
+									$markerArray['###'.strtoupper($key).'###'] = $value;
+								}
+							}
+							
+							$success=$this->sendMail($user["email"],$user["authcode"],$mailTexts, $markerArray);
 							if(!$success) return $this->LL("error_send").$this->formLink(array("step"=>1),"back");;
 						}else{
 							$out.="<div>".$user["email"]."</div>";
@@ -304,6 +312,12 @@ class  tx_kequestionnaire_module4 extends t3lib_SCbase {
 
 				}
 				function sendMail($email,$authcode,$mailTexts,$markerArray=array()){
+					//t3lib_div::devLog('sendMail markerArray', 'Einlade-Mod', 0, $markerArray);
+					if (is_array($markerArray['###PASSWORD'])){
+						unset($markerArray['###PID###']);
+						unset($markerArray['###PASSWORD###']);
+					}
+					//t3lib_div::devLog('sendMail markerArray', 'Einlade-Mod', 0, $markerArray);
 					$link = t3lib_div::getIndpEnv('TYPO3_SITE_URL') . 'index.php?id=' . $this->pid . '&tx_kequestionnaire_pi1[auth_code]=' . $authcode;
 					$html_link = '<a href="' . $link . '">' . $link . '</a>';
 
@@ -403,10 +417,16 @@ class  tx_kequestionnaire_module4 extends t3lib_SCbase {
 					foreach ($users as $key => $value) {
 						$email=trim($value["email"]);
 						$feuser=$value["feUserUid"];
+						$markerArray = array();
+						if ($this->extConf['sendMailWithFeUserData']){
+							$fe_user_data = t3lib_BEfunc::getRecord('fe_users',$feuser);
+							foreach ($fe_user_data as $key => $value){
+								$markerArray['###'.strtoupper($key).'###'] = $value;
+							}
+						}
 						$authCode=$this->generateSingleCode($email,$feuser);
-						//t3lib_div::devLog('test', 'Einlade-Mod', 0, array($email, $authCode));
 						if(!$authCode) continue;
-						$success=$this->sendMail($email, $authCode, $mailTexts);
+						$success=$this->sendMail($email, $authCode, $mailTexts, $markerArray);
 						if(!$success) return $this->LL("error_send");
 
 

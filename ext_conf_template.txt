@@ -36,3 +36,6 @@ exportNoTimestamp = 0
 
 # cat=basic/enable; type=string; label=date-Format for Export tstamps as Date in CSV-Export 
 exportNoTimestampFormat = d.m.Y H:i:s
+
+# cat=basic/enable; type=boolean; label=enable fe-user fields as marker in invite and remind mails
+sendMailWithFeUserData = 0
