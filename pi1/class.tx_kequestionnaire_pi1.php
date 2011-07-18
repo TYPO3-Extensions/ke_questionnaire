@@ -2044,6 +2044,20 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 			$saveArray = $question_obj->getSaveArray();
 			//t3lib_div::debug($saveArray,"getQuestionTypeRender");
 			$content = $question_obj->render();
+			
+			if ($this->user_id){
+				$user_res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*','fe_users','uid='.$this->user_id);
+				if ($user_res){
+					$user = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($user_res);
+					foreach ($user as $key => $value){
+						if ($key != 'pid' AND $key != 'password'){
+							$markerArray['###USER_'.strtoupper($key).'###'] = $value;
+						}
+					}
+				}
+				$content = $this->cObj->substituteMarkerArrayCached($content, $markerArray, array(), array());
+			}
+			
 			//t3lib_div::debug($content,"getQuestionTypeRender");
 				
 			if (is_array($saveArray[$question['uid']])){
