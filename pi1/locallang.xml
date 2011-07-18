@@ -157,7 +157,8 @@
 			<label index="no_more">Sie haben bereits an diesem Fragebogen teilgenommen!</label>
 
 			<label index="no_authcode">Diese Umfrage ist nur mittels Auth-Code zugänglich. Bitte nutzen Sie den Link in Ihrer Email oder tragen Sie den Auth-Code in das Eingabefeld ein.</label>
-			<label index="authcode_submit_label">AuthCode absenden</label>
+			<label index="no_authcode_falseuser">Der Auth-Code den sie eingegeben haben ist einem anderen Nutzer zugeordnet. Bitte nutzen sie ihren Auth-Code</label>
+			<label index="authcode_submit_label">Auth-Code absenden</label>
 
 			<label index="mandatory_marker">*</label>
 			<label index="name">Name</label>

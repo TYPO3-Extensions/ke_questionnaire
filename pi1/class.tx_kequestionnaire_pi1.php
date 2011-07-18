@@ -219,7 +219,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 					//show the text for no authcode the input for the authcode
 					$subPart = '###NO_AUTHCODE###';
 					$markerArray['###FORM_ACTION###'] = htmlspecialchars($this->pi_getPageLink($GLOBALS['TSFE']->id));
-					$markerArray['###TEXT###'] = $this->pi_getLL('no_authcode');
+					$markerArray['###TEXT###'] = $this->pi_getLL($this->no_authcodeKey);
 					$markerArray['###SUBMIT_LABEL###'] = $this->pi_getLL('authcode_submit_label');
 					$save = false;
 				//if fe_user and no user logged in
@@ -230,6 +230,17 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 					$save = false;
 				//else there is a valid authcode or logged in user
 				} else {
+					if ($this->user_id){
+						$user_res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*','fe_users','uid='.$this->user_id);
+						if ($user_res){
+							$user = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($user_res);
+							foreach ($user as $key => $value){
+								if ($key != 'pid' AND $key != 'password'){
+									$markerArray['###USER_'.strtoupper($key).'###'] = $value;
+								}
+							}
+						}
+					}
 					//check if the user has already paricipated
 					$last_result = array();
 					if (!$this->piVars['result_id']){
@@ -277,6 +288,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 							$save = false;
 						}
 					}
+					t3lib_div::devLog('markerArray for PI1', $this->prefixId, 0, $markerArray);
 				}
 				break;
 			default:
@@ -389,6 +401,12 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 				$row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
 				if (is_array($row)) {
 					$content = true;
+					if ($row['feuser']){
+						if ($row['feuser'] != $this->user_id){
+							$content = false;
+							$this->no_authcodeKey = 'no_authcode_falseuser';
+						}
+					}
 					$this->authCode = $row['authcode'];
 				}
 				//t3lib_div::devLog('authCode', $this->prefixId, 0, $row);
@@ -839,6 +857,17 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 	function renderPage($page_nr,$page_count,$form_pre_add='',$form_post_add=''){
 		$questions = '';
 		$markerArray = array();
+		if ($this->user_id){
+			$user_res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*','fe_users','uid='.$this->user_id);
+			if ($user_res){
+				$user = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($user_res);
+				foreach ($user as $key => $value){
+					if ($key != 'pid' AND $key != 'password'){
+						$markerArray['###USER_'.strtoupper($key).'###'] = $value;
+					}
+				}
+			}
+		}
 		//if all ins rendered on one page
 		if ($page_nr == $page_count AND $page_count == 1){
 			$markerArray['###ACT_PAGE###'] = '';
@@ -2080,6 +2109,8 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 		
 		//clear piVars (XSS and SQLInjection)
 		$this->clearPiVars();
+		
+		$this->no_authcodeKey = 'no_authcode';
 	}
 	
 	/**
