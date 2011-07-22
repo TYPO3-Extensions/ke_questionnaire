@@ -61,13 +61,13 @@ class  tx_kequestionnaire_module4 extends t3lib_SCbase {
 					//get the given Parameters
 					$this->q_id = intval(t3lib_div::_GP('q_id'));
 					$this->pid = intval(t3lib_div::_GP('id'));
-					
+
 					$this->vars=isset($_REQUEST["vars"])?t3lib_div::_GP("vars"):array();
 					$this->step=isset($this->vars["step"])?$this->vars["step"]:1;
-					
+
 					//t3lib_div::devLog('vars', 'Einlade-Mod', 0, $this->vars);
 					//t3lib_div::devLog('vars', 'Einlade-Mod', 0, $_REQUEST["vars"]);
-					
+
 					if ($this->q_id == 0 AND $this->vars['q_id']) $this->q_id = $this->vars['q_id'];
 					if ($this->pid == 0 AND $this->vars['id']) $this->pid = $this->vars['id'];
 
@@ -88,7 +88,7 @@ class  tx_kequestionnaire_module4 extends t3lib_SCbase {
 						$this->storagePid = $_SESSION["tx_kequestionnaire_module4"]["storagePid"];
 					}*/
 
-					
+
 
 					$this->maxAuthCodeLength=0;
 
@@ -274,7 +274,7 @@ class  tx_kequestionnaire_module4 extends t3lib_SCbase {
 									$markerArray['###'.strtoupper($key).'###'] = $value;
 								}
 							}
-							
+
 							$success=$this->sendMail($user["email"],$user["authcode"],$mailTexts, $markerArray);
 							if(!$success) return $this->LL("error_send").$this->formLink(array("step"=>1),"back");;
 						}else{
@@ -304,7 +304,7 @@ class  tx_kequestionnaire_module4 extends t3lib_SCbase {
 
 					$this->error=0;
 					if($out["body"]=="") $this->error="error_missing_text";
-					elseif(substr_count($out["body"],"###LINK###") == 0 && substr_count($out["body"], "###URL###") == 0) $this->error="error_missing_marker";
+					elseif(substr_count($out["body"],"###LINK###") == 0 && substr_count($out["body"], "###AUTHCODE###") == 0) $this->error="error_missing_marker";
 					if($out["subject"]=="") $this->error="error_missing_subject";
 					if($out["fromName"]=="" || $out["fromEmail"]=="") $this->error="error_missing_sender";
 
@@ -330,7 +330,7 @@ class  tx_kequestionnaire_module4 extends t3lib_SCbase {
 					$html_body=$mailTexts["body"];
 					foreach($markerArray as $key=>$val) $body=str_replace($key,$val,$body);
 					$markerArray["###LINK###"]=$html_link;
-					foreach($markerArray as $key=>$val) $html_body=str_replace($key,$val,$html_body);					
+					foreach($markerArray as $key=>$val) $html_body=str_replace($key,$val,$html_body);
 
 					$html_start="<html><head><title>".$mailTexts["subject"]."</title></head><body>";
 					$html_end="</body></html>";
@@ -646,7 +646,7 @@ class  tx_kequestionnaire_module4 extends t3lib_SCbase {
 				function sourceFormOptions(){
 					$out=$this->formLabel("sourceTitle");
 					$out.="<br />";
-					
+
 					// Enter adresses
 					$out.=$this->formLink(array("step"=>$this->step,"source"=>"input","q_id"=>$this->q_id,"id"=>$this->pid),"sourceInput");
 					$out.="<br />";

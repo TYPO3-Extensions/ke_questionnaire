@@ -37,10 +37,10 @@ require_once(PATH_tslib.'class.tslib_pibase.php');
 
 class question_dd_words extends question {
 	var $templateName = "question_dd_words.html";              //Name of default Templatefile
-	
+
 	/**
 	 * Saves the language object
-	 * 
+	 *
 	 * @var language
 	 */
 	var $lang;
@@ -58,7 +58,7 @@ class question_dd_words extends question {
 		$language = $GLOBALS['TSFE']->tmpl->setup['config.']['language'];
 		$this->lang = t3lib_div::makeInstance('language');
 		$this->lang->init($language ? $language : 'default');
-		
+
 		$this->options = array();
 		$where = 'question_uid = ' . $uid;
 		$where .= ' AND sys_language_uid = ' . $GLOBALS['TSFE']->sys_language_uid;
@@ -97,9 +97,9 @@ class question_dd_words extends question {
 			$("div#question_' . $this->question['uid'] . ' p.bodytext").css({
 				display: "inline-block"
 			});
-			
+
 			$("div#question_' . $this->question['uid'] . ' span.keq-placeholder").droppable({
-				accept: "div#question_' . $this->question['uid'] . ' div.keq-moveable",	
+				accept: "div#question_' . $this->question['uid'] . ' div.keq-moveable",
 				activeClass: "keq-possible",
 				hoverClass: "keq-hover",
 				drop: function( event, ui ) {
@@ -112,10 +112,10 @@ class question_dd_words extends question {
 					placeholderId = $(this).attr("id").replace(/keq-placeholder/g, "");
 
 					$("#keq-moveable" + answerIdNew).draggable({revert:false}).hide();
-					
+
 					// Set only if answer is correct
 					if(answerIdNew == placeholderId) {
-						$("select#keq_' . $this->question['uid'] . ' option[value=" + answerIdNew + "]").attr("selected", true);						
+						$("select#keq_' . $this->question['uid'] . ' option[value=" + answerIdNew + "]").attr("selected", true);
 					}
 
 					$(this).text(ui.draggable.text());
@@ -169,7 +169,7 @@ class question_dd_words extends question {
 
 		$value = $this->answer['options'];
 		if(!empty($value)) return;
-		
+
 		if (!$this->checkDependancies()){
 			$this->error = 0;
 		} else {

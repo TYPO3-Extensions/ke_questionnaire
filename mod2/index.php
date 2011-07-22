@@ -61,7 +61,7 @@ class  tx_kequestionnaire_module2 extends t3lib_SCbase {
 			$ff_data = t3lib_div::xml2array($this->q_data['pi_flexform']);
 			$this->ff_data = $ff_data['data'];
 		}
-		
+
 		$this->extConf = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['ke_questionnaire']);
 		$this->extConf_premium = array();
 		if (t3lib_extMgm::isLoaded('ke_questionnaire_premium'))	$this->extConf_premium = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['ke_questionnaire_premium']);
@@ -107,7 +107,7 @@ class  tx_kequestionnaire_module2 extends t3lib_SCbase {
 	 */
 	function main()	{
 		global $BE_USER,$LANG,$BACK_PATH,$TCA_DESCR,$TCA,$CLIENT,$TYPO3_CONF_VARS;
-		
+
 		// Access check!
 		// The page will show only if there is a valid page and if this page may be viewed by the user
 		$this->pageinfo = t3lib_BEfunc::readPageAccess($this->id,$this->perms_clause);
@@ -136,12 +136,12 @@ class  tx_kequestionnaire_module2 extends t3lib_SCbase {
 			if (t3lib_extMgm::isLoaded('ke_questionnaire_premium') AND $this->extConf_premium['chart_lib'] == 'openfl2'){
 				require_once(t3lib_extMgm::extPath('ke_questionnaire_premium').'res/other/class.open_flcharts2.php');
 				$this->charts = new open_flcharts2();
-				$this->charts->be_js_includes($this);				
+				$this->charts->be_js_includes($this);
 			} else {
 				require_once(t3lib_extMgm::extPath('ke_questionnaire').'res/other/class.js_raphael.php');
 				$this->charts = new js_raphael();
 				$this->charts->be_js_includes($this);
-			} 
+			}
 			//#############################################
 			$this->doc->postCode='
 				<script language="javascript" type="text/javascript">
@@ -237,7 +237,7 @@ class  tx_kequestionnaire_module2 extends t3lib_SCbase {
 		}
 		$this->content.=$this->doc->section($title,$content,0,1);
 	}
-	
+
 ##############################################################################################
 # Open Flash Map 2 Charts
 ##############################################################################################
@@ -246,7 +246,7 @@ class  tx_kequestionnaire_module2 extends t3lib_SCbase {
 		$templ = file_get_contents('res/OF_basic.html');
 		require_once(t3lib_extMgm::extPath('ke_questionnaire_premium').'res/other/class.keq_analysis.php');
 		$analyse = new keq_analysis(new open_flcharts2());
-		
+
 		$markerArray = array();
 
 		$finished = 0;
@@ -268,14 +268,14 @@ class  tx_kequestionnaire_module2 extends t3lib_SCbase {
 		$markerArray['###COUNT###'] = $LANG->getLL('result_count').': '.$counting.'<br />';
 		$markerArray['###COUNT###'] .= $LANG->getLL('parted_count').': '.$parted.'<br />';
 		$markerArray['###COUNT###'] .= $LANG->getLL('finished_count').': '.$finished;
-		
+
 		$markerArray['###WEEK###'] = $LANG->getLL('OFchart_select_week');
 		$markerArray['###SELECTED_WEEK###'] = '';
 		$markerArray['###SELECTED_DAY###'] = '';
 		if (t3lib_div::_GP('range_select') == 'week') $markerArray['###SELECTED_WEEK###'] = 'selected';
 		if (t3lib_div::_GP('range_select') == 'day') $markerArray['###SELECTED_DAY###'] = 'selected';
 		$markerArray['###DAY###'] = $LANG->getLL('OFchart_select_day');
-		
+
 		$content = $this->fillTemplate($templ, $markerArray);
 		//$script = $this->charts->testChart('timeline_chart');
 		if (t3lib_div::_GP('range_select') == 'day') $timeline = $analyse->getOFTimelineChartForDays('timeline_chart',$this->ff_data);
@@ -283,10 +283,10 @@ class  tx_kequestionnaire_module2 extends t3lib_SCbase {
 		//t3lib_div::devLog('getOFBasicCharts', 'BE Auswertungen', 0, array($timeline));
 		$content .= $timeline;
 		$content .= $analyse->getOFParticipationChart('parti_pie',$this->ff_data);
-		
+
 		return $content;
 	}
-	
+
 	function getOFQuestionCharts(){
 		global $LANG;
 		$chart = '';
@@ -294,11 +294,11 @@ class  tx_kequestionnaire_module2 extends t3lib_SCbase {
 		require_once(t3lib_extMgm::extPath('ke_questionnaire_premium').'res/other/class.keq_analysis.php');
 		$analyse = new keq_analysis(new open_flcharts2());
 		$markerArray = array();
-		
+
 		$types = array('\'open\'','\'closed\'','\'dd_words\'','\'dd_area\'','\'semantic\'','\'matrix\'');
 		$markerArray['###QUESTION_SELECT###'] = $this->getQuestionSelect($types);
-		
-		$q_id = t3lib_div::GPvar('question');
+
+		$q_id = t3lib_div::_GP('question');
 		$question = t3lib_BEfunc::getRecord('tx_kequestionnaire_questions',$q_id);
 
 		$storage_pid = $this->ff_data['sDEF']['lDEF']['storage_pid']['vDEF'];
@@ -323,7 +323,7 @@ class  tx_kequestionnaire_module2 extends t3lib_SCbase {
 		//t3lib_div::devLog('question', 'ke_questionnaire auswert Mod', 0, $question);
 		//t3lib_div::devLog('results', 'ke_questionnaire auswert Mod', 0, $results);
 		$markerArray['###DIV###'] = '';
-		
+
 		if ($q_id > 0){
 			$legend = '';
 			switch ($question['type']){
@@ -370,10 +370,10 @@ class  tx_kequestionnaire_module2 extends t3lib_SCbase {
 					break;
 			}
 		}
-		
+
 		$template = $this->fillTemplate($templ, $markerArray);
 		$content = $template.$charts;
-		
+
 		// Hook to enable different BE-OFQuestionCharts
 		if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['ke_questionnaire']['mod2_getOFQuestionCharts'])){
 			foreach($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['ke_questionnaire']['mod2_getOFQuestionCharts'] as $_classRef){
@@ -381,7 +381,7 @@ class  tx_kequestionnaire_module2 extends t3lib_SCbase {
 				$content = $_procObj->mod2_getOFQuestionCharts($this,$templ,$markerArray,$content,$charts);
 			}
 		}
-		
+
 		return $content;
 	}
 ##############################################################################################
@@ -400,7 +400,7 @@ class  tx_kequestionnaire_module2 extends t3lib_SCbase {
 		$types = array('\'open\'','\'closed\'','\'dd_words\'','\'dd_area\'','\'semantic\'','\'matrix\'');
 		$markerArray['###QUESTION_SELECT###'] = $this->getQuestionSelect($types);
 
-		$q_id = t3lib_div::GPvar('question');
+		$q_id = t3lib_div::_GP('question');
 		$question = t3lib_BEfunc::getRecord('tx_kequestionnaire_questions',$q_id);
 
 		$storage_pid = $this->ff_data['sDEF']['lDEF']['storage_pid']['vDEF'];
@@ -522,7 +522,7 @@ class  tx_kequestionnaire_module2 extends t3lib_SCbase {
 		//t3lib_div::devLog('results', 'ke_questionnaire auswert Mod', 0, $results);
 		//t3lib_div::devLog('bars', 'ke_questionnaire auswert Mod', 0, $columns);
 		global $LANG;
-		$q_id = t3lib_div::GPvar('question');
+		$q_id = t3lib_div::_GP('question');
 		$title = '';
 		$templ = file_get_contents('res/questions.html');
 
@@ -588,7 +588,7 @@ class  tx_kequestionnaire_module2 extends t3lib_SCbase {
 		//t3lib_div::devLog('results', 'ke_questionnaire auswert Mod', 0, $results);
 		//t3lib_div::devLog('bars', 'ke_questionnaire auswert Mod', 0, $bars);
 		global $LANG;
-		$q_id = t3lib_div::GPvar('question');
+		$q_id = t3lib_div::_GP('question');
 
 		$title = $LANG->getLL('question_matrixbar_chart');
 
@@ -667,7 +667,7 @@ class  tx_kequestionnaire_module2 extends t3lib_SCbase {
 		//t3lib_div::devLog('columns', 'ke_questionnaire auswert Mod', 0, $columns);
 		//t3lib_div::devLog('results', 'ke_questionnaire auswert Mod', 0, array($results));
 		global $LANG;
-		$q_id = t3lib_div::GPvar('question');
+		$q_id = t3lib_div::_GP('question');
 		$templ = file_get_contents('res/questions.html');
 
 		//$title = $LANG->getLL('question_pie_chart');
@@ -697,9 +697,9 @@ class  tx_kequestionnaire_module2 extends t3lib_SCbase {
 										elseif (is_array($result[$q_id]['answer']['options'][$sub['uid']]) AND ((string)$result[$q_id]['answer']['options'][$sub['uid']]['single'] == (string)$bar['uid'])) $values[$bar['uid']] ++;
 										elseif (in_array($bar['uid'],$result[$q_id]['answer']['options'])) $values[$bar['uid']] ++;
 									}
-								}								
+								}
 								//t3lib_div::devLog('result '.$bar['uid'], 'ke_questionnaire auswert Mod', 0, array($result[$q_id]['answer']['options'][$sub['uid']]));
-							}	
+							}
 						}
 					}
 				}
@@ -725,7 +725,7 @@ class  tx_kequestionnaire_module2 extends t3lib_SCbase {
 		//t3lib_div::devLog('results', 'ke_questionnaire auswert Mod', 0, $results);
 		//t3lib_div::devLog('bars', 'ke_questionnaire auswert Mod', 0, $bars);
 		global $LANG;
-		$q_id = t3lib_div::GPvar('question');
+		$q_id = t3lib_div::_GP('question');
 
 		//$title = $LANG->getLL('question_bar_chart');
 		$title = '';
@@ -769,7 +769,7 @@ class  tx_kequestionnaire_module2 extends t3lib_SCbase {
 	 */
 	function getGRQClosedPieChart($pieces,$results,$marker = 'pie'){
 		global $LANG;
-		$q_id = t3lib_div::GPvar('question');
+		$q_id = t3lib_div::_GP('question');
 
 		//$title = $LANG->getLL('question_pie_chart');
 		$title = '';
@@ -905,16 +905,16 @@ class  tx_kequestionnaire_module2 extends t3lib_SCbase {
 	function getGRTimelineChart($marker = 'chart'){
 		global $LANG;
 		$label = $LANG->getLL('timeline_chart');
-		
+
 		$labels = array();
 		$x_axis = array();
 		$y_axis = array();
 		$y_step = 0;
 		$x_step = 0;
-		
+
 		$results = array();
 		$finished = array();
-		$parted = array();		
+		$parted = array();
 
 		$first_started = 0;
 		$last_started = 0;
@@ -941,7 +941,7 @@ class  tx_kequestionnaire_module2 extends t3lib_SCbase {
 				}
 			}
 		}
-		
+
 		//get the weeks for the x-axis
 		$finished_diff = $last_finished - $first_finished;
 		$days_diff = $finished_diff / 86400;
@@ -953,7 +953,7 @@ class  tx_kequestionnaire_module2 extends t3lib_SCbase {
 		$check_tstmp = $first_finished;
 		$week_int = 86400 * 7;
 		$week_count = 1;
-		
+
 		for ($i = 0; $i <= $weeks; $i++){
 			$y_axis[$i] = 0;
 		}
@@ -1026,7 +1026,7 @@ class  tx_kequestionnaire_module2 extends t3lib_SCbase {
 		$chart = $this->charts->getLineChart($marker,$label,$x_axis,$x_step-1,$y_axis,$y_step,$labels,$colors,false);
 		return $chart;
 	}
-	
+
 ##############################################################################################
 
 	/**
@@ -1040,7 +1040,7 @@ class  tx_kequestionnaire_module2 extends t3lib_SCbase {
 		else $content = '<select id="keq_mod2_question" name="question" onchange="this.form.submit()">';
 		$storage_pid = $this->ff_data['sDEF']['lDEF']['storage_pid']['vDEF'];
 
-		$q_id = t3lib_div::GPvar('question');
+		$q_id = t3lib_div::_GP('question');
 
 		//get the questions
 		$where = 'pid='.$storage_pid.' AND hidden=0 AND deleted=0 AND type IN('.implode(',',$types).')';

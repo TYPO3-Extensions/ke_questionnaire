@@ -78,33 +78,33 @@ class question_dd_area extends question {
  				$("#keq-ddarea-checkbox" + answerId[0]).css("backgroundColor", "#DD0000");
  				$("#keq-ddarea-moveable" + answerId[0] + "-" + answerId[1]).fadeOut();
  			';
- 		}		
-		
+ 		}
+
 		// put JS to header
 		$GLOBALS['TSFE']->additionalHeaderData['keq-js-core'] = '<script src="'.t3lib_extMgm::siteRelPath('ke_questionnaire').'res/jquery/jquery-1.5.1.min.js" type="text/javascript"></script>';
 		$GLOBALS['TSFE']->additionalHeaderData['keq-js-ui'] = '<script src="'.t3lib_extMgm::siteRelPath('ke_questionnaire').'res/jquery/jquery-ui-1.8.11.custom.min.js" type="text/javascript"></script>';
 		$GLOBALS['TSFE']->register['kequestionnaire'][$this->question['uid']] = '
 			$("select#keq_' . $this->question['uid'] . '").hide();
-			
+
 			$("div#question_' . $this->question['uid'] . '").find("div.keq-ddarea-moveable").draggable({
 				revert: true
 			});
 			$("div#question_' . $this->question['uid'] . ' p.bodytext").css({
 				display: "inline-block"
 			});
-			
+
 			$("div#question_' . $this->question['uid'] . '").find("div.keq-ddarea-placeholder").css("opacity", .7).droppable({
-				accept: "div#question_' . $this->question['uid'] . ' div.keq-ddarea-moveable",	
+				accept: "div#question_' . $this->question['uid'] . ' div.keq-ddarea-moveable",
 				activeClass: "keq-possible",
 				hoverClass: "keq-hover",
 				drop: function( event, ui ) {
 					answerId = ui.draggable.attr("id").replace(/keq-ddarea-moveable/g, "");
 					answerId = answerId.split("-");
 					placeholderId = $(this).attr("id").replace(/keq-ddarea-placeholder' . $this->question['uid'] . '-/g, "");
-					
+
 					// ddarea-moveable was moved. So first of all deselect option in selectbox
 					$("select#keq_' . $this->question['uid'] . ' option[value=" + answerId[0] + "]").attr("selected", false);
-					
+
 					// If answer is correct
 					if(answerId[1] == placeholderId) {
 						$("select#keq_' . $this->question['uid'] . ' option[value=" + answerId[0] + "]").attr("selected", true);
@@ -116,7 +116,7 @@ class question_dd_area extends question {
 				}
 			});
 		';
-		
+
 		// get coords of answerareas
 		$coordRow = t3lib_div::trimExplode("\n", $this->question['coords']);
 		foreach($coordRow as $keyRow => $row) {
@@ -125,7 +125,7 @@ class question_dd_area extends question {
 				$coords[($keyRow + 1)][$keyPart] = t3lib_div::trimExplode(":", $part);
 			}
 		}
-		
+
 		// create the answers for each question
 		// create also hidden fields to save the answer
 		$i = 0;
@@ -138,7 +138,7 @@ class question_dd_area extends question {
 			$conf['wrap'] = '<div style="z-index: 10' . ($count - $i) . ';" id="keq-ddarea-moveable' . $key . '-' . $value['answerarea'] . '" class="keq-ddarea-moveable">|</div>';
 			$answers .= $this->cObj->IMAGE($conf);
 			$checkboxes .= '<div id="keq-ddarea-checkbox' . $key . '" class="keq-ddarea-checkbox">&nbsp;</div>';
-			
+
 			// there can be more answers than areas
 			// don't make more areas than needed
 			$dropAreas[$value['answerarea']] = '
@@ -152,11 +152,11 @@ class question_dd_area extends question {
 				">&nbsp;</div>';
 			$i++;
 		}
-		
+
 		$dropAreas = implode('', $dropAreas);
-		
+
 		$checkboxes = $checkboxes . '<div style="clear: left;"></div>';
-		
+
 		$imgSource = $this->renderImage(
 			array(
 				'title' => $this->question['title'],
@@ -164,7 +164,7 @@ class question_dd_area extends question {
 				'image_position' => $this->question['image_position']
 			)
 		);
-		
+
 		$this->fields['ddarea'] = new kequestionnaire_input(
 			'text',
 			'ddarea',
@@ -172,7 +172,7 @@ class question_dd_area extends question {
 			'###DDAREA###',
 			$this
 		);
-		
+
 		$this->fields['list'] = new kequestionnaire_input(
 			'list',
 			'selectbox_multi',
@@ -182,7 +182,7 @@ class question_dd_area extends question {
 			$this->options, array(), array(), array(),
 			'', $this->dependants
 		);
-		
+
 		$this->fields['checkboxes'] = new kequestionnaire_input(
 			'text',
 			'blind',
@@ -190,7 +190,7 @@ class question_dd_area extends question {
 			'###CHECKBOXES###',
 			$this
 		);
-		
+
 		$this->fields['answers'] = new kequestionnaire_input(
 			'text',
 			'blind',
@@ -198,10 +198,10 @@ class question_dd_area extends question {
 			'###BLIND###',
 			$this
 		);
-		
+
 		//t3lib_div::devLog('buildFieldArray', 'ke_questionnaire', -1, array($this->fields, $markerArray));
 	}
-	
+
 	function renderImage($data=array()){
 		if($data['image']) {
 			$imgConf['file'] = 'uploads/tx_kequestionnaire/' . $data['image'];
@@ -211,7 +211,7 @@ class question_dd_area extends question {
 			return '';
 		}
 	}
-	
+
 	/**
 	 * Selects Subpartname depending on Qustiontype
 	 *
@@ -230,7 +230,7 @@ class question_dd_area extends question {
 
 		$value = $this->answer['options'];
 		if(!empty($value)) return;
-		
+
 		if (!$this->checkDependancies()){
 			$this->error = 0;
 		} else {
