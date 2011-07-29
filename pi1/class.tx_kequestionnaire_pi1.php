@@ -232,14 +232,8 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 				//else there is a valid authcode or logged in user
 				} else {
 					if ($this->user_id){
-						$user_res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*','fe_users','uid='.$this->user_id);
-						if ($user_res){
-							$user = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($user_res);
-							foreach ($user as $key => $value){
-								if ($key != 'pid' AND $key != 'password'){
-									$markerArray['###USER_'.strtoupper($key).'###'] = $value;
-								}
-							}
+						foreach ($this->userMarker as $marker => $value){
+							$markerArray[$marker] = $value;
 						}
 					}
 					//check if the user has already paricipated
@@ -2340,14 +2334,19 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 	 */
 	function sendMail($email,$mailTexts){
 		$body = $mailTexts["body"];
-
-		$html_start="<html><head><title>".$mailTexts["subject"]."</title></head><body>";
+		$subject = $mailTexts['subject'];
+		if ($this->user_id){
+			$body = $this->renderMarker($body, $this->userMarker);
+			$subject = $this->renderMarker($subject, $this->userMarker);
+		}
+		
+		$html_start="<html><head><title>".$subject."</title></head><body>";
 		$html_end="</body></html>";
 
 		$this->htmlMail = t3lib_div::makeInstance('t3lib_htmlmail');
 		$this->htmlMail->start();
 		$this->htmlMail->recipient = $email;
-		$this->htmlMail->subject = $mailTexts['subject'];
+		$this->htmlMail->subject = $subject;
 		$this->htmlMail->from_email = $mailTexts['fromEmail'];
 		$this->htmlMail->from_name = $mailTexts['fromName'];
 		$this->htmlMail->replyto_name = $mailTexts['fromName'];
