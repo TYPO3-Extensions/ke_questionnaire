@@ -29,6 +29,7 @@ class dompdf_export {
 	var $cellWidth = array(); //Base-Definition Cell Width
 
 	var $questions = array();  //Question-array
+	var $user_marker = array();//array for user-marker
 
         /**
          * dompdf_export(): initialisation of the export object
@@ -351,7 +352,7 @@ class dompdf_export {
 				$content .= $this->renderOutcomes();
 			break;
 		}
-
+		
 		$html = str_replace('###CONTENT###',$content,$this->templates['base']);
 		$html = str_replace('###PDF_TITLE###',$this->LOCAL_LANG['pdf_title'],$html);
 		$html = str_replace('###DATE###',$date,$html);
@@ -360,7 +361,9 @@ class dompdf_export {
 		$css = $this->getCSS();
 		$html = str_replace('###CSS###',$css,$html);
 		$html = str_replace('###BASE_PATH###',PATH_site,$html);
-
+		
+		$html = $this->renderContent($html,$this->user_marker);
+		
 		return $html;
 	}
 

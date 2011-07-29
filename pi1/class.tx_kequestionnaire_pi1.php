@@ -65,6 +65,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 	var $questionsByID = array();			//Array to store questions of this questionnaire By ID
 	var $questionCount = array();			//count all the questions of the questionnaire
 	var $user_id	   = 0;				//ID of the user filling in the questionnaire
+	var $userMarker    = array(); 			//Marker for User-Values in Templates
 
 	var $saveString    = '';			//String to store the saved Data
 	var $saveArray    = '';				//Array to store the Data
@@ -858,14 +859,8 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 		$questions = '';
 		$markerArray = array();
 		if ($this->user_id){
-			$user_res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*','fe_users','uid='.$this->user_id);
-			if ($user_res){
-				$user = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($user_res);
-				foreach ($user as $key => $value){
-					if ($key != 'pid' AND $key != 'password'){
-						$markerArray['###USER_'.strtoupper($key).'###'] = $value;
-					}
-				}
+			foreach ($this->userMarker as $marker => $value){
+				$markerArray[$marker] = $value;
 			}
 		}
 		//if all ins rendered on one page
@@ -978,6 +973,8 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 
 
 		$content = $this->renderContent('###PAGE###',$markerArray);
+		
+		$content = $this->renderMarker($content, $this->userMarker);
 
 		return $content;
 	}
@@ -1241,6 +1238,11 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 	function renderFirstPage(){
 		$content = '';
 		$markerArray = array();
+		if ($this->user_id){
+			foreach ($this->userMarker as $marker => $value){
+				$markerArray[$marker] = $value;
+			}
+		}
 
 		$markerArray['###TEXT###'] = $this->pi_RTEcssText($this->ffdata['description']);
 		//$markerArray['###NAV###'] = $this->pi_linkTP($this->pi_getLL('to_questionnaire'),array($this->prefixId.'[page]'=>1));
@@ -1261,6 +1263,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 		$markerArray['###EMAILONFINISH###'] = '';
 		//t3lib_div::devLog('renderFirstPage', $this->prefixId, 0, $markerArray);
 		$content = $this->renderContent('###OTHER_PAGE###',$markerArray);
+		$content = $this->renderMarker($content, $this->userMarker);
 
 		return $content;
 	}
@@ -1298,6 +1301,11 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 		
 		$content = '';
 		$markerArray = array();
+		if ($this->user_id){
+			foreach ($this->userMarker as $marker => $value){
+				$markerArray[$marker] = $value;
+			}
+		}
 
 		$markerArray['###TEXT###'] = $this->pi_RTEcssText($this->ffdata['end_text']);
 		if ($markerArray['###TEXT###'] == '') $markerArray['###TEXT###'] = $this->pi_getLL('standard_endtext');
@@ -1419,6 +1427,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 		
 		$this->renderHiddenFields();
 		$content = $this->renderContent('###OTHER_PAGE###',$markerArray);
+		$content = $this->renderMarker($content, $this->userMarker);
 
 		//t3lib_div::devLog('renderLastPage', $this->prefixId, 0, $markerArray);
 
@@ -1877,6 +1886,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 			$storage_pid = $this->ffdata['storage_pid'];
 	
 			$pdf = new dompdf_export($pdf_conf,$storage_pid, 'test',$this->cObj->data['pi_flexform']['data']);
+			$pdf->user_marker = $this->userMarker;
 	
 			switch ($type){
 				case 'empty':
@@ -2046,14 +2056,8 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 			$content = $question_obj->render();
 			
 			if ($this->user_id){
-				$user_res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*','fe_users','uid='.$this->user_id);
-				if ($user_res){
-					$user = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($user_res);
-					foreach ($user as $key => $value){
-						if ($key != 'pid' AND $key != 'password'){
-							$markerArray['###USER_'.strtoupper($key).'###'] = $value;
-						}
-					}
+				foreach ($this->userMarker as $marker => $value){
+					$markerArray[$marker] = $value;
 				}
 				$content = $this->cObj->substituteMarkerArrayCached($content, $markerArray, array(), array());
 			}
@@ -2108,6 +2112,19 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 
 		//get the user id
 		$this->user_id = $GLOBALS['TSFE']->fe_user->user['uid'];
+		if ($this->user_id){
+			$markerArray = array();
+			$user_res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*','fe_users','uid='.$this->user_id);
+			if ($user_res){
+				$user = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($user_res);
+				foreach ($user as $key => $value){
+					if ($key != 'pid' AND $key != 'password'){
+						$markerArray['###USER_'.strtoupper($key).'###'] = $value;
+					}
+				}
+			}
+			$this->userMarker = $markerArray;
+		}
 
 		//init Captcha
 		if (t3lib_extMgm::isLoaded('sr_freecap') ) {
@@ -2289,6 +2306,28 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 
 		$subpart = $this->cObj->getSubpart($this->tmpl,$subpart);
 		$content = $this->cObj->substituteMarkerArrayCached($subpart, $markerArray, array(), $wrappedSubpartArray);
+
+		return $content;
+	}
+	
+	/**
+	 * Render the Content in the Template
+	 *
+	 * @param       string     	$text: Subpart to be filled
+	 * @param       array     	$markerArray: to fill the template
+	 *
+	 * @return      the whole content ready rendered
+	 */
+	function renderMarker($text,$markerArray){
+		$wrappedSubpartArray = array();
+	  	if ($this->errorText == '') {
+	  		$markerArray['###ERROR###'] = '';
+	  	} else {
+	  		$markerArray['###ERRORCLASS###'] = 'error';
+			$markerArray['###ERROR###'] = $this->errorText;
+	  	}
+
+		$content = $this->cObj->substituteMarkerArrayCached($text, $markerArray, array(), $wrappedSubpartArray);
 
 		return $content;
 	}
