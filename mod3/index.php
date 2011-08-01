@@ -487,9 +487,9 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 		$where = 'pid='.$this->ff_data['sDEF']['lDEF']['storage_pid']['vDEF'];
 		$where .= ' AND deleted=0 AND hidden=0';
 		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('uid',$table,$where);
-		//t3lib_div::devLog('getResults', 'ke_questionnaire Export Mod', 0, array($GLOBALS['TYPO3_DB']->SELECTquery('uid',$table,$where)));
 		if ($res){
 			while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)){
+				//t3lib_div::devLog('getResults', 'ke_questionnaire Export Mod', 0, $row);
 				$content .= '<option value="'.$row['uid'].'">'.$row['uid'].'</option>';
 			}
 		}
@@ -1115,14 +1115,29 @@ Event.observe(window, 'load', function() {
 			$storage_pid = $this->ff_data['sDEF']['lDEF']['storage_pid']['vDEF'];
 	
 			$pdf = new dompdf_export($pdf_conf,$storage_pid, $this->q_data['header'],$this->ff_data);
-	
+			$row = t3lib_BEfunc::getRecord('tx_kequestionnaire_results',t3lib_div::_GP('result_id_filled'));
+			//t3lib_div::devLog('result_row', 'ke_questionnaire Export Mod', 0, $row);
+			if ($row['auth']) {
+				$auth = t3lib_BEfunc::getRecord('tx_kequestionnaire_authcodes',$row['auth']);
+				//t3lib_div::devLog('auth', 'ke_questionnaire Export Mod', 0, $auth);
+				if ($auth['feuser']){
+					$feuser = t3lib_BEfunc::getRecord('fe_users',$auth['feuser']);
+					//t3lib_div::devLog('feuser', 'ke_questionnaire Export Mod', 0, $feuser);
+					$markerArray = array();
+					foreach ($feuser as $key => $value){
+						if ($key != 'pid' AND $key != 'password'){
+							$markerArray['###USER_'.strtoupper($key).'###'] = $value;
+						}
+					}
+					$pdf->user_marker = $markerArray;
+				}
+			}
+			
 			switch ($type){
 				case 'blank':
 					$pdfdata = $pdf->getPDFBlank();
 					break;
 				case 'filled':
-					$row = t3lib_BEfunc::getRecord('tx_kequestionnaire_results',t3lib_div::_GP('result_id_filled'));
-					//t3lib_div::devLog('result_row', 'ke_questionnaire Export Mod', 0, $row);
 					$temp_array = '';
 					$encoding = "UTF-8";
 					if ( true === mb_check_encoding ($row['xmldata'], $encoding ) ){
@@ -1135,7 +1150,7 @@ Event.observe(window, 'load', function() {
 					break;
 				case 'compare':
 					$row = t3lib_BEfunc::getRecord('tx_kequestionnaire_results',t3lib_div::_GP('result_id_compare'));
-					t3lib_div::devLog('result_row', 'ke_questionnaire Export Mod', 0, $row);
+					//t3lib_div::devLog('result_row', 'ke_questionnaire Export Mod', 0, $row);
 					$temp_array = '';
 					$encoding = "UTF-8";
 					if ( true === mb_check_encoding ($row['xmldata'], $encoding ) ){
