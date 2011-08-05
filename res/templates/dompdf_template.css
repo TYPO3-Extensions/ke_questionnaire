@@ -8,15 +8,53 @@
 }
 
 .header {
-    position: relative;
+    margin-top: 10px;
+    width:760px;
+    position: absolute;
     display: block;
-    height: 50px;
+    height: 110px;
+    background-repeat: no-repeat;
+}
+
+.header .title,
+.header .sub_title{
+    position: relative;
+    margin-top: 5px;
+    margin-left: 15px;
+}
+
+.header .sub_title span{
+    background-color: #506c70;
+    padding: 2px;
+    display: block;
+    width: 300px;
+    color: #fff;
+}
+
+.header .title span{
+    background-color: #fff;
+    padding: 3px;
+    display: block;
+    width: 300px;
 }
 
 .header .logo {
     position: absolute;
     left: 580px;
     top: 10px;
+}
+
+.footer {
+    display: block;
+    background-repeat: no-repeat;
+    height: 110px;
+    margin-top: 20px;
+    margin-left: -25px;
+    margin-right: -25px;
+}
+
+#page {
+    margin-top: 100px;
 }
 
 .questionnaire_description {
@@ -35,7 +73,7 @@
     color: #fff;
     font-weight: bold;
     font-size: 115%;
-    background-color: #0098A1;
+    background-color: #506c70;
     padding: 2px 3px 0 5px;
     margin: 5px 0 10px 0;
 }
@@ -53,7 +91,7 @@
     min-height: 100px;
     border: 1px solid black;
     background-color: #fff;
-    padding: 2px;
+    padding: 3px;
 }
 
 .open_question_multi_empty{
@@ -177,7 +215,8 @@
 .compare {
     margin-top: 5px;
     background-color: #ddd;
-    padding: 0 5px 5px 5px;
+    padding: 3px;
+    border: 1px solid black;
 }
 
 .outcome {

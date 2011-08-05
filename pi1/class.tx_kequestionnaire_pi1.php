@@ -1879,7 +1879,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 			$pdf_conf = $this->conf;
 			$storage_pid = $this->ffdata['storage_pid'];
 	
-			$pdf = new dompdf_export($pdf_conf,$storage_pid, 'test',$this->cObj->data['pi_flexform']['data']);
+			$pdf = new dompdf_export($pdf_conf,$storage_pid, $this->cObj->data['header'],$this->cObj->data['pi_flexform']['data']);
 			$pdf->user_marker = $this->userMarker;
 	
 			switch ($type){

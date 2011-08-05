@@ -216,13 +216,13 @@
         ###CSS###
     </style>
 </head>
-<body style="width:400px;">
+<body>
 <div id="page_margins">
-    <div class="header">
-        <div class="logo">
-            <img src="###BASE_PATH###/typo3conf/ext/ke_questionnaire/res/kequestionnaire_logo.gif" />
-        </div>
-        <div class="title">###PDF_TITLE### ###DATE###</div>
+    <div class="header" style="background-image: url(###BASE_PATH###/typo3conf/ext/ke_questionnaire/res/images/header.jpg)">
+        <div class="height:1px; line-height:1px">&nbsp;</div>
+        <div class="title"><span>###PDF_TITLE### ###DATE###</span></div><br />
+        <div class="title"><span>###QUESTIONNAIRE_NAME###</span></div><br />
+        <div class="sub_title"><span>Fragebogenmuster</span></div>
     </div>
     <div id="page">
         <div id="main">
@@ -233,6 +233,7 @@
                 </div>
         </div>
     </div>
+    <div class="footer" style="background-image: url(###BASE_PATH###/typo3conf/ext/ke_questionnaire/res/images/footer.jpg)">&nbsp;</div>
 </body>
 </html>
 <!-- ###DOMPDF### end-->
