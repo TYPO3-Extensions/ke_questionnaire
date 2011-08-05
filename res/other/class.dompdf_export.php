@@ -39,7 +39,7 @@ class dompdf_export {
          * @param       string  $title: title of the export
          * @param       array   $ffdata: flexform data of the questionnaire
          */
-  	function dompdf_export($conf, $pid, $title, $ffdata){
+	function dompdf_export($conf, $pid, $title, $ffdata){
 		spl_autoload_register('DOMPDF_autoload');
 		$this->title = $title;
 		$this->ffdata = $ffdata;
@@ -59,6 +59,8 @@ class dompdf_export {
 		//array_merge with new array first, so a value in locallang (or typoscript) can overwrite values from ../locallang_db
 		$this->LOCAL_LANG = array_merge_recursive($tempLOCAL_LANG,is_array($this->LOCAL_LANG) ? $this->LOCAL_LANG : array());
 		$this->LOCAL_LANG = $this->LOCAL_LANG['default'];
+		
+		t3lib_div::devLog('ffdata', 'DOMPDF Export', 0, $this->ffdata);
 	}
 
 	/**
@@ -356,6 +358,7 @@ class dompdf_export {
 		$html = str_replace('###CONTENT###',$content,$this->templates['base']);
 		$html = str_replace('###PDF_TITLE###',$this->LOCAL_LANG['pdf_title'],$html);
 		$html = str_replace('###DATE###',$date,$html);
+		$html = str_replace('###QUESTIONNAIRE_NAME###',$this->title,$html);
 		//t3lib_div::devLog('getHTML html '.$type, 'pdf_export', 0,array($html,$content,$this->templates['base']));
 
 		$css = $this->getCSS();
@@ -615,7 +618,7 @@ class dompdf_export {
 		$markerArray['###COMPARE###'] = '';
 		if ($compare) $markerArray['###COMPARE###'] = $this->renderCompare($question);
 		$markerArray['###HELPTEXT###'] = $question['helptext'];
-                
+
 		if ($question['text'] == '') {
 			$markerArray['###QUESTION_TITLE###'] = $question['title'];
 		} else {
@@ -634,16 +637,12 @@ class dompdf_export {
 		}
 		//t3lib_div::devLog('answered', 'pdf_export', 0, array($answered));
 		//t3lib_div::devLog('question', 'pdf_export', 0, $question);
-                //t3lib_div::devLog('templates', 'pdf_export', 0, $this->templates);
 		switch ($question['type']){
 			case 'blind':
 				$html = $this->renderContent($this->templates['blind'],$markerArray);
 				break;
 			case 'open':
 				if ($answered) $markerArray['###VALUE###'] = $answered;
-                                elseif ($question['open_in_text']) $markerArray['###VALUE###'] = $question['open_in_text'];
-                                $markerArray['###OPEN_PRE_TEXT###'] = $question['open_pre_text'];
-                                $markerArray['###OPEN_POST_TEXT###'] = $question['open_post_text'];
 				if ($question['open_type'] == 1){
 					if ($answered) $markerArray['###VALUE###'] = nl2br($answered);
 					$markerArray['###CLASS###'] = '';
@@ -729,7 +728,6 @@ class dompdf_export {
 				}
 		}
 		//$html .= '</div>';
-                $html = $this->renderContent($html, $this->user_marker);
 		return $html;
 	}
 
