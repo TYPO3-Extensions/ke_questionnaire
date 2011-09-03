@@ -305,7 +305,8 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 		
 		//render the content
 		$content = $this->renderContent($subPart,$markerArray);
-		//if the save-Flag is set
+		
+		//if the save-Flag is set and it's not the first page with a description
 		if ($save){
 			//save the results
 			$this->setResults($this->piVars['result_id']);
@@ -404,7 +405,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 					}
 					$this->authCode = $row['authcode'];
 				}
-				//t3lib_div::devLog('authCode', $this->prefixId, 0, $row);
+				t3lib_div::devLog('authCode', $this->prefixId, 0, $row);
 			}
 		}
 
@@ -437,7 +438,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 		}
 		$where .= ' AND pid='.$this->pid;
 		$where .= $this->cObj->enableFields('tx_kequestionnaire_authcodes');
-
+		
 		$res_authCode = $GLOBALS['TYPO3_DB']->exec_SELECTquery('uid','tx_kequestionnaire_authcodes',$where,'',$orderBy);
 		if ($res_authCode){
 			$row_authCode = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res_authCode);
@@ -514,6 +515,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 	function getResults($result_id, $makeHistory = false){
 		if (intval($result_id) == 0) return false;
 		$where = 'uid='.$result_id;
+		
 		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*','tx_kequestionnaire_results',$where);
 		//if there is a result, edit the old one
 		if ($res){
@@ -1237,6 +1239,9 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 				$markerArray[$marker] = $value;
 			}
 		}
+		
+		$result_id = $this->setResults(0);
+		$this->piVars['result_id'] = $result_id;
 
 		$markerArray['###TEXT###'] = $this->pi_RTEcssText($this->ffdata['description']);
 		//$markerArray['###NAV###'] = $this->pi_linkTP($this->pi_getLL('to_questionnaire'),array($this->prefixId.'[page]'=>1));
@@ -1256,6 +1261,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 		$markerArray['###HIDDEN_FIELDS###'] = $this->renderHiddenFields();
 		$markerArray['###EMAILONFINISH###'] = '';
 		//t3lib_div::devLog('renderFirstPage', $this->prefixId, 0, $markerArray);
+		//t3lib_div::debug($markerArray, $result_id);
 		$content = $this->renderContent('###OTHER_PAGE###',$markerArray);
 		$content = $this->renderMarker($content, $this->userMarker);
 
