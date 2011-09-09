@@ -55,12 +55,19 @@ class dompdf_export {
 
                 //get the Locallang of the pi1 / the questionnaire
 		$basePath = t3lib_extMgm::extPath('ke_questionnaire').'pi1/locallang.php';
-		$tempLOCAL_LANG = t3lib_div::readLLfile($basePath,'default');
+		
+		//t3lib_div::devLog('conf', 'DOMPDF Export', 0, $this->conf);
+		$lang = $this->conf['language'];
+		$tempLOCAL_LANG = t3lib_div::readLLfile($basePath,$lang);
+		//t3lib_div::devLog('lang temp', 'DOMPDF Export', 0, $tempLOCAL_LANG);
 		//array_merge with new array first, so a value in locallang (or typoscript) can overwrite values from ../locallang_db
 		$this->LOCAL_LANG = array_merge_recursive($tempLOCAL_LANG,is_array($this->LOCAL_LANG) ? $this->LOCAL_LANG : array());
-		$this->LOCAL_LANG = $this->LOCAL_LANG['default'];
+		//if (is_array($this->LOCAL_LANG[$lang])) t3lib_div::devLog('lang temp '.$lang, 'DOMPDF Export', 0, $this->LOCAL_LANG[$lang]);
+		if (count($this->LOCAL_LANG[$lang]) > 0) $this->LOCAL_LANG = $this->LOCAL_LANG[$lang];
+		else $this->LOCAL_LANG = $this->LOCAL_LANG['default'];
+		//t3lib_div::devLog('lang end', 'DOMPDF Export', 0, $this->LOCAL_LANG);
 		
-		t3lib_div::devLog('ffdata', 'DOMPDF Export', 0, $this->ffdata);
+		//t3lib_div::devLog('ffdata', 'DOMPDF Export', 0, $this->ffdata);
 	}
 
 	/**
@@ -71,10 +78,12 @@ class dompdf_export {
 		$this->questionCount['only_questions'] = 0; //no blind-texts counting
 		// $selectFields = 'uid,type,title,demographic_type,open_in_text,open_validation';
 		$selectFields = '*';
-		$where = 'pid='.$this->pid.' AND hidden = 0 AND deleted = 0';
+		$where = 'pid='.$this->pid.' AND hidden = 0 AND deleted = 0 AND sys_language_uid='.$this->conf['sys_language_uid'];
+		
 		$orderBy = 'sorting';
 		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery($selectFields,'tx_kequestionnaire_questions',$where,'',$orderBy);
 		//t3lib_div::devLog('where', 'pdf_export', 0, array($where));
+		//t3lib_div::devLog('conf', 'pdf_export', 0, $this->conf);
 
 		if ($res){
 			while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)){

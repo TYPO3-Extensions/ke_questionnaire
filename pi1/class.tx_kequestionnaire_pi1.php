@@ -1630,7 +1630,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 							}
 						}
 					}
-					t3lib_div::devLog('points', $this->extKey, -1, array($answers));
+					//t3lib_div::devLog('points', $this->extKey, -1, array($answers));
 					$total_points = 0;
 					foreach ($results as $rid => $result){
 						switch ($question['closed_type']){
@@ -2102,6 +2102,11 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 		$this->tmpl_path = t3lib_extMgm::siteRelPath('ke_questionnaire').'res/templates/';
 		if ($this->conf['template_dir'] != '') $this->tmpl_path = trim($this->conf['template_dir']);
 		if ($this->ffdata['template_dir'] != '') $this->tmpl_path = trim($this->ffdata['template_dir']);
+		//t3lib_div::debug($GLOBALS['TSFE']->config);
+		//language vars
+		$this->conf['sys_language_uid'] = $GLOBALS['TSFE']->config['config']['sys_language_uid'];
+		$this->conf['language'] = strtolower($GLOBALS['TSFE']->config['config']['language']);
+		
 		$this->tmpl = $this->cObj->fileResource($this->tmpl_path.$template);
 		//t3lib_div::devLog('template base', $this->prefixId, 0, array($this->tmpl_path,$this->tmpl,$this->tmpl_path.$template));
 
