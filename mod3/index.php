@@ -466,16 +466,50 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 
 		$content = '';
 		if (t3lib_extMgm::isLoaded('fpdf') or t3lib_extMgm::isLoaded('ke_dompdf')){
-			$content .= '<p><input type="submit" name="get_pdf_blank" value="'.$LANG->getLL('download_button_pdf_blank').'" /></p>';
+			$content .= $this->getLanguageSelect();
+			$content .= '<p>';			
+			$content .= '<input type="submit" name="get_pdf_blank" value="'.$LANG->getLL('download_button_pdf_blank').'" /></p>';
 			$content .= '<br /><hr><br />';
-			$content .= '<p>'.$this->getResultSelect().'</p><br />';
+			$content .= '<p>';
+			$content .= $this->getResultSelect().'</p><br />';
 			$content .= '<p><input type="submit" name="get_pdf_filled" value="'.$LANG->getLL('download_button_pdf_filled').'" /></p>';
 			$content .= '<br /><hr><br />';
-			$content .= '<p>'.$this->getResultSelect('compare').'</p><br />';
+			$content .= '<p>';
+			$content .= $this->getResultSelect('compare').'</p><br />';
 			$content .= '<p><input type="submit" name="get_pdf_compare" value="'.$LANG->getLL('download_button_pdf_compare').'" /></p>';
 		} else {
 			$content .= '<p>'.$LANG->getLL('error_no_fpdf_kedompdf').'</p>';
 		}
+		return $content;
+	}
+	
+	function getLanguageSelect(){
+		global $LANG;
+		$content = '';
+		$lang_id = 0;
+		
+		//check for other languages
+		if ($this->q_data['l18n_parent']){
+			$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*','tt_content',"list_type = 'ke_questionnaire_pi1' and l18n_parent=".$this->q_data['l18n_parent']);
+			$lang_id = $this->q_data['sys_language_uid'];
+		} else {
+			$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*','tt_content',"list_type = 'ke_questionnaire_pi1' and l18n_parent=".$this->q_data['uid']);	
+		}
+		
+		//t3lib_div::debug($GLOBALS['TYPO3_DB']->SELECTquery('*','tt_content',"list_type = 'ke_questionnaire_pi1' and l18n_parent=".$this->q_data['uid']));
+		if ($res){
+			$content .= $LANG->getLL('download_button_pdf_lang').' <select name="get_pdf_language">';
+			$content .= '<option value="0">Standard</option>';
+			while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)){
+				$lang = t3lib_BEfunc::getRecord('sys_language',$row['sys_language_uid']);
+				$content .= '<option value="'.$lang['uid'];
+				if ($lang['uid'] == $lang_id) $content .= 'selected="selected" ';
+				$content .= '">'.$lang['title'].'</option>';
+			}
+			$content .= '</select>';
+			$content .= '<hr><br />';
+		}
+		
 		return $content;
 	}
 	
@@ -1108,13 +1142,16 @@ Event.observe(window, 'load', function() {
 		if (t3lib_extMgm::isLoaded('ke_dompdf')){
 			require_once(t3lib_extMgm::extPath('ke_questionnaire').'res/other/class.dompdf_export.php');
 			$pdfdata = '';
-	
+							
 			$conf = $this->loadTypoScriptForBEModule('tx_kequestionnaire');
 			//t3lib_div::devLog('ts conf', 'ke_questionnaire Export Mod', 0, $conf);
 			$pdf_conf = $conf['pdf.'];
+			$pdf_conf['sys_language_uid'] = t3lib_div::_GP('get_pdf_language');
 			$storage_pid = $this->ff_data['sDEF']['lDEF']['storage_pid']['vDEF'];
-	
-			$pdf = new dompdf_export($pdf_conf,$storage_pid, $this->q_data['header'],$this->ff_data);
+
+			$header = $this->q_data['header'];
+				
+			$pdf = new dompdf_export($pdf_conf,$storage_pid, $header,$this->ff_data);
 			$row = t3lib_BEfunc::getRecord('tx_kequestionnaire_results',t3lib_div::_GP('result_id_filled'));
 			//t3lib_div::devLog('result_row', 'ke_questionnaire Export Mod', 0, $row);
 			if ($row['auth']) {
@@ -1151,6 +1188,7 @@ Event.observe(window, 'load', function() {
 				case 'compare':
 					$row = t3lib_BEfunc::getRecord('tx_kequestionnaire_results',t3lib_div::_GP('result_id_compare'));
 					//t3lib_div::devLog('result_row', 'ke_questionnaire Export Mod', 0, $row);
+
 					$temp_array = '';
 					$encoding = "UTF-8";
 					if ( true === mb_check_encoding ($row['xmldata'], $encoding ) ){
@@ -1213,6 +1251,7 @@ Event.observe(window, 'load', function() {
 			$TSObj->runThroughTemplates($rootLine);
 			$TSObj->generateConfig();
 			//t3lib_div::devLog('PDF constants', 'ke_questionnaire Export Mod', 0, $TYPO3_CONF_VARS);
+			//t3lib_div::devLog('PDF constants', 'ke_questionnaire Export Mod', 0, $TSObj->setup);
 			//return $TSObj->flatSetup;
 			return $TSObj->setup_constants['plugin.'][$extKey.'.'];
         }

@@ -29,6 +29,7 @@
 			<label index="download_parts">There are too much paricipations to export them all at once. The export is being genrated, this may take a while.</label>
 			<label index="download_button_spss_base">Download SPSS Base-File</label>
 			<label index="download_button_spss_data">Download SPSS Data-File</label>
+			<label index="download_button_pdf_lang">Select the language of the questions</label>
 			<label index="download_button_pdf_blank">Download the empty PDF-Questionnaire</label>
 			<label index="download_button_pdf_filled">Download a result as PDF-Questionnaire</label>
 			<label index="download_button_pdf_compare">Download a compared PDF-Questionnaire</label>			
@@ -72,6 +73,7 @@
 			<label index="download_parts">Es sind zu viele Datensätze vorhanden, um diese auf einmal zu exportieren. Der Export wird generiert, dies kann eine Weile dauern.</label>
 			<label index="download_button_spss_base">Download der SPSS Basis-Datei</label>
 			<label index="download_button_spss_data">Download der SPSS Daten-File</label>
+			<label index="download_button_pdf_lang">Wählen sie die Sprache der Fragen</label>
 			<label index="download_button_pdf_blank">Download des leeren PDF-Fragebogens</label>
 			<label index="download_button_pdf_filled">Download eines Ergebnisses als PDF-Fragebogens</label>			
 			<label index="download_button_pdf_compare">Download eines PDF-Fragebogens mit Vergleichswerten</label>			

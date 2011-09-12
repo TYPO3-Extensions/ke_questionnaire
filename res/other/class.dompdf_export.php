@@ -78,7 +78,7 @@ class dompdf_export {
 		$this->questionCount['only_questions'] = 0; //no blind-texts counting
 		// $selectFields = 'uid,type,title,demographic_type,open_in_text,open_validation';
 		$selectFields = '*';
-		$where = 'pid='.$this->pid.' AND hidden = 0 AND deleted = 0 AND sys_language_uid='.$this->conf['sys_language_uid'];
+		$where = 'pid='.$this->pid.' AND hidden = 0 AND deleted = 0 AND sys_language_uid='.intval($this->conf['sys_language_uid']);
 		
 		$orderBy = 'sorting';
 		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery($selectFields,'tx_kequestionnaire_questions',$where,'',$orderBy);
