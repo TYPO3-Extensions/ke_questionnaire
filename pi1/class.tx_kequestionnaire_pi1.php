@@ -1625,7 +1625,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 									break;
 								case 'check_multi':
 								case 'select_multi':
-									$answer_max_points += $answer['value'];
+									if($answer['value'] > 0) $answer_max_points += $answer['value'];
 									break;
 							}
 						}
