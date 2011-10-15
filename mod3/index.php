@@ -323,8 +323,10 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 			while($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)){
 				if ($row['xmldata'] != '') {
 					//$temp .= t3lib_div::view_array($row);
+					//t3lib_div::devLog('row', 'ke_questionnaire Export Mod', 0, $row);
 					$temp_array = array();
 					$temp_array['uid'] = $row['uid'];
+					$temp_array['auth'] = $row['auth'];
 					$temp_array['start_tstamp'] = $row['start_tstamp'];
 					$temp_array['finished_tstamp'] = $row['finished_tstamp'];
 					$this->results[] = $temp_array;
@@ -368,7 +370,8 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 		//$content .= '<input type="hidden" name="download_type" value="simple" />';
 		$content .= '<br /><p>';
 		$content .= '<input type="checkbox" name="only_finished" value="1" checked /> '.$LANG->getLL('download_only_finished').'</p><br />';
-		if ($this->ff_data['sDEF']['lDEF']['access']['vDEF'] == 'AUTH_CODE'){
+		//t3lib_div::devLog('ff_data', 'ke_questionnaire Export Mod', 0, $this->ff_data);
+		if ($this->ff_data['aDEF']['lDEF']['access']['vDEF'] == 'AUTH_CODE'){
 			$content .= '<p><input type="checkbox" name="with_authcode" value="1" /> '.$LANG->getLL('download_with_authcode').'</p>';
 		}
 		//check if the selected plugin lang has own results
@@ -400,6 +403,10 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 		}
 		if (t3lib_div::_GP('download_type') != '') {
 			$myVars['download_type'] = t3lib_div::_GP('download_type');
+			//t3lib_div::devLog('ein Download Type', 'ke_questionnaire Export Mod', 0, $_POST);
+		}
+		if (t3lib_div::_GP('with_authcode') != '') {
+			$myVars['with_authcode'] = t3lib_div::_GP('with_authcode');
 			//t3lib_div::devLog('ein Download Type', 'ke_questionnaire Export Mod', 0, $_POST);
 		}
 		//else
@@ -683,10 +690,14 @@ Event.observe(window, 'load', function() {
 		if ($only_finished == ''){
 			$only_finished = $myVars['only_finished'];
 		}
+		$with_authcode = t3lib_div::_GP('with_authcode');
+		if ($with_authcode == ''){
+			$with_authcode = $myVars('with_authcode');
+		}
 		//t3lib_div::devLog('getCSVDownload session '.$only_this_lang, 'ke_questionnaire Export Mod', 0, $myVars);
 		
 		require_once(t3lib_extMgm::extPath('ke_questionnaire').'res/other/class.csv_export.php');
-		$csv_export = new csv_export($this->extConf,$this->results,$this->q_data,$this->ff_data,$this->temp_file,$only_this_lang,$only_finished);
+		$csv_export = new csv_export($this->extConf,$this->results,$this->q_data,$this->ff_data,$this->temp_file,$only_this_lang,$only_finished,$with_authcode);
 		
 		switch ($type){
 			/*case 'simple':

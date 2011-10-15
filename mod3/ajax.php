@@ -333,7 +333,7 @@ class  tx_kequestionnaire_module3_ajax extends t3lib_SCbase {
 			}
 		    }
 	    }
-	    t3lib_div::devLog('result_line '.$q_nr.'/'.$v_nr, 'ke_questionnaire Export Mod', 0, $result_line);
+	    //t3lib_div::devLog('result_line '.$q_nr.'/'.$v_nr, 'ke_questionnaire Export Mod', 0, $result_line);
 	    fwrite($store_file,$delimeter.implode($parter,$result_line).$delimeter."\n");
 	    fclose($store_file);
 	}
@@ -493,7 +493,7 @@ class  tx_kequestionnaire_module3_ajax extends t3lib_SCbase {
                                 $fill_array = $_procObj->CSVExportFillArray($fill_array);
                         }
                 }
-		t3lib_div::devLog('fill_array', 'ke_questionnaire Export Mod', 0, $fill_array);
+		//t3lib_div::devLog('fill_array', 'ke_questionnaire Export Mod', 0, $fill_array);
 		return $fill_array;
 	}
 

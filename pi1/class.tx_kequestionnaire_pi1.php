@@ -879,6 +879,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 		
 		//get the questions shown on this page
 		$page_questions = $this->getQuestionsOfPage($page_nr,$page_count);
+		//t3lib_div::debug($page_questions);
 		$shown = $this->shown;
 		foreach ($page_questions as $quest){
 			//render reach question
@@ -1085,7 +1086,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 					}
 					//if ($p_count == 4) t3lib_div::devLog('shown '.$question['uid'].'/'.$p_count, $this->prefixId, 0, array($shown,$question));
 	
-					if ($question['type'] != 'blind'){
+					if ($question['type'] != 'blind' AND $question['type'] != 'pool'){
 						if ($question['is_dependant'] == 0) $q_count ++;
 						$counter ++;
 					} elseif ($this->ffdata['render_count_withblind'] == 1) {

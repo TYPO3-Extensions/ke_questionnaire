@@ -48,8 +48,9 @@ class pdfresult_dompdf {
 			'../../../../' . trim($this->templateFolder);
 		}
 
-		//t3lib_div::devLog('conf', 'pdf_export', 0, $conf);
-		//t3lib_div::devLog('ffdata', 'pdf_export', 0, $ffdata);
+		t3lib_div::devLog('conf', 'pdf_export', 0, $conf);
+		t3lib_div::devLog('ffdata', 'pdf_export', 0, $ffdata);
+		t3lib_div::devLog('template', 'pdf_export', 0, array($this->tempateFolder));
 
 		$this->pdf = new DOMPDF();
 

@@ -40,8 +40,9 @@ class csv_export {
 	 * @param	string	$temp_file: name of the file with the temp data
 	 * @param	bool	$only_this_lang: export only the selected language
 	 * @param	vbool	$only_finished: export only finished results
+	 * @param	bool	$with_authcode: export with authcode
 	 */
-        function csv_export($extConf,$results,$q_data,$ff_data,$temp_file,$only_this_lang,$only_finished){
+        function csv_export($extConf,$results,$q_data,$ff_data,$temp_file,$only_this_lang,$only_finished,$with_authcode){
                 $this->extConf = $extConf;
                 $this->results = $results;
                 $this->q_data = $q_data;
@@ -49,8 +50,10 @@ class csv_export {
                 $this->temp_file = $temp_file;
 		$this->only_this_lang = $only_this_lang;
 		$this->only_finished = $only_finished;
+		$this->with_authcode = $with_authcode;
                 
                 //t3lib_div::devLog('extConf', 'ke_questionnaire Export Mod', 0, $this->extConf);
+		//t3lib_div::devLog('with_authcode', 'ke_questionnaire Export Mod', 0, array($this->with_authcode));
         }
         
 	/**
@@ -203,7 +206,7 @@ class csv_export {
 								foreach($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['ke_questionnaire']['CSVExportQBaseLine'] as $_classRef){
 									$_procObj = & t3lib_div::getUserObj($_classRef);
 									$getit = $_procObj->CSVExportQBaseLine($free_cells,$question,$this->results,$delimeter,$parter);
-									t3lib_div::devLog('getCSVQBase getit', 'ke_questionnaire Export Mod', 0, array($getit));
+									//t3lib_div::devLog('getCSVQBase getit', 'ke_questionnaire Export Mod', 0, array($getit));
 									if ($getit != '') $lineset .= $getit;
 								}
 							}
@@ -250,6 +253,7 @@ class csv_export {
                 $question = $question['uid'];
 		switch($type){
 			case 'authcode': $line[] = '';
+					//t3lib_div::devLog('qbaseline', 'ke_questionnaire Export Mod', 0, $take);
 					foreach ($this->results as $nr => $r_data){
 						$result_id = $r_data['uid'];
 						$take['results'][$result_id] = str_replace($delimeter,$delimeter.$delimeter,$take['results'][$result_id]);
@@ -469,7 +473,7 @@ class csv_export {
 								foreach($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['ke_questionnaire']['CSVExportType2Headline'] as $_classRef){
 									$_procObj = & t3lib_div::getUserObj($_classRef);
 									$headline = $_procObj->CSVExportType2Headline($headline,$values);
-                                                                        t3lib_div::devLog('headline', 'ke_questionnaire Export Mod', 0, $headline);
+                                                                        //t3lib_div::devLog('headline', 'ke_questionnaire Export Mod', 0, $headline);
 								}
 							} else {
                                                             $headline[] = $values['title'];  
@@ -487,7 +491,7 @@ class csv_export {
 			foreach ($this->results as $r_id => $r_values){
 				$read_line = fgets($store_file);
 				$csvdata .= $read_line;
-				t3lib_div::devLog('simple 2 '.$r_id, 'ke_questionnaire Export Mod', 0, array($read_line,$r_values));
+				//t3lib_div::devLog('simple 2 '.$r_id, 'ke_questionnaire Export Mod', 0, array($read_line,$r_values));
 			}
 			fclose($store_file);
 		}
@@ -705,8 +709,9 @@ class csv_export {
 	
 		//create the question structure
 		$fill_array = array();
-		if ($res){
-			if (t3lib_div::_GP('with_authcode')) {
+		if ($res){			
+			if ($this->with_authcode) {
+				//t3lib_div::devLog('where', 'ke_questionnaire Export Mod', 0, array($where));
 				$fill_array['authcode'] = array();
 				$fill_array['authcode']['uid'] = 'authcode';
 				$fill_array['authcode']['title'] = 'authcode';
@@ -835,7 +840,7 @@ class csv_export {
                                 $fill_array = $_procObj->CSVExportFillArray($fill_array);
                         }
                 }
-		
+		//t3lib_div::devLog('fill_array', 'ke_questionnaire Export Mod', 0, $fill_array);
 		return $fill_array;
 	}
     
