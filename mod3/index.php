@@ -692,7 +692,7 @@ Event.observe(window, 'load', function() {
 		}
 		$with_authcode = t3lib_div::_GP('with_authcode');
 		if ($with_authcode == ''){
-			$with_authcode = $myVars('with_authcode');
+			$with_authcode = $myVars['with_authcode'];
 		}
 		//t3lib_div::devLog('getCSVDownload session '.$only_this_lang, 'ke_questionnaire Export Mod', 0, $myVars);
 		
