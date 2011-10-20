@@ -651,6 +651,9 @@ class dompdf_export {
 				$html = $this->renderContent($this->templates['blind'],$markerArray);
 				break;
 			case 'open':
+				$markerArray['###OPEN_PRE_TEXT###'] = (strlen($question['open_pre_text']))?$question['open_pre_text']:'';
+				$markerArray['###OPEN_POST_TEXT###'] = (strlen($question['open_post_text']))?$question['open_post_text']:'';
+				
 				if ($answered) $markerArray['###VALUE###'] = $answered;
 				if ($question['open_type'] == 1){
 					if ($answered) $markerArray['###VALUE###'] = nl2br($answered);
