@@ -182,20 +182,25 @@ class csv_export {
 							}
 						break;
 					case 'demographic':
-							$lineadd = '';
+							//t3lib_div::devLog('lineset '.$question['type'], 'ke_questionnaire Export Mod', 0, $question);
+							$lineadd = "\n";
 							if (is_array($question['fe_users'])){
-								$lineadd .= "\n";
-								foreach ($question['fe_users'] as $field => $f_values){
-									$lineadd .= $this->getQBaseLine($free_cells+2,$question,array(),0,array(),$field);
+								if (count($question['fe_users']) > 0){
+									//$lineadd .= "\n";
+									foreach ($question['fe_users'] as $field => $f_values){
+										$lineadd .= $this->getQBaseLine($free_cells+2,$question,array(),0,array(),$field);
+									}
 								}
 							}
 							if (is_array($question['tt_address'])){
-								$lineadd .= "\n";
-								foreach ($question['tt_address'] as $field => $f_values){
-									$lineadd .= $this->getQBaseLine($free_cells+2,$question,array(),0,array(),$field);
+								if (count($question['tt_address']) > 0){
+									//$lineadd .= "\n";
+									foreach ($question['tt_address'] as $field => $f_values){
+										$lineadd .= $this->getQBaseLine($free_cells+2,$question,array(),0,array(),$field);
+									}
 								}
 							}
-							if ($lineadd == '') $lineadd .= "\n";
+							//if ($lineadd == '') $lineadd .= "\n";
 							$lineset .= $lineadd;
 						break;
 					default:
@@ -208,6 +213,7 @@ class csv_export {
 									$getit = $_procObj->CSVExportQBaseLine($free_cells,$question,$this->results,$delimeter,$parter);
 									//t3lib_div::devLog('getCSVQBase getit', 'ke_questionnaire Export Mod', 0, array($getit));
 									if ($getit != '') $lineset .= $getit;
+									else $lineset .= "\n";
 								}
 							}
 						break;
@@ -330,14 +336,16 @@ class csv_export {
 					}
 				break;
 			case 'demographic': $line[] = $dem_field;
+					//t3lib_div::devLog('getCSVQBase line '.$type.' - '.$dem_field, 'ke_questionnaire Export Mod', 0, $take);
 					if (is_array($take['fe_users'][$dem_field]['results'])){
 						foreach ($this->results as $nr => $r_data){
 							$result_id = $r_data['uid'];
 							if ($take['fe_users'][$dem_field]['results'][$result_id]){
+								//t3lib_div::devLog('getCSVQBase line '.$result_id, 'ke_questionnaire Export Mod', 0, $take['fe_users'][$dem_field]);
 								$take['fe_users'][$dem_field]['results'][$result_id] = str_replace($delimeter,$delimeter.$delimeter,$take['fe_users'][$dem_field]['results'][$result_id]);
-								$take['results'][$result_id] = preg_replace('#[\r\n\t]#', ' ', $take['results'][$result_id]);
-								$take['results'][$result_id] = preg_replace('# {2,}#', ' ', $take['results'][$result_id]);
-								$line[] = strip_tags(nl2br($take['results'][$result_id]));
+								$take['fe_users'][$dem_field]['results'][$result_id] = preg_replace('#[\r\n\t]#', ' ', $take['fe_users'][$dem_field]['results'][$result_id]);
+								$take['fe_users'][$dem_field]['results'][$result_id] = preg_replace('# {2,}#', ' ', $take['fe_users'][$dem_field]['results'][$result_id]);
+								$line[] = strip_tags(nl2br($take['fe_users'][$dem_field]['results'][$result_id]));
 							} else {
 								$line[] = '';
 							}
@@ -355,7 +363,8 @@ class csv_export {
 						}
 					}
 				break;
-			default: 	
+			default:
+					
 				break;
 		}
 		

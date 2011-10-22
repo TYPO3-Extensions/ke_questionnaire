@@ -309,7 +309,7 @@ class  tx_kequestionnaire_module3_ajax extends t3lib_SCbase {
 					}
 				    break;
                                 case 'demographic':
-					//t3lib_div::devLog('demo '.$q_nr, 'ke_questionnaire Export Mod', 0, $act_v);
+					t3lib_div::devLog('demo '.$q_nr, 'ke_questionnaire Export Mod', 0, $act_v);
 					if (is_array($result['data'][$q_nr]['answer']['fe_users'])){
 						foreach ($result['data'][$q_nr]['answer']['fe_users'] as $fe_nr => $fe_values){
 							$result_line[] = $fe_values;
