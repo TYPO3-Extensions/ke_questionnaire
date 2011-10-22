@@ -28,6 +28,7 @@
 			<label index="error_keys">You have to answer according to the question</label>
 			<label index="error_keys_all">You have to answer according to the question and match all keywords</label>
 			<label index="error_required">required</label>
+			<label index="error_demographic_required">required</label>
 			<label index="error_semantic_required">required</label>
 			<label index="error_required_option">required</label>
 			<label index="error_matrix_required_option">required</label>

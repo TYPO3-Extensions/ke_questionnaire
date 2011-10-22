@@ -159,9 +159,11 @@
 				$msg="";
 				//t3lib_div::debug($this->errors);
 				foreach($this->errors as $error){
-					$msg .= '<span class="keq_input_error">';
-					$msg.=$this->obj->pi_getLL("error_".$error);
-					$msg .= '</span>';
+					if (count($this->errors) == 1 OR $error != 'required'){
+						$msg .= '<span class="keq_input_error">';
+						$msg.=$this->obj->pi_getLL("error_".$error);
+						$msg .= '</span>';
+					}
 				}
 				$subpartArray["###ERROR_MESSAGE###"]=str_replace("###ERROR###",$msg,$this->tmplError);
 			}
