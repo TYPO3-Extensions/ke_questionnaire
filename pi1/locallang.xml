@@ -140,6 +140,7 @@
 			<label index="error_keys">Sie müssen der Fragestellung entsprechend antworten</label>
 			<label index="error_keys_all">Sie müssen der Fragestellung entsprechend antworten und alle Schlüsselwörter verwenden.</label>
 			<label index="error_required">Dies ist eine Pflichtfrage.</label>
+			<label index="error_demographic_required">Pflichtfeld</label>
 			<label index="error_semantic_required">Pflichtfeld</label>
 			<label index="error_required_option">Pflichtfeld</label>
 			<label index="error_matrix_required_option">Pflichtfeld</label>

@@ -157,6 +157,7 @@
 				$subpartArray["###ERROR_MESSAGE###"]="";
 			}else{
 				$msg="";
+				//t3lib_div::debug($this->errors);
 				foreach($this->errors as $error){
 					$msg .= '<span class="keq_input_error">';
 					$msg.=$this->obj->pi_getLL("error_".$error);
@@ -852,6 +853,7 @@
 			//t3lib_div::debug($validationOptions);
 			//t3lib_div::devLog('validate '.$value, 'input->MatrixElement', 0, array('type'=>$validationType,'options'=>$validationOptions));
 			switch ($validationType){
+				case "demographic_required":
 				case "required":
 					$out=$value!="";
 				break;

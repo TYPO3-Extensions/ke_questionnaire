@@ -72,7 +72,7 @@ class question_demographic extends question{
 					$marker=$html==""?"###DEMO_DEFAULT###":"###".strtoupper($fieldName)."###";
 	
 					$label=$this->obj->pi_getLL($fieldName,$fieldName);
-					if ($doptions['validation'][$fieldName] == 'required') $label .= ' '.$this->obj->pi_getLL('mandatory_marker','mandatory_marker');
+					if ($doptions['validation'][$fieldName] == 'demographic_required') $label .= ' '.$this->obj->pi_getLL('mandatory_marker','mandatory_marker');
 	
 					$options=array();
 					switch($type){
@@ -147,7 +147,8 @@ class question_demographic extends question{
 		foreach($fields as  $field){
 			if($field=="") continue;
 			if(!isset($out["fields"][$field])) continue;
-			$out["validation"][$field]="required";
+			//$out["validation"][$field]="demographic_required";
+			$out["validation"][$field]="demographic_required";
 		}
 
 		// Options

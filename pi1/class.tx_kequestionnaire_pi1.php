@@ -283,7 +283,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 							$save = false;
 						}
 					}
-					t3lib_div::devLog('markerArray for PI1', $this->prefixId, 0, $markerArray);
+					//t3lib_div::devLog('markerArray for PI1', $this->prefixId, 0, $markerArray);
 				}
 				break;
 			default:
