@@ -387,7 +387,7 @@ class dompdf_export {
 
 		//open questions
 		$templateName = 'question_open.html';
-		$temp = file_get_contents($templateFolder.$templateName);
+		if (file_exists($templateFolder.$templateName)) $temp = file_get_contents($templateFolder.$templateName);
 		//t3lib_div::devLog('open', 'pdf', 0, array($templateFolder.$templateName,$open));
 		if ($temp == ''){
 			$templateFolder = t3lib_extMgm::extPath('ke_questionnaire').'res/templates/';
@@ -470,7 +470,7 @@ class dompdf_export {
 
 		$templateFolder = $this->templateFolder;
 		$templateName = 'dompdf_template.css';
-		$temp = file_get_contents($templateFolder.$templateName);
+		if (file_exists($templateFolder.$templateName)) $temp = file_get_contents($templateFolder.$templateName);
 		//t3lib_div::devLog('open', 'pdf', 0, array($templateFolder.$templateName,$open));
 		if ($temp == ''){
 			$templateFolder = t3lib_extMgm::extPath('ke_questionnaire').'res/templates/';

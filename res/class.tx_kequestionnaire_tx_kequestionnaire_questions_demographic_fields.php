@@ -95,7 +95,7 @@ class tx_kequestionnaire_tx_kequestionnaire_questions_demographic_fields {
 		t3lib_div::loadTCA("tt_address");
 		$TCA = &$GLOBALS["TCA"]["tt_address"];
 		$content = '';
-		if (is_array($TCA)){
+		if (is_array($TCA['columns'])){
 			foreach ($TCA['columns'] as $name => $conf){
 				if (!in_array($name,$excludes) AND in_array($conf['config']['type'],$allowed_types)){
 					$label = rtrim($LANG->sL($conf['label']),':');
@@ -118,7 +118,7 @@ class tx_kequestionnaire_tx_kequestionnaire_questions_demographic_fields {
 		t3lib_div::loadTCA("tt_address");
 		$TCA = &$GLOBALS["TCA"]["tt_address"];
 		$content = '';
-		if (is_array($TCA)){
+		if (is_array($TCA['columns'])){
 			foreach ($TCA['columns'] as $name => $conf){
 				if (!in_array($name,$excludes) AND in_array($conf['config']['type'],$allowed_types)){
 					$label = rtrim($LANG->sL($conf['label']),':');
