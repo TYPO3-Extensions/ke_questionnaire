@@ -45,12 +45,12 @@ class pdfresult_dompdf {
 
 		$this->templateFolder = trim(PATH_site . ltrim($this->ffdata['dDEF']['lDEF']['template_dir']['vDEF'], '/'));
 		if ($this->templateFolder == '') {
-			'../../../../' . trim($this->templateFolder);
+			$this->tmpl_path = t3lib_extMgm::siteRelPath('ke_questionnaire').'res/templates/';
 		}
 
-		t3lib_div::devLog('conf', 'pdf_export', 0, $conf);
-		t3lib_div::devLog('ffdata', 'pdf_export', 0, $ffdata);
-		t3lib_div::devLog('template', 'pdf_export', 0, array($this->tempateFolder));
+		//t3lib_div::devLog('conf', 'pdf_export', 0, $conf);
+		//t3lib_div::devLog('ffdata', 'pdf_export', 0, $ffdata);
+		//t3lib_div::devLog('template', 'pdf_export', 0, array($this->tempateFolder));
 
 		$this->pdf = new DOMPDF();
 

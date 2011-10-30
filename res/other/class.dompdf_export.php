@@ -47,9 +47,10 @@ class dompdf_export {
 		$this->conf = $conf;
 
 		$this->templateFolder = trim(PATH_site . ltrim($this->ffdata['dDEF']['lDEF']['template_dir']['vDEF'], '/'));
-		if ($this->templateFolder == '') {
-			'../../../../'.trim($this->templateFolder);
+		if (ltrim($this->ffdata['dDEF']['lDEF']['template_dir']['vDEF'], '/') == '') {
+			$this->templateFolder = PATH_site . t3lib_extMgm::siteRelPath('ke_questionnaire').'res/templates/';
 		}
+		//t3lib_div::devLog('lang temp', 'DOMPDF Export', 0, array($this->templateFolder));
 
 		$this->pdf = new DOMPDF();
 
@@ -78,6 +79,7 @@ class dompdf_export {
 		$this->questionCount['only_questions'] = 0; //no blind-texts counting
 		// $selectFields = 'uid,type,title,demographic_type,open_in_text,open_validation';
 		$selectFields = '*';
+		//$where = 'pid='.$this->pid.' AND hidden = 0 AND deleted = 0 AND sys_language_uid='.intval($this->conf['sys_language_uid']);
 		$where = 'pid='.$this->pid.' AND hidden = 0 AND deleted = 0 AND sys_language_uid='.intval($this->conf['sys_language_uid']);
 		
 		$orderBy = 'sorting';
@@ -99,8 +101,11 @@ class dompdf_export {
 		if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['ke_questionnaire']['dompdf_export_getQuestions'])){
 			foreach($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['ke_questionnaire']['dompdf_export_getQuestions'] as $_classRef){
 				$_procObj = & t3lib_div::getUserObj($_classRef);
-				$hook_questions = $_procObj->dompdf_export_getQuestions($this);
-				if (is_array($hook_questions)) $this->questions = $hook_questions;
+				/*$hook_questions = $_procObj->dompdf_export_getQuestions($this);
+				if (is_array($hook_questions)){
+					$this->questions = $hook_questions;					
+				}*/
+				$_procObj->dompdf_export_getQuestions($this);
 			}
 		}
 
@@ -243,12 +248,17 @@ class dompdf_export {
 
         /**
          * getPDFBlank(): get a pdf with the empty questionnaire
+         *
+         * @param       array   $result: result to be rendered into the pdf
+         * @param       string  $date: date to be rendered at the top of the questionnaire
          */
-	function getPDFBlank(){
+	function getPDFBlank($result = array(), $date = ''){
+		//t3lib_div::devLog('result', 'pdf_export', 0, $result);
+		$this->result = $result;
 		$this->getQuestions();
 		$html = $this->getHTML('blank');
 		//t3lib_div::devLog('html', 'pdf_export', 0, array($html));
-
+		//$html ='test';
 		$this->pdf->load_html($html);
 
 		$this->pdf->render();
@@ -333,6 +343,7 @@ class dompdf_export {
          */
 	function getHTML($type, $date='') {
 		$content = '';
+		//$content .= intval($this->conf['sys_language_uid']);
 
 		$this->getTemplates();
 		if ($date == '') $date = date('d.m.Y');
@@ -341,7 +352,8 @@ class dompdf_export {
 				$content .= $this->renderFirstPage();
 				//t3lib_div::devLog('getHTML '.$type, 'pdf_export', 0,array($content));
 				foreach ($this->questions as $nr => $question){
-					$content .= $this->renderQuestion($question);
+					//$content .= $question['title'];
+					$content .= $this->renderQuestion($question,false,false);
 				}
 				//$content = mb_convert_encoding($content, "Windows-1252", "UTF-8");
 			break;
@@ -617,10 +629,11 @@ class dompdf_export {
          *
          * @param       array   $question: question to be rendered
          * @param       bool    $compare: compare the question or not
+         * @param       bool    $filled: show the result in the question or not
          *
          * @return      string  rendered question
          */
-	function renderQuestion($question, $compare = false){
+	function renderQuestion($question, $compare = false, $filled=true){
 		$markerArray = array();
 		$markerArray['###QUESTION_TITLE###'] = '';
 		$markerArray['###QUESTION###'] = '';
@@ -639,7 +652,7 @@ class dompdf_export {
 		$value = '&nbsp;';
 		$markerArray['###VALUE###'] = $value;
 		$answered = array();
-		if (is_array($this->result)) {
+		if (is_array($this->result) AND $filled) {
 			if (is_array ($this->result[$question['uid']])){
 				$answered = $this->result[$question['uid']]['answer'];
 			}

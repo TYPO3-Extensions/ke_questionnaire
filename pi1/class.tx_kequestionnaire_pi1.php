@@ -1016,6 +1016,8 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 		$start = $qpp * ($page_nr-1);
 		//and the endquestion
 		
+		//t3lib_div::debug($this->questionCount);
+		
 		//get the shown questions
 		$shown = array();
 		$q_count = 0;
@@ -1086,7 +1088,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 					}
 					//if ($p_count == 4) t3lib_div::devLog('shown '.$question['uid'].'/'.$p_count, $this->prefixId, 0, array($shown,$question));
 	
-					if ($question['type'] != 'blind' AND $question['type'] != 'pool'){
+					if ($question['type'] != 'blind'){
 						if ($question['is_dependant'] == 0) $q_count ++;
 						$counter ++;
 					} elseif ($this->ffdata['render_count_withblind'] == 1) {
@@ -1097,6 +1099,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 			}
 		}
 		$this->shown = $shown;
+		//t3lib_div::debug($questions,'qustios');
 		return $questions;
 	}
 
@@ -1385,6 +1388,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 		$markerArray['###NAV###'] = '';
 		$markerArray['###HIDDEN_FIELDS###'] = '';
 		
+		//t3lib_div::debug($result_id,'pi1');
 		//Hook to do something after the questionnaire is finished
 		if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$this->extKey]['pi1_renderLastPage'])){
 			foreach($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$this->extKey]['pi1_renderLastPage'] as $_classRef){
@@ -1448,67 +1452,22 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 		} else {
 			$markerArray['###TEXT###'] = '';
 		}
-		
-		$points = 0;
-		$max_points = 0;
-		
-		foreach ($this->questionsByID as $qid => $question){
-			switch ($question['type']){
-				case 'closed':
-					$answers = array();
-					$where = 'question_uid='.$qid.$this->cObj->enableFields('tx_kequestionnaire_answers');
-					$res_answers = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*','tx_kequestionnaire_answers',$where);
-					$answer_max_points = 0;
-					if ($res_answers){
-						while ($answer = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res_answers)){
-							$answers[$answer['uid']]['points'] = $answer['value'];
-							switch ($question['closed_type']){
-								case 'radio_single':
-								case 'sbm_button':
-								case 'select_single':
-									if ($answer['value']>$answer_max_points) $answer_max_points = $answer['value'];
-									break;
-								case 'check_multi':
-								case 'select_multi':
-									$answer_max_points += $answer['value'];
-									break;
-							}
-						}
-					}
-					
-					switch ($question['closed_type']){
-						case 'sbm_button':
-						case 'radio_single':
-						case 'select_single':
-							$points += intval($answers[$this->piVars[$qid]['options']]['points']);
-							break;
-						case 'check_multi':
-						case 'select_multi':
-							//t3lib_div::devLog('piVar', $this->prefixId, 0, array($this->piVars[$qid]['options']));
-							if (is_array($this->piVars[$qid]['options'])){
-								foreach ($this->piVars[$qid]['options'] as $item){
-									$points += $answers[$item]['points'];
-								}
-							}
-							break;
-					}
-					$max_points += $answer_max_points;
-				break;
-			}
-		}
+			
+		//get the calculated points
+		$calced = $this->calculatePoints();
+		//t3lib_div::debug(array($max_points,$points),'own');
+		//t3lib_div::debug($calced,'calced');
 		//replace the Marker in the Info-Text
 		// ###TOTAL### max points to be achieved
-		$markerArray['###TEXT###'] = str_replace('###TOTAL###',$max_points,$markerArray['###TEXT###']);
+		$markerArray['###TEXT###'] = str_replace('###TOTAL###',$calced['max'],$markerArray['###TEXT###']);
 		// ###POINTS### actual points reached
-		$markerArray['###TEXT###'] = str_replace('###POINTS###',$points,$markerArray['###TEXT###']);
+		$markerArray['###TEXT###'] = str_replace('###POINTS###',$calced['own'],$markerArray['###TEXT###']);
 		// ###PERCENT### of max points
-		$own_percent = ($points/$max_points)*100;
-		$own_percent = number_format($own_percent,2,',','.');
-		$markerArray['###TEXT###'] = str_replace('###PERCENT###',$own_percent,$markerArray['###TEXT###']);
+		$markerArray['###TEXT###'] = str_replace('###PERCENT###',$calced['percent'],$markerArray['###TEXT###']);
 		
 		$markerArray['###REPORT###'] = '';
 		//Render outcomes
-		$markerArray['###REPORT###'] = $this->renderOutcome($points,$this->piVars);
+		$markerArray['###REPORT###'] = $this->renderOutcome($calced['own'],$this->piVars);
 		
 				
 		$content = $this->renderContent('###POINTS_REPORT###',$markerArray);
@@ -1599,7 +1558,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 	 *
 	 * @return	array	gathered points, own, total and max
 	 */
-	function calculatePoints($results){
+	function calculatePoints($results = NULL){
 		//t3lib_div::devLog('PIVars', $this->prefixId, 0, $this->piVars);
 		$returner = array();
 		
@@ -1633,27 +1592,29 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 					}
 					//t3lib_div::devLog('points', $this->extKey, -1, array($answers));
 					$total_points = 0;
-					foreach ($results as $rid => $result){
-						switch ($question['closed_type']){
-							case 'radio_single':
-							case 'sbm_button':
-							case 'select_single':
-								$total_points += $answers[$result[$qid]['answer']['options']]['points'];
-								//t3lib_div::devLog('total_points', $this->prefixId, 0, array($total_points,$answers[$result[$qid]['answer']['options']],$answers,$result[$qid]['answer']['options'],$result[$qid]['answer']));
-								break;
-							case 'check_multi':
-							case 'select_multi':
-								//t3lib_div::devLog('result', $this->prefixId, 0, array($result[$qid]));
-								//t3lib_div::devLog('answer', $this->prefixId, 0, array($answers));
-								if (is_array($result[$qid]['answer']['options'])){
-									foreach ($result[$qid]['answer']['options'] as $item){
-										$total_points += $answers[$item]['points'];
+					if ($results){
+						foreach ($results as $rid => $result){
+							switch ($question['closed_type']){
+								case 'radio_single':
+								case 'sbm_button':
+								case 'select_single':
+									$total_points += $answers[$result[$qid]['answer']['options']]['points'];
+									//t3lib_div::devLog('total_points', $this->prefixId, 0, array($total_points,$answers[$result[$qid]['answer']['options']],$answers,$result[$qid]['answer']['options'],$result[$qid]['answer']));
+									break;
+								case 'check_multi':
+								case 'select_multi':
+									//t3lib_div::devLog('result', $this->prefixId, 0, array($result[$qid]));
+									//t3lib_div::devLog('answer', $this->prefixId, 0, array($answers));
+									if (is_array($result[$qid]['answer']['options'])){
+										foreach ($result[$qid]['answer']['options'] as $item){
+											$total_points += $answers[$item]['points'];
+										}
 									}
-								}
-								break;
+									break;
+							}
 						}
+						$bars['total'][$qid] = $total_points/count($results);
 					}
-					$bars['total'][$qid] = $total_points/count($results);
 
 					switch ($question['closed_type']){
 						case 'sbm_button':
@@ -1692,15 +1653,17 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 					
 					// sum points of all answers of each question
 					$total_points = 0;
-					foreach ($results as $rid => $result){
-						if (is_array($result[$qid]['answer']['options'])){
-							foreach ($result[$qid]['answer']['options'] as $item){
-								$total_points += $answers[$item]['points'];
+					if ($results){
+						foreach ($results as $rid => $result){
+							if (is_array($result[$qid]['answer']['options'])){
+								foreach ($result[$qid]['answer']['options'] as $item){
+									$total_points += $answers[$item]['points'];
+								}
 							}
 						}
+						// calculate average points
+						$bars['total'][$qid] = $total_points/count($results);
 					}
-					// calculate average points
-					$bars['total'][$qid] = $total_points/count($results);
 					
 					//t3lib_div::devLog('piVar', $this->prefixId, 0, array($this->piVars[$qid]['options']));
 					if (is_array($this->piVars[$qid]['options'])){
@@ -1714,7 +1677,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 					break;
 			}
 		}
-		
+		if ($own_total < 0) $own_total = 0;
 		if ($max_points > 0) $returner['percent'] = ($own_total/$max_points)*100;
 		else $returner['precent'] = 0;
 		$returner['own'] = $own_total;
@@ -1891,7 +1854,8 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 	
 			switch ($type){
 				case 'empty':
-					$pdfdata = $pdf->getPDFBlank();
+					$this->getResults($this->piVars['p_id'],false);
+					$pdfdata = $pdf->getPDFBlank($this->saveArray);
 					break;
 				case 'filled':
 					$this->getResults($this->piVars['p_id'],false);
@@ -2040,6 +2004,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 	 * @param	array	$question: to be rendered
 	 */
 	function getQuestionTypeRender($question){
+		//t3lib_div::debug($question);
 		$uid = $question['uid'];
 		$content = '';
 		//$saveString = '';
@@ -2055,6 +2020,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 			$saveArray = $question_obj->getSaveArray();
 			//t3lib_div::debug($saveArray,"getQuestionTypeRender");
 			$content = $question_obj->render();
+			//t3lib_div::debug($question_obj);
 			
 			if ($this->user_id){
 				foreach ($this->userMarker as $marker => $value){
@@ -2069,6 +2035,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 				$this->saveArray[$question['uid']] = $saveArray[$question['uid']];
 			}
 		}
+		//t3lib_div::debug($content);
 		return $content;
 	}
 
@@ -2076,6 +2043,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 	 * init(): The init method of the PlugIn
 	 */
 	function init(){
+		//t3lib_div::debug($this->cObj->data);
 		// Assign the flexform data to a local variable for easier access
 		$piFlexForm = $this->cObj->data['pi_flexform'];
 
@@ -2105,7 +2073,8 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 		if ($this->ffdata['template_dir'] != '') $this->tmpl_path = trim($this->ffdata['template_dir']);
 		//t3lib_div::debug($GLOBALS['TSFE']->config);
 		//language vars
-		$this->conf['sys_language_uid'] = $GLOBALS['TSFE']->config['config']['sys_language_uid'];
+		//$this->conf['sys_language_uid'] = $GLOBALS['TSFE']->config['config']['sys_language_uid'];
+		$this->conf['sys_langauge_uid'] = $this->cObj->data['sys_language_uid'];
 		$this->conf['language'] = strtolower($GLOBALS['TSFE']->config['config']['language']);
 		
 		$this->tmpl = $this->cObj->fileResource($this->tmpl_path.$template);
@@ -2251,27 +2220,31 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 		if (is_array($questions)){
 			foreach ($questions as $row){
 				$question_obj = $this->getQuestionTypeObject($row);
-				if (count($question_obj->dependancies) > 0){
-					if ($this->ffdata['render_count_withoutdependant'] == 1) $row['is_dependant'] = 1;
-					else {
-						if ($row['dependant_show'] == 0){
-							if ($question_obj->checkDependancies()) $row['no_show'] = 0;
-							else $row['no_show'] = 1;	
-							//$row['no_show'] = $this->checkQuestionIfActivated($row);
+				if ($row['type'] == 'pool' AND $row['show_title'] == 0){
+					//t3lib_div::debug($row);
+				} else {
+					if (count($question_obj->dependancies) > 0){
+						if ($this->ffdata['render_count_withoutdependant'] == 1) $row['is_dependant'] = 1;
+						else {
+							if ($row['dependant_show'] == 0){
+								if ($question_obj->checkDependancies()) $row['no_show'] = 0;
+								else $row['no_show'] = 1;	
+								//$row['no_show'] = $this->checkQuestionIfActivated($row);
+							}
+						}
+					} else {
+						if ($this->ffdata['render_count_withoutdependant'] == 1 AND $row['type'] != 'refusal'){
+							if ($this->ffdata['record_count_withblind'] == 0 AND $row['type'] != 'blind') $temp_count ++;
+							elseif ($this->ffdata['record_count_withblind'] == 1) $temp_count ++;
 						}
 					}
-				} else {
-					if ($this->ffdata['render_count_withoutdependant'] == 1 AND $row['type'] != 'refusal'){
-						if ($this->ffdata['record_count_withblind'] == 0 AND $row['type'] != 'blind') $temp_count ++;
-						elseif ($this->ffdata['record_count_withblind'] == 1) $temp_count ++;
+					if ($row['no_show'] == 1) {
+						$temp_count_hidden ++;
 					}
+					if ($row['type'] != 'blind' AND $row['type'] != 'refusal') $this->questions[] = $row;
+					$this->allQuestions[] = $row;
+					$this->questionsByID[$row['uid']] = $row;
 				}
-				if ($row['no_show'] == 1) {
-					$temp_count_hidden ++;
-				}
-				if ($row['type'] != 'blind' AND $row['type'] != 'refusal') $this->questions[] = $row;
-				$this->allQuestions[] = $row;
-				$this->questionsByID[$row['uid']] = $row;
 			}
 			$this->questionCount['no_dependants'] = $temp_count;
 			$this->questionCount['notshown_dependants'] = $temp_count_hidden;
