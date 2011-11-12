@@ -124,6 +124,7 @@ class kequestionnaire_input_matrix extends kequestionnaire_input{
                 foreach($this->columns as $column){
                     $markerArray = array();
                     $markerArray['###VALUE###'] = $column['title'];
+                    $markerArray['###COLUMN_ID###'] = $column['uid'];
                     $markerArray = $this->renderImage($markerArray,$column);
                     $col = $this->cObj->substituteMarkerArrayCached($tmplCol, $markerArray);
                     $this->html.=$col;
