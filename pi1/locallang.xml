@@ -116,7 +116,7 @@
 			<label index="email_not_sent">Die E-Mail konnte nicht versendet werden. Prüfen Sie Ihre Adresse und versuchen Sie es erneut.</label>
 			<label index="intro_email_send">Geben Sie hier Ihre E-Mailadresse ein, um den Fragebogen mit Ihren Antworten im Textformat zu erhalten:</label>
 			<label index="email_back">Zurück</label>
-
+			<label index="dd_words_replacetext">ZU_ERSETZENDES_WORT</label>
 		</languageKey>
 		<languageKey index="de" type="array">
 			<label index="test">Test</label>
@@ -228,6 +228,7 @@
 			<label index="email_not_sent">Die E-Mail konnte nicht versendet werden. Prüfen Sie Ihre Adresse und versuchen Sie es erneut.</label>
 			<label index="intro_email_send">Geben Sie hier Ihre E-Mailadresse ein, um den Fragebogen mit Ihren Antworten im Textformat zu erhalten:</label>
 			<label index="email_back">Zurück</label>
+			<label index="dd_words_replacetext">ZU_ERSETZENDES_WORT</label>
 		</languageKey>
 	</data>
 </T3locallang>

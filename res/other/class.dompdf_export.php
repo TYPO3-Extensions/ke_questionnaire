@@ -89,6 +89,14 @@ class dompdf_export {
 
 		if ($res){
 			while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)){
+				//replace all drag and drop placeholder marks in question text (question type: dd_words) for export
+				if($row['type'] === 'dd_words') {
+					$replaceText = (TYPO3_MODE === 'BE')?'ZU_ERSETZENDES_WORT':$this->LOCAL_LANG['dd_words_replacetext'];
+					if(preg_match('/###(.|\n)*?###/iu', $row['text']) === 1) {
+						$row['text'] = preg_replace('/###(.|\n)*?###/iu', $replaceText, $row['text']);
+					}
+				}
+				
 				$this->allQuestions[] = $row;
 				$this->questions[] = $row;
 				$this->questionsByID[$row['uid']] = $row;

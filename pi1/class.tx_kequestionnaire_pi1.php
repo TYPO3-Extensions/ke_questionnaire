@@ -1590,7 +1590,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 							}
 						}
 					}
-					//t3lib_div::devLog('points', $this->extKey, -1, array($answers));
+					
 					$total_points = 0;
 					if ($results){
 						foreach ($results as $rid => $result){
@@ -1615,7 +1615,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 						}
 						$bars['total'][$qid] = $total_points/count($results);
 					}
-
+					
 					switch ($question['closed_type']){
 						case 'sbm_button':
 						case 'radio_single':
@@ -1627,7 +1627,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 							//t3lib_div::devLog('piVar', $this->prefixId, 0, array($this->piVars[$qid]['options']));
 							if (is_array($this->piVars[$qid]['options'])){
 								foreach ($this->piVars[$qid]['options'] as $item){
-									$bars['own'][$qid] += $answers[$item]['points'];
+									$bars['own'][$qid] += intval($answers[$item]['points']);
 								}
 							}
 							break;
