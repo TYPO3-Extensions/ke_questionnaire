@@ -233,7 +233,7 @@ class pdfresult_dompdf {
 		$this->result = $result;
 		$this->getQuestions();
 		//t3lib_div::devLog('result', 'pdf_export', 0, $result);
-die();
+
 		$html = $this->getHTML('compare',$date);
 
 		$this->pdf->load_html($html);
