@@ -555,6 +555,7 @@ class  tx_kequestionnaire_module4 extends t3lib_SCbase {
 							$out.=$this->formLink(array("step"=>$this->step,"source"=>""),"back");
 						break;
 						case "fe_users":
+						case "tt_address":
 							$users=$this->getUsers($source);
 							$options=array();
 							foreach ($users as $key => $value) {
@@ -621,6 +622,7 @@ class  tx_kequestionnaire_module4 extends t3lib_SCbase {
 
 						break;
 						case "fe_users":
+						case "tt_address":
 							if(empty($this->vars["user"])){
 								$this->error=1;
 								$this->errorMsg=$this->LL("errorUser");
@@ -655,8 +657,8 @@ class  tx_kequestionnaire_module4 extends t3lib_SCbase {
 
 
 					// Select tt_address records
-					//$out.=$this->formLink(array("step"=>$this->step,"source"=>"tt_address","q_id"=>$this->q_id,"id"=>$this->pid),"sourceAddress");
-					//$out.="<br />";
+					$out.=$this->formLink(array("step"=>$this->step,"source"=>"tt_address","q_id"=>$this->q_id,"id"=>$this->pid),"sourceAddress");
+					$out.="<br />";
 
 
 					// >Select Usergroup
@@ -690,6 +692,16 @@ class  tx_kequestionnaire_module4 extends t3lib_SCbase {
 
 						}
 
+					}else{
+						$res=$GLOBALS["TYPO3_DB"]->exec_SELECTgetRows("*", "tt_address", "$where AND deleted=0 and hidden=0 AND email<>''", "name", "", "", "");
+
+						$out=array();
+						foreach($res as $row){
+							$row["displayName"]=$row["name"];
+							$row["feUserGroup"]=0;
+							$row["feUserUid"]=0;
+							$out[$row["uid"]]=$row;
+						}
 					}
 					return $out;
 				}
