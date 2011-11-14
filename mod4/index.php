@@ -325,7 +325,7 @@ class  tx_kequestionnaire_module4 extends t3lib_SCbase {
 					$markerArray["###LINK###"] = '<' . $link . '>';
 					$markerArray["###ID###"] = $this->pid;
 					$markerArray["###URL###"] = $link;
-
+					
 					$body=$mailTexts["body"];
 					$html_body=$mailTexts["body"];
 					foreach($markerArray as $key=>$val) $body=str_replace($key,$val,$body);
@@ -523,7 +523,7 @@ class  tx_kequestionnaire_module4 extends t3lib_SCbase {
 				function selectSourceForm(){
 					$out=$this->generateHiddenFields(array("source","step","q_id","id"));
 					$source=isset($this->vars["source"])?$this->vars["source"]:"";
-
+					
 					$submit=isset($this->vars["submit"]);
 					if($submit){
 						$user=$this->getMails($source);
@@ -657,8 +657,8 @@ class  tx_kequestionnaire_module4 extends t3lib_SCbase {
 
 
 					// Select tt_address records
-					$out.=$this->formLink(array("step"=>$this->step,"source"=>"tt_address","q_id"=>$this->q_id,"id"=>$this->pid),"sourceAddress");
-					$out.="<br />";
+					//$out.=$this->formLink(array("step"=>$this->step,"source"=>"tt_address","q_id"=>$this->q_id,"id"=>$this->pid),"sourceAddress");
+					//$out.="<br />";
 
 
 					// >Select Usergroup
@@ -682,6 +682,7 @@ class  tx_kequestionnaire_module4 extends t3lib_SCbase {
 				function getUsers($table,$where="TRUE"){
 					if($table=="fe_users"){
 						$res=$GLOBALS["TYPO3_DB"]->exec_SELECTgetRows("*", "fe_users", "$where AND deleted=0 and disable=0 AND email<>''", "name", "", "", "");
+						
 						$out=array();
 						foreach($res as $row){
 							$row["displayName"]=$row["name"]." (".$row["username"].")";

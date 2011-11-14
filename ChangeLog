@@ -2,6 +2,16 @@
 
 2011-11-14 Fabian Friedrich <friedrich@kennziffer.com>
 
+	* Fixed: Backend users without page permissions on KEQ-pages could not access page tree of module "Export"
+	  (Thanks to Andreas Heling for reporting this on forge.typo3.org)
+
+2011-11-14 Fabian Friedrich <friedrich@kennziffer.com>
+
+	* Fixed: checking of question-dependencies not working correctly
+	  (Thanks to Andreas Heling for reporting this on forge.typo3.org)
+
+2011-11-14 Fabian Friedrich <friedrich@kennziffer.com>
+
 	* Removed tt_address data selection from question type "demographic data" (fe_users only now)  
 
 2011-11-12 Fabian Friedrich <friedrich@kennziffer.com>
