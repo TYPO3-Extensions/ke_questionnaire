@@ -41,8 +41,6 @@
 	* Feature: Drag'n Drop of words
 	* Bug: JS-Function for maxAnswers was overwritten with each question 
 
-$Id$
-
 2010-12-06 Martin Bless  <martin.bless@gmail.com>
 
 	* Feature: Providing the typoscript option 
