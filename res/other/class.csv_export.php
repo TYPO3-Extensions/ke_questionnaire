@@ -192,14 +192,6 @@ class csv_export {
 									}
 								}
 							}
-							if (is_array($question['tt_address'])){
-								if (count($question['tt_address']) > 0){
-									//$lineadd .= "\n";
-									foreach ($question['tt_address'] as $field => $f_values){
-										$lineadd .= $this->getQBaseLine($free_cells+2,$question,array(),0,array(),$field);
-									}
-								}
-							}
 							//if ($lineadd == '') $lineadd .= "\n";
 							$lineset .= $lineadd;
 						break;
@@ -346,17 +338,6 @@ class csv_export {
 								$take['fe_users'][$dem_field]['results'][$result_id] = preg_replace('#[\r\n\t]#', ' ', $take['fe_users'][$dem_field]['results'][$result_id]);
 								$take['fe_users'][$dem_field]['results'][$result_id] = preg_replace('# {2,}#', ' ', $take['fe_users'][$dem_field]['results'][$result_id]);
 								$line[] = strip_tags(nl2br($take['fe_users'][$dem_field]['results'][$result_id]));
-							} else {
-								$line[] = '';
-							}
-						}
-					}
-					if (is_array($take['tt_address'][$dem_field]['results'])){
-						foreach ($this->results as $nr => $r_data){
-							$result_id = $r_data['uid'];
-							if ($take['tt_address'][$dem_field]['results'][$result_id]){
-								$take['tt_address'][$dem_field]['results'][$result_id] = str_replace($delimeter,$delimeter.$delimeter,$take['tt_address'][$dem_field]['results'][$result_id]);
-								$line[] = $take['tt_address'][$dem_field]['results'][$result_id];
 							} else {
 								$line[] = '';
 							}
@@ -817,16 +798,12 @@ class csv_export {
 							$flex = t3lib_div::xml2array($question['demographic_addressfields']);
 							if (is_array($flex)) $fe_user_addressfields = explode(',',$flex['data']['sDEF']['lDEF']['FeUser_Fields']['vDEF']);
 							//t3lib_div::devLog('getCSVQBase flex', 'ke_questionnaire Export Mod', 0, array($fe_user_fields,$fe_user_addressfields));
-							if (is_array($fe_user_fields)){
-                                                            foreach ($fe_user_fields as $field){
+							if (is_array($fe_user_fields)){                          
+								
+								foreach ($fe_user_fields as $field){
 								$fill_array[$question['uid']]['fe_users'][$field] = array();
                                                             }
 							}
-                                                        if (is_array($fe_user_addressfields)){
-                                                            foreach ($fe_user_addressfields as $field){
-                                                            	$fill_array[$question['uid']]['tt_address'][$field] = array();
-                                                            }
-                                                        }
 							//$lineset .= $this->getQBaseLine($free_cells,$question);
 						break;
                                         default:
@@ -841,7 +818,6 @@ class csv_export {
 				}
 			}
 		}
-                
                 // Hook to make other types available for export
                 if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['ke_questionnaire']['CSVExportFillArray'])){
                         foreach($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['ke_questionnaire']['CSVExportFillArray'] as $_classRef){

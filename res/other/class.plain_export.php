@@ -581,11 +581,6 @@ class plain_export {
                                 $tmpOutput['value'][] = $key.': '.$value;
                         }
                 }
-                if (is_array($answered['tt_address'])){
-                        foreach ($answered['tt_address'] as $key => $value){
-                                $tmpOutput['value'][] = $key.': '.$value;
-                        }
-                }
                 
                 $this->outputPlain[] = $tmpOutput;
         }

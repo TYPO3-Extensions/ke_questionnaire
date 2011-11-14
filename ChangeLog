@@ -1,5 +1,13 @@
 (add new changes on top of this file)
 
+2011-11-14 Fabian Friedrich <friedrich@kennziffer.com>
+
+	* Removed tt_address data selection from question type "demographic data" (fe_users only now)  
+
+2011-11-12 Fabian Friedrich <friedrich@kennziffer.com>
+
+	* Fixed: Markers of question type "dd_words" not replaced properly in pdf export
+
 2011-10-06 Nadine Schwingler / Fabian Friedrich <friedrich@kennziffer.com>
 
 	* Fixed: Calculation of max points could result in negative value

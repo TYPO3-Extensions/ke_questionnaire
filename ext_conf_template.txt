@@ -1,9 +1,6 @@
 # cat=basic/enable; type=string; label=Demographic Fields to exclude:All of fe_users fields are able. Place the not to be ever shown in this list
 demographic_fields_exclude = password,usergroup,starttime,endtime,lockToDomain,image,disable,TSconfig,felogin_redirectPid
 
-# cat=basic/enable; type=string; label=Demographic Address Fields to exclude:All of tt_address fields are able. Place the not to be ever shown in this list
-demographic_address_fields_exclude = hidden,addressgroup,image
-
 # cat=basic/enable; type=string; label=Parter for Answer-Options for Validation of open-text-questions
 oq_validation_parter = /
 

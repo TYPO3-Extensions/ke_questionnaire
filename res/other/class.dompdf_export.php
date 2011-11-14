@@ -848,15 +848,6 @@ class dompdf_export {
 				$markerArray['###LINES###'] .= $this->renderContent($this->templates['demographic_line'],$l_markerArray);
 			}
 		}
-		if (is_array($answered['tt_address'])){
-			foreach ($answered['tt_address'] as $key => $value){
-				$l_markerArray = array();
-				//todo: get Label out of locallang
-				$l_markerArray['###TITLE###'] = $key;
-				$l_markerArray['###VALUE###'] = $value;
-				$markerArray['###LINES###'] .= $this->renderContent($this->templates['demographic_line'],$l_markerArray);
-			}
-		}
 
 		$html = $this->renderContent($this->templates['demographic'],$markerArray);
 

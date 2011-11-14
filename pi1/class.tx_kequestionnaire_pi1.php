@@ -1957,7 +1957,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 					$this->piVars[$question['uid']] = $this->saveArray[$question['uid']]['answer'];
 				}
 				$answer=$this->piVars[$question['uid']];
-
+				
 				if (is_array($answer['fe_users'])){
 					foreach ($answer['fe_users'] as $field => $value){
 						//t3lib_div::devLog('demographic answer field '.$question['uid'], $this->prefixId, 0, array($field,$value));
@@ -1966,6 +1966,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 						}
 					}
 				}
+				
 				if (is_array($options['fields'])){
 					foreach ($options['fields'] as $field => $type){
 						//t3lib_div::devLog('demographic answer field '.$question['uid'], $this->prefixId, 0, array($field,$type));

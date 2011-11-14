@@ -46,7 +46,7 @@ class question_demographic extends question{
     function buildFieldArray(){
 		switch($this->type){
 			case "both":
-				$tables=array("fe_users","tt_address");
+				$tables=array("fe_users");
 			break;
 			case "address":
 				$tables=array("tt_address");

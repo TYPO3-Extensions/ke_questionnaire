@@ -1130,9 +1130,6 @@ Event.observe(window, 'load', function() {
 							foreach ($fe_user_fields as $field){
 								$base_row[$row['uid']]['possible_answers']['fe_users'][] = $field;
 							}
-							foreach ($fe_user_addressfields as $field){
-								$base_row[$row['uid']]['possible_answers']['tt_address'][] = $field;
-							}
 							//$lineset .= $this->getQBaseLine($free_cells,$question);
 						break;
 				}

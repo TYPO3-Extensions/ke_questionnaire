@@ -494,8 +494,6 @@ $TCA['tx_kequestionnaire_questions'] = array (
 				'type' => 'select',
 				'items' => Array (
 					Array('LLL:EXT:ke_questionnaire/locallang_db.xml:tx_kequestionnaire_questions.demographic_type.I.0', 'demo'),
-					Array('LLL:EXT:ke_questionnaire/locallang_db.xml:tx_kequestionnaire_questions.demographic_type.I.1', 'address'),
-					Array('LLL:EXT:ke_questionnaire/locallang_db.xml:tx_kequestionnaire_questions.demographic_type.I.2', 'both'),
 				),
 				'size' => 1,
 				'maxitems' => 1,
@@ -546,63 +544,6 @@ $TCA['tx_kequestionnaire_questions'] = array (
 														<renderMode>checkbox</renderMode>
 														<maxitems>100</maxitems>
 														<itemsProcFunc>tx_kequestionnaire_tx_kequestionnaire_questions_demographic_fields->get_feuser_mandatory</itemsProcFunc>
-													</config>
-												</TCEforms>
-											</FeUser_Fields>
-										</el>
-									</ROOT>
-								</mDEF>
-							</sheets>
-						</T3DataStructure>
-					'
-				)
-			)
-		),
-		'demographic_addressfields' => Array (
-			'exclude' => 1,
-			'label' => 'LLL:EXT:ke_questionnaire/locallang_db.xml:tx_kequestionnaire_questions.demographic_addressfields',
-			'config' => Array (
-				'type' => 'flex',
-				'ds' => Array(
-					'default' => '
-						<T3DataStructure>
-							<sheets>
-								<sDEF>
-									<ROOT>
-										<TCEforms>
-											<sheetTitle>LLL:EXT:ke_questionnaire/locallang.xml:tt_content.pi_flexform.FeUser_Fields_Sheet</sheetTitle>
-										</TCEforms>
-										<type>array</type>
-										<el>
-											<FeUser_Fields>
-												<TCEforms>
-													<label>LLL:EXT:ke_questionnaire/locallang.xml:tt_content.pi_flexform.FeUser_Fields</label>
-													<config>
-														<type>select</type>
-														<renderMode>checkbox</renderMode>
-														<maxitems>100</maxitems>
-														<itemsProcFunc>tx_kequestionnaire_tx_kequestionnaire_questions_demographic_fields->get_ttaddress_fields</itemsProcFunc>
-													</config>
-												</TCEforms>
-											</FeUser_Fields>
-										</el>
-									</ROOT>
-								</sDEF>
-								<mDEF>
-									<ROOT>
-										<TCEforms>
-											<sheetTitle>LLL:EXT:ke_questionnaire/locallang.xml:tt_content.pi_flexform.FeUser_Mandatory_Sheet</sheetTitle>
-										</TCEforms>
-										<type>array</type>
-										<el>
-											<FeUser_Fields>
-												<TCEforms>
-													<label>LLL:EXT:ke_questionnaire/locallang.xml:tt_content.pi_flexform.FeUser_Mandatory</label>
-													<config>
-														<type>select</type>
-														<renderMode>checkbox</renderMode>
-														<maxitems>100</maxitems>
-														<itemsProcFunc>tx_kequestionnaire_tx_kequestionnaire_questions_demographic_fields->get_ttaddress_mandatory</itemsProcFunc>
 													</config>
 												</TCEforms>
 											</FeUser_Fields>

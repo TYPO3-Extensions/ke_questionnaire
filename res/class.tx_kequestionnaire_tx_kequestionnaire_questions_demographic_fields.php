@@ -86,49 +86,11 @@ class tx_kequestionnaire_tx_kequestionnaire_questions_demographic_fields {
                 // No return - the $params and $pObj variables are passed by reference, so just change content in then and it is passed back automatically...
 	}
 	function get_ttaddress_fields(&$params,&$pObj)	{
-		global $LANG;
-		$extConf = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['ke_questionnaire']);
-		$excludes = explode(',',$extConf['demographic_address_fields_exclude']);
-		
-		$allowed_types = array('input','text','select','check');
-		
-		t3lib_div::loadTCA("tt_address");
-		$TCA = &$GLOBALS["TCA"]["tt_address"];
-		$content = '';
-		if (is_array($TCA['columns'])){
-			foreach ($TCA['columns'] as $name => $conf){
-				if (!in_array($name,$excludes) AND in_array($conf['config']['type'],$allowed_types)){
-					$label = rtrim($LANG->sL($conf['label']),':');
-					$params['items'][] = array($label,$name);
-				}
-			}
-		}
-		
-		//return $params;
-                // No return - the $params and $pObj variables are passed by reference, so just change content in then and it is passed back automatically...
+		//Remove
 	}
 	
 	function get_ttaddress_mandatory(&$params,&$pObj)	{
-		global $LANG;
-		$extConf = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['ke_questionnaire']);
-		$excludes = explode(',',$extConf['demographic_address_fields_exclude']);
-		
-		$allowed_types = array('input','text','select','check');
-		
-		t3lib_div::loadTCA("tt_address");
-		$TCA = &$GLOBALS["TCA"]["tt_address"];
-		$content = '';
-		if (is_array($TCA['columns'])){
-			foreach ($TCA['columns'] as $name => $conf){
-				if (!in_array($name,$excludes) AND in_array($conf['config']['type'],$allowed_types)){
-					$label = rtrim($LANG->sL($conf['label']),':');
-					$params['items'][] = array($label.' *',$name);
-				}
-			}
-		}
-		
-		//return $params;
-                // No return - the $params and $pObj variables are passed by reference, so just change content in then and it is passed back automatically...
+		//Remove
 	}	
 }
 

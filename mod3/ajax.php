@@ -173,11 +173,6 @@ class  tx_kequestionnaire_module3_ajax extends t3lib_SCbase {
                                                         $write_array['fe_users'][$fe_nr]['results'][$v_nr] = $fe_values;
                                                 }
                                         }
-                                        if (is_array($act_v['answer']['tt_address'])){
-                                                foreach ($act_v['answer']['tt_address'] as $fe_nr => $fe_values){
-                                                        $write_array['tt_address'][$fe_nr]['results'][$v_nr] = $fe_values;
-                                                }
-                                        }
                                 break;
                         default: 	
                                         // Hook to make other types available for export
@@ -312,11 +307,6 @@ class  tx_kequestionnaire_module3_ajax extends t3lib_SCbase {
 					t3lib_div::devLog('demo '.$q_nr, 'ke_questionnaire Export Mod', 0, $act_v);
 					if (is_array($result['data'][$q_nr]['answer']['fe_users'])){
 						foreach ($result['data'][$q_nr]['answer']['fe_users'] as $fe_nr => $fe_values){
-							$result_line[] = $fe_values;
-						}
-					}
-					if (is_array($result['data'][$q_nr]['answer']['tt_address'])){
-						foreach ($result['data'][$q_nr]['answer']['tt_address'] as $fe_nr => $fe_values){
 							$result_line[] = $fe_values;
 						}
 					}
@@ -466,11 +456,6 @@ class  tx_kequestionnaire_module3_ajax extends t3lib_SCbase {
 								$fill_array[$question['uid']]['fe_users'][$field] = array();
                                                             }
 							}
-                                                        if (is_array($fe_user_addressfields)){
-                                                            foreach ($fe_user_addressfields as $field){
-                                                            	$fill_array[$question['uid']]['tt_address'][$field] = array();
-                                                            }
-                                                        }
 							//$lineset .= $this->getQBaseLine($free_cells,$question);
 						break;
 					default:

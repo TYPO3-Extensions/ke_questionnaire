@@ -210,7 +210,6 @@ class question{
 			switch($key){
 				case "fe_users":
 				case "text":
-				case "tt_address":
 					$out[$key]=$this->removeXSS($val);
 				break;
 				case "options":
