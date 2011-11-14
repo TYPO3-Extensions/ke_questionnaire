@@ -703,13 +703,13 @@ class question{
 		//t3lib_div::devLog('split ', 'checkDependants', 0, $split);
 		switch ($formula_type){
 		    case '=':
-			    if (intval($form_values[$this->obj->prefixId][$q_id]['text']) == $formula_value) $a ++;
+			    if (intval($form_values[$this->obj->prefixId][$q_id]['text']) == $formula_value) $a++;
 			break;
 		    case '<':
-			    if (intval($form_values[$this->obj->prefixId][$q_id]['text']) < $formula_value) $a ++;
+			    if (intval($form_values[$this->obj->prefixId][$q_id]['text']) < $formula_value) $a++;
 			break;
-			    if (intval($form_values[$this->obj->prefixId][$q_id]['text']) > $formula_value) $a ++;
-		    case '>':
+			case '>':
+			    if (intval($form_values[$this->obj->prefixId][$q_id]['text']) > $formula_value) $a++;
 			break;
 		}
 	    }
