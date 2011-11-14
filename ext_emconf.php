@@ -3,7 +3,7 @@
 ########################################################################
 # Extension Manager/Repository config file for ext "ke_questionnaire".
 #
-# Auto generated 14-11-2011 15:21
+# Auto generated 14-11-2011 15:30
 #
 # Manual updates:
 # Only the data in the array - everything else is removed by next
@@ -29,7 +29,7 @@ $EM_CONF[$_EXTKEY] = array(
 	'clearCacheOnLoad' => 1,
 	'lockType' => '',
 	'author_company' => 'www.kennziffer.com GmbH',
-	'version' => '2.5.1',
+	'version' => '2.5.2',
 	'constraints' => array(
 		'depends' => array(
 			'cms' => '',
