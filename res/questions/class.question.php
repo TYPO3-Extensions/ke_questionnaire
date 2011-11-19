@@ -335,6 +335,12 @@ class question{
 		}
 		if($this->question['privacy_file']!="") $out['###PRIVACY_LINK###'] = $this->obj->pi_getPageLink("uploads/tx_kequestionnaire/".$this->question['privacy_file']);
 		$out['###PRIVACY_TEXT###'] =$this->question['privacy_post'];
+		//t3lib_div::debug($this->conf);
+		if ($this->conf['privacy.']['exchange_title_for_link'] == 1){
+		    $out['###PRIVACY_TEXT###'] = str_replace($this->question['title'],'<a href="'.$out['###PRIVACY_LINK###'].'">'.$this->question['title'].'</a>',$out['###PRIVACY_TEXT###']);
+		    $out['###PRIVACY_LINK###'] = '';
+		    $out['###PRIVACY_LINK_LABEL###'] = '';
+		}
 
 		// Title
 		$out['###TITLE###'] = '';
