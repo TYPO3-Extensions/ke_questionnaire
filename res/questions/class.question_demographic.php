@@ -153,6 +153,41 @@ class question_demographic extends question{
 
 		// Options
 		$out["options"]=array();
+		
+		//check order
+		//t3lib_div::debug($out,$table);
+		/* to get the order add the ordered list to the typoscript
+		  eg:
+			demographic {
+				tt_address {
+					order = title, first_name, last_name, birthday, description, address, zip, city, country, email, phone, mobile
+				}
+			}
+		*/
+		if($this->obj->conf['demographic.'][$table.'.']){
+			//t3lib_div::debug($this->obj->conf['demographic.'][$table.'.'],$table);
+			$conf_data = $this->obj->conf['demographic.'][$table.'.'];
+			//t3lib_div::debug($conf_data,$table.' conf');
+			if ($conf_data['order']){
+				$order = explode(',',$conf_data['order']);
+				$unordered = $out['fields'];
+				//t3lib_div::debug($unordered,'unordered');
+				$ordered = array();
+				foreach ($order as $field){
+					$field = trim($field);
+					//t3lib_div::debug($field,'field');
+					//t3lib_div::debug($unordered[$field],'field '.$field);
+					if ($out['fields'][$field]){
+						//t3lib_div::debug($out['fields'][$field],$table.' out');
+						$ordered[$field] = $out['fields'][$field];
+						unset($unordered[$field]);
+					}
+				}
+				$ordered = array_merge($ordered,$unordered);
+				$out['fields'] = $ordered;
+				//t3lib_div::debug($ordered,$table);
+			}
+		}
 
 		return $out;
 
