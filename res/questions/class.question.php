@@ -335,7 +335,12 @@ class question{
 		}
 		if($this->question['privacy_file']!="") $out['###PRIVACY_LINK###'] = $this->obj->pi_getPageLink("uploads/tx_kequestionnaire/".$this->question['privacy_file']);
 		$out['###PRIVACY_TEXT###'] =$this->question['privacy_post'];
-		//t3lib_div::debug($this->conf);
+		//you're able to exchange stuff in the privacy-line (use the title of the question)
+		//activate with
+		//privacy {
+		//    exchange_title_for_link = 1
+		//}
+		//in typoscript
 		if ($this->conf['privacy.']['exchange_title_for_link'] == 1){
 		    $out['###PRIVACY_TEXT###'] = str_replace($this->question['title'],'<a href="'.$out['###PRIVACY_LINK###'].'">'.$this->question['title'].'</a>',$out['###PRIVACY_TEXT###']);
 		    $out['###PRIVACY_LINK###'] = '';
@@ -986,7 +991,7 @@ class question{
 			} elseif (!is_array($this->answer['options']) AND $this->answer['options']){
 				$saveArray[$this->question['uid']]['answer'] = $this->answer;
 			}
-			if (is_array($this->answer['fe_users'])){
+			if (is_array($this->answer['fe_users']) or is_array($this->answer['tt_address'])){
 				//t3lib_div::devLog('fe_users '.$this->question['uid'], 'class.question', 0, $this->answer['fe_users']);
 				//if (is_array($this->answer['options'])) $saveArray[$this->question['uid']]['answer'] = t3lib_div::array2xml($this->answer);
 				$saveArray[$this->question['uid']]['answer'] = $this->answer;
