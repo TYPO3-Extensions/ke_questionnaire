@@ -302,7 +302,8 @@ class  tx_kequestionnaire_module2 extends t3lib_SCbase {
 		$question = t3lib_BEfunc::getRecord('tx_kequestionnaire_questions',$q_id);
 
 		$storage_pid = $this->ff_data['sDEF']['lDEF']['storage_pid']['vDEF'];
-		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('xmldata,finished_tstamp','tx_kequestionnaire_results','pid='.$storage_pid.' AND hidden=0 AND deleted=0','','uid');
+		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('uid,xmldata,finished_tstamp','tx_kequestionnaire_results','pid='.$storage_pid.' AND hidden=0 AND deleted=0','','uid');
+		//t3lib_div::devLog('res', 'ke_questionnaire auswert Mod', 0, array($GLOBALS['TYPO3_DB']->SELECTquery('xmldata,finished_tstamp','tx_kequestionnaire_results','pid='.$storage_pid.' AND hidden=0 AND deleted=0','','uid')));
 		if ($res){
 			while($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)){
 				if ($row['xmldata'] != '') {
@@ -314,7 +315,9 @@ class  tx_kequestionnaire_module2 extends t3lib_SCbase {
 					} else {
 						$temp_array = t3lib_div::xml2array(utf8_encode($row['xmldata']));
 					}
+					//t3lib_div::debug($temp_array,'row '.$row['uid']);
 					$results[$row['uid']] = $temp_array;
+					//t3lib_div::debug($results,'results');
 					if ($row['finished_tstamp'] > 0) $finished ++;
 					$counting ++;
 				}
