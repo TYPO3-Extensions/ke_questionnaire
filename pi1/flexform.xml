@@ -317,7 +317,6 @@
 				<redirect_on_finish_uid>
 					<TCEforms>
 						<label>LLL:EXT:ke_questionnaire/locallang.xml:tt_content.redirect_on_finish_uid</label>
-						<displayCond>FIELD:render_type:!=:ALL</displayCond>
 						<config>
 							<type>select</type>
 							<allownonidvalues>1</allownonidvalues>

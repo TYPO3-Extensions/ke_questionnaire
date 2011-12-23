@@ -1405,9 +1405,17 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 			while($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res_answers)) {
 				$finishPids[$row['uid']] = $row['finish_page_uid'];
 			}
-			
+						
 			//set finish page by current answer
-			$finishPage = $finishPids[$this->saveArray[$this->ffdata['redirect_on_finish_uid']]['answer']['options']];
+			$answered = $this->saveArray[$this->ffdata['redirect_on_finish_uid']]['answer']['options'];
+			if (is_array($answered)){
+				foreach ($answered as $tid => $tvalue){
+					if ($finishPids[$tvalue]) $answered = $tvalue;
+				}				
+			}
+			$finishPage = $finishPids[$answered];
+			//t3lib_div::debug($this->saveArray[$this->ffdata['redirect_on_finish_uid']]['answer']['options'],'page');
+			//t3lib_div::debug($finishPage,'page');
 			
 			//if no finishing page given in answer, ignore and go on - else: redirect
 			if(strlen($finishPage) && $finishPage > 0) {

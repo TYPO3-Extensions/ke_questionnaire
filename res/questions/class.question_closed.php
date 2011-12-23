@@ -249,7 +249,29 @@ class question_closed extends question {
 				$out= "Templatetype ".$this->type." not defined!";
 			break;
 		}
-		// TODO: Check for correct answer
+		//Check for correct answer
+		if ($this->question['mandatory_correct']){
+			$correct = false;
+			foreach ($this->options as $option){
+				//t3lib_div::debug($option,$this->question['title']);
+				if (is_array($this->answer['options'])){
+					foreach ($this->answer['options'] as $answer){
+						if ($option['correct_answer']){
+							if ($answer == $option['uid'] and !$correct) $correct = true;
+						}
+					}
+				} else {
+					if ($option['correct_answer']){
+						if ($this->answer['options'] == $option['uid'] and !$correct) $correct = true;
+					}
+				}
+			}
+			//t3lib_div::debug($this->answer['options'],$this->question['title']);
+			if (!$correct){
+				$this->error=1;
+				$this->errorMsg=$this->obj->pi_getLL("error_required_correct");
+			}
+		}
 
 		// Check if any Value is selected for Checkboxes or Radio
 		if($this->type!="radio_single" && $this->type!="check_multi") return;

@@ -28,6 +28,7 @@
 			<label index="error_keys">You have to answer according to the question</label>
 			<label index="error_keys_all">You have to answer according to the question and match all keywords</label>
 			<label index="error_required">required</label>
+			<label index="error_required_correct">You must answer the question correctly</label>
 			<label index="error_demographic_required">required</label>
 			<label index="error_semantic_required">required</label>
 			<label index="error_required_option">required</label>
@@ -141,6 +142,7 @@
 			<label index="error_keys">Sie müssen der Fragestellung entsprechend antworten</label>
 			<label index="error_keys_all">Sie müssen der Fragestellung entsprechend antworten und alle Schlüsselwörter verwenden.</label>
 			<label index="error_required">Dies ist eine Pflichtfrage.</label>
+			<label index="error_required_correct">Die Frage muss korrekt beantwortet werden</label>
 			<label index="error_demographic_required">Pflichtfeld</label>
 			<label index="error_semantic_required">Pflichtfeld</label>
 			<label index="error_required_option">Pflichtfeld</label>

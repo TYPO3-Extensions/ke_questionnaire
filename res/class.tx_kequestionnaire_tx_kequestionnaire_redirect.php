@@ -44,11 +44,10 @@ class tx_kequestionnaire_tx_kequestionnaire_redirect {
 		
 		//default item
 		$params['items'][] = array($langLabel['tt_content.pi_flexform.redirect_no'], 0);
-		
 		if(!isset($params['row']['uid'])) {
 			return $params;
 		}
-		
+				
 		//get settings from flexforms, as soon as settings were saved
 		$piData = t3lib_BEfunc::getRecord('tt_content',$params['row']['uid']);
 		$ffData = t3lib_div::xml2array($piData['pi_flexform']);
@@ -56,12 +55,12 @@ class tx_kequestionnaire_tx_kequestionnaire_redirect {
 		
 		if(!is_array($piData) || !count($piData) || !is_array($ffData) || empty($storagePid)) {
 			return $params;
-		}
+		}		
 		
 		//get open questions
 		$where = 'hidden=0 and deleted=0 and pid='.$storagePid;
 		$where .= ' AND (type="closed") AND mandatory = 1';
-
+		
 		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*','tx_kequestionnaire_questions',$where,'sorting');
 		if ($res){
 			while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)){
@@ -69,7 +68,7 @@ class tx_kequestionnaire_tx_kequestionnaire_redirect {
 				$params['items'][] = array($row['title'], $row['uid']);	
 			}
 		}
-
+		
 		return $params;
 	}
 }
