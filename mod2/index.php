@@ -60,11 +60,13 @@ class  tx_kequestionnaire_module2 extends t3lib_SCbase {
 			$this->q_data = t3lib_BEfunc::getRecord('tt_content',$this->q_id);
 			$ff_data = t3lib_div::xml2array($this->q_data['pi_flexform']);
 			$this->ff_data = $ff_data['data'];
+			$this->ff_data['sys_language_uid'] = $this->q_data['sys_language_uid'];
 		}
 
 		$this->extConf = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['ke_questionnaire']);
 		$this->extConf_premium = array();
 		if (t3lib_extMgm::isLoaded('ke_questionnaire_premium'))	$this->extConf_premium = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['ke_questionnaire_premium']);
+		$this->ff_data['chart_lang_only'] = $this->extConf_premium['chart_lang_only'];
 
 		$this->standardColors = array();
 		$this->standardColors[] = '#A2BF2F';
@@ -253,7 +255,12 @@ class  tx_kequestionnaire_module2 extends t3lib_SCbase {
 		$counting = 0;
 		$parted = 0;
 		$storage_pid = $this->ff_data['sDEF']['lDEF']['storage_pid']['vDEF'];
-		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*','tx_kequestionnaire_results','pid='.$storage_pid.' AND hidden=0 AND deleted=0','','uid');
+		$where = 'pid='.$storage_pid.' AND hidden=0 AND deleted=0';
+		//t3lib_div::debug($this->extConf_premium);
+		if ($this->q_data['sys_language_uid'] > 0 OR $this->extConf_premium['chart_lang_only'] == 1){
+			$where .= ' AND sys_language_uid = '.$this->q_data['sys_language_uid'];
+		}
+		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*','tx_kequestionnaire_results',$where,'','uid');
 		//t3lib_div::devLog('getCSVInfos', 'ke_questionnaire Export Mod', 0, array($GLOBALS['TYPO3_DB']->SELECTquery('*','tx_kequestionnaire_results','pid='.$storage_pid.' AND hidden=0 AND deleted=0')));
 		if ($res){
 			while($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)){
@@ -293,6 +300,7 @@ class  tx_kequestionnaire_module2 extends t3lib_SCbase {
 		$templ = file_get_contents('res/OF_questions.html');
 		require_once(t3lib_extMgm::extPath('ke_questionnaire_premium').'res/other/class.keq_analysis.php');
 		$analyse = new keq_analysis(new open_flcharts2());
+		if ($this->extConf_premium['chart_round']) $analyse->roundTo = $this->extConf_premium['chart_round'];
 		$markerArray = array();
 
 		$types = array('\'open\'','\'closed\'','\'dd_words\'','\'dd_area\'','\'semantic\'','\'matrix\'');
@@ -302,7 +310,11 @@ class  tx_kequestionnaire_module2 extends t3lib_SCbase {
 		$question = t3lib_BEfunc::getRecord('tx_kequestionnaire_questions',$q_id);
 
 		$storage_pid = $this->ff_data['sDEF']['lDEF']['storage_pid']['vDEF'];
-		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('uid,xmldata,finished_tstamp','tx_kequestionnaire_results','pid='.$storage_pid.' AND hidden=0 AND deleted=0','','uid');
+		$where = 'pid='.$storage_pid.' AND hidden=0 AND deleted=0';
+		if ($this->q_data['sys_language_uid'] > 0 OR $this->extConf_premium['chart_lang_only'] == 1){
+			$where .= ' AND sys_language_uid = '.$this->q_data['sys_language_uid'];
+		}
+		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('uid,xmldata,finished_tstamp','tx_kequestionnaire_results',$where,'','uid');
 		//t3lib_div::devLog('res', 'ke_questionnaire auswert Mod', 0, array($GLOBALS['TYPO3_DB']->SELECTquery('xmldata,finished_tstamp','tx_kequestionnaire_results','pid='.$storage_pid.' AND hidden=0 AND deleted=0','','uid')));
 		if ($res){
 			while($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)){
@@ -1047,6 +1059,9 @@ class  tx_kequestionnaire_module2 extends t3lib_SCbase {
 
 		//get the questions
 		$where = 'pid='.$storage_pid.' AND hidden=0 AND deleted=0 AND type IN('.implode(',',$types).')';
+		if ($this->q_data['sys_language_uid'] > 0 OR $this->extConf_premium['chart_lang_only'] == 1){
+			$where .= ' AND sys_language_uid = '.$this->q_data['sys_language_uid'];
+		}
 		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('uid,title,matrix_type','tx_kequestionnaire_questions',$where,'','sorting');
 		//t3lib_div::devLog('qs', 'ke_questionnaire auswert Mod', 0, array($GLOBALS['TYPO3_DB']->SELECTquery('uid,title','tx_kequestionnaire_questions',$where,'','sorting')));
 		if ($res){

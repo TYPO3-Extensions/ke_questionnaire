@@ -217,11 +217,11 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 						}
 						if (t3lib_div::_GP('only_this_lang') != '') {
 							$myVars['only_this_lang'] = t3lib_div::_GP('only_this_lang');
-							t3lib_div::devLog('only_this_lang POST', 'ke_questionnaire Export Mod', 0, $_POST);
+							//t3lib_div::devLog('only_this_lang POST', 'ke_questionnaire Export Mod', 0, $_POST);
 						}
 						if (t3lib_div::_GP('only_finished') != '') {
 							$myVars['only_finished'] = t3lib_div::_GP('only_finished');
-							t3lib_div::devLog('only_finished POST', 'ke_questionnaire Export Mod', 0, $_POST);
+							//t3lib_div::devLog('only_finished POST', 'ke_questionnaire Export Mod', 0, $_POST);
 						}
 						$GLOBALS['BE_USER']->setAndSaveSessionData('tx_kequestionnaire',$myVars);
 						
