@@ -78,7 +78,7 @@
 			
 			<label index="quiz_report_title">Comparison with results achieved score</label>
 			<label index="quiz_report_total">Overall average</label>
-			<label index="quiz_report_own">own result/label>
+			<label index="quiz_report_own">own result</label>
 			<label index="quiz_report_text">
 				You have reached ###PERCENT###% of the total score.&lt;br&gt;
 				&lt;br&gt;
