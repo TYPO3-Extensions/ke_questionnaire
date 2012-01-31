@@ -17,8 +17,8 @@
 			<label index="format_email">follow this format: name@domain.land</label>
 			
 			<label index="error_maxAnswers">You're only allowed to select ###MAX### answers.</label>
-			<label index="error_maxAnswersMatrix">Sie dürfen maximal ###MAX### Antworten aus der Matrix auswählen.</label>
-			<label index="error_maxAnswersColumn">Sie dürfen maximal ###MAX### Antworten aus der Spalte auswählen.</label>
+			<label index="error_maxAnswersMatrix">You may select up to ###MAX### responses from the matrix.</label>
+			<label index="error_maxAnswersColumn">You may select up to ###MAX### responses from the column.</label>
 
 			<label index="error_numeric">Please insert Numeric</label>
 			<label index="error_integer">Please insert an Integer</label>
@@ -76,48 +76,48 @@
 
 			<label index="counter_parter">/</label>
 			
-			<label index="quiz_report_title">Ergebnis-Vergleich mit erreichter Punktzahl</label>
-			<label index="quiz_report_total">Gesamt-Durchschnitt</label>
-			<label index="quiz_report_own">eigenes Ergebnis</label>
+			<label index="quiz_report_title">Comparison with results achieved score</label>
+			<label index="quiz_report_total">Overall average</label>
+			<label index="quiz_report_own">own result/label>
 			<label index="quiz_report_text">
-				Sie haben ###PERCENT###% der Gesamtpunktzahl erreicht.&lt;br&gt;
+				You have reached ###PERCENT###% of the total score.&lt;br&gt;
 				&lt;br&gt;
-				Es wurden ###POINTS### von ###TOTAL### möglichen Punkten erreicht.&lt;br&gt;
+				###POINTS### of ###TOTAL### points reached.&lt;br&gt;
 			</label>
 			<label index="points_report_text">
-				Sie haben ###PERCENT###% der Gesamtpunktzahl erreicht.&lt;br&gt;
+				You have reached ###PERCENT###% of the total score.&lt;br&gt;
 				&lt;br&gt;
-				Es wurden ###POINTS### von ###TOTAL### möglichen Punkten erreicht.&lt;br&gt;
+				###POINTS### of ###TOTAL### points reached.&lt;br&gt;
 			</label>
 			
 			<label index="timer_text_total">
-				Sie haben nur begrenzt Zeit diesen Fragebogen zu beantworten.&lt;br&gt;
-				Verbleibende Sekunden: 
+				You have a limited time to answer this questionnaire.&lt;br&gt;
+				Remaining seconds: 
 			</label>
 			<label index="timer_text_pages">
-				Sie haben nur begrenzt Zeit die Seiten des Fragebogens zu beantworten.&lt;br&gt;
-				Verbleibende Sekunden: 
+				You have a limited time to answer this questionnaire.&lt;br&gt;
+				Remaining seconds:
 			</label>
 
-			<label index="standard_endtext">Vielen Dank für Ihre Teilnahme.</label>
+			<label index="standard_endtext">Thank you for your participation.</label>
 			
-			<label index="privacy_link_label">Link Datenschutzerklärung</label>
-			<label index="pdf_empty">leeren Fragebogen herunterladen</label>
-			<label index="pdf_filled">ausgefüllten Fragebogen herunterladen</label>
-			<label index="pdf_compare">Vergleich herunterladen</label>
-			<label index="pdf_outcomes">Ergebnis herunterladen</label>
+			<label index="privacy_link_label">Privacy Policy</label>
+			<label index="pdf_empty">download empty questionnaire</label>
+			<label index="pdf_filled">download filled questionnaire</label>
+			<label index="pdf_compare">download comparison</label>
+			<label index="pdf_outcomes">download result</label>
 			
-			<label index="pdf_compare_title">korrekte Antwort</label>
-			<label index="pdf_title">Ihre Auswertung vom </label>
+			<label index="pdf_compare_title">correct answer</label>
+			<label index="pdf_title">You revaluation of </label>
 			
 			<label index="question_ddwords_placeholder">Add the correct word here</label>
 			
 			<label index="not_answered">---</label>
-			<label index="email_sent">Die E-Mail wurde versendet.</label>
-			<label index="email_not_sent">Die E-Mail konnte nicht versendet werden. Prüfen Sie Ihre Adresse und versuchen Sie es erneut.</label>
-			<label index="intro_email_send">Geben Sie hier Ihre E-Mailadresse ein, um den Fragebogen mit Ihren Antworten im Textformat zu erhalten:</label>
-			<label index="email_back">Zurück</label>
-			<label index="dd_words_replacetext">ZU_ERSETZENDES_WORT</label>
+			<label index="email_sent">The mail has be sended.</label>
+			<label index="email_not_sent">The mail has not be sended. Please check your address and try it again.</label>
+			<label index="intro_email_send">Type in your email address here to receive the questionnaire with your answers in text form:</label>
+			<label index="email_back">Back</label>
+			<label index="dd_words_replacetext">WORD_TO_BE_REPLACED</label>
 		</languageKey>
 		<languageKey index="de" type="array">
 			<label index="test">Test</label>
