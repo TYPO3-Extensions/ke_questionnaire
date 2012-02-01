@@ -900,6 +900,7 @@
 					$all = count($validationOptions['textOptions']);
 					$counter = 0;
 					foreach ($validationOptions['textOptions'] as $option){
+						$option = trim($option);
 						$pos = strpos($value,$option);
 						//t3lib_div::debug($pos,$value);
 						if (!($pos===false)) $counter ++;
