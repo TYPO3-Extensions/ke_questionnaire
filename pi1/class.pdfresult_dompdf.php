@@ -63,19 +63,20 @@ class pdfresult_dompdf {
 
 	/**
 	 * Gather all the questions of this questionnaire ready for showing
-	 *
 	 */
-	function getQuestions(){
+	public function getQuestions(){
 		$this->questionCount['total'] = 0; //total of questions
 		$this->questionCount['only_questions'] = 0; //no blind-texts counting
-		// $selectFields = 'uid,type,title,demographic_type,open_in_text,open_validation';
-		$selectFields = '*';
-		$where = 'pid='.$this->pid.' AND hidden = 0 AND deleted = 0';
-		$orderBy = 'sorting';
-		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery($selectFields,'tx_kequestionnaire_questions',$where,'',$orderBy);
-		//t3lib_div::devLog('where', 'pdf_export', 0, array($where));
+		
+		// SF: I think they don't make use of enableFields because of PDF generation in BE
+		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
+			'*',
+			'tx_kequestionnaire_questions',
+			'pid=' . $this->pid . ' AND hidden=0 AND deleted=0',
+			'', 'sorting', ''
+		);
 
-		if ($res){
+		if ($res) {
 			while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)){
 				$this->allQuestions[] = $row;
 				$this->questions[] = $row;
@@ -229,12 +230,12 @@ class pdfresult_dompdf {
 		//return $html;
 	}
 
-	function getPDFCompare($result,$date=''){
+	public function getPDFCompare($result, $date=''){
 		$this->result = $result;
 		$this->getQuestions();
 		//t3lib_div::devLog('result', 'pdf_export', 0, $result);
 
-		$html = $this->getHTML('compare',$date);
+		$html = $this->getHTML('compare', $date);
 
 		$this->pdf->load_html($html);
 
@@ -270,7 +271,7 @@ class pdfresult_dompdf {
 		return $html;
 	}
 
-	function getHTML($type,$date){
+	public function getHTML($type, $date){
 		$content = '';
 
 		$this->getTemplates();
@@ -294,7 +295,7 @@ class pdfresult_dompdf {
 			case 'compare':
 				$content .= $this->renderFirstPage();
 				foreach ($this->questions as $nr => $question){
-					$content .= $this->renderQuestion($question,true);
+					$content .= $this->renderQuestion($question, true);
 				}
 			break;
 			case 'outcomes':
@@ -527,7 +528,7 @@ class pdfresult_dompdf {
 		return $content;
 	}
 
-	function renderQuestion($question, $compare = false){
+	public function renderQuestion($question, $compare=false) {
 		$markerArray = array();
 		$markerArray['###QUESTION_TITLE###'] = '';
 		$markerArray['###QUESTION###'] = '';

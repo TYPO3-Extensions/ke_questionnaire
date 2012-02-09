@@ -514,9 +514,13 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 	 */
 	function getResults($result_id, $makeHistory = false){
 		if (intval($result_id) == 0) return false;
-		$where = 'uid='.$result_id;
 		
-		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*','tx_kequestionnaire_results',$where);
+		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
+			'*',
+			'tx_kequestionnaire_results',
+			'uid=' . $result_id
+		);
+		
 		//if there is a result, edit the old one
 		if ($res){
 			$row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
@@ -575,7 +579,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 			$this->piVars['result_id'] = $GLOBALS['TYPO3_DB']->sql_insert_id();
 		}
 
-		//Only if you din't want a pdf rendered and the save array is filled
+		//Only if you didn't want a pdf rendered and the save array is filled
 		if (is_array($this->saveArray) AND !($this->piVars['pdf'])){
 			foreach ($this->saveArray as $idy => $values){
 				//check the last answered question, so you can direct the user to the last answered question
@@ -1082,7 +1086,8 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 							//$questions .= '<br>counter:'.$counter .'<br>q_count:'.$q_count.'<br>p_count:'.$p_count;
 							//t3lib_div::devLog('check', $this->prefixId, 0, array($check));
 						}
-					} elseif ($p_count == $page_nr AND ($question['is_dependant'] == 1 OR $question['type'] == 'blind') AND !in_array($question['uid'],$shown)){
+					} elseif ($p_count == $page_nr AND ($question['is_dependant'] == 1) AND !in_array($question['uid'],$shown)){
+					//} elseif ($p_count == $page_nr AND ($question['is_dependant'] == 1 OR $question['type'] == 'blind') AND !in_array($question['uid'],$shown)){
 						$questions[] = $question;
 						$shown[] = $question['uid'];
 					}
@@ -1317,7 +1322,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 		//PDF-Output
 		$markerArray['###PDF###'] = '';
 		if ($this->ffdata['pdf_type']){
-			$pdf_types = explode(',',$this->ffdata['pdf_type']);
+			$pdf_types = explode(',', $this->ffdata['pdf_type']);
 			$pdf_links = '';
 			foreach ($pdf_types as $pdf_type){
 				$temp_markerArray = array();
@@ -1848,16 +1853,16 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 	 *
 	 * @param	string	$type: Type of PDF to be rendered
 	 */
-	function getPDF($type = 'empty'){
+	public function getPDF($type = 'empty'){
 		//you'll need ke_dompdf
-		if (t3lib_extMgm::isLoaded('ke_dompdf')){
-			require_once(t3lib_extMgm::extPath('ke_questionnaire').'res/other/class.dompdf_export.php');
+		if (t3lib_extMgm::isLoaded('ke_dompdf')) {
+			require_once(t3lib_extMgm::extPath('ke_questionnaire') . 'res/other/class.dompdf_export.php');
 			$pdfdata = '';
 	
 			$pdf_conf = $this->conf;
 			$storage_pid = $this->ffdata['storage_pid'];
 	
-			$pdf = new dompdf_export($pdf_conf,$storage_pid, $this->cObj->data['header'],$this->cObj->data['pi_flexform']['data']);
+			$pdf = new dompdf_export($pdf_conf, $storage_pid, $this->cObj->data['header'], $this->cObj->data['pi_flexform']['data']);
 			$pdf->user_marker = $this->userMarker;
 	
 			switch ($type){
@@ -2081,9 +2086,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 		if ($this->conf['template_dir'] != '') $this->tmpl_path = trim($this->conf['template_dir']);
 		if ($this->ffdata['template_dir'] != '') $this->tmpl_path = trim($this->ffdata['template_dir']);
 		//t3lib_div::debug($GLOBALS['TSFE']->config);
-		//language vars
-		//$this->conf['sys_language_uid'] = $GLOBALS['TSFE']->config['config']['sys_language_uid'];
-		$this->conf['sys_langauge_uid'] = $this->cObj->data['sys_language_uid'];
+		$this->conf['sys_language_uid'] = $this->cObj->data['sys_language_uid'];
 		$this->conf['language'] = strtolower($GLOBALS['TSFE']->config['config']['language']);
 		
 		$this->tmpl = $this->cObj->fileResource($this->tmpl_path.$template);

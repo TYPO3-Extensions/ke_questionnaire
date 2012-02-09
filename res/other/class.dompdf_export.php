@@ -11,9 +11,9 @@
  */
 
 //require_once(t3lib_extMgm::extPath('fpdf').'class.tx_fpdf.php');
-require_once(t3lib_extMgm::extPath('ke_dompdf')."res/dompdf/dompdf_config.inc.php");
+require_once(t3lib_extMgm::extPath('ke_dompdf') . 'res/dompdf/dompdf_config.inc.php');
 require_once(PATH_tslib . 'class.tslib_content.php'); // load content file
-require_once(t3lib_extMgm::extPath('ke_questionnaire')."pi1/class.tx_kequestionnaire_pi1.php");
+require_once(t3lib_extMgm::extPath('ke_questionnaire') . 'pi1/class.tx_kequestionnaire_pi1.php');
 
 class dompdf_export {
 	var $conf = array();      //Basis PDF Conf
@@ -31,15 +31,15 @@ class dompdf_export {
 	var $questions = array();  //Question-array
 	var $user_marker = array();//array for user-marker
 
-        /**
-         * dompdf_export(): initialisation of the export object
-         *
-         * @param       array   $conf: configuration data
-         * @param       int     $pid: Page Id of the questionnaire Data
-         * @param       string  $title: title of the export
-         * @param       array   $ffdata: flexform data of the questionnaire
-         */
-	function dompdf_export($conf, $pid, $title, $ffdata){
+	/**
+	 * dompdf_export(): initialisation of the export object
+	 *
+	 * @param       array   $conf: configuration data
+	 * @param       int     $pid: Page Id of the questionnaire Data
+	 * @param       string  $title: title of the export
+	 * @param       array   $ffdata: flexform data of the questionnaire
+	 */
+	public function dompdf_export($conf, $pid, $title, $ffdata){
 		spl_autoload_register('DOMPDF_autoload');
 		$this->title = $title;
 		$this->ffdata = $ffdata;
@@ -54,7 +54,7 @@ class dompdf_export {
 
 		$this->pdf = new DOMPDF();
 
-                //get the Locallang of the pi1 / the questionnaire
+		//get the Locallang of the pi1 / the questionnaire
 		$basePath = t3lib_extMgm::extPath('ke_questionnaire').'pi1/locallang.php';
 		
 		//t3lib_div::devLog('conf', 'DOMPDF Export', 0, $this->conf);
@@ -77,13 +77,12 @@ class dompdf_export {
 	function getQuestions(){
 		$this->questionCount['total'] = 0; //total of questions
 		$this->questionCount['only_questions'] = 0; //no blind-texts counting
-		// $selectFields = 'uid,type,title,demographic_type,open_in_text,open_validation';
-		$selectFields = '*';
-		//$where = 'pid='.$this->pid.' AND hidden = 0 AND deleted = 0 AND sys_language_uid='.intval($this->conf['sys_language_uid']);
-		$where = 'pid='.$this->pid.' AND hidden = 0 AND deleted = 0 AND sys_language_uid='.intval($this->conf['sys_language_uid']);
-		
-		$orderBy = 'sorting';
-		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery($selectFields,'tx_kequestionnaire_questions',$where,'',$orderBy);
+		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
+			'*',
+			'tx_kequestionnaire_questions',
+			'pid=' . $this->pid . ' AND hidden = 0 AND deleted = 0 AND sys_language_uid=' . intval($this->conf['sys_language_uid']),
+			'', 'sorting', ''
+		);
 		//t3lib_div::devLog('where', 'pdf_export', 0, array($where));
 		//t3lib_div::devLog('conf', 'pdf_export', 0, $this->conf);
 
@@ -153,13 +152,14 @@ class dompdf_export {
 	function getOptions($uid){
 		$options = array();
 
-		$selectFields = '*';
-		$where = 'question_uid='.$uid.' AND hidden = 0 AND deleted = 0';
-		//t3lib_div::devLog('where', 'pdf_export', 0, array($where));
-		$orderBy = 'sorting';
-		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery($selectFields,'tx_kequestionnaire_answers',$where,'',$orderBy);
-		if ($res){
-			while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)){
+		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
+			'*',
+			'tx_kequestionnaire_answers',
+			'question_uid=' . $uid . ' AND hidden = 0 AND deleted = 0',
+			'', 'sorting', ''
+		);
+		if ($res) {
+			while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)){
 				$options[] = $row;
 			}
 		}
@@ -303,17 +303,17 @@ class dompdf_export {
          * @param       array   $result: result to be rendered and compared
          * @date        string  $date: date to be rendered at the top of the questionnaire
          */
-	function getPDFCompare($result,$date=''){
+	function getPDFCompare($result, $date=''){
 		$this->result = $result;
 		$this->getQuestions();
 		//t3lib_div::devLog('result', 'pdf_export', 0, $result);
 
-		$html = $this->getHTML('compare',$date);
+		$html = $this->getHTML('compare', $date);
 
 		$this->pdf->load_html($html);
 
 		$this->pdf->render();
-		$this->pdf->stream("questionnaire_".$this->pid.".pdf");
+		$this->pdf->stream('questionnaire_' . $this->pid . '.pdf');
 		//t3lib_div::devLog('html', 'pdf_export', 0, array($html));
 
 		//return $html;
@@ -375,7 +375,7 @@ class dompdf_export {
 			case 'compare':
 				$content .= $this->renderFirstPage();
 				foreach ($this->questions as $nr => $question){
-					$content .= $this->renderQuestion($question,true);
+					$content .= $this->renderQuestion($question, true);
 				}
 			break;
 			case 'outcomes':
@@ -998,7 +998,7 @@ class dompdf_export {
 	 *
 	 * @return      string   content
 	 */
-	function renderFirstPage(){
+	public function renderFirstPage(){
 		$content = '';
 
 		if ($this->ffdata['tDEF']['lDEF']['description']['vDEF'] != '') $content .= '<div class="questionnaire_description">'.$this->ffdata['tDEF']['lDEF']['description']['vDEF'].'</div>';

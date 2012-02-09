@@ -44,14 +44,18 @@ define('CRLF', CR . LF);
 
 
 class OutputGenerator {
-		// $that ist the '$this' object of tx_questionnaire_pi1
-	var $that;
+	/**
+	 * $that ist the '$this' object of tx_kequestionnaire_pi1
+	 * 
+	 * @var tx_kequestionnaire_pi1
+	 */
+	protected $that;
 
-	function __construct($caller=False) {
+	public function __construct($caller=False) {
 		$this->that = $caller;
 	}
 
-	function getPDF() {
+	public function getPDF() {
 		$content = '';
 		$type = 'empty';
 		$type = $this->that->piVars['type'];

@@ -93,11 +93,12 @@ class question{
 
 
 		// getRecord	
-		$where = "uid=".$uid .$this->cObj->enableFields('tx_kequestionnaire_questions');
-		$res=$GLOBALS["TYPO3_DB"]->exec_SELECTgetRows("*", "tx_kequestionnaire_questions", $where,'','sorting');
+		$where = 'uid=' . $uid . $this->cObj->enableFields('tx_kequestionnaire_questions');
+		$res = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('*', 'tx_kequestionnaire_questions', $where, '', 'sorting');
 		
-		foreach($res as $row){
-			$row=$this->processRTEFields($row,"tx_kequestionnaire_questions");
+		// fill question array. This data will be saved in xmldata later on.
+		foreach($res as $row) {
+			$row = $this->processRTEFields($row, 'tx_kequestionnaire_questions');
 			foreach($row as $name => $value){
 			    $this->question[$name] = isset($addOptions["question"][$name])?$addOptions["question"][$name]:$value;
 			}
