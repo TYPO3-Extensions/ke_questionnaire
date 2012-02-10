@@ -234,6 +234,12 @@
         </div>
     </div>
     <div class="footer" style="background-image: url(###BASE_PATH###/typo3conf/ext/ke_questionnaire/res/images/footer.jpg)">&nbsp;</div>
+	<script type="text/php">
+		if ( isset($pdf) ) {
+			$font = Font_Metrics::get_font("helvetica", "bold");
+			$pdf->page_text(270, 760, "Seite {PAGE_NUM} von {PAGE_COUNT}", $font, 10, array(0,0,0));
+		}
+	</script>
 </body>
 </html>
 <!-- ###DOMPDF### end-->

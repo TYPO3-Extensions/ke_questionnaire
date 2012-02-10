@@ -1301,7 +1301,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 			$mail_texts['body'] = $this->ffdata['inform_mail_text'];
 			$mail_texts['fromEmail'] = $this->ffdata['mail_sender'];
 			$mail_texts['fromName'] = $this->ffdata['mail_from'];
-			$this->sendMail($email_adresses,$mail_texts);
+			$this->sendMail($email_adresses, $mail_texts);
 			
 			$saveField = array();
 			$saveField['mailsent_tstamp'] = mktime();
@@ -1568,7 +1568,6 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 	 * calculatePoints(): Calculate the points gathered
 	 *
 	 * @param	array	$results: results made for this questionnaire
-	 *
 	 * @return	array	gathered points, own, total and max
 	 */
 	function calculatePoints($results = NULL){
@@ -2309,7 +2308,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 	 *
 	 * @return      the whole content ready rendered
 	 */
-	function renderMarker($text,$markerArray){
+	function renderMarker($text, $markerArray){
 		$wrappedSubpartArray = array();
 	  	if ($this->errorText == '') {
 	  		$markerArray['###ERROR###'] = '';
@@ -2329,13 +2328,17 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 	 * @param	string	$email: mail address to be send to
 	 * @param	array	$mailTexts: Texts to be used in the mail
 	 */
-	function sendMail($email,$mailTexts){
-		$body = $mailTexts["body"];
+	function sendMail($email, $mailTexts){
+		$body = $mailTexts['body'];
 		$subject = $mailTexts['subject'];
 		if ($this->user_id){
 			$body = $this->renderMarker($body, $this->userMarker);
 			$subject = $this->renderMarker($subject, $this->userMarker);
 		}
+		$points = $this->calculatePoints();
+		$markerArray['###OWN###'] = $points['own'];
+		$markerArray['###MAX###'] = $points['max'];
+		$body = $this->cObj->substituteMarkerArray($body, $markerArray);
 		
 		$html_start="<html><head><title>".$subject."</title></head><body>";
 		$html_end="</body></html>";

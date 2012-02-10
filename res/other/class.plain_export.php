@@ -182,17 +182,17 @@ class plain_export {
                 return $lines;
         }
       
-        function getPlain($result) {
+	public function getPlain($result) {
 		$content = '';
 		$this->result = $result;
 		$this->getQuestions();
 	
 		foreach ($this->questions as $nr => $question){
-			$this->renderQuestion($question,false);
+			$this->renderQuestion($question, false);
 		}
 			
 		return $this->outputPlain;
-        }
+	}
 		
 	function getHTML($type,$date){
                 $content = '';
@@ -451,7 +451,7 @@ class plain_export {
                 return $content;
         }
         
-        function renderQuestion($question, $compare = false){				
+	public function renderQuestion($question, $compare = false){				
 		$tmpOutput = array();
 				
 		if ($question['text'] == '') {
@@ -534,7 +534,7 @@ class plain_export {
                 //$html .= '</div>';
 				
 		$this->outputPlain[] = $tmpOutput;
-        }
+	}
         
         function renderCompare($question){
                 $content = '';
