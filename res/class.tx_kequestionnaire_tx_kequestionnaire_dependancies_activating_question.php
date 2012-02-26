@@ -57,11 +57,13 @@ class tx_kequestionnaire_tx_kequestionnaire_dependancies_activating_question {
 		t3lib_div::loadTCA("tx_kequestionnaire_dependancies");
 		$TCA = &$GLOBALS["TCA"]["tx_kequestionnaire_dependancies"];
 		$TCA['columns']['activating_value']['config']['items'] = array();
-		$where = 'hidden=0 and deleted=0 and question_uid='.$params['row']['activating_question'];
-		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*','tx_kequestionnaire_answers',$where);
-		if ($res){
-			while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)){
-				$TCA['columns']['activating_value']['config']['items'][] = array('['.$row['uid'].'] '.$row['title'],$row['uid']);
+		if ($params['row']['activating_question']){
+			$where = 'hidden=0 and deleted=0 and question_uid='.$params['row']['activating_question'];
+			$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*','tx_kequestionnaire_answers',$where);
+			if ($res){
+				while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)){
+					$TCA['columns']['activating_value']['config']['items'][] = array('['.$row['uid'].'] '.$row['title'],$row['uid']);
+				}
 			}
 		}
 		
