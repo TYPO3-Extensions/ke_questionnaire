@@ -190,7 +190,7 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 		
 		//t3lib_div::debug($_GET,'get');
 		//t3lib_div::debug($this->MOD_SETTINGS,'settings');
-		if ($this->q_id == 0){
+		if ($this->q_id == 0 AND $this->MOD_SETTINGS['function'] != 4 ){
 			$title = $LANG->getLL('none_selected');
 			$content = $LANG->getLL('none_selected');
 		} else {
@@ -286,14 +286,29 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 					//t3lib_div::debug($_POST,'post');
 					$title = $LANG->getLL('function4');
 					
-					$content = $this->getHTMLInfos();
-					if (t3lib_div::_GP('get_html_blank')){
-						$content .= $this->getHTMLDownload('blank');
-						exit;
-					}
-					if (t3lib_div::_GP('get_html_filled')){
-						$content .= $this->getHTMLDownload('filled');
-						exit;
+					if ($this->q_id == 0){
+						$ids = t3lib_div::_GP('questionnaires');
+						$content = $this->getHTMLAllInfos();
+						if (is_array($ids)){
+							if (t3lib_div::_GP('get_html_blank')){
+								$content .= $this->getHTMLDownload('blank',$ids);
+								exit;
+							}
+							if (t3lib_div::_GP('get_html_filled')){
+								$content .= $this->getHTMLDownload('filled',$ids);
+								exit;
+							}
+						}
+					} else {
+						$content = $this->getHTMLInfos();
+						if (t3lib_div::_GP('get_html_blank')){
+							$content .= $this->getHTMLDownload('blank');
+							exit;
+						}
+						if (t3lib_div::_GP('get_html_filled')){
+							$content .= $this->getHTMLDownload('filled');
+							exit;
+						}
 					}
 				break;
 			}
@@ -516,6 +531,44 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 		
 		$content = '';		
 		$content .= $this->getLanguageSelect('html');
+		$content .= '<p>';
+		$content .= '<input type="checkbox" name="html_oneperpage" value="1" /> '.$LANG->getLL('download_html_oneperpage').'<br /><br />';
+		$content .= '<input type="submit" name="get_html_blank" value="'.$LANG->getLL('download_button_html_blank').'" /></p>';
+		$content .= '<br /><hr><br />';
+		/*$content .= '<p>';
+		$content .= $this->getResultSelect().'</p><br />';
+		$content .= '<p><input type="submit" name="get_html_filled" value="'.$LANG->getLL('download_button_html_filled').'" /></p>';
+		$content .= '<hr />';*/
+
+		return $content;
+	}
+	
+	function getHTMLAllInfos(){
+		//t3lib_div::devLog('getSPSSInfos GET', 'ke_questionnaire Export Mod', 0, $_GET);
+		//t3lib_div::devLog('getSPSSInfos POST', 'ke_questionnaire Export Mod', 0, $_POST);
+		global $LANG;
+		
+		$content = '';		
+		//get the activated plugins
+		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
+			'*',
+			'tt_content',
+			'CType="list" AND list_type="ke_questionnaire_pi1" AND hidden=0 AND deleted=0'
+		);
+		if ($res){
+			$content .= '<div>';
+			while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)){
+				$pagy = t3lib_BEfunc::getRecord('pages',$row['pid']);
+				$content .= '<input type="checkbox" name="questionnaires[]" value="'.$row['uid'].'"> ';
+				if ($this->extConf['BE_showPageTitle'] == 1){
+					$content .= htmlspecialchars($pagy['title']);
+				} else {
+					$content .= htmlspecialchars($row['header']);
+				}
+				$content .= '<br />';
+			}
+			$content .= '</div><hr />';
+		}
 		$content .= '<p>';
 		$content .= '<input type="checkbox" name="html_oneperpage" value="1" /> '.$LANG->getLL('download_html_oneperpage').'<br /><br />';
 		$content .= '<input type="submit" name="get_html_blank" value="'.$LANG->getLL('download_button_html_blank').'" /></p>';
@@ -1251,26 +1304,58 @@ Event.observe(window, 'load', function() {
 		}
 	}
 	
-	function getHTMLDownload($type){
+	function getHTMLDownload($type, $ids = false){
 		require_once(t3lib_extMgm::extPath('ke_questionnaire_premium').'res/other/class.html_export.php');
 		
-		//$zip_filename = $this->q_id.'_'.time().'_html.zip';
-		$zip_filename = $this->q_id.'_html.zip';
-		$ts_setup = $this->loadTypoScriptForBEModule(false, 'setup');
-		$ts_constants = $this->loadTypoScriptForBEModule();
+		if (is_array($ids)){
+			$zip_filename = 'questionnaires_html.zip';
+			$htmls = array();
+			foreach ($ids as $q_id){
+				$q_data = t3lib_BEfunc::getRecord('tt_content',$q_id);
+				$this->id = $q_data['pid'];
+				$ts_setup = $this->loadTypoScriptForBEModule(false, 'setup');
+				$ts_constants = $this->loadTypoScriptForBEModule();
+				
+				$conf = array();
+				$conf['sys_language_uid'] = t3lib_div::_GP('get_html_language');
+				$lang = $this->getLanguageFromUid($conf['sys_language_uid']);
+				if ($lang == ''){
+					//t3lib_div::debug($ts_setup,'setup');
+					$lang = $ts_setup['config.']['language'];
+				}
+				$conf['language'] = $lang;
+				$conf['oneperpage'] = t3lib_div::_GP('html_oneperpage');
+				
+				$html = new html_export($q_id,$conf,$ts_setup);
+				$htmls[] = $html;
+				//t3lib_div::debug($html,'html');
+			}
+			//t3lib_div::debug($htmls,'htmls');
+			if (count($htmls) > 0){
+				$base = $htmls[0];
+				//t3lib_div::debug($base);
+				$htmls[0]->createComplexZip($zip_filename, $htmls);
+			}
+		} else {
+			$ts_setup = $this->loadTypoScriptForBEModule(false, 'setup');
+			$ts_constants = $this->loadTypoScriptForBEModule();
+			
+			$conf = array();
+			$conf['sys_language_uid'] = t3lib_div::_GP('get_html_language');
+			$lang = $this->getLanguageFromUid($conf['sys_language_uid']);
+			if ($lang == ''){
+				//t3lib_div::debug($ts_setup,'setup');
+				$lang = $ts_setup['config.']['language'];
+			}
+			$conf['language'] = $lang;
+			$conf['oneperpage'] = t3lib_div::_GP('html_oneperpage');
 		
-		$conf = array();
-		$conf['sys_language_uid'] = t3lib_div::_GP('get_html_language');
-		$lang = $this->getLanguageFromUid($conf['sys_language_uid']);
-		if ($lang == ''){
-			//t3lib_div::debug($ts_setup,'setup');
-			$lang = $ts_setup['config.']['language'];
+			//$zip_filename = $this->q_id.'_'.time().'_html.zip';
+			$zip_filename = $this->q_id.'_html.zip';
+			
+			$html = new html_export($this->q_id, $conf, $ts_setup);
+			$html->createZip($zip_filename);
 		}
-		$conf['language'] = $lang;
-		$conf['oneperpage'] = t3lib_div::_GP('html_oneperpage');
-		
-		$html = new html_export($this->q_id, $conf, $ts_setup);
-		$html->createZip($zip_filename);		
 	}
 
 	/**

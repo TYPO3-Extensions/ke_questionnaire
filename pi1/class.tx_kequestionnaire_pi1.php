@@ -2240,6 +2240,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 				$where,
 				'',$orderBy, ''
 			);
+			//t3lib_div::debug($where,'where');
 			if ($res){
 				while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)){
 					$questions[] = $row;
