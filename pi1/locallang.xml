@@ -118,6 +118,9 @@
 			<label index="intro_email_send">Type in your email address here to receive the questionnaire with your answers in text form:</label>
 			<label index="email_back">Back</label>
 			<label index="dd_words_replacetext">WORD_TO_BE_REPLACED</label>
+			
+			<label index="lastanswer_question">last Question:</label>
+			<label index="lastanswer_answer">your Answer:</label>
 		</languageKey>
 		<languageKey index="de" type="array">
 			<label index="test">Test</label>
@@ -231,6 +234,9 @@
 			<label index="intro_email_send">Geben Sie hier Ihre E-Mailadresse ein, um den Fragebogen mit Ihren Antworten im Textformat zu erhalten:</label>
 			<label index="email_back">Zurück</label>
 			<label index="dd_words_replacetext">ZU_ERSETZENDES_WORT</label>
+			
+			<label index="lastanswer_question">letzte Frage:</label>
+			<label index="lastanswer_answer">Ihre Antwort:</label>
 		</languageKey>
 	</data>
 </T3locallang>

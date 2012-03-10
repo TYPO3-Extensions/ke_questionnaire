@@ -71,6 +71,7 @@
 			<label index="tt_content.pi_flexform.linear">Lineare Beantwortung erforderlich \n(Die Anzeige erfolgt automatisch mit 1 Frage / Seite)</label>
 			<label index="tt_content.pi_flexform.show_captcha">Sow Captcha on last page</label>
 			<label index="tt_content.pi_flexform.end_page">Page the user will be headed to. Endtext will NOT be shown.</label>
+			<label index="tt_content.pi_flexform.show_lastanswer">Show the last answer on the page. (Only with one Question/ Page)</label>
 
 			<label index="tt_content.pi_flexform.mailing">Send Email Notification\nThis Email will be send to the given email-addresses here</label>
 			<label index="tt_content.pi_flexform.mail_turn">Mail Turn</label>
@@ -176,6 +177,7 @@
 			<label index="tt_content.pi_flexform.linear">Lineare Beantwortung erforderlich \n(Die Anzeige erfolgt automatisch mit 1 Frage / Seite)</label>
 			<label index="tt_content.pi_flexform.show_captcha">Captcha auf der letzten Seite anzeigen</label>
 			<label index="tt_content.pi_flexform.end_page">Seite, die angezeigt werden soll, nachdem der Fragebogen fertig gestellt wurde\nIn diesem Fall wird der Abschlusstext NICHT angezeigt!</label>
+			<label index="tt_content.pi_flexform.show_lastanswer">Antwort auf die letzte Frage auf der Seite anzeigen (Nur bei einer Frage/Seite)</label>
 
 			<label index="tt_content.pi_flexform.mailing">Email Benachrichtigungen versenden\nDies ist eine Informationsmail an den Betreiber des Fragebogens, nicht an den Teilnehmer!</label>
 			<label index="tt_content.pi_flexform.mail_turn">Häufigkeit des Versands \nBei Versand durch den Scheduler bitte darauf achten, dass dieser separat eingerichtet werden muss.</label>

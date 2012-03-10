@@ -142,6 +142,7 @@ class question_matrix  extends question{
 			// Anpassung Slider
 			if ($val['render_as_slider'] == 1) $typeField = 'matrix_slider';
 			//#############################################
+			//t3lib_div::debug($this->answer);
 			$this->fields[$key]=new kequestionnaire_input_matrix($key,$typeField,$this->answer,$marker,$this->obj,$this->subquestions,$this->columns, $this->question['matrix_maxanswers']);
 			$i++;
 		}
@@ -220,6 +221,61 @@ class question_matrix  extends question{
 		    }
 		}
 	}
+	
+	/**
+	 * get simple Answer-String
+	 *
+	 */
+	function getSimpleAnswer(){
+		$saveA = $this->getSaveArray();
+		$saveA = $saveA[$this->uid];
+		
+		$answer =  '';
+		
+		//t3lib_div::debug($saveA);
+		if (is_array($saveA['answer'])){
+			$answer .= '<table>';
+			$answer .= '<tr><th></th>';
+			foreach ($saveA['possible_answers'] as $ckey => $cols){
+				if ($ckey != 'lines'){
+					$answer .= '<th>'.$cols.'</th>';
+				}
+			}
+			$answer .= '</tr>';
+			foreach ($saveA['possible_answers']['lines'] as $rkey => $rows){
+				$answer .= '<tr>';
+				$answer .= '<td>'.$rows;
+				if (is_array($saveA['answer']['text']) && $saveA['answer']['text'][$rkey]){
+					$answer .= ' ('.$saveA['answer']['text'][$rkey][0].')';
+				}
+				$answer .= '</td>';
+				foreach ($saveA['possible_answers'] as $ckey => $cols){
+					if ($ckey != 'lines'){
+						//t3lib_div::debug($rkey.' '.$ckey, 'keys');
+						if ($saveA['subtype'] == 'input'){
+							$answer .= '<td style="text-align: center">'.$saveA['answer']['options'][$rkey][$ckey][0].'</td>';
+						} elseif ($saveA['subtype'] == 'radio') {
+							if ($saveA['answer']['options'][$rkey]['single'] == $ckey){
+								$answer .= '<td style="text-align: center">X</td>';
+							} else {
+								$answer .= '<td></td>';
+							}
+						} else {
+							if ($saveA['answer']['options'][$rkey][$ckey][0] == $ckey){
+								$answer .= '<td style="text-align: center">X</td>';
+							} else {
+								$answer .= '<td></td>';
+							}
+						}
+					}
+				}
+				$answer .= '</tr>';
+			}
+			$answer .= '</table>';
+		}
+	   
+		return $answer;
+        }
 }
 
 ?>

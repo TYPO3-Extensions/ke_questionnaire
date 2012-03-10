@@ -133,7 +133,20 @@ class question_open extends question{
 
 	}
 
-
+    /**
+	 * get simple Answer-String
+	 *
+	 */
+	function getSimpleAnswer(){
+		$saveA = $this->getSaveArray();
+		$saveA = $saveA[$this->uid];
+		
+		$answer =  $saveA['answer'];
+		
+		//t3lib_div::debug($saveA);
+	   
+		return $answer;
+        }
 }
 
 ?>

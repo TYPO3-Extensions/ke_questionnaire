@@ -716,7 +716,7 @@
 		}
 
 		function checkDependant($fieldName, $value = '\'\'', $withText = false, $maxAnswers = 0){
-			//t3lib_div::devLog('checkDependant', 'input', 0, array('fieldName'=>$fieldName,'value'=>$value,'maxAnswers'=>$maxAnswers,'type'=>$this->type));
+			//t3lib_div::devLog('checkDependant', 'input', 0, array('fieldName'=>$fieldName,'value'=>$value,'maxAnswers'=>$maxAnswers,'type'=>$this->type,'withText'=>$withText));
 			//t3lib_div::devLog('dependants '.$fieldName, 'input', 0, $this->dependants);
 			$dependant_id = 0;
 			$dependant_ids = array();

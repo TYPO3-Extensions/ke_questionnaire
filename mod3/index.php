@@ -84,7 +84,10 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 				'3' => $LANG->getLL('function3'),
 			)
 		);
-		if (t3lib_extMgm::isLoaded('ke_questionnaire_premium')) $this->MOD_MENU['function']['2'] = $LANG->getLL('function2');
+		if (t3lib_extMgm::isLoaded('ke_questionnaire_premium')) {
+			$this->MOD_MENU['function']['2'] = $LANG->getLL('function2');
+			$this->MOD_MENU['function']['4'] = $LANG->getLL('function4');
+		}
 				
 		parent::menuConfig();
 	}
@@ -274,6 +277,22 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 					}
 					if (t3lib_div::_GP('get_pdf_compare')){
 						$content .= $this->getPDFDownload('compare');
+						exit;
+					}
+				break;
+				//HTML
+				case 4:
+					//t3lib_div::debug($_GET,'get');
+					//t3lib_div::debug($_POST,'post');
+					$title = $LANG->getLL('function4');
+					
+					$content = $this->getHTMLInfos();
+					if (t3lib_div::_GP('get_html_blank')){
+						$content .= $this->getHTMLDownload('blank');
+						exit;
+					}
+					if (t3lib_div::_GP('get_html_filled')){
+						$content .= $this->getHTMLDownload('filled');
 						exit;
 					}
 				break;
@@ -490,7 +509,26 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 		return $content;
 	}
 	
-	function getLanguageSelect(){
+	function getHTMLInfos(){
+		//t3lib_div::devLog('getSPSSInfos GET', 'ke_questionnaire Export Mod', 0, $_GET);
+		//t3lib_div::devLog('getSPSSInfos POST', 'ke_questionnaire Export Mod', 0, $_POST);
+		global $LANG;
+		
+		$content = '';		
+		$content .= $this->getLanguageSelect('html');
+		$content .= '<p>';
+		$content .= '<input type="checkbox" name="html_oneperpage" value="1" /> '.$LANG->getLL('download_html_oneperpage').'<br /><br />';
+		$content .= '<input type="submit" name="get_html_blank" value="'.$LANG->getLL('download_button_html_blank').'" /></p>';
+		$content .= '<br /><hr><br />';
+		/*$content .= '<p>';
+		$content .= $this->getResultSelect().'</p><br />';
+		$content .= '<p><input type="submit" name="get_html_filled" value="'.$LANG->getLL('download_button_html_filled').'" /></p>';
+		$content .= '<hr />';*/
+
+		return $content;
+	}
+	
+	function getLanguageSelect($type = 'pdf'){
 		global $LANG;
 		$content = '';
 		$lang_id = 0;
@@ -505,7 +543,7 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 		
 		//t3lib_div::debug($GLOBALS['TYPO3_DB']->SELECTquery('*','tt_content',"list_type = 'ke_questionnaire_pi1' and l18n_parent=".$this->q_data['uid']));
 		if ($res){
-			$content .= $LANG->getLL('download_button_pdf_lang').' <select name="get_pdf_language">';
+			$content .= $LANG->getLL('download_button_'.$type.'_lang').' <select name="get_'.$type.'_language">';
 			$content .= '<option value="0">Standard</option>';
 			while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)){
 				$lang = t3lib_BEfunc::getRecord('sys_language',$row['sys_language_uid']);
@@ -1210,31 +1248,29 @@ Event.observe(window, 'load', function() {
 				default:
 					break;
 			}
-		} /*elseif (t3lib_extMgm::isLoaded('fpdf')){
-			require_once(t3lib_extMgm::extPath('ke_questionnaire').'res/other/class.fpdf_export.php');
-			$pdfdata = '';
+		}
+	}
 	
-			$conf = $this->loadTypoScriptForBEModule('tx_kequestionnaire');
-			$pdf_conf = $conf['pdf.'];
-			$storage_pid = $this->ff_data['sDEF']['lDEF']['storage_pid']['vDEF'];
-	
-			$pdf = new pdf_export($pdf_conf,$storage_pid, $this->q_data['header'],$this->ff_data['tDEF']['lDEF']['description']['vDEF']);
-	
-			switch ($type){
-				case 'blank':
-					$pdfdata = $pdf->getPDFBlank();
-					break;
-				default:
-					break;
-			}
-	
-			//$pdfdata = mb_convert_encoding($pdfdata, "Windows-1252", "UTF-8");
-			header("content-type: application/pdf");
-			header("content-length: ".strlen($pdfdata));
-			header("content-disposition: attachment; filename=\"".$this->q_id."_blank.pdf\"");
-	
-			print $pdfdata;	
-		}*/
+	function getHTMLDownload($type){
+		require_once(t3lib_extMgm::extPath('ke_questionnaire_premium').'res/other/class.html_export.php');
+		
+		//$zip_filename = $this->q_id.'_'.time().'_html.zip';
+		$zip_filename = $this->q_id.'_html.zip';
+		$ts_setup = $this->loadTypoScriptForBEModule(false, 'setup');
+		$ts_constants = $this->loadTypoScriptForBEModule();
+		
+		$conf = array();
+		$conf['sys_language_uid'] = t3lib_div::_GP('get_html_language');
+		$lang = $this->getLanguageFromUid($conf['sys_language_uid']);
+		if ($lang == ''){
+			//t3lib_div::debug($ts_setup,'setup');
+			$lang = $ts_setup['config.']['language'];
+		}
+		$conf['language'] = $lang;
+		$conf['oneperpage'] = t3lib_div::_GP('html_oneperpage');
+		
+		$html = new html_export($this->q_id, $conf, $ts_setup);
+		$html->createZip($zip_filename);		
 	}
 
 	/**
@@ -1243,7 +1279,7 @@ Event.observe(window, 'load', function() {
 	* @param string $extKey
 	* @return array
 	*/
-        function loadTypoScriptForBEModule($extKey) {
+        function loadTypoScriptForBEModule($extKey = false,$type = 'constants') {
 			global $TYPO3_CONF_VARS;
 			require_once(PATH_t3lib . 'class.t3lib_page.php');
 			require_once(PATH_t3lib . 'class.t3lib_tstemplate.php');
@@ -1260,10 +1296,35 @@ Event.observe(window, 'load', function() {
 			$TSObj->generateConfig();
 			//t3lib_div::devLog('PDF constants', 'ke_questionnaire Export Mod', 0, $TYPO3_CONF_VARS);
 			//t3lib_div::devLog('PDF constants', 'ke_questionnaire Export Mod', 0, $TSObj->setup);
+			//t3lib_div::debug($TSObj->setup,'setup');
 			//return $TSObj->flatSetup;
-			return $TSObj->setup_constants['plugin.'][$extKey.'.'];
+			if ($type == 'constants'){
+				if ($extKey) return $TSObj->setup_constants['plugin.'][$extKey.'.'];
+				else return $TSObj->setup_constants;	
+			} elseif ($type == 'setup'){
+				if ($extKey) return $TSObj->setup['plugin.'][$extKey.'.'];
+				else return $TSObj->setup;	
+			}
         }
-
+	
+	function getLanguageFromUid($uid){
+		$language = '';
+		
+		$lang = t3lib_BEfunc::getRecord('sys_language',$uid);
+		if ($lang){
+			$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*','static_languages','uid='.$lang['static_lang_isocode']);
+			//t3lib_div::debug($static_lang, 'static_lang '.$uid);
+			if ($res){
+				$static_lang = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
+				//t3lib_div::debug($static_lang, 'static_lang '.$uid);
+				$language = strtolower($static_lang['lg_iso_2']);
+			}
+		}
+		//t3lib_div::debug($lang, 'lang '.$uid);
+		
+		return $language;
+	}
+	
 	function stripString($temp){
 		$temp = strip_tags($temp);
 		$temp = html_entity_decode($temp);

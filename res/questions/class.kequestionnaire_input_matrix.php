@@ -20,6 +20,7 @@ class kequestionnaire_input_matrix extends kequestionnaire_input{
                 }
                 //t3lib_div::devLog('fieldname '.$fieldName, 'kequestionnaire_input', 0, $arr);
                 //t3lib_div::devLog('value '.$fieldName, 'kequestionnaire_input', 0,array($value));
+                //t3lib_div::debug($this->value);
         }
         
         /**
@@ -224,7 +225,8 @@ class kequestionnaire_input_matrix extends kequestionnaire_input{
                                 case "matrix_input_date":
                                 case "matrix_input_percent":
                                 case "matrix_input":
-                                        if (is_array($value)) $value[$column["uid"]] = str_replace('"','&quot;',$value[$column["uid"]]);
+                                        //t3lib_div::debug($value[$column["uid"]]);
+                                        if (is_array($value)) $value[$column["uid"]] = str_replace('"','&quot;',$value[$column["uid"]][0]);
                                         $markerArraySub["###VALUE###"]=$value[$column["uid"]];
                                 break;
                         }

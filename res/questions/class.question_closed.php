@@ -286,6 +286,38 @@ class question_closed extends question {
 			$this->errorMsg=$this->obj->pi_getLL("error_required");
 		}
 	}
+	
+	/**
+	 * get simple Answer-String
+	 *
+	 */
+	function getSimpleAnswer(){
+		$saveA = $this->getSaveArray();
+		$saveA = $saveA[$this->uid];
+		
+		$answer =  '';
+		
+		if (is_array($saveA['answer']['options'])){
+			foreach ($saveA['answer']['options'] as $option){
+				if ($answer != ''){
+					$answer .= ', ';
+				}
+				//t3lib_div::debug($option);
+				$answer .= $saveA['possible_answers'][$option];
+				if (is_array($saveA['answer']['text'])){
+					$text = $saveA['answer']['text'][$option];
+					if ($text != '') $answer .= ' ('.$text.')';
+				}
+			}
+		} else {
+			$option = $saveA['answer']['options'];
+			$answer .= $saveA['possible_answers'][$option];
+		}
+		//t3lib_div::debug($saveA);
+	   
+		return $answer;
+        }
+
 }
 
 ?>

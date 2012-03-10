@@ -936,6 +936,26 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 		
 		$markerArray['###NAV###'] = $this->renderContent('###NAVIGATION###',$nav_markerArray);
 		$markerArray['###QUESTIONS###'] = $questions;
+		
+		/****************************************************
+		 * kennziffer, Nadine Schwingler, 10.3.2012
+		 * Show last answer on next page
+		 ***************************************************/
+		$markerArray['###LAST_ANSWER###'] = '';
+		if ($this->ffdata['render_type'] == 'QUESTIONS' AND $this->ffdata['render_count'] == 1 AND $this->ffdata['show_lastanswer']){
+			if ($page_nr != 1) {
+				$la_markerArray = array();
+				$la_markerArray['###Q_LABEL###'] = $this->pi_getLL('lastanswer_question');
+				$la_markerArray['###A_LABEL###'] = $this->pi_getLL('lastanswer_answer');
+				
+				$lastpage_question = $this->getQuestionsOfPage(($page_nr-1),$page_count);
+				$lastpage_question = $this->getQuestionTypeObject($lastpage_question[0]);
+				//t3lib_div::debug($lastpage_question->fields[5]->options,'last');
+				$la_markerArray['###Q_TEXT###'] = $lastpage_question->question['title'];
+				$la_markerArray['###A_TEXT###'] = $lastpage_question->getSimpleAnswer();
+				$markerArray['###LAST_ANSWER###'] = $this->renderContent('###LASTANSWER###',$la_markerArray);
+			}
+		}
 
 		$markerArray['###HIDDEN_FIELDS###'] = $this->renderHiddenFields($shown);
 		$markerArray['###CAPTCHA###'] = '';
@@ -2226,6 +2246,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 				}
 			}
 		}
+		//t3lib_div::debug($where,'where');
 
 		//if there are active questions for the questionnaire
 		if (is_array($questions)){

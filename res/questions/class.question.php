@@ -124,13 +124,15 @@ class question{
 		} else {
 		    $this->template = $this->obj->tmpl_path.$this->templateName;
 		}
-
+		
 		// Read Subparts
 		$this->tmpl = $this->cObj->fileResource($this->template);
+		if ($this->tmpl == '') $this->tmpl = file_get_contents(PATH_site.$this->template);
+		//t3lib_div::debug($this->tmpl,$this->template);
 		
 		//Template not found in base extension? Check premium!
 		if($this->tmpl == '' && t3lib_extMgm::isLoaded('ke_questionnaire_premium')) {
-		     $this->template = t3lib_extMgm::siteRelPath('ke_questionnaire_premium').'/res/templates/'.$this->templateName;
+		     $this->template = t3lib_extMgm::siteRelPath('ke_questionnaire_premium').'res/templates/'.$this->templateName;
 		     $this->tmpl = $this->cObj->fileResource($this->template);
 		}
 			
@@ -645,7 +647,7 @@ class question{
 	//TODO: rewrite the function for localisation. If for the act. localized version no dep. are set the original dep. should act.
 	$where = 'dependant_question='.$dependant_id;
 	$where .= ' AND hidden=0 AND deleted=0';
-	$where .= ' AND sys_language_uid='.$GLOBALS['TSFE']->sys_language_uid;
+	//$where .= ' AND sys_language_uid='.$GLOBALS['TSFE']->sys_language_uid;
 	$res_all_activating = $GLOBALS['TYPO3_DB']->exec_SELECTquery('activating_question','tx_kequestionnaire_dependancies',$where);
 	if ($res_all_activating){
 	    while ($question_row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res_all_activating)){
@@ -921,6 +923,14 @@ class question{
 	$content .= '</'.$this->question['uid'].'>'."\n";
 
 	return $content;
+    }
+    
+    /**
+     * get simple Answer-String
+     *
+     */
+    function getSimpleAnswer(){
+	return '';
     }
 
     /**

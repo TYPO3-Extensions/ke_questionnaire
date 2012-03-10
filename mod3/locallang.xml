@@ -10,6 +10,7 @@
 			<label index="function1">Export CSV</label>
 			<label index="function2">Export SPSS</label>
 			<label index="function3">Export PDF</label>
+			<label index="function4">Export HTML</label>
 
 			<label index="none_selected">You must select a Questionnaire first!</label>
 			<label index="result_count">Count of results</label>
@@ -32,10 +33,14 @@
 			<label index="download_button_pdf_lang">Select the language of the questions</label>
 			<label index="download_button_pdf_blank">Download the empty PDF-Questionnaire</label>
 			<label index="download_button_pdf_filled">Download a result as PDF-Questionnaire</label>
-			<label index="download_button_pdf_compare">Download a compared PDF-Questionnaire</label>			
+			<label index="download_button_pdf_compare">Download a compared PDF-Questionnaire</label>
+			<label index="download_button_html_lang">Select the language of the questions</label>
+			<label index="download_button_html_blank">Download the empty HTML-Questionnaire</label>
+			<label index="download_button_html_filled">Download a result as HTML-Questionnaire</label>
 			<label index="download_only_finished">download only finished results</label>
 			<label index="download_with_authcode">download with the AuthCode of participant</label>
 			<label index="download_only_this_lang">download only this language results</label>
+			<label index="download_html_oneperpage">download one question per page, otherwise the plugin-selection will be taken</label>
 
 			<label index="CSV_download_type">Select the type of Export you want to make:</label>
 			<label index="CSV_download_simple">Simple Data-Download</label>
@@ -54,6 +59,7 @@
 			<label index="function1">Export CSV</label>
 			<label index="function2">Export SPSS</label>
 			<label index="function3">Export PDF</label>
+			<label index="function4">Export HTML</label>
 
 			<label index="none_selected">Sie müssen zuerst einen Fragebogen auswählen!</label>
 			<label index="result_count">Anzahl der Teilnahmen</label>
@@ -76,10 +82,14 @@
 			<label index="download_button_pdf_lang">Wählen sie die Sprache der Fragen</label>
 			<label index="download_button_pdf_blank">Download des leeren PDF-Fragebogens</label>
 			<label index="download_button_pdf_filled">Download eines Ergebnisses als PDF-Fragebogens</label>			
-			<label index="download_button_pdf_compare">Download eines PDF-Fragebogens mit Vergleichswerten</label>			
+			<label index="download_button_pdf_compare">Download eines PDF-Fragebogens mit Vergleichswerten</label>
+			<label index="download_button_html_lang">Wählen sie die Sprache der Fragen</label>
+			<label index="download_button_html_blank">Download des Fragebogens als HTML-Seiten</label>
+			<label index="download_button_html_filled">Download eines Ergebnisses als HTML-Seiten</label>
 			<label index="download_only_finished">nur abgeschlossene Teilnahmen herunterladen</label>
 			<label index="download_with_authcode">mit dem zugehörigen AuthCode herunterladen</label>
 			<label index="download_only_this_lang">nur die Ergebnisse der ausgewählten Sprache herunterladen</label>
+			<label index="download_html_oneperpage">eine Frage/Seite runterladen, ansonsten werden die Einstellungen des Plugins berücksichtigt</label>
 
 			<label index="CSV_download_type">Bitte wählen Sie den Typ des Exports:</label>
 			<label index="CSV_download_simple">Einfacher Daten-Download</label>

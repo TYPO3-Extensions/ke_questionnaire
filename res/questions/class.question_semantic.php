@@ -74,72 +74,105 @@ class question_semantic extends question{
 		}
 	}
 
-	    /**
-		 * Defines all fields in Template
-		 *
-		 *
-		 */
-	    function buildFieldArray(){
-			
-			$typeHead= "matrix_head";
-			$marker="###HEAD###";
-			$this->fields["head"]=new kequestionnaire_input("head",$typeHead,$this->answer["options"],$marker,$this->obj,$this->options,$this->subquestions,$this->columns,$this->sublines);				
-			
-			$marker="###SUBQUESTION###";
-			$type="semantic";
-			
-			foreach($this->sublines as $key=>$val){				
-				$this->fields[$key]=new kequestionnaire_input($key,$type,$this->answer,$marker,$this->obj,$this->options,$this->subquestions,$this->columns,$this->sublines);				
-				
-			}
-			
-
-
-	    }
-
-	    /**
-		 * Selects Subpartname depending on Qustiontype
-		 *
-		 * @return      the whole question ready rendered
-		 *
-		 */   
-		function getTemplateName(){			
-			return "QUESTION_SEMANTIC";
-
-		}
-
-
-
-	    /**
-		 * The validation method of the Question-Class
-		 *
-		 * @return	boolean true if validation is correct
-		 * 		Error-String if validation failed
-		 *
-		 */
-	    function validate(){
-
-			if(!$this->question['mandatory']) return;
+	/**
+	 * Defines all fields in Template
+	 *
+	 *
+	 */
+	function buildFieldArray(){
+		$typeHead= "matrix_head";
+		$marker="###HEAD###";
+		$this->fields["head"]=new kequestionnaire_input("head",$typeHead,$this->answer["options"],$marker,$this->obj,$this->options,$this->subquestions,$this->columns,$this->sublines);				
 		
-			$validationTypes[]="semantic_required";
-			$value=$this->answer["options"];
+		$marker="###SUBQUESTION###";
+		$type="semantic";
 		
-			foreach($this->fields as $key=>$field){						
-				if($key=="head") continue;
-				
-				$errors=$field->validate($validationTypes,$value);
-				
-				if(count($errors)) $this->error=1;
-			}
+		foreach($this->sublines as $key=>$val){				
+			$this->fields[$key]=new kequestionnaire_input($key,$type,$this->answer,$marker,$this->obj,$this->options,$this->subquestions,$this->columns,$this->sublines);				
 			
-			if (!$this->checkDependancies()){
-				$this->error=0;
-			}
-
 		}
-
-
 	}
+
+	/**
+	 * Selects Subpartname depending on Qustiontype
+	 *
+	 * @return      the whole question ready rendered
+	 *
+	 */   
+	function getTemplateName(){			
+		return "QUESTION_SEMANTIC";
+	}
+
+
+
+	/**
+	 * The validation method of the Question-Class
+	 *
+	 * @return	boolean true if validation is correct
+	 * 		Error-String if validation failed
+	 *
+	 */
+	function validate(){
+		if(!$this->question['mandatory']) return;
+		$validationTypes[]="semantic_required";
+		$value=$this->answer["options"];
+
+		foreach($this->fields as $key=>$field){						
+			if($key=="head") continue;
+			$errors=$field->validate($validationTypes,$value);
+			if(count($errors)) $this->error=1;
+		}
+		if (!$this->checkDependancies()){
+			$this->error=0;
+		}
+	}
+	
+	/**
+	 * get simple Answer-String
+	 *
+	 */
+	function getSimpleAnswer(){
+		$saveA = $this->getSaveArray();
+		$saveA = $saveA[$this->uid];
+		
+		$answer =  '';
+		
+		//t3lib_div::debug($saveA);
+		if (is_array($saveA['answer'])){
+			$answer .= '<table>';
+			$answer .= '<tr><th></th>';
+			foreach ($saveA['possible_answers'] as $ckey => $cols){
+				if ($ckey != 'lines'){
+					$answer .= '<th>'.$cols.'</th>';
+				}
+			}
+			$answer .= '<th></th></tr>';
+			foreach ($saveA['possible_answers']['lines'] as $rkey => $rows){
+				$answer .= '<tr>';
+				$answer .= '<td>'.$rows['start'];
+				//t3lib_div::debug($rows,'rows');
+				if (is_array($saveA['answer']['text']) && $saveA['answer']['text'][$rkey]){
+					$answer .= ' ('.$saveA['answer']['text'][$rkey][0].')';
+				}
+				$answer .= '</td>';
+				foreach ($saveA['possible_answers'] as $ckey => $cols){
+					if ($ckey != 'lines'){
+						if ($saveA['answer']['options'][$rkey] == $ckey){
+							$answer .= '<td style="text-align: center">X</td>';
+						} else {
+							$answer .= '<td></td>';
+						}
+					}
+				}
+				$answer .= '<td>'.$rows['end'].'</td>';
+				$answer .= '</tr>';
+			}
+			$answer .= '</table>';
+		}
+	   
+		return $answer;
+        }
+}
 
 
 ?>
