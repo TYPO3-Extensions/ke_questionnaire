@@ -53,6 +53,8 @@
 			<label index="CSV_answer">Answer</label>
 			<label index="CSV_resultId">Result ID</label>
 			<label index="CSV_resultIdPlus">Result ID / Results</label>
+			
+			<label index="CSV_feUserHeader">Fe-User Fields to be included into the Export</label>
 		</languageKey>
 		<languageKey index="de" type="array">
 			<label index="title">Export</label>
@@ -102,6 +104,8 @@
 			<label index="CSV_answer">Antwort</label>
 			<label index="CSV_resultId">Teilnahme ID</label>
 			<label index="CSV_resultIdPlus">Teilnahme ID / Teilnahmen</label>
+			
+			<label index="CSV_feUserHeader">Fe-User Felder, die im Expord eingefügt werden sollen</label>
 		</languageKey>
 	</data>
 </T3locallang>

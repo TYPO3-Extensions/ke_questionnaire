@@ -21,6 +21,9 @@ class  tx_kequestionnaire_module3_ajax extends t3lib_SCbase {
 	$this->type = $myVars['download_type'];
 	$this->only_this_lang = $myVars['only_this_lang'];
 	$this->only_finished = $myVars['only_finished'];
+	
+	$this->with_authcode = $myVars['with_authcode'];
+	$this->feUserFields = $myVars['feUserFields'];
         
         //t3lib_div::devLog('ajax vars', 'ke_questionnaire Export Mod', 0, array($this->q_id,$this->pid,$this->ff_data));
         //t3lib_div::devLog('ajax vars', 'ke_questionnaire Export Mod', 0, $myVars);
@@ -48,7 +51,10 @@ class  tx_kequestionnaire_module3_ajax extends t3lib_SCbase {
 	//get the actual result
         $result = $this->results[$pointer];
         $auth = t3lib_BEfunc::getRecord('tx_kequestionnaire_authcodes',$result['auth']); //test
-        $result['authcode'] = $auth['authcode'];
+	//t3lib_div::devLog('create DataFile auth '.$pointer, 'ke_questionnaire Export Mod', 0, $auth);
+	$result['authcode'] = $auth['authcode'];
+	$fe_user = t3lib_BEfunc::getRecord('fe_users',$auth['feuser']); //test
+	//t3lib_div::devLog('create DataFile feuser '.$pointer, 'ke_questionnaire Export Mod', 0, $fe_user);
         $result_nrs[] = $result['uid'];
         //t3lib_div::devLog('create DataFile result '.$pointer, 'ke_questionnaire Export Mod', 0, $result);
         //t3lib_div::devLog('create DataFile this->result '.$pointer, 'ke_questionnaire Export Mod', 0, $this->results);
@@ -96,6 +102,8 @@ class  tx_kequestionnaire_module3_ajax extends t3lib_SCbase {
                 switch ($q_values['type']){
                         case 'authcode': $write_array['results'][$v_nr] = $result['authcode'];
                                 break;
+			case 'fe_user': $write_array['results'][$v_nr] = $fe_user[$q_values['uid']];
+				break;
 			case 'start_tstamp':
 				    if ($this->extConf['exportNoTimestamp']){
                                         $write_array['results'][$v_nr] = date($this->extConf['exportNoTimestampFormat'],intval($result['start_tstamp']));
@@ -353,12 +361,22 @@ class  tx_kequestionnaire_module3_ajax extends t3lib_SCbase {
 	
 		//create the question structure
 		$fill_array = array();
+		
 		if ($res){
-			if (t3lib_div::_GP('with_authcode')) {
+			if ($this->with_authcode) {
+				//t3lib_div::devLog('where', 'ke_questionnaire Export Mod', 0, array($where));
 				$fill_array['authcode'] = array();
 				$fill_array['authcode']['uid'] = 'authcode';
 				$fill_array['authcode']['title'] = 'authcode';
 				$fill_array['authcode']['type'] = 'authcode';
+			}
+			if (count($this->feUserFields) > 0){
+				foreach($this->feUserFields as $field => $val){
+					$fill_array[$field] = array();
+					$fill_array[$field]['uid'] = $field;
+					$fill_array[$field]['title'] = $field;
+					$fill_array[$field]['type'] = 'fe_user';
+				}
 			}
 			$fill_array['start_tstamp'] = array();
 			$fill_array['start_tstamp']['uid'] = 'start_tstamp';

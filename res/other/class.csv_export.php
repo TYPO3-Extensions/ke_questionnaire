@@ -41,8 +41,9 @@ class csv_export {
 	 * @param	bool	$only_this_lang: export only the selected language
 	 * @param	vbool	$only_finished: export only finished results
 	 * @param	bool	$with_authcode: export with authcode
+	 * @param 	array   $feUserFields: export feUserfields
 	 */
-        function csv_export($extConf,$results,$q_data,$ff_data,$temp_file,$only_this_lang,$only_finished,$with_authcode){
+        function csv_export($extConf,$results,$q_data,$ff_data,$temp_file,$only_this_lang,$only_finished,$with_authcode,$feUserFields=array()){
                 $this->extConf = $extConf;
                 $this->results = $results;
                 $this->q_data = $q_data;
@@ -51,6 +52,7 @@ class csv_export {
 		$this->only_this_lang = $only_this_lang;
 		$this->only_finished = $only_finished;
 		$this->with_authcode = $with_authcode;
+		$this->feUserFields = $feUserFields;
                 
                 //t3lib_div::devLog('extConf', 'ke_questionnaire Export Mod', 0, $this->extConf);
 		//t3lib_div::devLog('with_authcode', 'ke_questionnaire Export Mod', 0, array($this->with_authcode));
@@ -110,6 +112,8 @@ class csv_export {
 				//t3lib_div::devLog('lineset '.$question['type'], 'ke_questionnaire Export Mod', 0, array($lineset));
 				switch ($question['type']){
 					case 'authcode':	$lineset .= $this->getQBaseLine($free_cells,$question);
+						break;
+					case 'fe_user':		$lineset .= $this->getQBaseLine($free_cells,$question);
 						break;
 					case 'start_tstamp':	$lineset .= $this->getQBaseLine($free_cells,$question);
 						break;
@@ -247,11 +251,20 @@ class csv_export {
 
 		$line_add = '';
 		$take = $question['data'];
-		
+				
                 $question = $question['uid'];
 		switch($type){
 			case 'authcode': $line[] = '';
 					//t3lib_div::devLog('qbaseline', 'ke_questionnaire Export Mod', 0, $take);
+					foreach ($this->results as $nr => $r_data){
+						$result_id = $r_data['uid'];
+						$take['results'][$result_id] = str_replace($delimeter,$delimeter.$delimeter,$take['results'][$result_id]);
+						$line[] = $take['results'][$result_id];
+					}
+				break;
+			case 'fe_user': $line[] = '';
+					//t3lib_div::debug($take,'take');
+					//t3lib_div::debug($question,'question');
 					foreach ($this->results as $nr => $r_data){
 						$result_id = $r_data['uid'];
 						$take['results'][$result_id] = str_replace($delimeter,$delimeter.$delimeter,$take['results'][$result_id]);
@@ -422,7 +435,8 @@ class csv_export {
 			foreach ($fill_array as $question_id => $values){
 				if ($values['title'] != ''){
 					switch ($values['type']){
-						case 'authcode': 
+						case 'authcode':
+						case 'fe_user': 
 						case 'start_tstamp':
 						case 'finished_tstamp':
 								$headline[] = $values['title'];
@@ -707,6 +721,14 @@ class csv_export {
 				$fill_array['authcode']['title'] = 'authcode';
 				$fill_array['authcode']['type'] = 'authcode';
 			}
+			if (count($this->feUserFields) > 0){
+				foreach($this->feUserFields as $field => $val){
+					$fill_array[$field] = array();
+					$fill_array[$field]['uid'] = $field;
+					$fill_array[$field]['title'] = $field;
+					$fill_array[$field]['type'] = 'fe_user';
+				}
+			}
 			$fill_array['start_tstamp'] = array();
 			$fill_array['start_tstamp']['uid'] = 'start_tstamp';
 			$fill_array['start_tstamp']['title'] = 'start tstamp';
@@ -825,6 +847,7 @@ class csv_export {
                                 $fill_array = $_procObj->CSVExportFillArray($fill_array);
                         }
                 }
+		//t3lib_div::debug($fill_array,'fill_array');
 		//t3lib_div::devLog('fill_array', 'ke_questionnaire Export Mod', 0, $fill_array);
 		return $fill_array;
 	}

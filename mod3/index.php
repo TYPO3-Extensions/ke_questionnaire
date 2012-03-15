@@ -403,11 +403,8 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 		$content .= '</select></p>';
 		//$content .= '<input type="hidden" name="download_type" value="simple" />';
 		$content .= '<br /><p>';
-		$content .= '<input type="checkbox" name="only_finished" value="1" checked /> '.$LANG->getLL('download_only_finished').'</p><br />';
+		$content .= '<input type="checkbox" name="only_finished" value="1" checked /> '.$LANG->getLL('download_only_finished').'</p>';
 		//t3lib_div::devLog('ff_data', 'ke_questionnaire Export Mod', 0, $this->ff_data);
-		if ($this->ff_data['aDEF']['lDEF']['access']['vDEF'] == 'AUTH_CODE'){
-			$content .= '<p><input type="checkbox" name="with_authcode" value="1" /> '.$LANG->getLL('download_with_authcode').'</p>';
-		}
 		//check if the selected plugin lang has own results
 		if ($this->q_data['sys_language_uid'] > 0 AND $langs[$this->q_data['sys_language_uid']] == 1){
 			$content .= '<p><input type="checkbox" name="only_this_lang" value="L_'.$this->q_data['sys_language_uid'].'" /> '.$LANG->getLL('download_only_this_lang').'</p>';
@@ -419,8 +416,13 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 				}
 			}
 		}
+		if ($this->ff_data['aDEF']['lDEF']['access']['vDEF'] == 'AUTH_CODE'){
+			$content .= '<p><input type="checkbox" name="with_authcode" value="1" /> '.$LANG->getLL('download_with_authcode').'</p>';
+		} elseif ($this->ff_data['aDEF']['lDEF']['access']['vDEF'] == 'FE_USERS'){
+			$content .= '<br/><p>'.$this->getFeUserFields().'</p><br />';
+		}
 		$content .= '<br />';
-		
+			
 		//set some vars in the session
 		$myVars = $GLOBALS['BE_USER']->getSessionData('tx_kequestionnaire');
 		$myVars['q_id'] = $this->q_id;
@@ -442,6 +444,9 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 		if (t3lib_div::_GP('with_authcode') != '') {
 			$myVars['with_authcode'] = t3lib_div::_GP('with_authcode');
 			//t3lib_div::devLog('ein Download Type', 'ke_questionnaire Export Mod', 0, $_POST);
+		}
+		if (t3lib_div::_GP('feUserFields') != '') {
+			$myVars['feUserFields'] = t3lib_div::_GP('feUserFields');
 		}
 		//else
 		//t3lib_div::devLog('hmm', 'ke_questionnaire Export Mod', 0, $_POST);
@@ -606,6 +611,25 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 			}
 			$content .= '</select>';
 			$content .= '<hr><br />';
+		}
+		
+		return $content;
+	}
+	
+	function getFeUserFields(){
+		global $LANG;
+		
+		$excludes = explode(',',$this->extConf['demographic_fields_exclude']);
+		
+		$content = '';
+		$content .= '<b>'.$LANG->getLL('CSV_feUserHeader').'</b><br />';
+		t3lib_div::loadTCA("fe_users");
+		$TCA = &$GLOBALS["TCA"]["fe_users"];
+		foreach ($TCA['columns'] as $name => $conf){
+			if (!in_array($name,$excludes)){
+				$content .= '<input type="checkbox" name="feUserFields['.$name.']" value="1" /> ';
+				$content .= $name.'<br />';
+			}
 		}
 		
 		return $content;
@@ -785,10 +809,14 @@ Event.observe(window, 'load', function() {
 		if ($with_authcode == ''){
 			$with_authcode = $myVars['with_authcode'];
 		}
+		$feUserFields = t3lib_div::_GP('feUserFields');
+		if ($feUserFields == ''){
+			$feUserFields = $myVars['feUserFields'];
+		}
 		//t3lib_div::devLog('getCSVDownload session '.$only_this_lang, 'ke_questionnaire Export Mod', 0, $myVars);
 		
 		require_once(t3lib_extMgm::extPath('ke_questionnaire').'res/other/class.csv_export.php');
-		$csv_export = new csv_export($this->extConf,$this->results,$this->q_data,$this->ff_data,$this->temp_file,$only_this_lang,$only_finished,$with_authcode);
+		$csv_export = new csv_export($this->extConf,$this->results,$this->q_data,$this->ff_data,$this->temp_file,$only_this_lang,$only_finished,$with_authcode,$feUserFields);
 		
 		switch ($type){
 			/*case 'simple':
@@ -820,6 +848,7 @@ Event.observe(window, 'load', function() {
 		header("content-disposition: attachment; filename=\"".$this->q_id."_csv_export.csv\"");
 	
 		print $csvdata;
+		//t3lib_div::debug($csvdata);
 	}
 
 	
