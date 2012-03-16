@@ -218,6 +218,7 @@ class  tx_kequestionnaire_module3_ajax extends t3lib_SCbase {
         $result = $this->results[$pointer];
         $auth = t3lib_BEfunc::getRecord('tx_kequestionnaire_authcodes',$result['auth']);
 	$result['authcode'] = $auth['authcode'];
+	$fe_user = t3lib_BEfunc::getRecord('fe_users',$auth['feuser']); //test
 	$result['result_row'] = t3lib_BEfunc::getRecord('tx_kequestionnaire_results',$result['uid']);
 	$encoding = "UTF-8";
 	if ( true === mb_check_encoding ($result['result_row']['xmldata'], $encoding ) ){
@@ -245,6 +246,9 @@ class  tx_kequestionnaire_module3_ajax extends t3lib_SCbase {
                                 case 'authcode': 
                                         $result_line[] = $result['authcode'];    
                                     break;
+				case 'fe_user':
+					 $result_line[] = $fe_user[$values['uid']];
+				    break;
                                 case 'start_tstamp':
                                         if ($this->extConf['exportNoTimestamp']){
                                             $result_line[] = date($this->extConf['exportNoTimestampFormat'],intval($result['start_tstamp']));
