@@ -142,6 +142,27 @@ class  tx_kequestionnaire_module3_ajax extends t3lib_SCbase {
                                         }
 
                                 break;
+			case 'dd_pictures':
+                                        //t3lib_div::devLog('dd_pics act_v '.$q_nr, 'ke_questionnaire Export Mod', 0, $act_v);
+					//t3lib_div::devLog('dd_pics q_values '.$q_nr, 'ke_questionnaire Export Mod', 0, $q_values);
+					//t3lib_div::devLog('dd_pics write_array '.$q_nr, 'ke_questionnaire Export Mod', 0, $write_array);
+					foreach ($q_values['answers'] as $area_nr => $area_values){
+					    foreach ($area_values as $a_nr => $a_values){
+						//t3lib_div::devLog('dd_pics a_values '.$a_nr, 'ke_questionnaire Export Mod', 0, $a_values);
+						foreach ($act_v['answer']['options'] as $varea_nr => $varea_values){
+						    //t3lib_div::devLog('dd_pics varea_values '.$a_nr, 'ke_questionnaire Export Mod', 0, $varea_values);
+						    foreach ($varea_values as $given_anr => $given_avalue){
+							//t3lib_div::devLog('dd_pics varea_values '.$a_nr, 'ke_questionnaire Export Mod', 0, array($given_avalue));
+							if ($given_avalue == $a_nr){
+							    $write_array['answers'][$a_nr]['results'][$v_nr] = $area_nr;
+							}
+						    }
+						}
+					    }
+					}
+                                        
+					t3lib_div::devLog('write_array '.$q_nr.'/'.$v_nr, 'ke_questionnaire Export Mod', 0, $write_array);
+                                break;
                         case 'matrix':
                         case 'semantic':
                                         //t3lib_div::devLog('matrix '.$q_nr, 'ke_questionnaire Export Mod', 0, $act_v);
@@ -203,6 +224,7 @@ class  tx_kequestionnaire_module3_ajax extends t3lib_SCbase {
                 //t3lib_div::devLog('write_array '.$q_nr.'/'.$v_nr, 'ke_questionnaire Export Mod', 0, $write_array);
                 if (is_array($write_array) AND count($write_array) > 0) fwrite($store_file,json_encode($write_array)."\n");
         }
+	//t3lib_div::devLog('write_array', 'ke_questionnaire Export Mod', 0, $write_array);
         fclose($store_file);	
     }
     
@@ -276,6 +298,18 @@ class  tx_kequestionnaire_module3_ajax extends t3lib_SCbase {
 						} else $result_line[] = '';
 					}
 				    break;
+				/*case 'dd_pictures':
+                                        //t3lib_div::devLog('dd_pics '.$q_nr, 'ke_questionnaire Export Mod', 0, $values);
+					//t3lib_div::devLog('dd_pics '.$q_nr, 'ke_questionnaire Export Mod', 0, $result);
+					foreach ($values['answers'] as $a_id => $area){
+					    foreach ($area as $area_id => $a_values){
+						//t3lib_div::devLog('read line closed ansers '.$a_id, 'ke_questionnaire Export Mod', 0, $a_values);
+                                                if (is_array($result['data'][$q_nr]['answer']['options'][$area_id]) AND in_array($a_id,$result['data'][$q_nr]['answer']['options'][$area_id])){
+						    $result_line[] = $marker;
+						} else $result_line[] = '';
+					    }
+					}
+				    break;*/
 				case 'semantic':
 					//t3lib_div::devLog('read line', 'ke_questionnaire Export Mod', 0, $read_line);
 					//t3lib_div::devLog('values semantic', 'ke_questionnaire Export Mod', 0, $values);
@@ -479,6 +513,18 @@ class  tx_kequestionnaire_module3_ajax extends t3lib_SCbase {
                                                             }
 							}
 							//$lineset .= $this->getQBaseLine($free_cells,$question);
+						break;
+					case 'dd_pictures':
+							$where = 'question_uid='.$question['uid'].' and hidden=0 and deleted=0';
+							$res_answers = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*','tx_kequestionnaire_answers',$where,'','sorting');
+							//t3lib_div::devLog('getCSVQBase '.$question['type'], 'ke_questionnaire Export Mod', 0, array($GLOBALS['TYPO3_DB']->SELECTquery('*','tx_kequestionnaire_answers',$where,'','sorting')));
+							if ($res_answers){
+								$fill_array[$question['uid']]['answers'] = array();
+								while ($answer = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res_answers)){
+									$fill_array[$question['uid']]['answers'][$answer['answerarea']][$answer['uid']] = array();
+									//$fill_array[$question['uid']]['answers'][$answer['uid']]['uid'] = $answer['uid'];
+								}
+							}							
 						break;
 					default:
 						    // Hook to make other types available for export

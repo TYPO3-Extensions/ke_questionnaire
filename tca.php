@@ -726,7 +726,6 @@ $TCA['tx_kequestionnaire_questions'] = array (
 			)
 		),
 		'ddarea_drop_once' => array (
-			'displayCond' => 'FIELD:type:=:dd_area',
 			'exclude' => 1,
 			'label'   => 'LLL:EXT:ke_questionnaire/locallang_db.xml:tx_kequestionnaire_questions.ddarea_drop_once',
 			'config'  => array (
@@ -998,7 +997,6 @@ $TCA['tx_kequestionnaire_questions'] = array (
 				l18n_diffsource,
 				hidden;;1,
 				type,
-				ddarea_drop_once,
 				title;;;;2-2-2,
 				show_title;;;;3-3-3,
 				text;;;richtext[cut|copy|paste|formatblock|textcolor|bold|italic|underline|left|center|right|orderedlist|unorderedlist|outdent|indent|link|table|image|line|chMode]:rte_transform[mode=ts_css|imgpath=uploads/tx_kequestionnaire/rte/],
@@ -1014,7 +1012,36 @@ $TCA['tx_kequestionnaire_questions'] = array (
 				--div--;LLL:EXT:ke_questionnaire/locallang.xml:tx_kequestionnaire.type_based,
 				closed_randomanswers,
 				--div--;LLL:EXT:ke_questionnaire/locallang.xml:tx_kequestionnaire.answers,'
-				.'coords,answers'
+				.'ddarea_drop_once,
+                                coords,
+                                answers'
+		),
+                'dd_pictures' => array(
+			'showitem' => '
+				--div--;LLL:EXT:ke_questionnaire/locallang.xml:tx_kequestionnaire.base,
+				sys_language_uid;;;;1-1-1,
+				l18n_parent,
+				l18n_diffsource,
+				hidden;;1,
+				type,
+				title;;;;2-2-2,
+				show_title;;;;3-3-3,
+				text;;;richtext[cut|copy|paste|formatblock|textcolor|bold|italic|underline|left|center|right|orderedlist|unorderedlist|outdent|indent|link|table|image|line|chMode]:rte_transform[mode=ts_css|imgpath=uploads/tx_kequestionnaire/rte/],
+				helptext;;;richtext[cut|copy|paste|formatblock|textcolor|bold|italic|underline|left|center|right|orderedlist|unorderedlist|outdent|indent|link|table|image|line|chMode]:rte_transform[mode=ts_css|imgpath=uploads/tx_kequestionnaire/rte/],
+				image,
+				image_position,
+				--div--;LLL:EXT:ke_questionnaire/locallang.xml:tx_kequestionnaire.flow,
+				mandatory,
+				mandatory_correct,'.
+				'dependant_show,
+				dependancy_simple,
+				dependancy,
+				--div--;LLL:EXT:ke_questionnaire/locallang.xml:tx_kequestionnaire.type_based,
+				closed_randomanswers,
+				--div--;LLL:EXT:ke_questionnaire/locallang.xml:tx_kequestionnaire.answers,'
+				.'ddarea_drop_once,
+                                coords,
+                                answers'
 		),
 		'refusal' => array(
 			'showitem' => '

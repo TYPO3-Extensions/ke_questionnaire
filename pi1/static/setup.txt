@@ -379,24 +379,24 @@ plugin.tx_kequestionnaire_pi1 {
 			color: #fff;
 		}
 
-	    .tx-kequestionnaire-pi1 .odd {
-			background-color: transparent;
-			line-height:1.5em;
-			padding:3px;
-	    }
+		.tx-kequestionnaire-pi1 .odd {
+			    background-color: transparent;
+			    line-height:1.5em;
+			    padding:3px;
+		}
 
 		.tx-kequestionnaire-pi1 .title_line {
 		 	background-color: #d9d9d9;
 			line-height:1.5em;
 			padding:3px;
 			border: 0;
-	    }
-
-	    .keq_navigation {
-			margin:20px auto 0 auto;
-			padding: 0 0 10px 0;
-			width: 425px;
-	    }
+		}
+    
+		.keq_navigation {
+			    margin:20px auto 0 auto;
+			    padding: 0 0 10px 0;
+			    width: 425px;
+		}
 
 		.keq_navigation a {
 			background-color:#0098A1;
@@ -563,6 +563,10 @@ plugin.tx_kequestionnaire_pi1 {
 			text-align: center;
 			width: 180px;
 		}
+		
+		div.highlight_area {
+			background:transparent url('../typo3conf/ext/ke_questionnaire/res/images/transparent33.png');
+		}
 
 		div.keq-ddarea-placeholder {
 			position: absolute;
@@ -596,7 +600,43 @@ plugin.tx_kequestionnaire_pi1 {
 		}
 		
 		div.keq-ddarea-moveable {
-			display: inline;
+			display: block;
+			float: left;
+		}
+		
+		div.keq_ddpics_pics ul {
+			list-style: none;
+			list-style-position: inside;
+			min-height: 100px;
+			padding: 10px;
+			margin: 0px;
+		}
+		
+		div.keq_ddpics_pics ul li{
+			z-index: 20;
+			display: block;
+			float: left;
+			margin-left: 2px;
+		}
+		
+		div.keq_ddpics_ddarea ul {
+			list-style: none;
+			list-style-position: inside;
+		}
+		
+		div.keq_ddpics_ddarea ul li{
+			z-index: 20;
+			display: block;
+			float: left;
+		}
+		
+		div.keq_ddpics_ddarea .keq-ddarea-placeholder ul {
+			margin-left: -15px;
+		}
+		
+		div.keq_ddpics_ddarea .keq-ddarea-placeholder ul li {
+			float: left;
+			width: 75px;
 		}
 		
 		div.clearer {

@@ -22,6 +22,8 @@
 			<label index="tx_kequestionnaire_questions.type.I.privacy">privacy policy</label>
 			<label index="tx_kequestionnaire_questions.type.I.blind">blind</label>
 			<label index="tx_kequestionnaire_questions.type.I.dd_words">Drag n Drop words</label>
+			<label index="tx_kequestionnaire_questions.type.I.dd_area">Drag and Drop areas</label>
+			<label index="tx_kequestionnaire_questions.type.I.dd_pictures">Assign pictures</label>
 			<label index="tx_kequestionnaire_questions.type">questiontype</label>
 			<label index="tx_kequestionnaire_questions.title">title</label>
 			<label index="tx_kequestionnaire_questions.show_title">show title?</label>
@@ -194,6 +196,7 @@
 			<label index="tx_kequestionnaire_questions.type.I.blind">Textelement</label>
 			<label index="tx_kequestionnaire_questions.type.I.dd_words">Verschieben von Wörtern</label>
 			<label index="tx_kequestionnaire_questions.type.I.dd_area">Drag and Drop - Bereiche</label>
+			<label index="tx_kequestionnaire_questions.type.I.dd_pictures">Bilderzuordnung</label>
 			<label index="tx_kequestionnaire_questions.type.I.refusal">Verstecktes Feld</label>
 			<label index="tx_kequestionnaire_questions.type">Fragetyp</label>
 			<label index="tx_kequestionnaire_questions.title">Titel</label>

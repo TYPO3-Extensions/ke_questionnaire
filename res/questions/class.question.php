@@ -14,6 +14,7 @@ require_once(t3lib_extMgm::extPath('ke_questionnaire').'res/questions/class.ques
 require_once(t3lib_extMgm::extPath('ke_questionnaire').'res/questions/class.question_closed.php');
 require_once(t3lib_extMgm::extPath('ke_questionnaire').'res/questions/class.question_dd_words.php');
 require_once(t3lib_extMgm::extPath('ke_questionnaire').'res/questions/class.question_dd_area.php');
+require_once(t3lib_extMgm::extPath('ke_questionnaire').'res/questions/class.question_dd_pictures.php');
 require_once(t3lib_extMgm::extPath('ke_questionnaire').'res/questions/class.question_matrix.php');
 require_once(t3lib_extMgm::extPath('ke_questionnaire').'res/questions/class.question_semantic.php');
 require_once(t3lib_extMgm::extPath('ke_questionnaire').'res/questions/class.question_demographic.php');

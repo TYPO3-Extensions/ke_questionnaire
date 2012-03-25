@@ -83,6 +83,9 @@
 				case "ddarea":
 					$out=$this->renderDdArea();
 				break;
+				case "ddpicture":
+					$out=$this->renderDdPics();
+				break;
 				case "sbm_button":
 					$out=$this->renderSubmit();
 				break;
@@ -137,6 +140,18 @@
 		function renderDdArea() {
 			$subpartArray = array();
 			$markerArray = array('###DDIMAGE###' => $this->value['ddimage'], '###DROPAREAS###' => $this->value['dropareas']);
+			
+			$this->html=$this->cObj->substituteMarkerArrayCached($this->tmpl, $markerArray, $subpartArray);
+			return $this->html;
+		}
+		
+		function renderDdPics() {
+			//$subpartArray = array();
+			//$subpartArray['###DDPIC###'] = "";
+			foreach ($this->value['ddpic'] as $pic){
+				$markerArray['###PICS###'] .= $pic;
+			}
+			//$markerArray = array('###PIC###' => $this->value['ddpic']);
 			
 			$this->html=$this->cObj->substituteMarkerArrayCached($this->tmpl, $markerArray, $subpartArray);
 			return $this->html;
