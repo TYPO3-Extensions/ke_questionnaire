@@ -98,7 +98,7 @@ class csv_export {
 			$read_line = json_decode($read_line,true);
 			$question['data'] = array();
 			$question['data'] = $read_line;
-			t3lib_div::devLog('readline '.$question['type'], 'ke_questionnaire Export Mod', 0, array($read_line));
+			//t3lib_div::devLog('readline '.$question['type'], 'ke_questionnaire Export Mod', 0, array($read_line));
 			//create the line
 			$line = array();
 			//question id
@@ -124,7 +124,7 @@ class csv_export {
 						break;
 					case 'dd_pictures':
 					case 'closed':
-							t3lib_div::devLog('question '.$question['type'], 'ke_questionnaire Export Mod', 0, $question);
+							//t3lib_div::devLog('question '.$question['type'], 'ke_questionnaire Export Mod', 0, $question);
 							$lineset .= "\n";
 							$where = 'question_uid='.$question['uid'].' and hidden=0 and deleted=0';
 							$res_answers = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*','tx_kequestionnaire_answers',$where,'','sorting');
@@ -764,7 +764,7 @@ class csv_export {
 			$fill_array['finished_tstamp']['title'] = 'finished tstamp';
 			$fill_array['finished_tstamp']['type'] = 'finished_tstamp';
 			while($question = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)){
-				t3lib_div::devLog('question', 'ke_questionnaire Export Mod', 0, $question);
+				//t3lib_div::devLog('question', 'ke_questionnaire Export Mod', 0, $question);
 				$fill_array[$question['uid']] = array();
 				$fill_array[$question['uid']]['uid'] = $question['uid'];
 				$fill_array[$question['uid']]['title'] = $question['title'];

@@ -151,6 +151,7 @@
 			foreach ($this->value['ddpic'] as $pic){
 				$markerArray['###PICS###'] .= $pic;
 			}
+			$markerArray['###ADDITIONAL_JS###'] = $this->value['additional_js'];
 			//$markerArray = array('###PIC###' => $this->value['ddpic']);
 			
 			$this->html=$this->cObj->substituteMarkerArrayCached($this->tmpl, $markerArray, $subpartArray);

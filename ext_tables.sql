@@ -68,7 +68,8 @@ CREATE TABLE tx_kequestionnaire_questions (
 	sublines blob NOT NULL,
 	submatrix blob NOT NULL,
 	coords text NOT NULL,
-	ddarea_drop_once tinyint(4) DEFAULT '0' NOT NULL,
+	ddarea_onetry tinyint(4) DEFAULT '0' NOT NULL,
+        ddarea_maxitems tinyint(4) DEFAULT '0' NOT NULL,
 	
 	PRIMARY KEY (uid),
 	KEY parent (pid),

@@ -91,7 +91,8 @@ class question_dd_pictures extends question {
 		
 		$js_markerArray = array();
                 $js_markerArray['###ID###'] = $this->question['uid'];
-                $js_rendered = $this->renderJS($js_markerArray);
+		$js_rendered = $this->renderJs($js_markerArray);
+		$js_rendered .= $this->renderJsRecycle($js_markerArray);
 
 		// create the answers for each question
 		// create also hidden fields to save the answer
@@ -99,7 +100,9 @@ class question_dd_pictures extends question {
 		$count = count($this->answers);
 		$dropAreas = '';
 		$dropJs = '';
+		//t3lib_div::debug($this->answer,'answer');
                 $answers = array();
+		$additional_js = '';
 		foreach($this->answers as $key => $value) {
 			//$answers .= $this->cObj->wrap($value['text'], '<div style="z-index: 10' . ($count - $i) . ';" id="keq-ddarea-moveable' . $key . '-' . $value['answerarea'] . '" class="keq-ddarea-moveable">|</div>');
 			$conf['file'] = 'uploads/tx_kequestionnaire/' . $value['image'];
@@ -113,12 +116,16 @@ class question_dd_pictures extends question {
 			$img_markerArray['###HEIGHT###'] = $size[1];
 			//$answers[] = $this->cObj->IMAGE($conf);
 			$answers[] = $this->renderAnswer($img_markerArray);
-			$checkboxes .= '<div id="keq-ddarea-checkbox' . $key . '" class="keq-ddarea-checkbox">&nbsp;</div>';
+			//$checkboxes .= '<div id="keq-ddarea-checkbox' . $key . '" class="keq-ddarea-checkbox">&nbsp;</div>';
 
 			// there can be more answers than areas
 			// don't make more areas than needed
 			$area_markerArray = array();
 			$area_markerArray['###ID###'] = $this->question['uid'];
+			$area_markerArray['###DISABLE_DRAGGABLE###'] = '';
+			$area_markerArray['###MAXITEMS###'] = 0;
+			if($this->question['ddarea_maxitems'] == 1) $area_markerArray['###MAXITEMS###'] = $this->getMaxitemsForArea($value['answerarea']);
+			if($this->question['ddarea_onetry'] == 1) $area_markerArray['###DISABLE_DRAGGABLE###'] = '$item.draggable({disabled:true});';
 			$area_markerArray['###AREA###'] = $value['answerarea'];
 			$area_markerArray['###AREA_TOP###'] = $coords[$value['answerarea']][0][1];
 			$area_markerArray['###AREA_LEFT###'] = $coords[$value['answerarea']][0][0];
@@ -127,6 +134,18 @@ class question_dd_pictures extends question {
 			$dropAreas[$value['answerarea']] = $this->renderArea($area_markerArray);
 			
 			//$dropJs[$value['answerarea']] = $this->renderAreaJs($area_markerArray);
+			//check given answer
+			if (is_array($this->answer['options'])){
+				foreach ($this->answer['options'] as $a_area => $a_answers){
+					if (in_array($value['uid'],$a_answers)) {
+						$add_markerArray['###AREA###'] = $a_area;
+						$add_markerArray['###ID###'] = $this->question['uid'];
+						$add_markerArray['###ITEM_ID###'] = $value['uid'];
+						//do somethin so the answers will be rendered where they should
+						$additional_js .= $this->renderAdditionalJs($add_markerArray);
+					}
+				}
+			}
 		}
                 
                 $dropAreas = implode('', $dropAreas);
@@ -153,7 +172,7 @@ class question_dd_pictures extends question {
                 $this->fields[] = new kequestionnaire_input(
 			'text',
 			'ddpicture',
-			array('ddpic' => $answers),
+			array('ddpic' => $answers,'additional_js' => $additional_js),
 			'###DDPICTURES###',
 			$this
                 );
@@ -164,37 +183,20 @@ class question_dd_pictures extends question {
                 //t3lib_div::debug($js_rendered,'rendered');
 		$GLOBALS['TSFE']->register['kequestionnaire'][$this->question['uid']] = $js_rendered;
 
-
-		/*$this->fields['list'] = new kequestionnaire_input(
-			'list',
-			'selectbox_multi',
-			$this->answer['options'],
-			'###LIST###',
-			$this->obj,
-			$this->options, array(), array(), array(),
-			'', $this->dependants
-		);*/
-
-		/*$this->fields['checkboxes'] = new kequestionnaire_input(
-			'text',
-			'blind',
-			array('text' => $checkboxes),
-			'###CHECKBOXES###',
-			$this
-		);*/
-
-		/*$this->fields['answers'] = new kequestionnaire_input(
-			'text',
-			'blind',
-			array('text' => $answers),
-			'###BLIND###',
-			$this
-		);*/
-
 		//t3lib_div::devLog('buildFieldArray', 'ke_questionnaire', -1, array($this->fields, $markerArray));
 	}
-        
-        function renderJS($markerArray=array()){
+	
+	function getMaxitemsForArea( $area ){
+		$items = 0;
+		
+		foreach ($this->answers as $answer){
+			if ($answer['answerarea'] == $area) $items ++;
+		}
+		
+		return $items;
+	}
+	
+	function renderJs($markerArray=array()){
                 $subpartJs = $this->cObj->getSubpart($this->tmpl,"###DD_PICTURES_JAVASCRIPT###");
                 //t3lib_div::debug($subpartJs,'js');
                 //t3lib_div::debug($this->tmpl,'js');
@@ -202,6 +204,24 @@ class question_dd_pictures extends question {
                 
                 return $out;
         }
+	
+	function renderAdditionalJs($markerArray=array()){
+                $subpartJs = $this->cObj->getSubpart($this->tmpl,"###PRE_SELECT_ANSWER_JS###");
+                //t3lib_div::debug($subpartJs,'js');
+                //t3lib_div::debug($this->tmpl,'js');
+                $out = $this->cObj->substituteMarkerArrayCached($subpartJs, $markerArray);
+                
+                return $out;
+        }
+	
+	function renderJsRecycle($markerArray=array()){
+		$subpartPic = $this->cObj->getSubpart($this->tmpl,"###DD_PICTURES_RECYCLE_JAVASCRIPT###");
+                //t3lib_div::debug($subpartJs,'js');
+                //t3lib_div::debug($this->tmpl,'js');
+                $out = $this->cObj->substituteMarkerArrayCached($subpartPic, $markerArray);
+                
+                return $out;
+	}
 	
 	function renderAnswer($markerArray=array()){
 		$subpartPic = $this->cObj->getSubpart($this->tmpl,"###ANSWER_PICTURE###");
@@ -214,15 +234,6 @@ class question_dd_pictures extends question {
 	
 	function renderArea($markerArray=array()){
 		$subpartPic = $this->cObj->getSubpart($this->tmpl,"###DD_AREA###");
-                //t3lib_div::debug($subpartJs,'js');
-                //t3lib_div::debug($this->tmpl,'js');
-                $out = $this->cObj->substituteMarkerArrayCached($subpartPic, $markerArray);
-                
-                return $out;
-	}
-	
-	function renderAreaJs($markerArray=array()){
-		$subpartPic = $this->cObj->getSubpart($this->tmpl,"###DD_AREA_JS###");
                 //t3lib_div::debug($subpartJs,'js');
                 //t3lib_div::debug($this->tmpl,'js');
                 $out = $this->cObj->substituteMarkerArrayCached($subpartPic, $markerArray);

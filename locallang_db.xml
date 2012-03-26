@@ -95,7 +95,8 @@
 			<label index="tx_kequestionnaire_questions.subquestions">subquestions</label>
 			<label index="tx_kequestionnaire_questions.sublines">sublines</label>
 			<label index="tx_kequestionnaire_questions.coords">Coordinates for answersections. Each line represents one area. Devide x and y coord with :. Devide upper left and lower right with |. Sample: 0:0|100:150</label>
-			<label index="tx_kequestionnaire_questions.ddarea_drop_once">Checked: If the answer was false it doesn't revert to its position and was marked as false.</label>
+			<label index="tx_kequestionnaire_questions.ddarea_onetry">Only one try per answer. When not checked, the user can rearrange the answers</label>
+			<label index="tx_kequestionnaire_questions.ddarea_maxitems">Allow only the given amount of answers per area, calculated on base of the answers of the question</label>
 			
 			<label index="tx_kequestionnaire_answers">Answer</label>
 			<label index="tx_kequestionnaire_answers.title">title</label>
@@ -268,7 +269,8 @@
 			<label index="tx_kequestionnaire_questions.sublines">Angaben Zeilen</label>
 			<label index="tx_kequestionnaire_questions.submatrix">Sub Matrix</label>
 			<label index="tx_kequestionnaire_questions.coords">Koordinaten für die Antwortbereiche. Jede Zeile = Ein Antwortbereich. Trenne x und y mit Doppelpunkt (:). Trenne obere linke Ecke und untere rechte Ecke mit Pipe (|). Beispiel: 0:0|100:150</label>
-			<label index="tx_kequestionnaire_questions.ddarea_drop_once">Markiert: Wenn die Antwort falsch ist, dann wird diese nicht mehr an Ihre Ursprungsposition gesetzt und die Antwort wird als Falsch gesetzt.</label>
+			<label index="tx_kequestionnaire_questions.ddarea_onetry">Nur ein Versuch pro Antwort, ansonsten kann der Teilnehmer die Zuordnung beliebig oft neu gestalten</label>
+			<label index="tx_kequestionnaire_questions.ddarea_maxitems">Nur eine begrenzte Anzahl an Zuordnungen pro Areal erlauben. Kalkuliert auf Basis der unten eingetragenen und zugeordneten Antworten</label>
 			
 			<label index="tx_kequestionnaire_submatrix">Submatrix (erweiterte Matrix)</label>
 			<label index="tx_kequestionnaire_submatrix.text">Sub Matrix Überschrift</label>

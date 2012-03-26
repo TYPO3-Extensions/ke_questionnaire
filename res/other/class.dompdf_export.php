@@ -427,6 +427,13 @@ class dompdf_export {
 		$this->templates['closed_options'] = t3lib_parsehtml::getSubpart($temp, '###DOMPDF_OPTION###');
 		$this->templates['closed_compare'] = t3lib_parsehtml::getSubpart($temp, '###DOMPDF_COMPARE###');
 
+		//drag 'n drop pictures
+		$templateName = 'question_dd_pictures.html';
+		$temp = file_get_contents($templateFolder.$templateName);
+		$this->templates['dd_pictures'] = t3lib_parsehtml::getSubpart($temp, '###DOMPDF###');
+		$this->templates['dd_pictures_options'] = t3lib_parsehtml::getSubpart($temp, '###DOMPDF_OPTION###');
+		$this->templates['dd_pictures_compare'] = t3lib_parsehtml::getSubpart($temp, '###DOMPDF_COMPARE###');
+
 		//drag 'n drop words
 		$templateName = 'question_dd_words.html';
 		$temp = file_get_contents($templateFolder.$templateName);
@@ -434,6 +441,7 @@ class dompdf_export {
 		$this->templates['dd_words_options'] = t3lib_parsehtml::getSubpart($temp, '###DOMPDF_OPTION###');
 		$this->templates['dd_words_compare'] = t3lib_parsehtml::getSubpart($temp, '###DOMPDF_COMPARE###');
 
+	
 		//semantic questions
 		$templateName = 'question_semantic.html';
 		$temp = file_get_contents($templateFolder.$templateName);
@@ -555,6 +563,69 @@ class dompdf_export {
 							break;
 					}
 
+					$own_total += $bars['own'][$qid];
+					$max_points += $answer_max_points;
+					break;
+				case 'dd_words':
+				case 'dd_area':
+					$answers = array();
+					// get all answers
+					$where = 'question_uid='.$qid.$this->cObj->enableFields('tx_kequestionnaire_answers');
+					$res_answers = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*','tx_kequestionnaire_answers',$where);
+					$answer_max_points = 0;
+					if ($res_answers){
+						// create array with points of each answer
+						while ($answer = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res_answers)){
+							$answers[$answer['uid']]['points'] = $answer['value'];
+							$answer_max_points += $answer['value'];
+						}
+					}
+					
+					// sum points of all answers of each question
+					$total_points = 0;
+					if ($results){
+						foreach ($results as $rid => $result){
+							if (is_array($result[$qid]['answer']['options'])){
+								foreach ($result[$qid]['answer']['options'] as $item){
+									$total_points += $answers[$item]['points'];
+									$bars['own'][$qid] += $answers[$item]['points'];
+								}
+							}
+						}
+						// calculate average points
+					}
+					
+					$own_total += $bars['own'][$qid];
+					$max_points += $answer_max_points;
+					break;
+				case 'dd_pictures':
+					$answers = array();
+					$areas = array();
+					// get all answers
+					$where = 'question_uid='.$qid.$this->cObj->enableFields('tx_kequestionnaire_answers');
+					$res_answers = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*','tx_kequestionnaire_answers',$where);
+					$answer_max_points = 0;
+					if ($res_answers){
+						// create array with points of each answer
+						while ($answer = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res_answers)){
+							$answers[$answer['uid']]['points'] = $answer['value'];
+							$areas[$answer['answerarea']][] = $answer['uid'];
+							$answer_max_points += $answer['value'];
+						}
+					}
+					
+					// sum points of all answers of each question
+					$total_points = 0;
+					if (is_array($result[$qid]['answer']['options'])){
+						foreach ($result[$qid]['answer']['options'] as $area => $areaitems){
+							foreach ($areaitems as $item){
+								if (in_array($item,$areas[$area])) $total_points += $answers[$item]['points'];
+								$bars['own'][$qid] += $answers[$item]['points'];
+							}
+						}
+					}
+					
+									
 					$own_total += $bars['own'][$qid];
 					$max_points += $answer_max_points;
 					break;
@@ -712,6 +783,32 @@ class dompdf_export {
 				}
 				$html = $this->renderContent($this->templates['closed'],$markerArray);
 				break;
+			case 'dd_pictures':
+				$options = $this->getOptions($question['uid']);
+				//t3lib_div::devLog('question', 'pdf_export', 0, $question);
+				//t3lib_div::devLog('options', 'pdf_export', 0, $options);
+				$markerArray['###DDIMAGE###'] = 'uploads/tx_kequestionnaire/' . $question['image'];
+				$markerArray['###OPTIONS###'] = '';
+				foreach ($options as $option){
+					$o_markerArray = array();
+					$o_markerArray['###AREA_ID###'] = '';
+					$text = $option['title'];
+					if ($option['text'] != '') $text = $option['text'];
+					$o_markerArray['###TEXT###'] = $text;
+					$o_markerArray['###IMAGE###'] = 'uploads/tx_kequestionnaire/' . $option['image'];
+					if (is_array($answered['options'])){
+						//t3lib_div::devLog('area '.$area, 'pdf_export', 0, $answered);
+						foreach ($answered['options'] as $area => $aoptions){
+							//t3lib_div::devLog('area '.$area. ' => ' .$option['uid'], 'pdf_export', 0, $aoptions);
+							if (in_array($option['uid'],$aoptions)){
+								$o_markerArray['###AREA_ID###'] = '=> '.$area;
+							}
+						}
+					}
+					$markerArray['###OPTIONS###'] .= $this->renderContent($this->templates['dd_pictures_options'],$o_markerArray);
+				}
+				$html = $this->renderContent($this->templates['dd_pictures'],$markerArray);
+				break;
 			case 'dd_words':
 				$options = $this->getOptions($question['uid']);
 				$markerArray['###OPTIONS###'] = '';
@@ -801,6 +898,23 @@ class dompdf_export {
 					$markerArray['###OPTIONS###'] .= $this->renderContent($this->templates['closed_options'],$o_markerArray);
 				}
 				if ($markerArray['###OPTIONS###'] != '') $content .= $this->renderContent($this->templates['closed_compare'],$markerArray);
+				break;
+			case 'dd_pictures':
+				$options = $this->getOptions($question['uid']);
+				$markerArray['###DDIMAGE###'] = 'uploads/tx_kequestionnaire/' . $question['image'];
+				$markerArray['###OPTIONS###'] = '';
+				foreach ($options as $option){
+					$o_markerArray = array();
+					$o_markerArray['###AREA_ID###'] = '';
+					$o_markerArray['###VALUE###'] = $value;
+					$text = $option['title'];
+					if ($option['text'] != '') $text = $option['text'];
+					$o_markerArray['###TEXT###'] = $text;
+					$o_markerArray['###IMAGE###'] = 'uploads/tx_kequestionnaire/' . $option['image'];
+					$o_markerArray['###AREA_ID###'] = '=> '.$option['answerarea'];
+					$markerArray['###OPTIONS###'] .= $this->renderContent($this->templates['dd_pictures_options'],$o_markerArray);
+				}
+				if ($markerArray['###OPTIONS###'] != '') $content .= $this->renderContent($this->templates['dd_pictures_compare'],$markerArray);
 				break;
 			case 'dd_words':
 				$options = $this->getOptions($question['uid']);

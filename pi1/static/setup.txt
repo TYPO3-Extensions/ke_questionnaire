@@ -610,6 +610,7 @@ plugin.tx_kequestionnaire_pi1 {
 			min-height: 100px;
 			padding: 10px;
 			margin: 0px;
+			position: relative;
 		}
 		
 		div.keq_ddpics_pics ul li{
@@ -617,6 +618,7 @@ plugin.tx_kequestionnaire_pi1 {
 			display: block;
 			float: left;
 			margin-left: 2px;
+			border: 1px solid #0098A1;
 		}
 		
 		div.keq_ddpics_ddarea ul {
@@ -628,15 +630,20 @@ plugin.tx_kequestionnaire_pi1 {
 			z-index: 20;
 			display: block;
 			float: left;
+			border: 1px solid #0098A1;
 		}
 		
 		div.keq_ddpics_ddarea .keq-ddarea-placeholder ul {
-			margin-left: -15px;
+			margin-left: 0px;
+			margin-top: 5px;
+			position: relative;
 		}
 		
 		div.keq_ddpics_ddarea .keq-ddarea-placeholder ul li {
 			float: left;
-			width: 75px;
+			height: 40px;
+			margin-bottom: 5px;
+			margin-left: 5px;
 		}
 		
 		div.clearer {

@@ -28,6 +28,7 @@
 		    <ul id="keq_ddpics_###NAME###_gallery">
 			###PICS###
 		    </ul>
+		    ###ADDITIONAL_JS###
 		    <div class="clearer">&nbsp;</div>
 		</div>
                 <!-- ###DDPICTURES### end-->
@@ -51,10 +52,10 @@
 	//$('#keq-ddarea-placeholder-###ID###-###AREA###').html('test');
 	$('#keq-ddarea-placeholder-###ID###-###AREA###').droppable({
 	    accept: "#keq_ddpics_###ID###_gallery > li",
-		activeClass: "highlight_area",
-		drop: function( event, ui ) {
-		    delete###ID######AREA###Image( ui.draggable, '#keq-ddarea-placeholder-###ID###-###AREA###');
-		}
+	    activeClass: "highlight_area",
+	    drop: function( event, ui ) {
+		delete###ID######AREA###Image( ui.draggable, '#keq-ddarea-placeholder-###ID###-###AREA###');
+	    }
 	});
 	
 	//let the items be draggable
@@ -66,13 +67,23 @@
 	function delete###ID######AREA###Image( $item ) {
 	    //alert('#keq-ddarea-placeholder-###ID###-###AREA###');
 	    var $list = $( "ul", '#keq-ddarea-placeholder-###ID###-###AREA###' );
-	    $hidden = '<input id="hidden_answer_###ID###_'+$item.attr('value')+'" type="hidden" name="tx_kequestionnaire_pi1[###ID###][options][###AREA###][]" value="'+$item.attr('value')+'" />';
+	    $maxitems = ###MAXITEMS###;
+	    $hidden = '<input id="hidden_answer_###ID###_'+$item.attr('value')+'" type="hidden" area="###AREA###" name="tx_kequestionnaire_pi1[###ID###][options][###AREA###][]" value="'+$item.attr('value')+'" />';
     
 	    //$pic = $item.find( "img" );
 	    $($hidden).appendTo( $list );
 	    $($item).appendTo( $list ).fadeIn(function() {
 		$item.find( "img" ).animate({ width: '100%', height: '100%' });
+		###DISABLE_DRAGGABLE###
+		if ($maxitems > 0){
+		    //alert($( "li", $list ).length + $maxitems);
+		    if ($( "li", $list ).length >= $maxitems) {
+			$( '#keq-ddarea-placeholder-###ID###-###AREA###').droppable({ disabled: true });
+		    }
+		}
 	    });
+	    
+	    $('.keq-ddarea-placeholder').removeClass('highlight_area');
 	}
     </script>
 </div>
@@ -84,6 +95,22 @@
     </li>
 <!-- ###ANSWER_PICTURE### end-->
 
+<!-- ###PRE_SELECT_ANSWER_JS### begin-->
+    <script type="text/javascript">
+	var $gallery = $('#keq_ddpics_###ID###_gallery');
+	$item = $('li[value="###ITEM_ID###"]',$gallery);
+	//alert('test: '+$item.attr('value'));
+	delete###ID######AREA###Image($item);
+	
+	//let the items be draggable
+	$item.draggable({
+	    revert: "invalid",
+	    cursor: "move",
+	    helper: "clone"
+	});
+    </script>
+<!-- ###PRE_SELECT_ANSWER_JS### end-->
+
 <!-- ###DD_PICTURES_JAVASCRIPT### begin-->
     //alert('test');
     var $gallery = $('#keq_ddpics_###ID###_gallery');
@@ -94,7 +121,11 @@
         cursor: "move",
 	helper: "clone"
     });
-    
+
+<!-- ###DD_PICTURES_JAVASCRIPT### end-->
+
+<!-- ###DD_PICTURES_RECYCLE_JAVASCRIPT### begin-->
+    //alert('test2');
     // let the gallery be droppable as well, accepting items from the area
     $gallery.parent().droppable({
 	    accept: "#keq_ddarea_###ID### > div > ul > li",
@@ -107,33 +138,38 @@
     // image recycle function
     function recycleImage( $item ) {
 	$hidden = $('#hidden_answer_###ID###_'+$item.attr('value'));
+	$area = $hidden.attr('area');
 	$hidden.remove();
 	$item.appendTo( $gallery ).fadeIn(function() {
 	    $item.find( "img" ).animate({ width: '100%', height: '100%' });
+	    $( '#keq-ddarea-placeholder-###ID###-'+$area).droppable({ disabled: false });
 	});
     }
 
-<!-- ###DD_PICTURES_JAVASCRIPT### end-->
+<!-- ###DD_PICTURES_RECYCLE_JAVASCRIPT### end-->
 
 <!-- ###DOMPDF### begin-->
 <div class="question">
     <div class="question_title">###QUESTION_TITLE######QUESTION###</div>
-    ###OPTIONS###
+    <div class="dd_image"><img src="###BASE_PATH###/###DDIMAGE###" alt="###QUESTION_TITLE###" /></div>
+    <table class="dd_pictures_options">
+	<tr>###OPTIONS###</tr>
+    </table>
 </div>
 <div class="question">
 	###COMPARE###
 </div>
 <!-- ###DOMPDF### end-->
 <!-- ###DOMPDF_OPTION### begin-->
-    <div class="closed_question_element">
-	<div class="closed_question_option">###VALUE###</div> ###TEXT### ###INPUT_TEXT###
-    </div>
+    <td><img src="###BASE_PATH###/###IMAGE###" alt="###TEXT###" /> ###AREA_ID###</td>
 <!-- ###DOMPDF_OPTION### end-->
 
 <!-- ###DOMPDF_COMPARE### begin-->
 <div class="compare">
-	###COMPARE_TITLE###
-	###OPTIONS###
+    <div class="dd_image"><img src="###BASE_PATH###/###DDIMAGE###" alt="###QUESTION_TITLE###" /></div>
+    <table class="dd_pictures_options">
+	<tr>###OPTIONS###</tr>
+    </table>
 </div>
 <!-- ###DOMPDF_COMPARE### end-->
 
