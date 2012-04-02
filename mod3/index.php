@@ -538,6 +538,7 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 		$content .= $this->getLanguageSelect('html');
 		$content .= '<p>';
 		$content .= '<input type="checkbox" name="html_oneperpage" value="1" /> '.$LANG->getLL('download_html_oneperpage').'<br /><br />';
+		$content .= $LANG->getLL('download_html_fileending').'&nbsp;&nbsp;<input type="text" name="html_fileending" value="zip" /><br /><br />';
 		$content .= '<input type="submit" name="get_html_blank" value="'.$LANG->getLL('download_button_html_blank').'" /></p>';
 		$content .= '<br /><hr><br />';
 		/*$content .= '<p>';
@@ -576,6 +577,7 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 		}
 		$content .= '<p>';
 		$content .= '<input type="checkbox" name="html_oneperpage" value="1" /> '.$LANG->getLL('download_html_oneperpage').'<br /><br />';
+		$content .= $LANG->getLL('download_html_fileending').'&nbsp;&nbsp;<input type="text" name="html_fileending" value="zip" /><br /><br />';
 		$content .= '<input type="submit" name="get_html_blank" value="'.$LANG->getLL('download_button_html_blank').'" /></p>';
 		$content .= '<br /><hr><br />';
 		/*$content .= '<p>';
@@ -1335,9 +1337,13 @@ Event.observe(window, 'load', function() {
 	
 	function getHTMLDownload($type, $ids = false){
 		require_once(t3lib_extMgm::extPath('ke_questionnaire_premium').'res/other/class.html_export.php');
+		$ending = 'zip';
+		if (t3lib_div::_GP('html_fileending')){
+			$ending = t3lib_div::_GP('html_fileending');
+		}
 		
 		if (is_array($ids)){
-			$zip_filename = 'questionnaires_html.zip';
+			$zip_filename = 'questionnaires_html.'.$ending;
 			$htmls = array();
 			foreach ($ids as $q_id){
 				$q_data = t3lib_BEfunc::getRecord('tt_content',$q_id);
@@ -1380,7 +1386,7 @@ Event.observe(window, 'load', function() {
 			$conf['oneperpage'] = t3lib_div::_GP('html_oneperpage');
 		
 			//$zip_filename = $this->q_id.'_'.time().'_html.zip';
-			$zip_filename = $this->q_id.'_html.zip';
+			$zip_filename = $this->q_id.'_html.'.$ending;
 			
 			$html = new html_export($this->q_id, $conf, $ts_setup);
 			$html->createZip($zip_filename);

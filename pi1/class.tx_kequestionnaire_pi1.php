@@ -952,7 +952,17 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 				$lastpage_question = $this->getQuestionsOfPage(($page_nr-1),$page_count);
 				$lastpage_question = $this->getQuestionTypeObject($lastpage_question[0]);
 				//t3lib_div::debug($lastpage_question->fields[5]->options,'last');
-				$la_markerArray['###Q_TEXT###'] = $lastpage_question->question['title'];
+				$temp_text = $lastpage_question->question['text'];
+				$check = substr($temp_text,0,20);
+				if ($check == '<p class="bodytext">'){
+				    $temp_text = substr_replace($temp_text,'',0,20);
+				    $temp_text = substr_replace($temp_text,'',-4,4);
+				}
+				t3lib_div::debug($temp_text,'temp_text');
+				$la_markerArray['###Q_TEXT###'] = $temp_text;
+				if ($lastpage_question->question['show_title'] == 1) $la_markerArray['###Q_TEXT###'] = $lastpage_question->question['title'].$temp_text;
+				if ($lastpage_question->question['text'] == "") $la_markerArray['###Q_TEXT###'] = $lastpage_question->question['title'];
+				//$la_markerArray['###Q_TEXT###'] = $lastpage_question->question['title'];
 				$la_markerArray['###A_TEXT###'] = $lastpage_question->getSimpleAnswer();
 				$markerArray['###LAST_ANSWER###'] = $this->renderContent('###LASTANSWER###',$la_markerArray);
 			}

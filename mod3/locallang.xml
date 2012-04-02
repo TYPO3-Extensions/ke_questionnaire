@@ -41,6 +41,7 @@
 			<label index="download_with_authcode">download with the AuthCode of participant</label>
 			<label index="download_only_this_lang">download only this language results</label>
 			<label index="download_html_oneperpage">download one question per page, otherwise the plugin-selection will be taken</label>
+			<label index="download_html_fileending">Ending of the file. Default is zip</label>
 
 			<label index="CSV_download_type">Select the type of Export you want to make:</label>
 			<label index="CSV_download_simple">Simple Data-Download</label>
