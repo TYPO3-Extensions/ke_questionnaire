@@ -36,3 +36,6 @@ exportNoTimestampFormat = d.m.Y H:i:s
 
 # cat=basic/enable; type=boolean; label=enable fe-user fields as marker in invite and remind mails
 sendMailWithFeUserData = 0
+
+# cat=basic/enable; type=string; label=Pagefield to use of Export-File or Folder for HTML export, if empty id of questionnaire will be taken
+exportHTMLpagefield = title

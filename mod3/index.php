@@ -1360,6 +1360,7 @@ Event.observe(window, 'load', function() {
 				}
 				$conf['language'] = $lang;
 				$conf['oneperpage'] = t3lib_div::_GP('html_oneperpage');
+				$conf['exportHTMLpagefield'] = $this->extConf['exportHTMLpagefield'];
 				
 				$html = new html_export($q_id,$conf,$ts_setup);
 				$htmls[] = $html;
@@ -1384,9 +1385,14 @@ Event.observe(window, 'load', function() {
 			}
 			$conf['language'] = $lang;
 			$conf['oneperpage'] = t3lib_div::_GP('html_oneperpage');
-		
+			
+			$temp_title = $this->q_id;
+			if ($this->extConf['exportHTMLpagefield'] != ''){
+				$pagy = t3lib_BEfunc::getRecord('pages',$this->pid);
+				$temp_title = $pagy[$this->extConf['exportHTMLpagefield']];
+			}
 			//$zip_filename = $this->q_id.'_'.time().'_html.zip';
-			$zip_filename = $this->q_id.'_html.'.$ending;
+			$zip_filename = $temp_title.'_html.'.$ending;
 			
 			$html = new html_export($this->q_id, $conf, $ts_setup);
 			$html->createZip($zip_filename);
