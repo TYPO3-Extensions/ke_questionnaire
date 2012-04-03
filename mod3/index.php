@@ -221,10 +221,14 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 						if (t3lib_div::_GP('only_this_lang') != '') {
 							$myVars['only_this_lang'] = t3lib_div::_GP('only_this_lang');
 							//t3lib_div::devLog('only_this_lang POST', 'ke_questionnaire Export Mod', 0, $_POST);
+						} elseif ($myVars['only_finished']){
+							$myVars['only_this_lang'] = 0;
 						}
 						if (t3lib_div::_GP('only_finished') != '') {
 							$myVars['only_finished'] = t3lib_div::_GP('only_finished');
 							//t3lib_div::devLog('only_finished POST', 'ke_questionnaire Export Mod', 0, $_POST);
+						} elseif ($myVars['only_finished']){
+							$myVars['only_finished'] = 0;
 						}
 						$GLOBALS['BE_USER']->setAndSaveSessionData('tx_kequestionnaire',$myVars);
 						
@@ -335,15 +339,19 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 		$where = 'pid='.$storage_pid.' AND hidden=0 AND deleted=0';
 		
 		//Check if only the actual plugin-lang should be selected
+		$myVars = $GLOBALS['BE_USER']->getSessionData('tx_kequestionnaire');
+		//t3lib_div::devLog('load Results myVars', 'ke_questionnaire Export Mod', 0, $myVars);
+		//t3lib_div::devLog('load Results get', 'ke_questionnaire Export Mod', 0, $_GET);
+		//t3lib_div::devLog('load Results post', 'ke_questionnaire Export Mod', 0, $_POST);
 		$langs = array();
-		if (htmlentities(t3lib_div::_GP('only_this_lang'))){
+		if (htmlentities(t3lib_div::_GP('only_this_lang')) or (t3lib_div::_GP('get_csv_parted_download') == 1 AND $myVars['only_this_lang'] == 1)){
 			$only_lang = explode('_',htmlentities(t3lib_div::_GP('only_this_lang')));
 			$where .= ' AND sys_language_uid='.$only_lang[1];
 		}
 		
 		//Check if only the finished should be exported
 		$langs = array();
-		if (htmlentities(t3lib_div::_GP('only_finished'))){
+		if (htmlentities(t3lib_div::_GP('only_finished')) or (t3lib_div::_GP('get_csv_parted_download') == 1 AND $myVars['only_finished'] == 1)){
 			$where .= ' AND finished_tstamp>0';
 		}
 		

@@ -50,13 +50,13 @@ class  tx_kequestionnaire_module3_ajax extends t3lib_SCbase {
         
 	//get the actual result
         $result = $this->results[$pointer];
+	//t3lib_div::devLog('create DataFile result '.$pointer, 'ke_questionnaire Export Mod', 0, $result);
         $auth = t3lib_BEfunc::getRecord('tx_kequestionnaire_authcodes',$result['auth']); //test
 	//t3lib_div::devLog('create DataFile auth '.$pointer, 'ke_questionnaire Export Mod', 0, $auth);
 	$result['authcode'] = $auth['authcode'];
 	$fe_user = t3lib_BEfunc::getRecord('fe_users',$auth['feuser']); //test
 	//t3lib_div::devLog('create DataFile feuser '.$pointer, 'ke_questionnaire Export Mod', 0, $fe_user);
         $result_nrs[] = $result['uid'];
-        //t3lib_div::devLog('create DataFile result '.$pointer, 'ke_questionnaire Export Mod', 0, $result);
         //t3lib_div::devLog('create DataFile this->result '.$pointer, 'ke_questionnaire Export Mod', 0, $this->results);
 
         //t3lib_div::devLog('simplify results value_arrays', 'ke_questionnaire Export Mod', 0, $value_arrays);
@@ -161,7 +161,7 @@ class  tx_kequestionnaire_module3_ajax extends t3lib_SCbase {
 					    }
 					}
                                         
-					t3lib_div::devLog('write_array '.$q_nr.'/'.$v_nr, 'ke_questionnaire Export Mod', 0, $write_array);
+					//t3lib_div::devLog('write_array '.$q_nr.'/'.$v_nr, 'ke_questionnaire Export Mod', 0, $write_array);
                                 break;
                         case 'matrix':
                         case 'semantic':

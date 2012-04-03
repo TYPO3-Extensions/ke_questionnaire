@@ -958,7 +958,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 				    $temp_text = substr_replace($temp_text,'',0,20);
 				    $temp_text = substr_replace($temp_text,'',-4,4);
 				}
-				t3lib_div::debug($temp_text,'temp_text');
+				//t3lib_div::debug($temp_text,'temp_text');
 				$la_markerArray['###Q_TEXT###'] = $temp_text;
 				if ($lastpage_question->question['show_title'] == 1) $la_markerArray['###Q_TEXT###'] = $lastpage_question->question['title'].$temp_text;
 				if ($lastpage_question->question['text'] == "") $la_markerArray['###Q_TEXT###'] = $lastpage_question->question['title'];
