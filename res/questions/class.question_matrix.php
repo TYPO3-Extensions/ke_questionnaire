@@ -172,6 +172,8 @@ class question_matrix  extends question{
 	 */
 	function validate(){
 		//t3lib_div::devLog('validate', 'question_matrix', 0,array($this->question["matrix_validation"]));
+		//t3lib_div::debug($this->question['matrix_maxanswers']);
+		$given_answers = 0;
 		foreach($this->fields as $key=>$field){
 			if ($field->type == 'matrix_title_line') continue;
 			$validationTypes=array();
@@ -210,15 +212,18 @@ class question_matrix  extends question{
 
 			$validationOptions["dateFormat"]=$this->dateFormat;
 			$validationOptions["numberDivider"]=$this->numberDivider;
+			$validationOptions["maxAnswers"]=$this->question['matrix_maxanswers'];
 			
 			$errors=$field->validate($validationTypes,$value,$validationOptions);
+			//t3lib_div::debug($validationTypes,$this->question['title'].' valTypes');
+			//t3lib_div::debug($errors,$this->question['title'].' errors');
 			//t3lib_div::devLog('validate '.$field->type, 'question_matrix', 0, array('errors'=>$errors));
 			if (!$this->checkDependancies()){
 				$this->error=0;
 			} elseif(count($errors) > 0) {
-			    $this->error=1;
-			    $this->errorFields[] = $key;
-		    }
+				$this->error=1;
+				$this->errorFields[] = $key;
+			}
 		}
 	}
 	

@@ -486,12 +486,27 @@ class kequestionnaire_input_matrix extends kequestionnaire_input{
                                 }
                         break;
                         case "matrix_required_option":
+                                $counter = 0;
+                                if ($validationOptions['maxAnswers'] > 0){
+                                        if (is_array($value)){
+                                                foreach ($value as $vkey => $vvalue){
+                                                        if (is_array ($vvalue)){
+                                                                foreach ($vvalue as $vvkey => $vvvalue){
+                                                                        $counter ++;
+                                                                }
+                                                        }
+                                                }
+                                        }
+                                        if ($counter == $validationOptions['maxAnswers']) break;
+                                }
                                 foreach($this->subquestions as $key=>$subquestion){
-                                        if(isset($value[$key])) continue;
-                                        elseif($subquestion['title_line'] == 1) continue;
+                                        if(isset($value[$key])) {
+                                                continue;
+                                        } elseif($subquestion['title_line'] == 1) continue;
                                         $out=0;
                                         $this->subquestions[$key]["error"]=$validationType;
                                 }
+                                
                         break;
                         case "matrix_required_input":
                                 foreach($this->subquestions as $key=>$subquestion){
