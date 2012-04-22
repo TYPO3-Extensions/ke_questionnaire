@@ -147,7 +147,7 @@
 			<label index="tt_content.pi_flexform.redirect_on_finish_uid">Frage, welche die Umleitung nach Abschluss bestimmt</label>
 			<label index="tt_content.pi_flexform.use_pools">Fragenpools nutzen um Fragen zu gruppieren</label>
 			<label index="tt_content.pi_flexform.count_pools">Fragenpools in die Seitenbereichnung einbeziehen (ein Pool zählt dann wie eine Frage)</label>
-			<label index="tt_content.pi_flexform.show_pool_index">Überblick anzeigen in welchem Fragenpool man sich gerade befindet (ersetzt den Überblick über Seiten falls dieser aktiviert ist).</label>
+			<label index="tt_content.pi_flexform.show_pool_map">Überblick anzeigen in welchem Fragenpool man sich gerade befindet (ersetzt den Überblick über Seiten falls dieser aktiviert ist).</label>
 			<label index="tt_content.pi_flexform.show_pagemap">Überblick anzeigen auf welcher Seite man sich gerade befindet.</label>
 			<label index="tt_content.pi_flexform.show_pagecounter">Fortschrittsbalken anzeigen.</label>
 			<label index="tt_content.pi_flexform.pagemap_navigation">Navigation über den Überblick erlauben.</label>
