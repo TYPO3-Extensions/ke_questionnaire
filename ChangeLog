@@ -1,5 +1,12 @@
 (add new changes on top of this file)
 
+2012-04-22 Nadine Schwingler <schwingler@kennziffer.com>
+	
+	* Small bugfixes
+	* Feature: Added Pointscalculation for Matrix Questions
+	* Feature: Added Marker ###OWN### and ###TOTAL### to Points-Outcomes 
+	* Feature: Added Summary of pages as new possible navigation in the Questionnaires
+
 2011-11-14 Fabian Friedrich <friedrich@kennziffer.com>
 
 	* Fixed: Backend users without page permissions on KEQ-pages could not access page tree of module "Export"
