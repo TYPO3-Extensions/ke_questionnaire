@@ -313,6 +313,75 @@
 						</config>
 					</TCEforms>
 				</show_lastanswer>
+				<show_pagecounter>
+					<TCEforms>
+						<exclude>1</exclude>
+						<label>LLL:EXT:ke_questionnaire/locallang.xml:tt_content.pi_flexform.show_pagecounter</label>
+						<displayCond>FIELD:render_type:!=:ALL</displayCond>
+						<config>
+							<type>check</type>
+							<default>1</default>
+						</config>
+					</TCEforms>
+				</show_pagecounter>
+				<show_pagemap>
+					<TCEforms>
+						<exclude>1</exclude>
+						<label>LLL:EXT:ke_questionnaire/locallang.xml:tt_content.pi_flexform.show_pagemap</label>
+						<displayCond>FIELD:render_type:!=:ALL</displayCond>
+						<config>
+							<type>check</type>
+							<default>0</default>
+						</config>
+					</TCEforms>
+				</show_pagemap>
+				<pagemap_navigation>
+					<TCEforms>
+						<exclude>1</exclude>
+						<label>LLL:EXT:ke_questionnaire/locallang.xml:tt_content.pi_flexform.pagemap_navigation</label>
+						<!--<displayCond>FIELD:render_type:!=:ALL</displayCond>!-->
+						<displayCond>FIELD:render_type:!=:ALL</displayCond>
+						<config>
+							<type>check</type>
+							<default>0</default>
+						</config>
+					</TCEforms>
+				</pagemap_navigation>
+				<use_pools>
+					<TCEforms>
+						<exclude>1</exclude>
+						<label>LLL:EXT:ke_questionnaire/locallang.xml:tt_content.pi_flexform.use_pools</label>
+						<!--<displayCond>FIELD:type:=:QUIZ</displayCond>!-->
+						<displayCond>EXT:ke_questionnaire_premium:LOADED:true</displayCond>
+						<config>
+							<type>check</type>
+							<default>0</default>
+						</config>
+					</TCEforms>
+				</use_pools>
+				<count_pools>
+					<TCEforms>
+						<exclude>1</exclude>
+						<label>LLL:EXT:ke_questionnaire/locallang.xml:tt_content.pi_flexform.count_pools</label>
+						<!--<displayCond>FIELD:type:=:QUIZ</displayCond>!-->
+						<displayCond>EXT:ke_questionnaire_premium:LOADED:true</displayCond>
+						<config>
+							<type>check</type>
+							<default>0</default>
+						</config>
+					</TCEforms>
+				</count_pools>
+				<show_pool_map>
+					<TCEforms>
+						<exclude>1</exclude>
+						<label>LLL:EXT:ke_questionnaire/locallang.xml:tt_content.pi_flexform.show_pool_map</label>
+						<displayCond>EXT:ke_questionnaire_premium:LOADED:true</displayCond>
+						<config>
+							<type>check</type>
+							<default>0</default>
+						</config>
+					</TCEforms>
+				</show_pool_map>
 				<show_captcha>
 					<TCEforms>
 						<exclude>1</exclude>
@@ -325,7 +394,7 @@
 				</show_captcha>
 				<redirect_on_finish_uid>
 					<TCEforms>
-						<label>LLL:EXT:ke_questionnaire/locallang.xml:tt_content.redirect_on_finish_uid</label>
+						<label>LLL:EXT:ke_questionnaire/locallang.xml:tt_content.pi_flexform.redirect_on_finish_uid</label>
 						<config>
 							<type>select</type>
 							<allownonidvalues>1</allownonidvalues>

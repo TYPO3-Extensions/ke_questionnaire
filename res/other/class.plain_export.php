@@ -330,12 +330,16 @@ class plain_export {
         }
         
         /**
-	 * Calculate the points
+	 * calculatePoints(): Calculate the points for the result
+	 *
+	 * @param       array   $result: result to be calculated
+	 *
+	 * @return      array   point values
 	 */
 	function calculatePoints($result){
 		$returner = array();
-                //t3lib_div::devLog('result', 'pdf_export', 0, $result);
-		
+		//t3lib_div::devLog('result', 'pdf_export', 0, $result);
+
 		foreach ($this->questionsByID as $qid => $question){
 			$temp .= $qid;
 			$titles[] = $question['title'];
@@ -344,25 +348,25 @@ class plain_export {
 			$bars['titles'][$qid] = $question['title'];
 			switch ($question['type']){
 				case 'closed':
-                                        $options = $this->getOptions($qid);
-                                        //t3lib_div::devLog('result answers '.$question['title'], 'pdf_export', 0, $options);
+					$options = $this->getOptions($qid);
+					//t3lib_div::devLog('result answers '.$question['title'], 'pdf_export', 0, $options);
 					$answer_max_points = 0;
 					foreach ($options as $answer){
-                                                $answers[$answer['uid']]['points'] = $answer['value'];
-                                                switch ($question['closed_type']){
-                                                        case 'radio_single':
-                                                        case 'sbm_button':
-                                                        case 'select_single':
-                                                                if ($answer['value']>$answer_max_points) $answer_max_points = $answer['value'];
-                                                                break;
-                                                        case 'check_multi':
-                                                        case 'select_multi':
-                                                                $answer_max_points += $answer['value'];
-                                                                break;
-                                                }
-                                        }
-										
-                                        //t3lib_div::devLog('result answers '.$question['title'], 'pdf_export', 0, $answers);
+						$answers[$answer['uid']]['points'] = $answer['value'];
+						switch ($question['closed_type']){
+							case 'radio_single':
+							case 'sbm_button':
+							case 'select_single':
+								if ($answer['value']>$answer_max_points) $answer_max_points = $answer['value'];
+								break;
+							case 'check_multi':
+							case 'select_multi':
+								$answer_max_points += $answer['value'];
+								break;
+						}
+					}
+
+					//t3lib_div::devLog('result answers '.$question['title'], 'pdf_export', 0, $answers);
 					switch ($question['closed_type']){
 						case 'sbm_button':
 						case 'radio_single':
@@ -378,9 +382,178 @@ class plain_export {
 							}
 							break;
 					}
+
+					$own_total += $bars['own'][$qid];
+					$max_points += $answer_max_points;
+					break;
+				case 'dd_words':
+				case 'dd_area':
+					$answers = array();
+					// get all answers
+					$where = 'question_uid='.$qid.$this->cObj->enableFields('tx_kequestionnaire_answers');
+					$res_answers = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*','tx_kequestionnaire_answers',$where);
+					$answer_max_points = 0;
+					if ($res_answers){
+						// create array with points of each answer
+						while ($answer = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res_answers)){
+							$answers[$answer['uid']]['points'] = $answer['value'];
+							$answer_max_points += $answer['value'];
+						}
+					}
+					
+					// sum points of all answers of each question
+					$total_points = 0;
+					if ($results){
+						foreach ($results as $rid => $result){
+							if (is_array($result[$qid]['answer']['options'])){
+								foreach ($result[$qid]['answer']['options'] as $item){
+									$total_points += $answers[$item]['points'];
+									$bars['own'][$qid] += $answers[$item]['points'];
+								}
+							}
+						}
+						// calculate average points
+					}
 					
 					$own_total += $bars['own'][$qid];
 					$max_points += $answer_max_points;
+					break;
+				case 'dd_pictures':
+					$answers = array();
+					$areas = array();
+					// get all answers
+					$where = 'question_uid='.$qid.$this->cObj->enableFields('tx_kequestionnaire_answers');
+					$res_answers = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*','tx_kequestionnaire_answers',$where);
+					$answer_max_points = 0;
+					if ($res_answers){
+						// create array with points of each answer
+						while ($answer = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res_answers)){
+							$answers[$answer['uid']]['points'] = $answer['value'];
+							$areas[$answer['answerarea']][] = $answer['uid'];
+							$answer_max_points += $answer['value'];
+						}
+					}
+					
+					// sum points of all answers of each question
+					$total_points = 0;
+					if (is_array($result[$qid]['answer']['options'])){
+						foreach ($result[$qid]['answer']['options'] as $area => $areaitems){
+							foreach ($areaitems as $item){
+								if (in_array($item,$areas[$area])) $total_points += $answers[$item]['points'];
+								$bars['own'][$qid] += $answers[$item]['points'];
+							}
+						}
+					}
+					
+									
+					$own_total += $bars['own'][$qid];
+					$max_points += $answer_max_points;
+					break;
+				case 'matrix':
+					$matrix_max_points = 0;
+					$total_points = 0;
+					//t3lib_div::debug($question,'question');
+					$where = 'question_uid='.$qid.$this->cObj->enableFields('tx_kequestionnaire_columns');
+					$res_columns = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*','tx_kequestionnaire_columns',$where);
+					$columns = array();
+					if ($res_columns){
+						while ($col = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res_columns)){
+							$columns[$col['uid']] = $col;
+						}
+					}
+					$where = 'question_uid='.$qid.$this->cObj->enableFields('tx_kequestionnaire_subquestions');
+					$res_subquestions = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*','tx_kequestionnaire_subquestions',$where);
+					$subquestions = array();
+					if ($res_subquestions){
+						while ($sub = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res_subquestions)){
+							$columns[$sub['uid']] = $sub;
+						}
+					}
+					
+					switch ($question['matrix_type']){
+						case 'radio':
+							if ($question['matrix_pointsforcolumn'] == 1){
+								foreach ($columns as $col){
+									$single_max_points = 0;
+									foreach ($subquestions as $sub){
+										//für zeilen
+										//$total_points += $question_obj->subquestions[$result[$qid]['answer']['options'][$sub['uid']]['single']]['value'];
+										if ($single_max_points < $sub['value']) $single_max_points = $sub['value'];
+									}
+									$matrix_max_points += $single_max_points;
+								}
+							} else {
+								foreach ($subquestions as $sub){
+									$single_max_points = 0;
+									foreach ($columns as $col){
+										if ($single_max_points < $col['value']) $single_max_points = $col['value'];
+									}
+									$matrix_max_points += $single_max_points;
+								}
+							}
+							break;
+						case 'check':
+							if ($question['matrix_pointsforcolumn'] == 1){
+								foreach ($columns as $col){
+									$single_max_points = 0;
+									foreach ($subquestions as $sub){
+										//für zeilen
+										//$total_points += $question_obj->subquestions[$result[$qid]['answer']['options'][$sub['uid']]['single']]['value'];
+										if ($sub['value'] > 0) $single_max_points += $sub['value'];
+									}
+									$matrix_max_points += $single_max_points;
+								}
+							} else {
+								foreach ($subquestions as $sub){
+									$single_max_points = 0;
+									foreach ($columns as $col){
+										if ($col['value'] > 0) $single_max_points += $col['value'];
+									}
+									$matrix_max_points += $single_max_points;
+								}
+							}
+							break;
+					}
+					
+					$total_points = 0;					
+					//t3lib_div::debug($this->piVars,'piVars');
+					switch ($question['matrix_type']){
+						case 'radio':
+							foreach ($subquestions as $sub){
+								if ($question['matrix_pointsforcolumn'] == 1){
+									if ($result[$qid]['answer']['options'][$sub['uid']]){
+										$bars['own'][$qid] += intval($sub['value']);
+									}
+									//$bars['own'][$qid] += intval($question_obj->subquestions[$this->piVars[$qid]['options'][$sub['uid']]['single']]['value']);
+								} else {
+									$bars['own'][$qid] += intval($columns[$result[$qid]['answer']['options'][$sub['uid']]['single']]['value']);
+								}
+							}
+							break;
+						case 'check':
+							foreach ($subquestions as $sub){
+								if ($question['matrix_pointsforcolumn'] == 1){
+									foreach ($columns as $col){
+										//t3lib_div::debug($this->piVars[$qid]['options'][$sub['uid']][$col['uid']],'test');
+										if ($result[$qid]['answer']['options'][$sub['uid']][$col['uid']][0] == $col['uid']){
+											$bars['own'][$qid] += intval($sub['value']);
+										}
+									}
+									//$bars['own'][$qid] += intval($question_obj->subquestions[$this->piVars[$qid]['options'][$sub['uid']]['single']]['value']);
+								} else {
+									if (is_array($result[$qid]['answer']['options'][$sub['uid']])){
+										foreach ($result[$qid]['answer']['options'][$sub['uid']] as $r_item){
+											$bars['own'][$qid] += intval($columns[$r_item[0]]['value']);
+										}
+									}
+								}
+							}
+							break;
+					}
+					//t3lib_div::debug($bars,'bars');
+
+					$own_total += $bars['own'][$qid];
+					$max_points += $matrix_max_points;
 					break;
 			}
 		}
@@ -388,8 +561,8 @@ class plain_export {
 		$returner['percent'] = ($own_total/$max_points)*100;
 		$returner['own'] = $own_total;
 		$returner['max'] = $max_points;
-		
-                return $returner;
+
+		return $returner;
 	}
         
         function renderOutcomes(){

@@ -312,7 +312,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 			$this->setResults($this->piVars['result_id']);
 			//t3lib_div::devLog('saved saveArray '.$this->piVars['result_id'], $this->prefixId, 0, array($this->saveArray));
 		}
-		t3lib_div::devLog('saved saveArray '.$this->piVars['result_id'], $this->prefixId, 0, array($this->saveArray));
+		//t3lib_div::devLog('saved saveArray '.$this->piVars['result_id'], $this->prefixId, 0, array($this->saveArray));
 
 		//if there is additional Header Data in the array
 		if (is_array($this->addHeaderData)){
@@ -819,6 +819,9 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 		}
 		//not shown dependants never count for pagecount
 		$amount = $amount - $this->questionCount['notshown_dependants'];
+		//substract the pools
+		$amount = $amount - $this->questionCount['substract_pools'];
+		//t3lib_div::debug($this->questionCount,'q count');
 
 		//calculate the pagecount on the rendertype chosen in the flexforms
 		switch ($this->ffdata['render_type']){
@@ -876,7 +879,8 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 			$markerArray['###COUNTER_PARTER###'] = $this->pi_getLL('counter_parter');
 			$percent = $page_nr/$page_count *100;
 			$markerArray['###COUNTERBAR_WIDTH###'] = $percent.'%';
-			$markerArray['###PAGE_COUNTER###'] = $this->renderContent('###PAGECOUNTER###',$markerArray);
+			$markerArray['###PAGE_COUNTER###'] = '';
+			if ($this->ffdata['show_pagecounter'] == 1) $markerArray['###PAGE_COUNTER###'] = $this->renderContent('###PAGECOUNTER###',$markerArray);
 		}
 
 		$markerArray['###FORM_PRE_ADD###'] = $form_pre_add;
@@ -884,6 +888,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 		
 		//get the questions shown on this page
 		$page_questions = $this->getQuestionsOfPage($page_nr,$page_count);
+		$markerArray['###PAGE_MAP###'] = $this->renderPagemap($page_nr,$page_count,$page_questions);
 		//t3lib_div::debug($page_questions);
 		$shown = $this->shown;
 		foreach ($page_questions as $quest){
@@ -1031,6 +1036,8 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 		}
 		//not shown dependants never count for pagecount
 		$amount = $amount - $this->questionCount['notshown_dependants'];
+		//substract the pools
+		$amount = $amount - $this->questionCount['substract_pools'];
 		if ($this->ffdata['linear'] == 1) $this->ffdata['render_type'] = 'QUESTIONS';
 		switch ($this->ffdata['render_type']){
 			case 'ALL':
@@ -1059,6 +1066,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 		$p_count = 0;
 		$counter = 0;
 		foreach ($this->allQuestions as $nr => $question){
+			if ($question['type'] == 'pool') $question['uid'] = 'p_'.$question['uid'];
 			$check = '.';
 			//if there are only one question/page and the question should not be shown, move on
 			if ($qpp == 1 AND $question['no_show'] == 1){
@@ -1078,60 +1086,73 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 					}
 					$counter ++;
 				} elseif ($question['is_dependant_ns'] !=1 AND $check != '') {
+					$no_further_check = false;
 					if ($q_count == $qpp){
 						$p_count ++;
 						$q_count = 0;
 					}
 					if ($p_count == $page_nr AND $question['is_dependant'] == 0 AND $question['type'] != 'blind') {
-						break;
+						//break;
+						$no_further_check = true;
 					}
-					if ($p_count == ($page_nr - 1)){
-						if ($question['is_dependant_ns'] == 1){
-							$check_obj = $this->getQuestionTypeObject($question);
-							//t3lib_div::devLog('shown '.$nr, $this->prefixId, 0, array($shown,$question));
-							if ($check->checkDependancies()) {
-								$check = '+';
-							} else {
-								$check = '';
+					if (!$no_further_check){
+						if ($p_count == ($page_nr - 1)){
+							if ($question['is_dependant_ns'] == 1){
+								$check_obj = $this->getQuestionTypeObject($question);
+								//t3lib_div::devLog('shown '.$nr, $this->prefixId, 0, array($shown,$question));
+								if ($check->checkDependancies()) {
+									$check = '+';
+								} else {
+									$check = '';
+								}
 							}
+							if ($question['is_dependant'] == 1 AND !in_array($question['uid'],$shown)){
+								//$questions .= '<br>counter:'.$counter .'<br>q_count:'.$q_count.'<br>p_count:'.$p_count;
+								//t3lib_div::devLog('SHOWN '.$question['uid'], $this->prefixId, 0, $shown);
+								$questions[] = $question;
+								$shown[] = $question['uid'];
+							} elseif ($question['type'] != 'blind' AND (!in_array($question['uid'],$shown)) AND $question['is_dependant'] != 1 AND $question['is_dependant_ns'] != 1) {
+								//$questions .= '<br>counter:'.$counter .'<br>q_count:'.$q_count.'<br>p_count:'.$p_count;
+								//t3lib_div::devLog('shown '.$nr, $this->prefixId, 0, $question);
+								$questions[] = $question;
+								$shown[] = $question['uid'];
+								//if ($question['type'] == 'pool') t3lib_div::debug($question, $question['title']);
+							} elseif (!in_array($question['uid'],$shown) AND $question['is_dependant_ns'] != 1){
+								//$questions .= '<br>counter:'.$counter .'<br>q_count:'.$q_count.'<br>p_count:'.$p_count;
+								$questions[] = $question;
+								$shown[] = $question['uid'];
+							} elseif ($question['is_dependant_ns'] == 1 AND $check != '') {
+								//$questions .= '<br>counter:'.$counter .'<br>q_count:'.$q_count.'<br>p_count:'.$p_count;
+								$questions[] = $question;
+								$shown[] = $question['uid'];
+							} else {
+								//t3lib_div::debug($question, $question['title']);
+								//$questions .= '<br>counter:'.$counter .'<br>q_count:'.$q_count.'<br>p_count:'.$p_count;
+								//t3lib_div::devLog('check', $this->prefixId, 0, array($check));
+							}
+							//t3lib_div::debug($this->allQuestions[$nr],$question['title']);
+						} elseif ($p_count == $page_nr AND ($question['is_dependant'] == 1) AND !in_array($question['uid'],$shown)){
+						//} elseif ($p_count == $page_nr AND ($question['is_dependant'] == 1 OR $question['type'] == 'blind') AND !in_array($question['uid'],$shown)){
+							$questions[] = $question;
+							$shown[] = $question['uid'];
 						}
-						if ($question['is_dependant'] == 1 AND !in_array($question['uid'],$shown)){
-							//$questions .= '<br>counter:'.$counter .'<br>q_count:'.$q_count.'<br>p_count:'.$p_count;
-							//t3lib_div::devLog('SHOWN '.$question['uid'], $this->prefixId, 0, $shown);
-							$questions[] = $question;
-							$shown[] = $question['uid'];
-						} elseif ($question['type'] != 'blind' AND (!in_array($question['uid'],$shown)) AND $question['is_dependant'] != 1 AND $question['is_dependant_ns'] != 1) {
-							//$questions .= '<br>counter:'.$counter .'<br>q_count:'.$q_count.'<br>p_count:'.$p_count;
-							//t3lib_div::devLog('shown '.$nr, $this->prefixId, 0, $question);
-							$questions[] = $question;
-							$shown[] = $question['uid'];
-						} elseif (!in_array($question['uid'],$shown) AND $question['is_dependant_ns'] != 1){
-							//$questions .= '<br>counter:'.$counter .'<br>q_count:'.$q_count.'<br>p_count:'.$p_count;
-							$questions[] = $question;
-							$shown[] = $question['uid'];
-						} elseif ($question['is_dependant_ns'] == 1 AND $check != '') {
-							//$questions .= '<br>counter:'.$counter .'<br>q_count:'.$q_count.'<br>p_count:'.$p_count;
-							$questions[] = $question;
-							$shown[] = $question['uid'];
-						} else {
-							//$questions .= '<br>counter:'.$counter .'<br>q_count:'.$q_count.'<br>p_count:'.$p_count;
-							//t3lib_div::devLog('check', $this->prefixId, 0, array($check));
-						}
-					} elseif ($p_count == $page_nr AND ($question['is_dependant'] == 1) AND !in_array($question['uid'],$shown)){
-					//} elseif ($p_count == $page_nr AND ($question['is_dependant'] == 1 OR $question['type'] == 'blind') AND !in_array($question['uid'],$shown)){
-						$questions[] = $question;
-						$shown[] = $question['uid'];
+						//if ($p_count == 4) t3lib_div::devLog('shown '.$question['uid'].'/'.$p_count, $this->prefixId, 0, array($shown,$question));
 					}
-					//if ($p_count == 4) t3lib_div::devLog('shown '.$question['uid'].'/'.$p_count, $this->prefixId, 0, array($shown,$question));
-	
 					if ($question['type'] != 'blind'){
-						if ($question['is_dependant'] == 0) $q_count ++;
+						if ($question['type'] == 'pool' AND $this->ffdata['count_pools'] != 1) {
+							//t3lib_div::debug('test','test');
+						} elseif ($question['is_dependant'] == 0) $q_count ++;
 						$counter ++;
 					} elseif ($this->ffdata['render_count_withblind'] == 1) {
 						$q_count ++;
 						//t3lib_div::devLog('q'.$nr, $this->prefixId, 0, array($questions));
 					}
+					//t3lib_div::debug($question, $question['title']);
+				} else {
+					//t3lib_div::debug($question);
 				}
+				if ($question['type']=='pool') $this->allQuestions[$nr]['shown_on_page'] = $p_count+1;
+				//t3lib_div::debug($question);
 			}
 		}
 		$this->shown = $shown;
@@ -1191,6 +1212,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 			foreach ($this->piVars as $name => $arry){
 				$markerArray['###ID###'] = $name;
 				//t3lib_div::devLog('renderHiddenFields name '.$name, $this->prefixId, 0, array('arry'=>$arry));
+				//t3lib_div::debug($this->piVars,'arry');
 				if (is_array($arry) AND $name != 'page' AND !in_array($name,$shown)){
 					$this->getQuestionTypeRender($this->questionsByID[$name]);
 					foreach ($arry as $add => $value){
@@ -1491,11 +1513,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 	function getPointsReport(){
 		$content = '';
 		$markerArray = array();
-		if ($this->ffdata['user_reports'] == 1){
-			$markerArray['###TEXT###'] = $this->pi_getll('points_report_text');
-		} else {
-			$markerArray['###TEXT###'] = '';
-		}
+		$markerArray['###TEXT###'] = $this->pi_getll('points_report_text');
 			
 		//get the calculated points
 		$calced = $this->calculatePoints();
@@ -1511,12 +1529,64 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 		
 		$markerArray['###REPORT###'] = '';
 		//Render outcomes
-		$markerArray['###REPORT###'] = $this->renderOutcome($calced['own'],$this->piVars);
+		$markerArray['###REPORT###'] = $this->renderOutcome($calced,$this->piVars);
 		
-				
+		$markerArray['###ADDITIONAL###'] = '';
+		//Hook to do something after the questionnaire is finished
+		if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$this->extKey]['pi1_getPointsReport'])){
+			foreach($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$this->extKey]['pi1_getPointsReport'] as $_classRef){
+				$_procObj = & t3lib_div::getUserObj($_classRef);
+				$markerArray = $_procObj->pi1_getPointsReport($this,$calced,$markerArray);
+			}
+		}
+		if ($this->ffdata['user_reports'] != 1){
+			$markerArray['###TEXT###'] = '';
+			$markerArray['###ADDITIONAL###'] = '';
+		}
+
 		$content = $this->renderContent('###POINTS_REPORT###',$markerArray);
 		
 		return $content;
+	}
+	
+	/**
+	 * renderPagemap(): render the pagemap of the questionnaire
+	 *
+	 * @param	int	page nr
+	 * @param	int	page count
+	 * @param	array   questions of page
+	 *
+	 * @return	outcome to be rendered
+	 */
+	function renderPagemap($page_nr,$page_count,$page_questions) {
+		$map = '';
+		$map_items = '';
+		
+		$markerArray = array();
+		if ($this->ffdata['show_pagemap']){
+			for ($i = 1; $i <= $page_count; $i++){
+				$map_markerArray = array();
+				$map_markerArray['###ACTIVE###'] = '';
+				//t3lib_div::debug($i, $page_nr);
+				$map_markerArray['###TITLE###'] = $this->pi_getLL('pagemap_prefix').$i;
+				if ($page_nr == $i){
+					$map_markerArray['###ACTIVE###'] = 'active';
+				} else {
+					if ($this->ffdata['pagemap_navigation'] == 1){
+						$href = 'javascript:';
+						$href .= 'document.ke_questionnaire.action=\''.htmlspecialchars($this->pi_getPageLink($GLOBALS['TSFE']->id,'',array($this->prefixId.'[page]'=>($i)))).'\';';
+						$href .= 'document.ke_questionnaire.submit()';
+						$map_markerArray['###TITLE###'] = '<a href="'.$href.'">'.$map_markerArray['###TITLE###'].'</a>';
+					}	
+				}
+				
+				$map_items .= $this->renderContent('###PAGEMAP_ITEM###',$map_markerArray);
+			}
+			$markerArray['###ITEMS###'] = $map_items;
+			$map = $this->renderContent('###PAGEMAP###',$markerArray);
+		}
+		
+		return $map;
 	}
 	
 	/**
@@ -1527,8 +1597,11 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 	 *
 	 * @return	outcome to be rendered
 	 */
-	function renderOutcome($points = 0, $answers = array()) {
+	function renderOutcome($calculated, $answers = array()) {
+		$points = $calculated['own'];
+		$max = $calculated['max'];
 		$content = '';
+		$block_content = '';
 		//t3lib_div::devLog('answers', $this->prefixId, 0, $answers);
 		
 		$where = 'pid='.$this->pid.' AND hidden=0 AND deleted=0';
@@ -1536,61 +1609,84 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 		if ($res_outcomes){
 			while ($outcome = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res_outcomes)){
 				//t3lib_div::devLog('outcome', $this->prefixId, 0, $outcome);
-				if ($outcome['type'] == 'dependancy'){
-					//get the dependancies
-					$dependancies = array();
-					$dep_where = 'dependant_outcome='.$outcome['uid'].' AND hidden=0 AND deleted=0';
-					$dep_res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*','tx_kequestionnaire_dependancies',$dep_where,'','sorting');
-					if ($dep_res){
-						while ($dep_row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($dep_res)){
-							$dependancies[] = $dep_row;
+				switch($outcome['type']){
+					case 'value':
+						//t3lib_div::devLog('outcome', $this->prefixId, 0, $outcome);
+						if ($points >= $outcome['value_start'] AND $points <= $outcome['value_end']) {
+							$temp = $this->pi_RTEcssText($outcome['text']);
+							//t3lib_div::debug($temp,'temp');
+							$temp = str_replace('###OWN###',$points,$temp);
+							$temp = str_replace('###TOTAL###',$max,$temp);
+							$content .= $temp;
 						}
-					}
-					$dep_counter = count($dependancies);
-					$own_counter = 0;
-					//t3lib_div::devLog('deps', $this->prefixId, 0, $dependancies);
-					foreach ($dependancies as $dep){
-						//t3lib_div::devLog('dep '.$dep['title'], $this->prefixId, 0, $dep);
-						$temp = '';
-						foreach ($this->questions as $question){
-							//t3lib_div::devLog('q '.$question['title'], $this->prefixId, 0, $question);
-							if ($question['uid'] == $dep['activating_question']){
-								switch ($question['closed_type']){
-									case 'radio_single':
-										//t3lib_div::devLog('mmm '.$dep['activating_value'], $this->prefixId, 0, array($answers[$dep['activating_question']]['options']));
-										if ($answers[$dep['activating_question']]['options'] == $dep['activating_value']){
-											//t3lib_div::devLog('mmm '.$dep['activating_value'], $this->prefixId, 0, array($answers[$dep['activating_question']]['options']));
-											$own_counter ++;
-										}
-										break;
-									case 'check_multi':
-										if (in_array($dep['activating_value'],$answers[$dep['activating_question']]['options'])){
-											$own_counter ++;
-										}
-										break;
-								}
+					break;					
+					case 'dependancy':
+						//get the dependancies
+						$dependancies = array();
+						$dep_where = 'dependant_outcome='.$outcome['uid'].' AND hidden=0 AND deleted=0';
+						$dep_res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*','tx_kequestionnaire_dependancies',$dep_where,'','sorting');
+						if ($dep_res){
+							while ($dep_row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($dep_res)){
+								$dependancies[] = $dep_row;
 							}
 						}
-						//t3lib_div::devLog('outcome '.$outcome['title'], $this->prefixId, 0, array('dep'=>$dep_counter,'own'=>$own_counter));
-					}
-					$temp = $this->pi_RTEcssText($outcome['text']);
-					if ($outcome['dependancy_simple'] == 1){
-						if ($own_counter > 0){
-							$content .= $temp;
+						$dep_counter = count($dependancies);
+						$own_counter = 0;
+						//t3lib_div::devLog('deps', $this->prefixId, 0, $dependancies);
+						foreach ($dependancies as $dep){
+							//t3lib_div::devLog('dep '.$dep['title'], $this->prefixId, 0, $dep);
+							$temp = '';
+							foreach ($this->questions as $question){
+								//t3lib_div::devLog('q '.$question['title'], $this->prefixId, 0, $question);
+								if ($question['uid'] == $dep['activating_question']){
+									switch ($question['closed_type']){
+										case 'radio_single':
+											//t3lib_div::devLog('mmm '.$dep['activating_value'], $this->prefixId, 0, array($answers[$dep['activating_question']]['options']));
+											if ($answers[$dep['activating_question']]['options'] == $dep['activating_value']){
+												//t3lib_div::devLog('mmm '.$dep['activating_value'], $this->prefixId, 0, array($answers[$dep['activating_question']]['options']));
+												$own_counter ++;
+											}
+											break;
+										case 'check_multi':
+											if (in_array($dep['activating_value'],$answers[$dep['activating_question']]['options'])){
+												$own_counter ++;
+											}
+											break;
+									}
+								}
+							}
+							//t3lib_div::devLog('outcome '.$outcome['title'], $this->prefixId, 0, array('dep'=>$dep_counter,'own'=>$own_counter));
 						}
-					} else {
-						if ($dep_counter == $own_counter){
-							$content .= $temp;
+						$temp = $this->pi_RTEcssText($outcome['text']);
+						if ($outcome['dependancy_simple'] == 1){
+							if ($own_counter > 0){
+								$content .= $temp;
+							}
+						} else {
+							if ($dep_counter == $own_counter){
+								$content .= $temp;
+							}
 						}
-					}
-				} else {
-					//t3lib_div::devLog('outcome', $this->prefixId, 0, $outcome);
-					if ($points >= $outcome['value_start'] AND $points <= $outcome['value_end']) {
-						$content .= $this->pi_RTEcssText($outcome['text']);
-					}
+					break;
+					case 'block':
+						$block = $calculated['blocks'][$outcome['questionpool']];
+						
+						if ($block['own'] >= $outcome['value_start'] AND $block['own'] <= $outcome['value_end']) {
+							$temp = $this->pi_RTEcssText($outcome['text']);
+							//t3lib_div::debug($temp,'temp');
+							$temp = str_replace('###OWN###',$block['own'],$temp);
+							$temp = str_replace('###TOTAL###',$block['max'],$temp);
+							$block_content .= $temp;
+						}
+						
+						//t3lib_div::debug($outcome,'outcome');
+						//t3lib_div::debug($block,'calculated');
+					break;
 				} 
 			}
 		}
+		
+		$content .= $block_content;
 		
 		return $content;
 	}
@@ -1604,6 +1700,13 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 	function calculatePoints($results = NULL){
 		//t3lib_div::devLog('PIVars', $this->prefixId, 0, $this->piVars);
 		$returner = array();
+		$blocks = array();
+		$pools = $this->piVars['random_pools'];
+		foreach ($pools as $p_id => $pool){
+			$blocks[$p_id] = array();
+		}
+		//t3lib_div::debug($this->questionsByID,'q by id');
+		//t3lib_div::debug($blocks,'blocks');
 		
 		foreach ($this->questionsByID as $qid => $question){
 			$temp .= $qid;
@@ -1659,6 +1762,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 						$bars['total'][$qid] = $total_points/count($results);
 					}
 					
+					//t3lib_div::debug($this->piVars,'piVars');
 					switch ($question['closed_type']){
 						case 'sbm_button':
 						case 'radio_single':
@@ -1678,6 +1782,8 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 
 					$own_total += $bars['own'][$qid];
 					$max_points += $answer_max_points;
+					$blocks[$question['pool_id']]['max'] += $answer_max_points;
+					$blocks[$question['pool_id']]['own'] += $bars['own'][$qid];
 					break;
 				case 'dd_words':
 				case 'dd_area':
@@ -1717,6 +1823,8 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 					
 					$own_total += $bars['own'][$qid];
 					$max_points += $answer_max_points;
+					$blocks[$question['pool_id']]['max'] += $answer_max_points;
+					$blocks[$question['pool_id']]['own'] += $bars['own'][$qid];
 					break;
 				case 'dd_pictures':
 					$answers = array();
@@ -1761,6 +1869,137 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 					
 					$own_total += $bars['own'][$qid];
 					$max_points += $answer_max_points;
+					$blocks[$question['pool_id']]['max'] += $answer_max_points;
+					$blocks[$question['pool_id']]['own'] += $bars['own'][$qid];
+					break;
+				case 'matrix':
+					$matrix_max_points = 0;
+					$total_points = 0;
+					//t3lib_div::debug($question,'question');
+					$question_obj = $this->getQuestionTypeObject($question);
+					//t3lib_div::debug($question_obj->columns,'question');
+					switch ($question['matrix_type']){
+						case 'radio':
+							if ($question['matrix_pointsforcolumn'] == 1){
+								foreach ($question_obj->columns as $col){
+									$single_max_points = 0;
+									foreach ($question_obj->subquestions as $sub){
+										//für zeilen
+										//$total_points += $question_obj->subquestions[$result[$qid]['answer']['options'][$sub['uid']]['single']]['value'];
+										if ($single_max_points < $sub['value']) $single_max_points = $sub['value'];
+									}
+									$matrix_max_points += $single_max_points;
+								}
+							} else {
+								foreach ($question_obj->subquestions as $sub){
+									$single_max_points = 0;
+									foreach ($question_obj->columns as $col){
+										if ($single_max_points < $col['value']) $single_max_points = $col['value'];
+									}
+									$matrix_max_points += $single_max_points;
+								}
+							}
+							break;
+						case 'check':
+							if ($question['matrix_pointsforcolumn'] == 1){
+								foreach ($question_obj->columns as $col){
+									$single_max_points = 0;
+									foreach ($question_obj->subquestions as $sub){
+										//für zeilen
+										//$total_points += $question_obj->subquestions[$result[$qid]['answer']['options'][$sub['uid']]['single']]['value'];
+										if ($sub['value'] > 0) $single_max_points += $sub['value'];
+									}
+									$matrix_max_points += $single_max_points;
+								}
+							} else {
+								foreach ($question_obj->subquestions as $sub){
+									$single_max_points = 0;
+									foreach ($question_obj->columns as $col){
+										if ($col['value'] > 0) $single_max_points += $col['value'];
+									}
+									$matrix_max_points += $single_max_points;
+								}
+							}
+							break;
+					}
+					//t3lib_div::debug($matrix_max_points,'max_points');
+					//t3lib_div::debug($results,'results');
+					
+					if ($results){
+						foreach ($results as $rid => $result){
+							//t3lib_div::debug($result,'result');
+							switch ($question['matrix_type']){
+								case 'radio':
+									foreach ($question_obj->subquestions as $sub){
+										if ($question['matrix_pointsforcolumn'] == 1){
+											//für zeilen											
+											if ($result[$qid]['answer']['options'][$sub['uid']]) $total_points += $sub['value'];
+										} else {
+											$total_points += $question_obj->columns[$result[$qid]['answer']['options'][$sub['uid']]['single']]['value'];
+										}
+									}
+									break;
+								case 'check':
+									foreach ($question_obj->subquestions as $sub){
+										if ($question['matrix_pointsforcolumn'] == 1){
+											foreach ($question_obj->columns as $col){
+												//für zeilen											
+												if ($result[$qid]['answer']['options'][$sub['uid']][$col['uid']][0] == $col['uid']) $total_points += $sub['value'];
+											}
+										} else {
+											if (is_array($result[$qid]['answer']['options'][$sub['uid']])){
+												foreach ($result[$qid]['answer']['options'][$sub['uid']] as $r_item){
+													$total_points += $question_obj->columns[$r_item[0]]['value'];
+												}
+											}
+										}
+									}
+									break;
+							}
+						}
+						$bars['total'][$qid] = $total_points/count($results);
+					}
+					
+					//t3lib_div::debug($this->piVars,'piVars');
+					switch ($question['matrix_type']){
+						case 'radio':
+							foreach ($question_obj->subquestions as $sub){
+								if ($question['matrix_pointsforcolumn'] == 1){
+									if ($this->piVars[$qid]['options'][$sub['uid']]){
+										$bars['own'][$qid] += intval($sub['value']);
+									}
+									//$bars['own'][$qid] += intval($question_obj->subquestions[$this->piVars[$qid]['options'][$sub['uid']]['single']]['value']);
+								} else {
+									$bars['own'][$qid] += intval($question_obj->columns[$this->piVars[$qid]['options'][$sub['uid']]['single']]['value']);
+								}
+							}
+							break;
+						case 'check':
+							foreach ($question_obj->subquestions as $sub){
+								if ($question['matrix_pointsforcolumn'] == 1){
+									foreach ($question_obj->columns as $col){
+										//t3lib_div::debug($this->piVars[$qid]['options'][$sub['uid']][$col['uid']],'test');
+										if ($this->piVars[$qid]['options'][$sub['uid']][$col['uid']][0] == $col['uid']){
+											$bars['own'][$qid] += intval($sub['value']);
+										}
+									}
+									//$bars['own'][$qid] += intval($question_obj->subquestions[$this->piVars[$qid]['options'][$sub['uid']]['single']]['value']);
+								} else {
+									if (is_array($this->piVars[$qid]['options'][$sub['uid']])){
+										foreach ($this->piVars[$qid]['options'][$sub['uid']] as $r_item){
+											$bars['own'][$qid] += intval($question_obj->columns[$r_item[0]]['value']);
+										}
+									}
+								}
+							}
+							break;
+					}
+					//t3lib_div::debug($bars,'bars');
+
+					$own_total += $bars['own'][$qid];
+					$max_points += $matrix_max_points;
+					$blocks[$question['pool_id']]['max'] += $matrix_max_points;
+					$blocks[$question['pool_id']]['own'] += $bars['own'][$qid];
 					break;
 			}
 		}
@@ -1770,7 +2009,9 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 		$returner['own'] = $own_total;
 		$returner['max'] = $max_points;
 		$returner['bars'] = $bars;
+		$returner['blocks'] = $blocks;
 		
+		//t3lib_div::debug($returner,'returner');
 		return $returner;
 	}
 	
@@ -1825,6 +2066,15 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 		$own_percent = ($own_total/$max_points)*100;
 		$own_percent = number_format($own_percent,2,',','.');
 		$markerArray['###TEXT###'] = str_replace('###PERCENT###',$own_percent,$markerArray['###TEXT###']);
+		
+		$markerArray['###ADDITIONAL###'] = '';
+		//Hook to do something after the questionnaire is finished
+		if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$this->extKey]['pi1_getQuitReport'])){
+			foreach($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$this->extKey]['pi1_getQuizReport'] as $_classRef){
+				$_procObj = & t3lib_div::getUserObj($_classRef);
+				$markerArray = $_procObj->pi1_getQuizReport($this,$calced,$markerArray);
+			}
+		}		
 		
 		$markerArray['###REPORT###'] = '';
 		//if premium is loaded render a graphic report
@@ -2281,6 +2531,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 		$this->questionCount['notshown_dependants'] = 0; //don't count dependants when not shown if not activated
 		$this->questionCount['only_questions'] = 0; //no blind-texts counting
 		$this->questionCount['no_dependants'] = 0; //don't count the dependants
+		$this->questionCount['substract_pools'] = 0; //if pools count into pagecount don't substract them
 		
 		$temp_count = 0;
 		$temp_count_hidden = 0;
@@ -2343,14 +2594,20 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 					}
 					if ($row['type'] != 'blind' AND $row['type'] != 'refusal') $this->questions[] = $row;
 					$this->allQuestions[] = $row;
-					$this->questionsByID[$row['uid']] = $row;
+					if ($row['type'] == 'pool') {
+						$this->questionCount['substract_pools'] ++;
+						$this->questionsByID['p_'.$row['uid']] = $row;
+					}
+					else $this->questionsByID[$row['uid']] = $row;
 				}
 			}
+			if ($this->ffdata['count_pools'] != 1) $this->questionCount['substract_pools'] = 0;
 			$this->questionCount['no_dependants'] = $temp_count;
 			$this->questionCount['notshown_dependants'] = $temp_count_hidden;
 			$this->questionCount['only_questions'] = count($this->questions);
 			$this->questionCount['total'] = count($this->allQuestions);
 		}
+		//t3lib_div::debug($this->questionsByID,'byId');
 	}
 	
 	/**

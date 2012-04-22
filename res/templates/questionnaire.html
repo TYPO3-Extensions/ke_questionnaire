@@ -82,7 +82,9 @@
 -->
 <!-- ###PAGE### begin-->
 <div class="keq_page">
+    ###PAGE_MAP###
     ###PAGE_COUNTER###
+    <div class="clearer_all">&nbsp;</div>
     <form id="ke_questionnaire" name="ke_questionnaire" class="keq_form" method="post" target="_top" enctype="multipart/form-data" action="###FORM_ACTION###">
         ###SHOW_TIMER###
         ###FORM_PRE_ADD###
@@ -163,6 +165,7 @@
 <div class="keq_quiz_report">
     <p>&nbsp;</p>
     <p>###TEXT###</p>
+    ###ADDITIONAL###
     ###CERTIFICATE###
     <p>###REPORT###</p>
 </div>
@@ -172,6 +175,7 @@
 <div class="keq_points_report">
     <p>&nbsp;</p>
     <p>###TEXT###</p>
+    ###ADDITIONAL###
     <p>###REPORT###</p>
 </div>
 <!-- ###POINTS_REPORT### end-->
@@ -215,6 +219,18 @@
     ###A_LABEL### "###A_TEXT###"
 </div>
 <!-- ###LASTANSWER### end-->
+
+<!-- ###PAGEMAP### begin-->
+<div class="pagemap">
+    ###ITEMS###
+</div>
+<!-- ###PAGEMAP### end-->
+
+<!-- ###PAGEMAP_ITEM### begin-->
+<div class="pagemap_item ###ACTIVE###">
+    ###TITLE###
+</div>
+<!-- ###PAGEMAP_ITEM### end-->
 
 <!-- ###DOMPDF### begin-->
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">

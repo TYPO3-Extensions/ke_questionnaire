@@ -15,6 +15,7 @@ if (TYPO3_MODE=="BE")	include_once(t3lib_extMgm::extPath("ke_questionnaire")."re
 if (TYPO3_MODE=="BE")	include_once(t3lib_extMgm::extPath("ke_questionnaire")."res/class.tx_kequestionnaire_tx_kequestionnaire_dependancies_activating_question.php");
 if (TYPO3_MODE=="BE")	include_once(t3lib_extMgm::extPath("ke_questionnaire")."res/class.tx_kequestionnaire_tx_kequestionnaire_redirect.php");
 if (TYPO3_MODE=="BE")	include_once(t3lib_extMgm::extPath("ke_questionnaire")."res/class.tx_kequestionnaire_tx_kequestionnaire_questions_dd_area_type.php");
+if (TYPO3_MODE=="BE")	include_once(t3lib_extMgm::extPath("ke_questionnaire")."res/class.tx_kequestionnaire_tx_kequestionnaire_outcomes_type.php");
 if (TYPO3_MODE=="BE")	include_once(t3lib_extMgm::extPath("ke_questionnaire")."res/class.tx_kequestionnaire_type.php");
 
 // CSH Definitions
@@ -42,7 +43,7 @@ $TCA["tx_kequestionnaire_questions"] = array (
 		'transOrigDiffSourceField' => 'l18n_diffsource',
 		'sortby' => 'sorting',
 		'delete' => 'deleted',
-        'requestUpdate' => 'closed_type,matrix_type,open_validation',
+                'requestUpdate' => 'closed_type,matrix_type,open_validation',
 		'enablecolumns' => array (
 			'disabled' => 'hidden',
 			'starttime' => 'starttime',
@@ -195,6 +196,7 @@ $TCA["tx_kequestionnaire_outcomes"] = array (
 		'tstamp'    => 'tstamp',
 		'crdate'    => 'crdate',
 		'cruser_id' => 'cruser_id',
+                'type' => 'type',
 		'languageField'            => 'sys_language_uid',
 		'transOrigPointerField'    => 'l18n_parent',
 		'transOrigDiffSourceField' => 'l18n_diffsource',

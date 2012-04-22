@@ -649,5 +649,20 @@ plugin.tx_kequestionnaire_pi1 {
 		div.clearer {
 			clear: left;
 		}
+		
+		div.clearer_all {
+			clear: both;
+		}
+		
+		div.pagemap {
+			float: right;
+			display: block;
+			padding: 5px;
+			background: #fff;
+		}
+		
+		div.pagemap_item.active {
+			font-weight: bold;
+		}
 	)
 }

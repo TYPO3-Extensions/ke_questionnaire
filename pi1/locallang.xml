@@ -70,7 +70,7 @@
 			<label index="telephone">Phone</label>
 
 			<label index="to_questionnaire">to questionnaire</label>
-			<label index="to_last">last page</label>
+			<label index="to_last">previous page</label>
 			<label index="to_next">next page</label>
 			<label index="submit">submit questionnaire</label>
 
@@ -88,6 +88,9 @@
 				You have reached ###PERCENT###% of the total score.&lt;br&gt;
 				&lt;br&gt;
 				###POINTS### of ###TOTAL### points reached.&lt;br&gt;
+			</label>
+			<label index="block_points_text">
+				###TITLE###: ###POINTS### of ###TOTAL### points reached.&lt;br&gt;
 			</label>
 			
 			<label index="timer_text_total">
@@ -121,6 +124,8 @@
 			
 			<label index="lastanswer_question">last Question:</label>
 			<label index="lastanswer_answer">your Answer:</label>
+			
+			<label index="pagemap_prefix">Page </label>
 		</languageKey>
 		<languageKey index="de" type="array">
 			<label index="test">Test</label>
@@ -207,6 +212,9 @@
 				&lt;br&gt;
 				Es wurden ###POINTS### von ###TOTAL### möglichen Punkten erreicht.&lt;br&gt;
 			</label>
+			<label index="block_points_text">
+				###TITLE###: ###POINTS### von ###TOTAL### möglichen Punkten.&lt;br&gt;
+			</label>
 			
 			<label index="timer_text_total">
 				Sie haben nur begrenzt Zeit diesen Fragebogen zu beantworten.&lt;br&gt;
@@ -237,6 +245,8 @@
 			
 			<label index="lastanswer_question">letzte Frage:</label>
 			<label index="lastanswer_answer">Ihre Antwort:</label>
+			
+			<label index="pagemap_prefix">Seite </label>
 		</languageKey>
 	</data>
 </T3locallang>

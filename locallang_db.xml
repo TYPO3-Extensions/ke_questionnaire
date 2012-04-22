@@ -78,6 +78,7 @@
 			<label index="tx_kequestionnaire_questions.matrix_validation">matrix validation types</label>
 			<label index="tx_kequestionnaire_questions.matrix_maxanswers">max answers allowed for user in whole matrix</label>
 			<label index="tx_kequestionnaire_questions.matrix_inputfield">Inputfield</label>
+			<label index="tx_kequestionnaire_questions.matrix_pointsforcolumn">Calculate Matrix points for column instead of rows (only for checkboxes to be calculated)</label>
 			<label index="tx_kequestionnaire_questions.demographic_type.I.0">demographic data</label>
 			<label index="tx_kequestionnaire_questions.demographic_type.I.1">address Data</label>
 			<label index="tx_kequestionnaire_questions.demographic_type.I.2">both sets of Data</label>
@@ -118,6 +119,7 @@
 			<label index="tx_kequestionnaire_columns.different_type.I.2">Input type</label>
 			<label index="tx_kequestionnaire_columns.different_type">Different input type for subquestion</label>
 			<label index="tx_kequestionnaire_columns.maxanswers">max amount of answers given to the user in this column</label>
+			<label index="tx_kequestionnaire_columns.value">value</label>
 			
 			<label index="tx_kequestionnaire_subquestions">Subquestion (matrix)</label>
 			<label index="tx_kequestionnaire_subquestions.title_line">is title line (no input fields rendered)</label>
@@ -125,6 +127,7 @@
 			<label index="tx_kequestionnaire_subquestions.title">title</label>
 			<label index="tx_kequestionnaire_subquestions.text">text</label>
 			<label index="tx_kequestionnaire_subquestions.image">image</label>
+			<label index="tx_kequestionnaire_subquestions.value">value</label>
 			
 			<label index="tx_kequestionnaire_dependancies">Dependancy (of questions)</label>
 			<label index="tx_kequestionnaire_dependancies.dependant_question">dependant question</label>
@@ -150,6 +153,7 @@
 			<label index="tx_kequestionnaire_outcomes.image">image</label>
 			<label index="tx_kequestionnaire_outcomes.type.value">value</label>
 			<label index="tx_kequestionnaire_outcomes.type.dependancy">dependancy</label>
+			<label index="tx_kequestionnaire_outcomes.questionpool">question group/ question pool</label>
 			
 			<label index="tx_kequestionnaire_authcodes">Auth-Code</label>
 			<label index="tx_kequestionnaire_authcodes.qpid">questionnaire data Pid</label>
@@ -252,6 +256,7 @@
 			<label index="tx_kequestionnaire_questions.matrix_validation">Überprüfung</label>
 			<label index="tx_kequestionnaire_questions.matrix_inputfield">Position des Eingabefeldes</label>
 			<label index="tx_kequestionnaire_questions.matrix_maxanswers">max. Anzahl an Antworten, die dem Nutzer in der gesamten Matrix erlaubt sind</label>
+			<label index="tx_kequestionnaire_questions.matrix_pointsforcolumn">Punkteberechnung innerhalb der Matrix für Spalten und nicht für Zeilen (nur bei Checkboxen zu kalkulieren)</label>
 			<label index="tx_kequestionnaire_questions.demographic_type.I.0">demografische Daten</label>
 			<label index="tx_kequestionnaire_questions.demographic_type.I.1">Adress-Daten</label>
 			<label index="tx_kequestionnaire_questions.demographic_type.I.2">beide Datenfelder</label>
@@ -324,6 +329,7 @@
 			<label index="tx_kequestionnaire_outcomes.image">Bild</label>
 			<label index="tx_kequestionnaire_outcomes.type.value">Wert</label>
 			<label index="tx_kequestionnaire_outcomes.type.dependancy">Abhängigkeit</label>
+			<label index="tx_kequestionnaire_outcomes.questionpool">Gruppe von Fragen/ Fragenpool</label>
 			
 			<label index="tx_kequestionnaire_authcodes">Auth-Code</label>
 			<label index="tx_kequestionnaire_authcodes.qpid">Fragebogen Daten Pid</label>

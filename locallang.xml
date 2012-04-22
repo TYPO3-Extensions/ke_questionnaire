@@ -32,7 +32,13 @@
 
 			<label index="tt_content.pi_flexform.user_reports">Show Analysis in Frontend</label>
 			<label index="tt_content.pi_flexform.q_report_graph">show graphical analysis</label>
-			<label index="tt_content.redirect_on_finish_uid">Question used for redirect on finish</label>
+			<label index="tt_content.pi_flexform.redirect_on_finish_uid">Question used for redirect on finish</label>
+			<label index="tt_content.pi_flexform.use_pools">Use Question-Pools to group questions</label>
+			<label index="tt_content.pi_flexform.count_pools">Count Pools for page calculation</label>
+			<label index="tt_content.pi_flexform.show_pool_map">Show an overview in wich Question-Pool you currently are. (Overwrites the page overview if it's acitvated)</label>
+			<label index="tt_content.pi_flexform.show_pagemap">Show an overview on wich page you are.</label>
+			<label index="tt_content.pi_flexform.show_pagecounter">Show progress bar as overview.</label>
+			<label index="tt_content.pi_flexform.pagemap_navigation">Allow navigation through the overview</label>
 			
 			<label index="tt_content.pi_flexform.pdf_type">PDF-Export after finishing</label>
 			<label index="tt_content.pi_flexform.pdf_type.none">none</label>
@@ -138,7 +144,13 @@
 
 			<label index="tt_content.pi_flexform.user_reports">Frontend-Auswertungen für Nutzer anzeigen</label>
 			<label index="tt_content.pi_flexform.q_report_graph">graphische Auswertung anzeigen</label>
-			<label index="tt_content.redirect_on_finish_uid">Frage, welche die Umleitung nach Abschluss bestimmt</label>
+			<label index="tt_content.pi_flexform.redirect_on_finish_uid">Frage, welche die Umleitung nach Abschluss bestimmt</label>
+			<label index="tt_content.pi_flexform.use_pools">Fragenpools nutzen um Fragen zu gruppieren</label>
+			<label index="tt_content.pi_flexform.count_pools">Fragenpools in die Seitenbereichnung einbeziehen (ein Pool zählt dann wie eine Frage)</label>
+			<label index="tt_content.pi_flexform.show_pool_index">Überblick anzeigen in welchem Fragenpool man sich gerade befindet (ersetzt den Überblick über Seiten falls dieser aktiviert ist).</label>
+			<label index="tt_content.pi_flexform.show_pagemap">Überblick anzeigen auf welcher Seite man sich gerade befindet.</label>
+			<label index="tt_content.pi_flexform.show_pagecounter">Fortschrittsbalken anzeigen.</label>
+			<label index="tt_content.pi_flexform.pagemap_navigation">Navigation über den Überblick erlauben.</label>
 			
 			<label index="tt_content.pi_flexform.pdf_type">PDF-Export nach Beendigung</label>
 			<label index="tt_content.pi_flexform.pdf_type.none">keiner</label>

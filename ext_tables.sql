@@ -54,6 +54,7 @@ CREATE TABLE tx_kequestionnaire_questions (
 	matrix_validation varchar(7) DEFAULT '' NOT NULL,
 	matrix_maxanswers int(11) DEFAULT '0' NOT NULL,
 	matrix_inputfield int(11) DEFAULT '0' NOT NULL,
+        matrix_pointsforcolumn tinyint(3) DEFAULT '0' NOT NULL,
 	demographic_type varchar(7) DEFAULT '' NOT NULL,
 	demographic_fields text NOT NULL,
 	demographic_addressfields text NOT NULL,
@@ -146,6 +147,7 @@ CREATE TABLE tx_kequestionnaire_columns (
 	image blob NOT NULL,
 	image_position varchar(11) DEFAULT '' NOT NULL,
 	question_uid int(11) DEFAULT '0' NOT NULL,
+        value int(11) DEFAULT '0' NOT NULL,
 	
 	PRIMARY KEY (uid),
 	KEY parent (pid),
@@ -185,6 +187,7 @@ CREATE TABLE tx_kequestionnaire_subquestions (
 	image blob NOT NULL,
 	image_position varchar(11) DEFAULT '' NOT NULL,
 	question_uid int(11) DEFAULT '0' NOT NULL,
+        value int(11) DEFAULT '0' NOT NULL,
 	
 	PRIMARY KEY (uid),
 	KEY parent (pid),
@@ -271,6 +274,7 @@ CREATE TABLE tx_kequestionnaire_outcomes (
 	image_position varchar(11) DEFAULT '' NOT NULL,
 	dependancy blob NOT NULL,
 	dependancy_simple tinyint(3) DEFAULT '0' NOT NULL,
+        questionpool int(11) DEFAULT '0' NOT NULL,
 	
 	PRIMARY KEY (uid),
 	KEY parent (pid)
