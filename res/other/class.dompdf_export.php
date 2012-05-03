@@ -568,12 +568,17 @@ class dompdf_export {
 					break;
 				case 'dd_words':
 				case 'dd_area':
-					$options = $this->getOptions($qid);
 					$answers = array();
 					// get all answers
-					foreach ($options as $answer){
+					$where = 'question_uid='.$qid.$this->cObj->enableFields('tx_kequestionnaire_answers');
+					$res_answers = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*','tx_kequestionnaire_answers',$where);
+					$answer_max_points = 0;
+					if ($res_answers){
+						// create array with points of each answer
+						while ($answer = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res_answers)){
 							$answers[$answer['uid']]['points'] = $answer['value'];
 							$answer_max_points += $answer['value'];
+						}
 					}
 					
 					// sum points of all answers of each question
@@ -594,15 +599,19 @@ class dompdf_export {
 					$max_points += $answer_max_points;
 					break;
 				case 'dd_pictures':
-					$options = $this->getOptions($qid);
 					$answers = array();
 					$areas = array();
 					// get all answers
+					$where = 'question_uid='.$qid.$this->cObj->enableFields('tx_kequestionnaire_answers');
+					$res_answers = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*','tx_kequestionnaire_answers',$where);
 					$answer_max_points = 0;
-					foreach ($options as $answer){
+					if ($res_answers){
+						// create array with points of each answer
+						while ($answer = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res_answers)){
 							$answers[$answer['uid']]['points'] = $answer['value'];
 							$areas[$answer['answerarea']][] = $answer['uid'];
 							$answer_max_points += $answer['value'];
+						}
 					}
 					
 					// sum points of all answers of each question

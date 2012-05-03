@@ -395,6 +395,7 @@
 				<redirect_on_finish_uid>
 					<TCEforms>
 						<label>LLL:EXT:ke_questionnaire/locallang.xml:tt_content.pi_flexform.redirect_on_finish_uid</label>
+
 						<config>
 							<type>select</type>
 							<allownonidvalues>1</allownonidvalues>

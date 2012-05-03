@@ -70,7 +70,7 @@
 			<label index="telephone">Phone</label>
 
 			<label index="to_questionnaire">to questionnaire</label>
-			<label index="to_last">previous page</label>
+			<label index="to_last">last page</label>
 			<label index="to_next">next page</label>
 			<label index="submit">submit questionnaire</label>
 

@@ -419,6 +419,37 @@ class plain_export {
 					$own_total += $bars['own'][$qid];
 					$max_points += $answer_max_points;
 					break;
+				case 'dd_pictures':
+					$answers = array();
+					$areas = array();
+					// get all answers
+					$where = 'question_uid='.$qid.$this->cObj->enableFields('tx_kequestionnaire_answers');
+					$res_answers = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*','tx_kequestionnaire_answers',$where);
+					$answer_max_points = 0;
+					if ($res_answers){
+						// create array with points of each answer
+						while ($answer = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res_answers)){
+							$answers[$answer['uid']]['points'] = $answer['value'];
+							$areas[$answer['answerarea']][] = $answer['uid'];
+							$answer_max_points += $answer['value'];
+						}
+					}
+					
+					// sum points of all answers of each question
+					$total_points = 0;
+					if (is_array($result[$qid]['answer']['options'])){
+						foreach ($result[$qid]['answer']['options'] as $area => $areaitems){
+							foreach ($areaitems as $item){
+								if (in_array($item,$areas[$area])) $total_points += $answers[$item]['points'];
+								$bars['own'][$qid] += $answers[$item]['points'];
+							}
+						}
+					}
+					
+									
+					$own_total += $bars['own'][$qid];
+					$max_points += $answer_max_points;
+					break;
 				case 'matrix':
 					$matrix_max_points = 0;
 					$total_points = 0;
@@ -446,7 +477,7 @@ class plain_export {
 								foreach ($columns as $col){
 									$single_max_points = 0;
 									foreach ($subquestions as $sub){
-										//fÃ¼r zeilen
+										//für zeilen
 										//$total_points += $question_obj->subquestions[$result[$qid]['answer']['options'][$sub['uid']]['single']]['value'];
 										if ($single_max_points < $sub['value']) $single_max_points = $sub['value'];
 									}
@@ -467,7 +498,7 @@ class plain_export {
 								foreach ($columns as $col){
 									$single_max_points = 0;
 									foreach ($subquestions as $sub){
-										//fÃ¼r zeilen
+										//für zeilen
 										//$total_points += $question_obj->subquestions[$result[$qid]['answer']['options'][$sub['uid']]['single']]['value'];
 										if ($sub['value'] > 0) $single_max_points += $sub['value'];
 									}
