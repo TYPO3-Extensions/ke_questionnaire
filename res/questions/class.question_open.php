@@ -35,68 +35,65 @@ require_once(PATH_tslib.'class.tslib_pibase.php');
  * @subpackage	tx_kequestionnaire
  * */
 
-class question_open extends question{
-    var $templateName           = "question_open.html";              //Name of default Templatefile
+class question_open extends question {
+	var $templateName = 'question_open.html'; //Name of default Templatefile
 
 
-    /**
+	/**
 	 * Defines all fields in Template
 	 *
-	 *
+	 * @return void
 	 */
-    function buildFieldArray(){
+	public function buildFieldArray(){
 		$this->fields["text"]=new kequestionnaire_input("text","input",$this->answer["text"],"###INPUT###",$this->obj,array(),array(),array(),array(),"",$this->dependants);
-    }
+	}
 
-    /**
+	/**
 	 * Selects Subpartname depending on Qustiontype
 	 *
-	 * @return      the whole question ready rendered
-	 *
+	 * @return the whole question ready rendered
 	 */
-	function getTemplateName(){
-		switch($this->question["open_type"]){
+	public function getTemplateName(){
+		switch($this->question['open_type']){
 			case 0:
-				switch($this->question["open_validation"]){
-					case "numeric":
-						$out= "QUESTION_NUMBERIC";
+				switch($this->question['open_validation']){
+					case 'numeric':
+						$out= 'QUESTION_NUMBERIC';
 					break;
-					case "integer":
-						$out= "QUESTION_INTEGER";
+					case 'integer':
+						$out= 'QUESTION_INTEGER';
 					break;
-					case "date":
-						$out= "QUESTION_DATE";
+					case 'date':
+						$out= 'QUESTION_DATE';
 					break;
-					case "email":
-						$out= "QUESTION_EMAIL";
+					case 'email':
+						$out= 'QUESTION_EMAIL';
 					break;
 					default:
-						$out= "QUESTION_SINGLE";
+						$out= 'QUESTION_SINGLE';
 					break;
 				}
 			break;
 			case 1:
-				$out= "QUESTION_MULTI";
+				$out= 'QUESTION_MULTI';
 			break;
 			default:
-				$out= "Templatetype ".$this->question["open_type"]." not defined!";
+				$out= 'Templatetype ' . $this->question['open_type'] . ' not defined!';
 			break;
 		}
 
 		return $out;
-
 	}
 
 
-
-    /**
+	/**
 	 * The validation method of the Question-Class
 	 *
 	 * @return	boolean true if validation is correct
 	 * 		Error-String if validation failed
 	 *
 	 */
-    function validate(){
+	function validate(){
 		//t3lib_div::devLog('validate', 'question_open', 0, array('question'=>$this->question,'answer'=>$this->answer['text']));
 		//t3lib_div::devLog('extConf', 'question_open', 0, $this->obj->extConf);
 		//t3lib_div::devLog('this->question', 'question_open', 0, $this->question);
@@ -106,47 +103,42 @@ class question_open extends question{
 		$validationTypes=array();
 		if($this->question['open_validation']) $validationTypes[]=$this->question['open_validation']; // validation for special type?
 		if($this->question['mandatory']) $validationTypes[]="required"; // required?
-		
-		$validationOptions["dateFormat"]=$this->dateFormat;
-		$validationOptions["numberDivider"]=$this->numberDivider;
+
+		$validationOptions['dateFormat']=$this->dateFormat;
+		$validationOptions['numberDivider']=$this->numberDivider;
 		if ($this->question['open_validation'] == 'text') $validationOptions["textOptions"]=explode($this->obj->extConf['oq_validation_parter'],$this->question['open_validation_text']);
 		if ($this->question['open_validation'] == 'keys') {
-		    $parter = ',';
-		    if ($this->obj->extConf['oq_keywords_validation_parter']) $parter = $this->obj->extConf['oq_keywords_validation_parter'];
-		    $validationOptions["textOptions"]=explode($parter,$this->question['open_validation_keywords']);
-		    $validationOptions["matchAll"] = $this->question['open_validation_keywords_all'];
-		    if ($this->question['open_validation_keywords_all']){
-			foreach ($validationTypes as $key => $vvalue){
-			    //t3lib_div::debug('test', $key);
-			    if ($vvalue == 'keys') $validationTypes[$key] = $vvalue.'_all';
+			$parter = ',';
+			if($this->obj->extConf['oq_keywords_validation_parter']) $parter = $this->obj->extConf['oq_keywords_validation_parter'];
+			$validationOptions['textOptions']=explode($parter,$this->question['open_validation_keywords']);
+			$validationOptions['matchAll'] = $this->question['open_validation_keywords_all'];
+			if($this->question['open_validation_keywords_all']) {
+				foreach ($validationTypes as $key => $vvalue){
+					//t3lib_div::debug('test', $key);
+					if ($vvalue == 'keys') $validationTypes[$key] = $vvalue.'_all';
+				}
 			}
-		    }
 		}
 		// Get all validation errors
-		$errors=$this->fields["text"]->validate($validationTypes,$value,$validationOptions);
+		$errors=$this->fields['text']->validate($validationTypes,$value,$validationOptions);
 		if (!$this->checkDependancies()){
-			$this->error=0;
+			$this->error = 0;
 		} elseif(count($errors) > 0) {
-		    $this->error=1;
-		    $this->errorFields[] = $key;
+			$this->error = 1;
+			$this->errorFields[] = $key;
 		}
-
 	}
 
-    /**
+
+	/**
 	 * get simple Answer-String
 	 *
 	 */
-	function getSimpleAnswer(){
+	public function getSimpleAnswer(){
 		$saveA = $this->getSaveArray();
 		$saveA = $saveA[$this->uid];
-		
 		$answer =  $saveA['answer'];
-		
-		//t3lib_div::debug($saveA);
-	   
 		return $answer;
-        }
+	}
 }
-
 ?>

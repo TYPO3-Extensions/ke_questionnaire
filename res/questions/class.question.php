@@ -53,12 +53,12 @@ class question{
     var $error          = false;		//Errorflag
     var $errorMsg       = '';			//Errormessage
     var $errorFields    = array();
-    
+
     /**
      * @var tslib_cObj
      */
     var $cObj;
-    
+
 	/**
 	 * The initiation method of the PlugIn
 	 *
@@ -93,10 +93,10 @@ class question{
 		$GLOBALS['TYPO3_DB']->debugOutput=$this->debug;
 
 
-		// getRecord	
+		// getRecord
 		$where = 'uid=' . $uid . $this->cObj->enableFields('tx_kequestionnaire_questions');
 		$res = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('*', 'tx_kequestionnaire_questions', $where, '', 'sorting');
-		
+
 		// fill question array. This data will be saved in xmldata later on.
 		foreach($res as $row) {
 			$row = $this->processRTEFields($row, 'tx_kequestionnaire_questions');
@@ -107,13 +107,13 @@ class question{
 		$this->type = $this->question["closed_type"];
 
 		//t3lib_div::devLog('test '.$uid, 'questions', 0, array('test'));
-		
+
 		// Dependancies
 		$this->getDependancies();
-		
+
 		// Dependants
 		$this->getDependants();
-		
+
 		//Get other tables
 		//look into the type-classes and base_init-section
 		$this->base_init($this->uid);
@@ -125,18 +125,18 @@ class question{
 		} else {
 		    $this->template = $this->obj->tmpl_path.$this->templateName;
 		}
-		
+
 		// Read Subparts
 		$this->tmpl = $this->cObj->fileResource($this->template);
 		if ($this->tmpl == '') $this->tmpl = file_get_contents(PATH_site.$this->template);
 		//t3lib_div::debug($this->tmpl,$this->template);
-		
+
 		//Template not found in base extension? Check premium!
 		if($this->tmpl == '' && t3lib_extMgm::isLoaded('ke_questionnaire_premium')) {
 		     $this->template = t3lib_extMgm::siteRelPath('ke_questionnaire_premium').'res/templates/'.$this->templateName;
 		     $this->tmpl = $this->cObj->fileResource($this->template);
 		}
-			
+
 		$mainSubpartName=$this->getTemplateName();
 		$this->tmplMain = $this->cObj->getSubpart($this->tmpl, $mainSubpartName);
 		$this->tmplFields = $this->cObj->getSubpart($this->tmplMain, '###FIELDS###');
@@ -149,7 +149,7 @@ class question{
 		//start Xajax
 		$this->XAJAX_start();
 	}
-	
+
 	/**
 	 * The initiation method of the PlugIn
 	 *
@@ -157,7 +157,7 @@ class question{
 	function base_init($uid){
 	    //To be defined in the lower classes
 	}
-	
+
 	function getDependants($uid = 0, $l18n_parent = 0){
 	    if ($uid == 0) $uid = $this->question['uid'];
 	    if ($l18n_parent == 0) $l18n_parent = $this->question['l18n_parent'];
@@ -168,7 +168,7 @@ class question{
 		foreach($res as $row){
 		    $this->dependants[$row["uid"]]=$row;
 		}
-		
+
 		if (count($this->dependants) == 0){
 		    $where = "activating_question=".$l18n_parent .$this->cObj->enableFields('tx_kequestionnaire_dependancies');
 		    $res=$GLOBALS["TYPO3_DB"]->exec_SELECTgetRows("*", "tx_kequestionnaire_dependancies", $where,'','sorting');
@@ -180,7 +180,7 @@ class question{
 	    }
 	    //t3lib_div::devLog('this->dependants '.$this->question['title'], 'question class', 0, $this->dependants);
 	}
-	
+
 	function getDependancies($uid = 0, $l18n_parent = 0){
 	    if ($uid == 0) $uid = $this->question['uid'];
 	    if ($l18n_parent == 0) $l18n_parent = $this->question['l18n_parent'];
@@ -191,7 +191,7 @@ class question{
 		    //t3lib_div::devLog('row '.$this->question['title'], 'question class', 0, $row);
 		    if ($row['dependant_outcome'] == 0 AND $row['dependant_question'] != 0) $this->dependancies[$row["uid"]]=$row;
 		}
-		
+
 		if (count($this->dependancies) == 0){
 		    $where = "dependant_question=".$l18n_parent .$this->cObj->enableFields('tx_kequestionnaire_dependancies');
 		    $res = $GLOBALS["TYPO3_DB"]->exec_SELECTgetRows("*", "tx_kequestionnaire_dependancies", $where,'','sorting');
@@ -296,7 +296,7 @@ class question{
 		}
 		//t3lib_div::debug($temp_text);
 		$out['###TEXT###'] = $temp_text;
-		
+
 		// dependancy related
 		$out['###DEPENDANT###'] = '';
 		$out['###DEPENDANT_STYLE###'] = '';
@@ -330,7 +330,7 @@ class question{
 		// Closed
 		$out['###CLOSED_INPUT###'] = $this->question['closed_inputfield'];
 		$out['###CLOSED_SIZE###'] = $this->question['closed_selectsize']>0?"size='".$this->question['closed_selectsize']."'":"";
-		
+
 		// Privacy
 		$out['###PRIVACY_LINK_LABEL###'] = '';
 		if($this->question['privacy_link']!="") {
@@ -359,7 +359,7 @@ class question{
 		// Help in q-Template
 		$out['###HELPIMAGE###'] = t3lib_extMgm::siteRelPath('ke_questionnaire').'/res/images/helpbubble.gif';
 		$out['###HELPTEXT###'] = $this->question['helptext'];
-		
+
 		// Help in separate Template
 		$out['###HELPBOX###'] = '';
 		if ($this->question['helptext'] != ''){
@@ -423,7 +423,7 @@ class question{
 
 		//if the dependancy is simple
 		$simple = $this->question['dependancy_simple'];
-		
+
 		$need = count ($this->dependancies);
 		$is = 0;
 		foreach ($this->dependancies as $key => $dependancy){
@@ -487,7 +487,7 @@ class question{
 	$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*','tx_kequestionnaire_questions',$where);
 	$q = array();
 	if ($res){
-	    $q = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);   
+	    $q = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
 	}
 	return $q;
     }
@@ -507,10 +507,10 @@ class question{
 
 		$this->htmlFields=$this->renderFields();
 		$out = $this->renderQuestion();
-		
+
 		return $out;
     }
-    
+
 	/**
 	 * Render HTML for each Field
 	 *
@@ -630,7 +630,7 @@ class question{
 	$this->obj->addHeaderData['question_xajax'] = $this->xajax->getJavascript(t3lib_extMgm::siteRelPath('xajax'));
 	//$GLOBALS['TSFE']->additionalHeaderData[$this->prefixId] = $this->xajax->getJavascript(t3lib_extMgm::siteRelPath('xajax'));
     }
-    
+
     /**
     * XAJAX-Function checkDependants
     *
@@ -735,7 +735,7 @@ class question{
 	if ($simple == 1 AND $a > 0) $activate = true;
 
 	switch ($question['type']){
-	    case 'closed':
+		case 'closed':
 		//get all the answers of the dependant_question
 		$answers = array();
 		$res_answers = $GLOBALS['TYPO3_DB']->exec_SELECTquery('uid','tx_kequestionnaire_answers','question_uid='.$dependant_id.' AND hidden=0 AND deleted=0');
@@ -878,70 +878,71 @@ class question{
     // #################################################
 
 
-    ##############################
-    ## UNUSED BY NOW
-    ##############################
+	##############################
+	## UNUSED BY NOW
+	##############################
 
-    /**
-     * get the save-String for the question and values for the save-array
-     *
-     * @param	int	$timestamp: Time the Question is answered
-     * @return	The Save String
-     *
-     */
-    function getSaveString($timestamp = ''){
-	$content = '';
 	/**
-	 * basic save-structure for the xml-array to store
-	 * <questionn_id>
-	 * 	question: ???
-	 * 	question_id: id
-	 * 	possible_answers:
-	 * 		<answer_nr> 123 </answer_nr>
-	 * 		<answer_nr> 234 </answer_nr>
-	 * 	answer: 123
-	 * 	time:
-	 * </frage_id>
-	*/
+	 * get the save-String for the question and values for the save-array
+	 *
+	 * @param	int	$timestamp: Time the Question is answered
+	 * @return	The Save String
+	 *
+	 */
+	function getSaveString($timestamp = ''){
+		$content = '';
+		/**
+		 * basic save-structure for the xml-array to store
+		 * <questionn_id>
+		 * 	question: ???
+		 * 	question_id: id
+		 * 	possible_answers:
+		 * 		<answer_nr> 123 </answer_nr>
+		 * 		<answer_nr> 234 </answer_nr>
+		 * 	answer: 123
+		 * 	time:
+		 * </frage_id>
+		*/
 
-	$content .= '<'.$this->question['uid'].'>'."\n";
-	$content .= '	question:'.$this->question['text']."\n";
-	$content .= '	question_id:'.$this->question['uid']."\n";
-	$i = 0;
-	if (count($this->answers) > 0){
-	    $content .= '	possible_answers:'."\n";
-	    foreach ($this->answers as $nr => $answer){
-		$i ++;
-		//$content .= '		<'.$answer['uid'].'>';
-		$content .= '		<'.$i.'>';
-		$content .= '			'.$answer['text'];
-		$content .= '		</'.$i.'>';
-		//$content .= '		<'.$answer['uid'].'>';
-	    }
+		$content .= '<'.$this->question['uid'].'>'."\n";
+		$content .= '	question:'.$this->question['text']."\n";
+		$content .= '	question_id:'.$this->question['uid']."\n";
+		$i = 0;
+		if (count($this->answers) > 0){
+			$content .= '	possible_answers:'."\n";
+			foreach ($this->answers as $nr => $answer){
+				$i ++;
+				//$content .= '		<'.$answer['uid'].'>';
+				$content .= '		<'.$i.'>';
+				$content .= '			'.$answer['text'];
+				$content .= '		</'.$i.'>';
+				//$content .= '		<'.$answer['uid'].'>';
+			}
+		}
+		$content .= '	answer:'.$this->answer['text']."\n";
+		$content .= '	time:'.$timestamp."\n";
+		$content .= '</'.$this->question['uid'].'>'."\n";
+
+		return $content;
 	}
-	$content .= '	answer:'.$this->answer['text']."\n";
-	$content .= '	time:'.$timestamp."\n";
-	$content .= '</'.$this->question['uid'].'>'."\n";
 
-	return $content;
-    }
-    
-    /**
-     * get simple Answer-String
-     *
-     */
-    function getSimpleAnswer(){
-	return '';
-    }
+	/**
+	 * get simple Answer-String
+	 * abstract method which have to be overridden within the subclasses
+	 *
+	 */
+	public function getSimpleAnswer(){
+		return '';
+	}
 
-    /**
-     * get the save-array for the question and values
-     *
-     * @param	int	$timestamp: Time the Question is answered
-     * @return	The Save String
-     *
-     */
-    function getSaveArray($timestamp = ''){
+	/**
+	 * get the save-array for the question and values
+	 *
+	 * @param	int	$timestamp: Time the Question is answered
+	 * @return	The Save String
+	 *
+	 */
+	function getSaveArray($timestamp = ''){
 		$saveArray = array();
 		/**
 		 * basic save-structure for the xml-array to store
@@ -962,7 +963,7 @@ class question{
 			$saveArray[$this->question['uid']]['question_id'] = $this->question['uid'];
 			$saveArray[$this->question['uid']]['type'] = $this->question['type'];
 			$saveArray[$this->question['uid']]['subtype'] = $this->type;
-		
+
 			if (count($this->answers) > 0){
 				//t3lib_div::debug($this->answers,"answers");
 				$saveArray[$this->question['uid']]['possible_answers'] = array();
@@ -1013,9 +1014,8 @@ class question{
 			// t3lib_div::debug($saveArray,"saveArray");
 			// t3lib_div::debug($this->columns,"columns");
 		}
-	
-		return $saveArray;
-    }
-}
 
+		return $saveArray;
+	}
+}
 ?>

@@ -238,17 +238,16 @@ class question_dd_area extends question {
 			$this->errorMsg = $this->obj->pi_getLL('error_required');
 		}
 	}
-	
+
 	/**
 	 * get simple Answer-String
-	 *
 	 */
-	function getSimpleAnswer(){
+	public function getSimpleAnswer(){
 		$saveA = $this->getSaveArray();
 		$saveA = $saveA[$this->uid];
-		
+
 		$answer =  '';
-		
+
 		if (is_array($saveA['answer']['options'])){
 			foreach ($saveA['answer']['options'] as $option){
 				if ($answer != ''){
@@ -266,10 +265,8 @@ class question_dd_area extends question {
 			$answer .= $saveA['possible_answers'][$option];
 		}
 		//t3lib_div::debug($saveA);
-	   
+
 		return $answer;
-        }
-
+	}
 }
-
 ?>

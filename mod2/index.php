@@ -351,6 +351,7 @@ class  tx_kequestionnaire_module2 extends t3lib_SCbase {
 				case 'closed':
 				case 'dd_words':
 				case 'dd_area':
+				case 'dd_pictures':
 					$markerArray['###DIV###'] = '<h2 style="width:600px;">'.$question['title'].'</h2>';
 					$markerArray['###DIV###'] .= '<div id="pie"> </div>';
 					$res_answers = $GLOBALS['TYPO3_DB']->exec_SELECTquery('uid,title','tx_kequestionnaire_answers','question_uid='.$q_id.' and hidden=0 and deleted=0','','sorting');
@@ -360,18 +361,6 @@ class  tx_kequestionnaire_module2 extends t3lib_SCbase {
 							$answers[] = $answer;
 						}
 						$charts .= $analyse->getOFQClosedPieChart($answers,$results,$question);
-					};
-					break;
-				case 'dd_pictures':
-					$markerArray['###DIV###'] = '<h2 style="width:600px;">'.$question['title'].'</h2>';
-					$markerArray['###DIV###'] .= '<div id="pie"> </div>';
-					$res_answers = $GLOBALS['TYPO3_DB']->exec_SELECTquery('uid,title,answerarea','tx_kequestionnaire_answers','question_uid='.$q_id.' and hidden=0 and deleted=0','','sorting');
-					$answers = array();
-					if ($res_answers){
-						while ($answer = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res_answers)){
-							$answers[] = $answer;
-						}
-						$charts .= $analyse->getOFQDdpicturesPieChart($answers,$results,$question);
 					};
 					break;
 				case 'matrix':

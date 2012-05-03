@@ -98,9 +98,9 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 		$this->pi_USER_INT_obj=1;	// Configuring so caching is not expected. This value means that no cHash params are ever set. We do this, because it's a USER_INT object!
 		//Initialize the Plugin
 		$this->init();
-		
-		
-		// There are main tasks we might have to do: 
+
+
+		// There are main tasks we might have to do:
 		//   mainAskQuestions OR mainGetPdf OR mainSendMail
 		// First thing is to set a flag indicating what's needed
 		$this->mainTask = 'mainAskQuestions';
@@ -125,10 +125,10 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 			default:
 				$content = 'unknown task \'' . $this->mainTask . '\'';
 		}
-		
+
 		return $content;
 	}
-	
+
 	/**
 	 * mainSendMail(): Main Fork Function to send Emails
 	 *
@@ -145,7 +145,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 		} else {
 			$content = $this->pi_getLL('email_not_sent').'<br /><a href="javascript: history.back();">'.$this->pi_getLL('email_back').'</a>';
 		}
-		
+
 		return $content;
 	}
 
@@ -174,7 +174,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 	 * mainAskQuestions(): Main Fork Function to render the Questionnaire
 	 *
 	 * @return	content to be displayed
-	 */	
+	 */
 	function mainAskQuestions() {
 		// if there are no questions made for the questionnaire
 		if (count($this->questions) == 0) {
@@ -196,13 +196,13 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 		$save = true;
 		$markerArray = array();
 		$markerArray['###PI###'] = $this->prefixId;
-		
+
 		//check if history should be made
 		$make_history = false;
 		if ($this->ffdata['history'] == 1){
 			$make_history = true;
 		}
-		
+
 		//different handling for different access-types
 		switch ($this->ffdata['access']){
 			//free access, no check needed
@@ -302,12 +302,12 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 				}
 				break;
 		}
-		
+
 		//render the content
 		$content = $this->renderContent($subPart,$markerArray);
-		
+
 		//if the save-Flag is set and it's not the first page with a description
-		if ($save){
+		if($save) {
 			//save the results
 			$this->setResults($this->piVars['result_id']);
 			//t3lib_div::devLog('saved saveArray '.$this->piVars['result_id'], $this->prefixId, 0, array($this->saveArray));
@@ -329,12 +329,12 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 					implode(CHR(10), $GLOBALS['TSFE']->register['kequestionnaire']) . '
 					});
 				</script>
-			';			
+			';
 		}
-		
+
 		return $this->pi_wrapInBaseClass($content);
 	}
-	
+
 	/**
 	 * getTimer(): Create Timer with the given Max-Time
 	 *
@@ -343,11 +343,11 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 	 * @param	string		$time_type: time-value in minutes or seconds?
 	 *
 	 * @return	content to be displayed
-	 */	
+	 */
 	function getTimer($time, $timer = 'total', $time_type = 'minutes'){
 		$content = '';
 		$markerArray = array();
-		
+
 		//check the timer-type
 		if ($time_type == 'minutes') $seconds = ceil($time * 60);
 		else $seconds = ceil($time);
@@ -361,22 +361,22 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 			$secs = ceil($seconds - $diff);
 		} else {
 			$diff = $chk_time - $GLOBALS['TSFE']->fe_user->getKey('ses', 'kequestionnaire_start_tstamp');
-			$secs = ceil($seconds - $diff);			
+			$secs = ceil($seconds - $diff);
 		}
-		
+
 		$markerArray['###MINS###'] = floor($secs/60);
 		$markerArray['###SECS###'] = $secs%60;
 		$markerArray['###TIMER_BASE###'] = $secs;
 		$markerArray['###PI###'] = $this->prefixId;
-			
+
 		if ($timer == 'total') {
 			$markerArray['###TEXT###'] = $this->pi_getLL('timer_text_total');
 		} elseif ($timer == 'pages') {
 			$markerArray['###TEXT###'] = $this->pi_getLL('timer_text_pages');
 		}
-			
+
 		$content = $this->renderContent('###TIMER###',$markerArray);
-		
+
 		return $content;
 	}
 
@@ -384,7 +384,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 	 * checkAuthCode(): Check if the given Auth-Code is correct
 	 *
 	 * @return	false or true
-	 */	
+	 */
 	function checkAuthCode(){
 		$content = false;
 
@@ -419,7 +419,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 	 * If the acces is fe_user you'll need and authcode-Dataset too
 	 *
 	 * @return	auth Code id
-	 */	
+	 */
 	function getAuthCodeId(){
 		$authCode_id = -1;
 
@@ -439,7 +439,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 		}
 		$where .= ' AND pid='.$this->pid;
 		$where .= $this->cObj->enableFields('tx_kequestionnaire_authcodes');
-		
+
 		$res_authCode = $GLOBALS['TYPO3_DB']->exec_SELECTquery('uid','tx_kequestionnaire_authcodes',$where,'',$orderBy);
 		if ($res_authCode){
 			$row_authCode = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res_authCode);
@@ -513,15 +513,15 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 	 *
 	 * @return	void
 	 */
-	function getResults($result_id, $makeHistory = false){
+	public function getResults($result_id, $makeHistory = false){
 		if (intval($result_id) == 0) return false;
-		
+
 		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
 			'*',
 			'tx_kequestionnaire_results',
 			'uid=' . $result_id
 		);
-		
+
 		//if there is a result, edit the old one
 		if ($res){
 			$row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
@@ -546,7 +546,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 						$this->saveArray = $_procObj->pi1_getResultsSaveArray($this);
 					}
 				}
-				
+
 				//update the resultset to set the timestamp of the last access
 				$saveFields = array();
 				$saveFields['last_tstamp'] = mktime();
@@ -638,9 +638,10 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 	/**
 	 * setResults(): Set the actual results of the user or authCode
 	 *
-	 * @param	int 	$result_id: id of the actual resultset
+	 * @param int $result_id: id of the actual resultset
+	 * @return integer Result UID
 	 */
-	function setResults($result_id){
+	public function setResults($result_id){
 		//t3lib_div::devLog('to be saved saveArray setResults', $this->prefixId, 0, $this->saveArray);
 		$saveFields = array();
 		$saveFields['pid'] = $this->pid;
@@ -660,7 +661,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 				$saveFields = $_procObj->pi1_setResultsSaveFields($this,$saveFields);
 			}
 		}
-		
+
 		if (is_array($this->saveArray)) $saveFields['xmldata'] = t3lib_div::array2xml($this->saveArray);
 
 		//when the questionnaire is finished and all questions are answered
@@ -705,7 +706,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 		$page_count = $this->pageCount;
 		//if the timer is set and the type is "total" the questionnaire is finnished as soon as the timer reaches 0
 		if (isset($this->piVars['timer']) AND $this->ffdata['timer_type'] == 'TOTAL' AND $this->piVars['timer'] <= 0) $page_nr = $page_count +1;
-		
+
 		//if there is a description text for the questionnaire, make a first page
 		//to show it before the questionnaire starts
 		if ($this->ffdata['description'] != '' AND $page_nr == 0){
@@ -728,7 +729,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 	function getPageNr(){
 		//basicly the pageNr is the one given with the piVars
 		$pageNr = $this->piVars['page'];
-		
+
 		//if the questionnaire is marked as linear (one question/page and no turning back)
 		if ($this->ffdata['linear'] == 1){
 			foreach ($this->questions as $nr => $question){
@@ -885,7 +886,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 
 		$markerArray['###FORM_PRE_ADD###'] = $form_pre_add;
 		$markerArray['###FORM_POST_ADD###'] = $form_post_add;
-		
+
 		//get the questions shown on this page
 		$page_questions = $this->getQuestionsOfPage($page_nr,$page_count);
 		$markerArray['###PAGE_MAP###'] = $this->renderPagemap($page_nr,$page_count,$page_questions);
@@ -895,9 +896,9 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 			//render reach question
 			$questions .= $this->getQuestionTypeRender($quest);
 		}
-		
+
 		//navigation for the questionnaire (first page, last page, next page, last page)
-		$nav_markerArray = array();		
+		$nav_markerArray = array();
 		if (($page_nr - 1) > 0 AND $this->ffdata['linear'] != 1 AND $this->ffdata['type'] != 'QUIZ'){
 			$nav_markerArray['###HREF###'] = 'javascript:';
 			$nav_markerArray['###HREF###'] .= 'document.ke_questionnaire.action=\''.htmlspecialchars($this->pi_getPageLink($GLOBALS['TSFE']->id,'',array($this->prefixId.'[page]'=>($page_nr-1)))).'\';';
@@ -921,13 +922,13 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 		$add_js = '
 				<script type="text/javascript">
 					window.history.forward();
-				</script>';	
+				</script>';
 		if ($add_js != '') $this->addHeaderData[] = $add_js;
 
 		$nav_markerArray['###PI###'] = $this->prefixId;
 		$nav_markerArray['###NAME###'] = 'next';
 		$nav_markerArray['###NEXT###'] = $this->renderContent('###NAV_BUTTON###',$nav_markerArray);
-		
+
 		//no "next" navigation if current type of question = "sbm_button"
 		if($this->ffdata['render_type'] == 'QUESTIONS' && $this->ffdata['render_count'] == 1) {
 			foreach ($this->allQuestions as $nr => $question){
@@ -939,10 +940,10 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 			}
 		}
 		$markerArray['###FORM_ACTION###'] = htmlspecialchars($this->pi_getPageLink($GLOBALS['TSFE']->id,'',array($this->prefixId.'[page]'=>($page_nr+1),$this->prefixId.'[next]'=>(1))));
-		
+
 		$markerArray['###NAV###'] = $this->renderContent('###NAVIGATION###',$nav_markerArray);
 		$markerArray['###QUESTIONS###'] = $questions;
-		
+
 		/****************************************************
 		 * kennziffer, Nadine Schwingler, 10.3.2012
 		 * Show last answer on next page
@@ -953,7 +954,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 				$la_markerArray = array();
 				$la_markerArray['###Q_LABEL###'] = $this->pi_getLL('lastanswer_question');
 				$la_markerArray['###A_LABEL###'] = $this->pi_getLL('lastanswer_answer');
-				
+
 				$lastpage_question = $this->getQuestionsOfPage(($page_nr-1),$page_count);
 				$lastpage_question = $this->getQuestionTypeObject($lastpage_question[0]);
 				//t3lib_div::debug($lastpage_question->fields[5]->options,'last');
@@ -987,7 +988,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 				$markerArray['###CAPTCHA###'] = 'install sr_freecap';
 			}
 		}
-		
+
 		//embedding the timer if needed
 		$markerArray['###SHOW_TIMER###'] = '';
 		switch ($this->ffdata['timer_type']){
@@ -1002,7 +1003,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 					}
 				break;
 		}
-		
+
 		$markerArray['###JS###'] = '';
 		if ($this->pageJS != ''){
 			$markerArray['###JS###'] = '<script type="text/javascript">'.$this->pageJS.'</script>';
@@ -1010,12 +1011,12 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 
 
 		$content = $this->renderContent('###PAGE###',$markerArray);
-		
+
 		$content = $this->renderMarker($content, $this->userMarker);
 
 		return $content;
 	}
-	
+
 	/**
 	 * getQuestionsOfPage(): get the questions for the actual page to be rendered
 	 *
@@ -1026,7 +1027,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 	 */
 	function getQuestionsOfPage ($page_nr, $page_count){
 		$questions = array();
-		
+
 		if ($this->ffdata['render_count_withoutdependant'] == 1) {
 			$amount = $this->questionCount['no_dependants'];
 		} elseif ($this->ffdata['render_count_withblind'] == 1) {
@@ -1057,9 +1058,9 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 		//compute the startquestion
 		$start = $qpp * ($page_nr-1);
 		//and the endquestion
-		
+
 		//t3lib_div::debug($this->questionCount);
-		
+
 		//get the shown questions
 		$shown = array();
 		$q_count = 0;
@@ -1168,7 +1169,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 	function checkValidation(){
 		$page_nr = $this->getPageNr() -1;
 		$validation = true;
-		
+
 		$val_questions = $this->getQuestionsOfPage($page_nr,$this->pageCount);
 		//t3lib_div::devLog('val_queston', $this->prefixId, 0, $val_questions);
 		//t3lib_div::devLog('PIVars', $this->prefixId, 0, $this->piVars);
@@ -1185,7 +1186,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 				if (count($question_obj->errorFields) > 0) $focus_id .= '_'. $question_obj->errorFields[0];
 				$this->pageJS = 'document.getElementById("keq_'.$focus_id.'").focus();';
 			}
-		}		
+		}
 		if ($page_nr == $this->pageCount){
 			if ($this->ffdata['show_captcha'] == 1){
 				if (is_object($this->freeCap) && !$this->freeCap->checkWord($this->piVars['captcha_response'])) {
@@ -1274,7 +1275,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 				$content .= $this->renderContent('###HIDDEN_FIELD###',$markerArray);
 			}
 		}
-		
+
 		//Hook to add hidden fields
 		if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$this->extKey]['pi1_renderHiddenFields'])){
 			foreach($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$this->extKey]['pi1_renderHiddenFields'] as $_classRef){
@@ -1282,9 +1283,9 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 				$content .= $_procObj->pi1_renderHiddenFields($this);
 			}
 		}
-		
+
 		//t3lib_div::devLog('renderHiddenFields', $this->prefixId, 0, array($timestamp_start,$content));
-		
+
 		return $content;
 	}
 
@@ -1301,7 +1302,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 				$markerArray[$marker] = $value;
 			}
 		}
-		
+
 		$result_id = $this->setResults(0);
 		$this->piVars['result_id'] = $result_id;
 
@@ -1335,7 +1336,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 	 *
 	 * @return	string	content to be rendered
 	 */
-	function renderLastPage(){
+	public function renderLastPage(){
 		//if it is a free-access questionnaire, the save array needs to be rendered:
 		if ($this->ffdata['access'] == 'FREE') $this->renderHiddenFields();
 		//when the user calls the end-page of the questionnaire,
@@ -1355,12 +1356,12 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 			$mail_texts['fromEmail'] = $this->ffdata['mail_sender'];
 			$mail_texts['fromName'] = $this->ffdata['mail_from'];
 			$this->sendMail($email_adresses, $mail_texts);
-			
+
 			$saveField = array();
 			$saveField['mailsent_tstamp'] = mktime();
 			$GLOBALS['TYPO3_DB']->exec_UPDATEquery('tx_kequestionnaire_results','uid='.$resultId,$saveField);
 		}
-		
+
 		$content = '';
 		$markerArray = array();
 		if ($this->user_id){
@@ -1371,7 +1372,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 
 		$markerArray['###TEXT###'] = $this->pi_RTEcssText($this->ffdata['end_text']);
 		if ($markerArray['###TEXT###'] == '') $markerArray['###TEXT###'] = $this->pi_getLL('standard_endtext');
-		
+
 		//PDF-Output
 		$markerArray['###PDF###'] = '';
 		if ($this->ffdata['pdf_type']){
@@ -1381,7 +1382,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 				$temp_markerArray = array();
 				$pdf_type = strtolower($pdf_type);
 				$temp_markerArray['###TYPE###'] = $pdf_type;
-				
+
 				$add_params = array();
 				$add_params[$this->prefixId.'[pdf]'] = 1;
 				$add_params[$this->prefixId.'[p_id]'] = $this->piVars['result_id'];
@@ -1412,24 +1413,24 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 				$temp_markerArray['###LINK###'] = $pdf_link;
 				$pdf_links .= $this->renderContent('###PDF_LINK_LINE###',$temp_markerArray);
 			}
-			$markerArray['###PDF###'] = $pdf_links;	
+			$markerArray['###PDF###'] = $pdf_links;
 		}
-		
+
 		//send result as e-mail after finishing
 		if ($this->ffdata['send_finish_mail']){
 			//t3lib_div::debug($this->ffdata);
 			$emailLink = $this->pi_linkTP_keepPIvars_url(array('sendemail' => 1,'p_id' => $this->piVars['result_id']),0,1);
-			
+
 			$email_markerArray['###URL###'] = $emailLink;
 			$email_markerArray['###INTROTEXT###'] = $this->pi_getLL('intro_email_send');
 			$emailForm = $this->renderContent('###EMAILONFINISHFORM###',$email_markerArray);
-			
+
 			$markerArray['###EMAILONFINISH###'] = $emailForm;
 		} else {
-			$markerArray['###EMAILONFINISH###'] = '';	
+			$markerArray['###EMAILONFINISH###'] = '';
 		}
-		
-		
+
+
 		$add_info = '';
 		switch ($this->type){
 			case 'QUIZ':
@@ -1445,7 +1446,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 
 		$markerArray['###NAV###'] = '';
 		$markerArray['###HIDDEN_FIELDS###'] = '';
-		
+
 		//t3lib_div::debug($result_id,'pi1');
 		//Hook to do something after the questionnaire is finished
 		if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$this->extKey]['pi1_renderLastPage'])){
@@ -1454,27 +1455,27 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 				$markerArray = $_procObj->pi1_renderLastPage($this,$resultId,$markerArray);
 			}
 		}
-		
+
 		//if finish page differs by answer, check this here
 		if(intval($this->ffdata['redirect_on_finish_uid'] != 0)) {
 			$res_answers = $GLOBALS['TYPO3_DB']->exec_SELECTquery('tx_kequestionnaire_answers.uid,tx_kequestionnaire_answers.finish_page_uid','tx_kequestionnaire_questions,tx_kequestionnaire_answers','tx_kequestionnaire_questions.uid = tx_kequestionnaire_answers.question_uid AND tx_kequestionnaire_questions.uid = '.$this->ffdata['redirect_on_finish_uid']);
-			
+
 			//get finish pages from answers
 			while($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res_answers)) {
 				$finishPids[$row['uid']] = $row['finish_page_uid'];
 			}
-						
+
 			//set finish page by current answer
 			$answered = $this->saveArray[$this->ffdata['redirect_on_finish_uid']]['answer']['options'];
 			if (is_array($answered)){
 				foreach ($answered as $tid => $tvalue){
 					if ($finishPids[$tvalue]) $answered = $tvalue;
-				}				
+				}
 			}
 			$finishPage = $finishPids[$answered];
 			//t3lib_div::debug($this->saveArray[$this->ffdata['redirect_on_finish_uid']]['answer']['options'],'page');
 			//t3lib_div::debug($finishPage,'page');
-			
+
 			//if no finishing page given in answer, ignore and go on - else: redirect
 			if(strlen($finishPage) && $finishPage > 0) {
 				//if the conf Var is set, give the resultId to the link
@@ -1488,14 +1489,14 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 				//t3lib_div::devLog('renderLastPage', $this->prefixId, 0, array($fp_params,$link));
 			}
 		}
-		
+
 		//if the redirect page is set
 		if ($this->ffdata['end_page']){
 			$link = $this->pi_getPageLink($this->ffdata['end_page']);
 			if ($GLOBALS['TSFE']->config['config']['baseURL']) $link = $GLOBALS['TSFE']->config['config']['baseURL'].$link;
 			header('Location:'.$link);
 		}
-		
+
 		$this->renderHiddenFields();
 		$content = $this->renderContent('###OTHER_PAGE###',$markerArray);
 		$content = $this->renderMarker($content, $this->userMarker);
@@ -1504,7 +1505,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 
 		return $content;
 	}
-	
+
 	/**
 	 * getPointsReport(): get the Report for Points Questionnaire Type
 	 *
@@ -1514,7 +1515,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 		$content = '';
 		$markerArray = array();
 		$markerArray['###TEXT###'] = $this->pi_getll('points_report_text');
-			
+
 		//get the calculated points
 		$calced = $this->calculatePoints();
 		//t3lib_div::debug(array($max_points,$points),'own');
@@ -1526,11 +1527,11 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 		$markerArray['###TEXT###'] = str_replace('###POINTS###',$calced['own'],$markerArray['###TEXT###']);
 		// ###PERCENT### of max points
 		$markerArray['###TEXT###'] = str_replace('###PERCENT###',$calced['percent'],$markerArray['###TEXT###']);
-		
+
 		$markerArray['###REPORT###'] = '';
 		//Render outcomes
 		$markerArray['###REPORT###'] = $this->renderOutcome($calced,$this->piVars);
-		
+
 		$markerArray['###ADDITIONAL###'] = '';
 		//Hook to do something after the questionnaire is finished
 		if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$this->extKey]['pi1_getPointsReport'])){
@@ -1545,10 +1546,10 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 		}
 
 		$content = $this->renderContent('###POINTS_REPORT###',$markerArray);
-		
+
 		return $content;
 	}
-	
+
 	/**
 	 * renderPagemap(): render the pagemap of the questionnaire
 	 *
@@ -1561,7 +1562,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 	function renderPagemap($page_nr,$page_count,$page_questions) {
 		$map = '';
 		$map_items = '';
-		
+
 		$markerArray = array();
 		if ($this->ffdata['show_pagemap']){
 			for ($i = 1; $i <= $page_count; $i++){
@@ -1577,18 +1578,18 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 						$href .= 'document.ke_questionnaire.action=\''.htmlspecialchars($this->pi_getPageLink($GLOBALS['TSFE']->id,'',array($this->prefixId.'[page]'=>($i)))).'\';';
 						$href .= 'document.ke_questionnaire.submit()';
 						$map_markerArray['###TITLE###'] = '<a href="'.$href.'">'.$map_markerArray['###TITLE###'].'</a>';
-					}	
+					}
 				}
-				
+
 				$map_items .= $this->renderContent('###PAGEMAP_ITEM###',$map_markerArray);
 			}
 			$markerArray['###ITEMS###'] = $map_items;
 			$map = $this->renderContent('###PAGEMAP###',$markerArray);
 		}
-		
+
 		return $map;
 	}
-	
+
 	/**
 	 * renderOutcome(): render the outcome of the questionnaire
 	 *
@@ -1603,7 +1604,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 		$content = '';
 		$block_content = '';
 		//t3lib_div::devLog('answers', $this->prefixId, 0, $answers);
-		
+
 		$where = 'pid='.$this->pid.' AND hidden=0 AND deleted=0';
 		$res_outcomes = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*','tx_kequestionnaire_outcomes',$where,'','sorting');
 		if ($res_outcomes){
@@ -1619,7 +1620,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 							$temp = str_replace('###TOTAL###',$max,$temp);
 							$content .= $temp;
 						}
-					break;					
+					break;
 					case 'dependancy':
 						//get the dependancies
 						$dependancies = array();
@@ -1670,7 +1671,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 					break;
 					case 'block':
 						$block = $calculated['blocks'][$outcome['questionpool']];
-						
+
 						if ($block['own'] >= $outcome['value_start'] AND $block['own'] <= $outcome['value_end']) {
 							$temp = $this->pi_RTEcssText($outcome['text']);
 							//t3lib_div::debug($temp,'temp');
@@ -1678,19 +1679,19 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 							$temp = str_replace('###TOTAL###',$block['max'],$temp);
 							$block_content .= $temp;
 						}
-						
+
 						//t3lib_div::debug($outcome,'outcome');
 						//t3lib_div::debug($block,'calculated');
 					break;
-				} 
+				}
 			}
 		}
-		
+
 		$content .= $block_content;
-		
+
 		return $content;
 	}
-	
+
 	/**
 	 * calculatePoints(): Calculate the points gathered
 	 *
@@ -1707,7 +1708,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 		}
 		//t3lib_div::debug($this->questionsByID,'q by id');
 		//t3lib_div::debug($blocks,'blocks');
-		
+
 		foreach ($this->questionsByID as $qid => $question){
 			$temp .= $qid;
 			$titles[] = $question['title'];
@@ -1736,7 +1737,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 							}
 						}
 					}
-					
+
 					$total_points = 0;
 					if ($results){
 						foreach ($results as $rid => $result){
@@ -1761,7 +1762,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 						}
 						$bars['total'][$qid] = $total_points/count($results);
 					}
-					
+
 					//t3lib_div::debug($this->piVars,'piVars');
 					switch ($question['closed_type']){
 						case 'sbm_button':
@@ -1787,6 +1788,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 					break;
 				case 'dd_words':
 				case 'dd_area':
+				case 'dd_pictures':
 					$answers = array();
 					// get all answers
 					$where = 'question_uid='.$qid.$this->cObj->enableFields('tx_kequestionnaire_answers');
@@ -1799,7 +1801,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 							$answer_max_points += $answer['value'];
 						}
 					}
-					
+
 					// sum points of all answers of each question
 					$total_points = 0;
 					if ($results){
@@ -1813,60 +1815,14 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 						// calculate average points
 						$bars['total'][$qid] = $total_points/count($results);
 					}
-					
+
 					//t3lib_div::devLog('piVar', $this->prefixId, 0, array($this->piVars[$qid]['options']));
 					if (is_array($this->piVars[$qid]['options'])){
 						foreach ($this->piVars[$qid]['options'] as $item){
 							$bars['own'][$qid] += $answers[$item]['points'];
 						}
 					}
-					
-					$own_total += $bars['own'][$qid];
-					$max_points += $answer_max_points;
-					$blocks[$question['pool_id']]['max'] += $answer_max_points;
-					$blocks[$question['pool_id']]['own'] += $bars['own'][$qid];
-					break;
-				case 'dd_pictures':
-					$answers = array();
-					$areas = array();
-					// get all answers
-					$where = 'question_uid='.$qid.$this->cObj->enableFields('tx_kequestionnaire_answers');
-					$res_answers = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*','tx_kequestionnaire_answers',$where);
-					$answer_max_points = 0;
-					if ($res_answers){
-						// create array with points of each answer
-						while ($answer = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res_answers)){
-							$answers[$answer['uid']]['points'] = $answer['value'];
-							$areas[$answer['answerarea']][] = $answer['uid'];
-							$answer_max_points += $answer['value'];
-						}
-					}
-					
-					// sum points of all answers of each question
-					$total_points = 0;
-					if ($results){
-						foreach ($results as $rid => $result){
-							if (is_array($result[$qid]['answer']['options'])){
-								foreach ($result[$qid]['answer']['options'] as $area => $areaitems){
-									foreach ($areaitems as $item){
-										if (in_array($item,$areas[$area])) $total_points += $answers[$item]['points'];
-									}
-								}
-							}
-						}
-						// calculate average points
-						$bars['total'][$qid] = $total_points/count($results);
-					}
-					
-					//t3lib_div::devLog('piVar', $this->prefixId, 0, array($this->piVars[$qid]['options']));
-					if (is_array($this->piVars[$qid]['options'])){
-						foreach ($this->piVars[$qid]['options'] as $area => $areaitems){
-							foreach ($areaitems as $item){
-								if (in_array($item,$areas[$area])) $bars['own'][$qid] += $answers[$item]['points'];
-							}
-						}
-					}
-					
+
 					$own_total += $bars['own'][$qid];
 					$max_points += $answer_max_points;
 					$blocks[$question['pool_id']]['max'] += $answer_max_points;
@@ -1924,7 +1880,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 					}
 					//t3lib_div::debug($matrix_max_points,'max_points');
 					//t3lib_div::debug($results,'results');
-					
+
 					if ($results){
 						foreach ($results as $rid => $result){
 							//t3lib_div::debug($result,'result');
@@ -1932,7 +1888,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 								case 'radio':
 									foreach ($question_obj->subquestions as $sub){
 										if ($question['matrix_pointsforcolumn'] == 1){
-											//für zeilen											
+											//für zeilen
 											if ($result[$qid]['answer']['options'][$sub['uid']]) $total_points += $sub['value'];
 										} else {
 											$total_points += $question_obj->columns[$result[$qid]['answer']['options'][$sub['uid']]['single']]['value'];
@@ -1943,7 +1899,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 									foreach ($question_obj->subquestions as $sub){
 										if ($question['matrix_pointsforcolumn'] == 1){
 											foreach ($question_obj->columns as $col){
-												//für zeilen											
+												//für zeilen
 												if ($result[$qid]['answer']['options'][$sub['uid']][$col['uid']][0] == $col['uid']) $total_points += $sub['value'];
 											}
 										} else {
@@ -1959,7 +1915,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 						}
 						$bars['total'][$qid] = $total_points/count($results);
 					}
-					
+
 					//t3lib_div::debug($this->piVars,'piVars');
 					switch ($question['matrix_type']){
 						case 'radio':
@@ -2010,11 +1966,11 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 		$returner['max'] = $max_points;
 		$returner['bars'] = $bars;
 		$returner['blocks'] = $blocks;
-		
+
 		//t3lib_div::debug($returner,'returner');
 		return $returner;
 	}
-	
+
 	/**
 	 * getQuizReport(): get the Report for Quiz/eLearning Questionnaire Type
 	 *
@@ -2023,13 +1979,13 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 	function getQuizReport(){
 		$markerArray = array();
 		$markerArray['###TEXT###'] = $this->pi_getll('quiz_report_text');
-		
+
 		$temp = '';
 		$bars = array();
-		
+
 		$max_points = 0;
 		$own_total = 0;
-		
+
 		//To make the middle, you need all the results till now
 		$results = array();
 		$where = 'pid='.$this->pid.$this->cObj->enableFields('tx_kequestionnaire_results');
@@ -2039,24 +1995,24 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 				if ($result['xmldata'] != ''){
 					$results[$result['uid']] = t3lib_div::xml2array($result['xmldata']);
 					if (count($results[$result['uid']]) == 1) $results[$result['uid']] = t3lib_div::xml2array(utf8_encode($result['xmldata']));
-				}				
+				}
 			}
 		}
-		
+
 		if (is_array($results)){
 			$calculated = $this->calculatePoints($results);
 		}
-		
+
 		$bars = $calculated['bars'];
 		foreach ($bars['titles'] as $temp_title){
 			$titles[] = $temp_title;
 		}
-		unset($bars['titles']);	
+		unset($bars['titles']);
 		$max_points = $calculated['max'];
 		$own_total = $calculated['own'];
 		$own_percent = $calculated['percent'];
 		$own_percent = number_format($own_percent,2,',','.');
-		
+
 		//replace the Marker in the Info-Text
 		// ###TOTAL### max points to be achieved
 		$markerArray['###TEXT###'] = str_replace('###TOTAL###',$max_points,$markerArray['###TEXT###']);
@@ -2066,7 +2022,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 		$own_percent = ($own_total/$max_points)*100;
 		$own_percent = number_format($own_percent,2,',','.');
 		$markerArray['###TEXT###'] = str_replace('###PERCENT###',$own_percent,$markerArray['###TEXT###']);
-		
+
 		$markerArray['###ADDITIONAL###'] = '';
 		//Hook to do something after the questionnaire is finished
 		if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$this->extKey]['pi1_getQuitReport'])){
@@ -2074,13 +2030,13 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 				$_procObj = & t3lib_div::getUserObj($_classRef);
 				$markerArray = $_procObj->pi1_getQuizReport($this,$calced,$markerArray);
 			}
-		}		
-		
+		}
+
 		$markerArray['###REPORT###'] = '';
 		//if premium is loaded render a graphic report
 		if (t3lib_extMgm::isLoaded('ke_questionnaire_premium')){
 			require_once(t3lib_extMgm::extPath('ke_questionnaire_premium').'res/other/class.open_flcharts2.php');
-			
+
 			if ($this->ffdata['q_report_graph'] == 1){
 				$y_scale = array();
 				$y_scale['max'] = 8;
@@ -2101,7 +2057,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 				foreach ($temp as $key => $values){
 					$bars[] = $values;
 				}
-				
+
 				$charts = new open_flcharts2();
 				$charts->path = 'typo3conf/ext/ke_questionnaire_premium/';
 				$this->addHeaderData['of_charts'] = $charts->fe_js();
@@ -2109,12 +2065,12 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 				$title = $this->pi_getLL('quiz_report_title');
 				$keys = array($this->pi_getLL('quiz_report_total'),$this->pi_getLL('quiz_report_own'));
 				$colors = array('#39BB2C','#FF9C00');
-				
+
 				$markerArray['###REPORT###'] = '<div id="'.$marker.'"> </div>'."\n";
 				$markerArray['###REPORT###'] .= $charts->getBarChart($marker, $title, $bars, $titles, $keys, $colors, $y_scale);
 			}
 		}
-		
+
 		// Hook give more Fields for Questionnaire List
 		$markerArray['###CERTIFICATE###'] = '';
 		if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$this->extKey]['pi1_markerArray'])){
@@ -2123,12 +2079,12 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 				$markerArray = $_procObj->pi1_markerArray($this,$markerArray,$this->cObj->data['uid'],$this->ffdata,$own_percent);
 			}
 		}
-		
+
 		$content = $this->renderContent('###QUIZ_REPORT###',$markerArray);
-		
+
 		return $content;
 	}
-	
+
 	/**
 	 * sendByMail(): E-Mail-Content
 	 *
@@ -2141,12 +2097,12 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 
 		$plain_conf = $this->conf;
 		$storage_pid = $this->ffdata['storage_pid'];
-	
+
 		$plain = new plain_export($plain_conf,$storage_pid, 'test',$this->cObj->data['pi_flexform']['data']);
 		$this->getResults($this->piVars['p_id'],false);
-			
+
 		$mailData = $plain->getPlain($this->saveArray);
-		
+
 		$emailText .= $this->ffdata['send_finish_mail_subject']."\r\n";
 		$emailText .= $this->ffdata['send_finish_mail_emailhead']."\r\n";
 		foreach($mailData as $emailContent) {
@@ -2171,7 +2127,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 			return false;
 		}
 	}
-	
+
 	/**
 	 * getPDF(): Render the PDF
 	 *
@@ -2182,13 +2138,13 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 		if (t3lib_extMgm::isLoaded('ke_dompdf')) {
 			require_once(t3lib_extMgm::extPath('ke_questionnaire') . 'res/other/class.dompdf_export.php');
 			$pdfdata = '';
-	
+
 			$pdf_conf = $this->conf;
 			$storage_pid = $this->ffdata['storage_pid'];
-	
+
 			$pdf = new dompdf_export($pdf_conf, $storage_pid, $this->cObj->data['header'], $this->cObj->data['pi_flexform']['data']);
 			$pdf->user_marker = $this->userMarker;
-	
+
 			switch ($type){
 				case 'empty':
 					$this->getResults($this->piVars['p_id'],false);
@@ -2211,7 +2167,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 			}
 		}
 	}
-	
+
 	/**
 	 * getQuestionTypeObject(): Find the Questions type and get the question-Object
 	 *
@@ -2306,7 +2262,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 					$this->piVars[$question['uid']] = $this->saveArray[$question['uid']]['answer'];
 				}
 				$answer=$this->piVars[$question['uid']];
-				
+
 				if (is_array($answer['fe_users'])){
 					foreach ($answer['fe_users'] as $field => $value){
 						//t3lib_div::devLog('demographic answer field '.$question['uid'], $this->prefixId, 0, array($field,$value));
@@ -2315,7 +2271,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 						}
 					}
 				}
-				
+
 				if (is_array($options['fields'])){
 					foreach ($options['fields'] as $field => $type){
 						//t3lib_div::devLog('demographic answer field '.$question['uid'], $this->prefixId, 0, array($field,$type));
@@ -2347,7 +2303,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 		}
 		return $question_obj;
 	}
-	
+
 	/**
 	 * getQuestionTypeRender(): Get the Question-Object and render it
 	 *
@@ -2359,28 +2315,28 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 		$content = '';
 		//$saveString = '';
 		$saveArray = array();
-		
+
 		//get the object for the question
 		$question_obj = $this->getQuestionTypeObject($question);
 		if (is_object($question_obj)){
 			if ($question_obj->checkDependancies() AND $this->validated){
 				$question_obj->validateInput = 1;
 			}
-			
+
 			$saveArray = $question_obj->getSaveArray();
 			//t3lib_div::debug($saveArray,"getQuestionTypeRender");
 			$content = $question_obj->render();
 			//t3lib_div::debug($question_obj);
-			
+
 			if ($this->user_id){
 				foreach ($this->userMarker as $marker => $value){
 					$markerArray[$marker] = $value;
 				}
 				$content = $this->cObj->substituteMarkerArrayCached($content, $markerArray, array(), array());
 			}
-			
+
 			//t3lib_div::debug($content,"getQuestionTypeRender");
-				
+
 			if (is_array($saveArray[$question['uid']])){
 				$this->saveArray[$question['uid']] = $saveArray[$question['uid']];
 			}
@@ -2408,10 +2364,10 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 				}
 			}
 		}
-		
+
 		//questionnaire Type
 		$this->type = $this->ffdata['type'];
-		
+
 		//t3lib_div::devLog('ffdata', $this->prefixId, 0, $this->ffdata);
 		$this->pid = $this->ffdata['storage_pid'];
 
@@ -2424,13 +2380,13 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 		//t3lib_div::debug($GLOBALS['TSFE']->config);
 		$this->conf['sys_language_uid'] = $this->cObj->data['sys_language_uid'];
 		$this->conf['language'] = strtolower($GLOBALS['TSFE']->config['config']['language']);
-		
+
 		$this->tmpl = $this->cObj->fileResource($this->tmpl_path.$template);
 		//t3lib_div::devLog('template base', $this->prefixId, 0, array($this->tmpl_path,$this->tmpl,$this->tmpl_path.$template));
 
 		// if $this->ffdata['render_count'] is null, set it to one
 		if ($this->ffdata['render_count'] == 0) $this->ffdata['render_count'] = 1;
-		
+
 		$this->extConf = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['ke_questionnaire']);
 
 		//get the user id
@@ -2454,19 +2410,19 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 			require_once(t3lib_extMgm::extPath('sr_freecap').'pi2/class.tx_srfreecap_pi2.php');
 			$this->freeCap = t3lib_div::makeInstance('tx_srfreecap_pi2');
 		}
-		
+
 		//get the questions of the questionnaire
 		$this->getQuestions();
-		
+
 		//centralize the pagecount
 		$this->pageCount = $this->getPageCount();
-		
+
 		//clear piVars (XSS and SQLInjection)
 		$this->clearPiVars();
-		
+
 		$this->no_authcodeKey = 'no_authcode';
 	}
-	
+
 	/**
 	 * clearPiVars(): clear the piVars as counter to xss and hacking attemps
 	 */
@@ -2532,11 +2488,11 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 		$this->questionCount['only_questions'] = 0; //no blind-texts counting
 		$this->questionCount['no_dependants'] = 0; //don't count the dependants
 		$this->questionCount['substract_pools'] = 0; //if pools count into pagecount don't substract them
-		
+
 		$temp_count = 0;
 		$temp_count_hidden = 0;
 		$questions = array();
-		
+
 		//Hook to manipulate the Question-Array
 		if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$this->extKey]['pi1_getQuestions'])){
 			foreach($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$this->extKey]['pi1_getQuestions'] as $_classRef){
@@ -2544,7 +2500,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 				$questions = $_procObj->pi1_getQuestions($this);
 			}
 		}
-		
+
 		//if there are no questions (could be out if the hook) take the normal way
 		if (!$questions){
 			$selectFields = '*';
@@ -2579,7 +2535,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 						else {
 							if ($row['dependant_show'] == 0){
 								if ($question_obj->checkDependancies()) $row['no_show'] = 0;
-								else $row['no_show'] = 1;	
+								else $row['no_show'] = 1;
 								//$row['no_show'] = $this->checkQuestionIfActivated($row);
 							}
 						}
@@ -2609,7 +2565,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 		}
 		//t3lib_div::debug($this->questionsByID,'byId');
 	}
-	
+
 	/**
 	 * checkQuestionIfActivated(): Check if the question is activeted and should be shown
 	 *
@@ -2645,7 +2601,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 
 		return $content;
 	}
-	
+
 	/**
 	 * Render the Content in the Template
 	 *
@@ -2685,7 +2641,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 		$markerArray['###OWN###'] = $points['own'];
 		$markerArray['###MAX###'] = $points['max'];
 		$body = $this->cObj->substituteMarkerArray($body, $markerArray);
-		
+
 		$html_start="<html><head><title>".$subject."</title></head><body>";
 		$html_end="</body></html>";
 

@@ -461,6 +461,7 @@ class pdfresult_dompdf {
 					break;
 				case 'dd_words':
 				case 'dd_area':
+				case 'dd_pictures':
 					$options = $this->getOptions($qid);
 					$answers = array();
 					// get all answers
@@ -483,33 +484,6 @@ class pdfresult_dompdf {
 						// calculate average points
 					}
 					
-					$own_total += $bars['own'][$qid];
-					$max_points += $answer_max_points;
-					break;
-				case 'dd_pictures':
-					$options = $this->getOptions($qid);
-					$answers = array();
-					$areas = array();
-					// get all answers
-					$answer_max_points = 0;
-					foreach ($options as $answer){
-							$answers[$answer['uid']]['points'] = $answer['value'];
-							$areas[$answer['answerarea']][] = $answer['uid'];
-							$answer_max_points += $answer['value'];
-					}
-					
-					// sum points of all answers of each question
-					$total_points = 0;
-					if (is_array($result[$qid]['answer']['options'])){
-						foreach ($result[$qid]['answer']['options'] as $area => $areaitems){
-							foreach ($areaitems as $item){
-								if (in_array($item,$areas[$area])) $total_points += $answers[$item]['points'];
-								$bars['own'][$qid] += $answers[$item]['points'];
-							}
-						}
-					}
-					
-									
 					$own_total += $bars['own'][$qid];
 					$max_points += $answer_max_points;
 					break;
