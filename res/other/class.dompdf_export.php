@@ -877,26 +877,17 @@ class dompdf_export {
 				break;
 			case 'dd_pictures':
 				$options = $this->getOptions($question['uid']);
-				//t3lib_div::devLog('question', 'pdf_export', 0, $question);
-				//t3lib_div::devLog('options', 'pdf_export', 0, $options);
 				$markerArray['###DDIMAGE###'] = 'uploads/tx_kequestionnaire/' . $question['image'];
 				$markerArray['###OPTIONS###'] = '';
-				foreach ($options as $option){
+				foreach($options as $option) {
+					$imgInfo = getimagesize(PATH_site . 'uploads/tx_kequestionnaire/' . $option['image']);
 					$o_markerArray = array();
-					$o_markerArray['###AREA_ID###'] = '';
+					$o_markerArray['###HEIGHT###'] = $imgInfo[1];
+					$o_markerArray['###WIDTH###'] = $imgInfo[0];
 					$text = $option['title'];
 					if ($option['text'] != '') $text = $option['text'];
 					$o_markerArray['###TEXT###'] = $text;
 					$o_markerArray['###IMAGE###'] = 'uploads/tx_kequestionnaire/' . $option['image'];
-					if (is_array($answered['options'])){
-						//t3lib_div::devLog('area '.$area, 'pdf_export', 0, $answered);
-						foreach ($answered['options'] as $area => $aoptions){
-							//t3lib_div::devLog('area '.$area. ' => ' .$option['uid'], 'pdf_export', 0, $aoptions);
-							if (in_array($option['uid'],$aoptions)){
-								$o_markerArray['###AREA_ID###'] = '=> '.$area;
-							}
-						}
-					}
 					$markerArray['###OPTIONS###'] .= $this->renderContent($this->templates['dd_pictures_options'],$o_markerArray);
 				}
 				$html = $this->renderContent($this->templates['dd_pictures'],$markerArray);
@@ -953,14 +944,14 @@ class dompdf_export {
 		return $html;
 	}
 
-        /**
-         * renderCompare(): render the compare content for the question
-         *
-         * @param       array   $question: question to be compared
-         *
-         * @return      string  rendered compare
-         */
-	function renderCompare($question){
+	/**
+	 * renderCompare(): render the compare content for the question
+	 *
+	 * @param       array   $question: question to be compared
+	 *
+	 * @return      string  rendered compare
+	 */
+	public function renderCompare($question){
 		$content = '';
 		$markerArray = array();
 
@@ -993,18 +984,28 @@ class dompdf_export {
 				break;
 			case 'dd_pictures':
 				$options = $this->getOptions($question['uid']);
+				$coords = $this->getCoords($question['coords']);
 				$markerArray['###DDIMAGE###'] = 'uploads/tx_kequestionnaire/' . $question['image'];
 				$markerArray['###OPTIONS###'] = '';
 				foreach ($options as $option){
 					$o_markerArray = array();
-					$o_markerArray['###AREA_ID###'] = '';
+					if(array_key_exists($option['answerarea'], $coords)) {
+						$o_markerArray['###TOP###'] = $top = $coords[$option['answerarea']]['start']['top'];
+						$o_markerArray['###LEFT###'] = $left = $coords[$option['answerarea']]['start']['left'];
+						$o_markerArray['###HEIGHT###'] = $height = $coords[$option['answerarea']]['end']['top'] - $coords[$option['answerarea']]['start']['top'];
+						$o_markerArray['###WIDTH###'] = $width = $coords[$option['answerarea']]['end']['left'] - $coords[$option['answerarea']]['start']['left'];
+						$style = 'position: absolute; top: ' . $top . 'px; left: ' . $left . 'px; width: ' . $width . 'px; height: ' . $height . 'px;';
+					} else {
+						continue;
+					}
 					$o_markerArray['###VALUE###'] = $value;
 					$text = $option['title'];
 					if ($option['text'] != '') $text = $option['text'];
 					$o_markerArray['###TEXT###'] = $text;
 					$o_markerArray['###IMAGE###'] = 'uploads/tx_kequestionnaire/' . $option['image'];
-					$o_markerArray['###AREA_ID###'] = '=> '.$option['answerarea'];
-					$markerArray['###OPTIONS###'] .= $this->renderContent($this->templates['dd_pictures_options'],$o_markerArray);
+					$optionContent = $this->renderContent($this->templates['dd_pictures_options'],$o_markerArray);
+					$optionContent = '<div style="' . $style . '">' . $optionContent . '</div>';
+					$markerArray['###OPTIONS###'] .= $optionContent;
 				}
 				if ($markerArray['###OPTIONS###'] != '') $content .= $this->renderContent($this->templates['dd_pictures_compare'],$markerArray);
 				break;
@@ -1030,15 +1031,35 @@ class dompdf_export {
 		return $content;
 	}
         
-        /**
-         * renderDemographicQuestion(): render the demographic question for the pdf
-         *
-         * @param       array   $question
-         * @param       array   $markerArray: prefilled markerArray
-         * @answered    array   $answered: answers given
-         *
-         * @return      string  content to be rendered
-         */
+	/**
+	 * get coords from answer
+	 *
+	 * @param string $coordinates the defined coords in question
+	 * @return array Array containing the defined coords
+	 */
+	public function getCoords($coordinates) {
+		$coordRow = t3lib_div::trimExplode(CHR(10), $coordinates);
+		foreach($coordRow as $keyRow => $row) {
+			$coordParts = t3lib_div::trimExplode('|', $row);
+			foreach($coordParts as $keyPart => $part) {
+				$keyPart = ($keyPart === 0) ? 'start' : 'end';
+				$positions = t3lib_div::trimExplode(':', $part);
+				$coords[($keyRow + 1)][$keyPart]['left'] = $positions[0];
+				$coords[($keyRow + 1)][$keyPart]['top'] = $positions[1];
+			}
+		}
+		return $coords;
+	}
+
+	/**
+	 * renderDemographicQuestion(): render the demographic question for the pdf
+	 *
+	 * @param       array   $question
+	 * @param       array   $markerArray: prefilled markerArray
+	 * @answered    array   $answered: answers given
+	 *
+	 * @return      string  content to be rendered
+	 */
 	function renderDemographicQuestion($question,$markerArray,$answered){
 		//t3lib_div::devLog('answered', 'pdf_export', 0, $answered);
 		$html = '';

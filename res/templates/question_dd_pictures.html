@@ -39,7 +39,7 @@
 <!-- ###QUESTION_DD_PICTURES### end-->
 
 <!-- ###PLACEHOLDER### begin-->
-<input class="checkbox" style="display: none;" type="checkbox" name="tx_kequestionnaire_pi1[###ID###][options][]" id="keq_###ID###_###ROW###" value="###ROW###">
+<input class="checkbox" style="display: inline;" type="checkbox" name="tx_kequestionnaire_pi1[###ID###][options][]" id="keq_###ID###_###ROW###" value="###ANSWERID###">
 <div id="keq-ddarea-placeholder-###ID###-###ROW###" class="keq-ddarea-placeholder keq-ddarea-placeholder-###ID###" style="
 	z-index: 5;
 	position: absolute;
@@ -104,24 +104,23 @@ $answers.draggable({
 <div class="question">
 	<div class="question_title">###QUESTION_TITLE######QUESTION###</div>
 	<div class="dd_image"><img src="###BASE_PATH###/###DDIMAGE###" alt="###QUESTION_TITLE###" /></div>
-	<table class="dd_pictures_options">
-		<tr>###OPTIONS###</tr>
-	</table>
+	<div>###OPTIONS###</div>
 </div>
 <div class="question">
 	###COMPARE###
 </div>
 <!-- ###DOMPDF### end-->
+
 <!-- ###DOMPDF_OPTION### begin-->
-<td><img src="###BASE_PATH###/###IMAGE###" alt="###TEXT###" /> ###AREA_ID###</td>
+<img src="###BASE_PATH######IMAGE###" width="###WIDTH###" height="###HEIGHT###" border="0" alt="###TEXT###" />
 <!-- ###DOMPDF_OPTION### end-->
 
 <!-- ###DOMPDF_COMPARE### begin-->
 <div class="compare">
-	<div class="dd_image"><img src="###BASE_PATH###/###DDIMAGE###" alt="###QUESTION_TITLE###" /></div>
-	<table class="dd_pictures_options">
-		<tr>###OPTIONS###</tr>
-	</table>
+	<div class="dd_image" style="position: relative">
+		<img src="###BASE_PATH######DDIMAGE###" alt="###QUESTION_TITLE###" />
+		###OPTIONS###
+	</div>
 </div>
 <!-- ###DOMPDF_COMPARE### end-->
 </body>
