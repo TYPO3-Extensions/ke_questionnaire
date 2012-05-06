@@ -709,9 +709,13 @@ class  tx_kequestionnaire_module2 extends t3lib_SCbase {
 							foreach ($results as $result){
 								if (is_array($result[$q_id]) AND is_array($result[$q_id]['answer'])){
 									if (is_array($result[$q_id]['answer']['options'])){
+										//t3lib_div::debug($result[$q_id]['answer']['options'][$sub['uid']],'res '.$sub['uid'].' / '.$bar['uid']);
 										if ((string)$result[$q_id]['answer']['options'][$sub['uid']] == (string)$bar['uid']) $values[$bar['uid']] ++;
 										elseif (is_array($result[$q_id]['answer']['options'][$sub['uid']]) AND ((string)$result[$q_id]['answer']['options'][$sub['uid']]['single'] == (string)$bar['uid'])) $values[$bar['uid']] ++;
 										elseif (in_array($bar['uid'],$result[$q_id]['answer']['options'])) $values[$bar['uid']] ++;
+										elseif (is_array($result[$q_id]['answer']['options'][$sub['uid']][$bar['uid']])){
+											$values[$bar['uid']] ++;
+										}
 									}
 								}
 								//t3lib_div::devLog('result '.$bar['uid'], 'ke_questionnaire auswert Mod', 0, array($result[$q_id]['answer']['options'][$sub['uid']]));
@@ -721,6 +725,8 @@ class  tx_kequestionnaire_module2 extends t3lib_SCbase {
 				}
 				//t3lib_div::devLog('values '.$sub['uid'], 'ke_questionnaire auswert Mod', 0, $values);
 				//t3lib_div::devLog('labels', 'ke_questionnaire auswert Mod', 0, $labels);
+				//t3lib_div::debug($values,'vals');
+				//t3lib_div::debug($labels,'labels');
 
 				$charts .= $this->charts->getPieLegendChart($marker.'_'.$sub['uid'],$title,$values,$labels,$colors,false,'east',150);
 				$content .= $this->fillTemplate($templ, $markerArray);
