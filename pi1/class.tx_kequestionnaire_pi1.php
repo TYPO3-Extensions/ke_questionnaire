@@ -1830,15 +1830,17 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 					$answers = array();
 					$areas = array();
 					// get all answers
-					$where = 'question_uid='.$qid.$this->cObj->enableFields('tx_kequestionnaire_answers');
-					$res_answers = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*','tx_kequestionnaire_answers',$where);
+					$where = 'question_uid=' . $qid . $this->cObj->enableFields('tx_kequestionnaire_answers');
+					$res_answers = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*', 'tx_kequestionnaire_answers', $where);
 					$answer_max_points = 0;
-					if ($res_answers){
+					if($res_answers){
 						// create array with points of each answer
-						while ($answer = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res_answers)){
+						while($answer = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res_answers)){
 							$answers[$answer['uid']]['points'] = $answer['value'];
 							$areas[$answer['answerarea']][] = $answer['uid'];
-							$answer_max_points += $answer['value'];
+							if($answer['correct_answer']) {
+								$answer_max_points += $answer['value'];
+							}
 						}
 					}
 					
@@ -1849,7 +1851,9 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 							if (is_array($result[$qid]['answer']['options'])){
 								foreach ($result[$qid]['answer']['options'] as $area => $areaitems){
 									foreach ($areaitems as $item){
-										if (in_array($item,$areas[$area])) $total_points += $answers[$item]['points'];
+										if (in_array($item,$areas[$area])) {
+											$total_points += $answers[$item]['points'];
+										}
 									}
 								}
 							}
@@ -1858,12 +1862,9 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 						$bars['total'][$qid] = $total_points/count($results);
 					}
 					
-					//t3lib_div::devLog('piVar', $this->prefixId, 0, array($this->piVars[$qid]['options']));
 					if (is_array($this->piVars[$qid]['options'])){
-						foreach ($this->piVars[$qid]['options'] as $area => $areaitems){
-							foreach ($areaitems as $item){
-								if (in_array($item,$areas[$area])) $bars['own'][$qid] += $answers[$item]['points'];
-							}
+						foreach ($this->piVars[$qid]['options'] as $area){
+							$bars['own'][$qid] += $answers[$area]['points'];
 						}
 					}
 					

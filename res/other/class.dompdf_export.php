@@ -518,7 +518,7 @@ class dompdf_export {
 	 */
 	function calculatePoints($result){
 		$returner = array();
-		//t3lib_div::devLog('result', 'pdf_export', 0, $result);
+		// t3lib_div::devLog('result', 'pdf_export', 0, $result);
 
 		foreach ($this->questionsByID as $qid => $question){
 			$temp .= $qid;
@@ -877,6 +877,7 @@ class dompdf_export {
 				break;
 			case 'dd_pictures':
 				$options = $this->getOptions($question['uid']);
+				$coords = $this->getCoords($question['coords']);
 				$markerArray['###DDIMAGE###'] = 'uploads/tx_kequestionnaire/' . $question['image'];
 				$markerArray['###OPTIONS###'] = '';
 				foreach($options as $option) {
@@ -888,7 +889,23 @@ class dompdf_export {
 					if ($option['text'] != '') $text = $option['text'];
 					$o_markerArray['###TEXT###'] = $text;
 					$o_markerArray['###IMAGE###'] = 'uploads/tx_kequestionnaire/' . $option['image'];
-					$markerArray['###OPTIONS###'] .= $this->renderContent($this->templates['dd_pictures_options'],$o_markerArray);
+					
+					if(is_array($answered['options']) && in_array($option['uid'], $answered['options']) || $answered['options'] == $option['uid']) {
+						if(array_key_exists($option['answerarea'], $coords)) {
+							$o_markerArray['###TOP###'] = $top = $coords[$option['answerarea']]['start']['top'];
+							$o_markerArray['###LEFT###'] = $left = $coords[$option['answerarea']]['start']['left'];
+							$o_markerArray['###HEIGHT###'] = $height = $coords[$option['answerarea']]['end']['top'] - $coords[$option['answerarea']]['start']['top'];
+							$o_markerArray['###WIDTH###'] = $width = $coords[$option['answerarea']]['end']['left'] - $coords[$option['answerarea']]['start']['left'];
+							$style = 'position: absolute; top: ' . $top . 'px; left: ' . $left . 'px; width: ' . $width . 'px; height: ' . $height . 'px;';
+						} else {
+							continue;
+						}
+						$optionContent = $this->renderContent($this->templates['dd_pictures_options'], $o_markerArray);
+						$optionContent = '<div style="' . $style . '">' . $optionContent . '</div>';
+						$markerArray['###OPTIONS###'] .= $optionContent;
+					} else {
+						$markerArray['###OPTIONS###'] .= $this->renderContent($this->templates['dd_pictures_options'], $o_markerArray);					
+					}
 				}
 				$html = $this->renderContent($this->templates['dd_pictures'],$markerArray);
 				break;
