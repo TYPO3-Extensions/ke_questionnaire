@@ -327,7 +327,7 @@ class  tx_kequestionnaire_module4 extends t3lib_SCbase {
 					$markerArray["###URL###"] = $link;
 					
 					$body=$mailTexts["body"];
-					$html_body=$mailTexts["body"];
+					$html_body=nl2br($mailTexts["body"]);
 					foreach($markerArray as $key=>$val) $body=str_replace($key,$val,$body);
 					$markerArray["###LINK###"]=$html_link;
 					foreach($markerArray as $key=>$val) $html_body=str_replace($key,$val,$html_body);
