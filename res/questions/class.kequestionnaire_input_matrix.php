@@ -348,7 +348,6 @@ class kequestionnaire_input_matrix extends kequestionnaire_input{
                 
                 $tmplCol=$this->cObj->getSubpart($this->tmpl, '###SLIDER###');
                 $header = $this->cObj->getSubpart($this->cObj->fileResource($this->template), '###HEADER_ADDITIONS###');
-                t3lib_utility_Debug::debug($question, 'question');
                 $GLOBALS['TSFE']->register['kequestionnaire'][$question['question_uid']] .= '
                         $( "#keq_'.$question['question_uid'].'_'.$question['uid'].'" ).val(1);
                         $( "#span_'.$question['question_uid'].'_'.$question['uid'].'" ).text(id2title(1));
