@@ -23,6 +23,8 @@
 			$this->dependants = $dependants;
 			$this->label=$label;
 			$this->odd=0;
+			$this->markerId = 0;
+			$this->certMarker = array();
 
 			$arr=explode("__",$fieldName);
 			if(count($arr)>1){
@@ -134,6 +136,7 @@
 			$out=$this->cObj->substituteMarkerArrayCached($out, $markerArray, $subpartArray);
 
 			$this->html = $out;
+			
 			return $out;
 		}
 		
@@ -163,6 +166,8 @@
 		 */
 		function renderInput(){
 			$this->value = str_replace('"','&quot;',$this->value);
+			$this->markerId = 1;
+			$this->certMarker[] = strtoupper($this->fieldName);
 			$markerArray["###VALUE###"]=$this->value;
 			$markerArray["###LABEL###"]=$this->label;
 			$markerArray["###FIELDNAME###"]=$this->fieldName;
@@ -205,6 +210,8 @@
 
 			$markerArray["###CHECKED###"]=$this->value==$this->fieldName?"checked='checked'":'';
 			$markerArray["###VALUE###"]=$this->options[$this->fieldName]['uid'];
+			$this->markerId = $this->options[$this->fieldName]['uid'];
+			$this->certMarker[] = $this->markerId;
 			$markerArray['###DEPENDANT_AJAX###'] = $this->checkDependant($this->fieldName,$this->options[$this->fieldName]['uid']);
 			//t3lib_div::devLog('markerArray', 'input', 0, $markerArray);
 			
@@ -250,6 +257,8 @@
 			$markerArray["###VALUE_TEXT###"]=$this->value["text"][$this->fieldName];
 			$markerArray["###VALUE_OPTION###"]=$this->options[$this->fieldName]['uid'];
 			$markerArray["###VALUE###"]=$this->options[$this->fieldName]['uid'];
+			$this->markerId = $this->options[$this->fieldName]['uid'];
+			$this->certMarker[] = $this->markerId;
 			$markerArray['###DEPENDANT_AJAX###'] = $this->checkDependant($this->fieldName,$this->options[$this->fieldName]['uid'], true);
 
 			//t3lib_div::devLog('markerArray', 'input', 0, $markerArray);
@@ -292,6 +301,8 @@
 			}			
 			
 			$markerArray["###VALUE###"]=$this->options[$this->fieldName]['uid'];
+			$this->markerId = $this->options[$this->fieldName]['uid'];
+			$this->certMarker[] = $this->markerId;
 
 			$markerArray['###DEPENDANT_AJAX###'] = $this->checkDependant($this->fieldName,$this->options[$this->fieldName]['uid'],false,$this->maxAnswers);
 			//t3lib_div::devLog('markerArray', 'input', 0, $markerArray);
@@ -342,6 +353,8 @@
 			$markerArray["###VALUE_TEXT###"]=$this->value["text"][$this->fieldName];
 			$markerArray["###VALUE_OPTION###"]=$this->options[$this->fieldName]['uid'];
 			$markerArray["###VALUE###"]=$this->options[$this->fieldName]['uid'];
+			$this->markerId = $this->options[$this->fieldName]['uid'];
+			$this->certMarker[] = $this->markerId;
 			$markerArray['###DEPENDANT_AJAX###'] = $this->checkDependant($this->fieldName,$this->options[$this->fieldName]['uid'],true,$this->maxAnswers);
 			
 			//images
@@ -367,6 +380,7 @@
 		function renderSelectbox($multi){
 			$markerArray["###LABEL###"]=$this->label;
 			$markerArray["###FIELDNAME###"]=$this->fieldName;
+			$this->markerId = 1;
 
 			$options=$multi?"":"<option value='".KEQUESTIONAIRE_EMPTY."'></option>";
 			foreach($this->options as $row){
@@ -377,6 +391,7 @@
 				}
 				//t3lib_div::devLog('$this->value', 'input', 0, array($this->value));
 				$options.="<option value='".$row["uid"]."' $selected>";
+				$this->certMarker[] = $row['uid'];
 				$option_title = $row["title"];
 				if ($row['text'] != '') {
 					$temp_val = str_replace('&nbsp;','',$row['text']);

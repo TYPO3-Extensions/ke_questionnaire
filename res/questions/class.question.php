@@ -535,6 +535,19 @@ class question{
 			if ($this->fields[$key]->closed_onchange) {
 			    $out['closed_onchangejs'] .= $this->fields[$key]->closed_onchange;
 			}
+			//t3lib_div::debug($key,'fields for '.$this->uid);
+			if ($this->obj->ffdata['cert_debugmarker'] == 1 AND $field->markerId > 0) {
+			    $temp_marker_render = '';
+			    //t3lib_div::debug($field->certMarker,'fieldname');
+			    if (is_array($field->certMarker)){
+				foreach ($field->certMarker as $debug => $debugmarker){
+				    $temp_marker = '###'.$this->uid.'_'.$debugmarker.'###';
+				    //t3lib_div::debug('###'.$this->uid.'_'.$debugmarker.'###','marker '.$this->question['title']);
+				    $temp_marker_render .= $temp_marker.' ';
+				}
+			    }
+			    $render_temp .= '<div style="font-size:10px">'.$temp_marker_render.'</div>';
+			}
 			$out[$marker] .= $render_temp;
 		}
 		return $out;
@@ -968,10 +981,10 @@ class question{
 				//t3lib_div::debug($this->answers,"answers");
 				$saveArray[$this->question['uid']]['possible_answers'] = array();
 				foreach ($this->answers as $nr => $answer){
-				//t3lib_div::devLog('answer '.$this->question['uid'], 'class.question', 0, $answer);
-				$i ++;
-				$text=($answer['text'] != '')?$answer['text']:$answer['title'];
-				$saveArray[$this->question['uid']]['possible_answers'][$nr] = $text;
+				    //t3lib_div::devLog('answer '.$this->question['uid'], 'class.question', 0, $answer);
+				    $i ++;
+				    $text=($answer['text'] != '')?$answer['text']:$answer['title'];
+				    $saveArray[$this->question['uid']]['possible_answers'][$nr] = $text;
 				}
 			}
 			// for Matrix

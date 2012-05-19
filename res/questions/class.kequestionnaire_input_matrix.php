@@ -12,6 +12,8 @@ class kequestionnaire_input_matrix extends kequestionnaire_input{
                 $this->cObj=$obj->cObj;
                 $this->odd=0;
                 $this->maxAnswers = $maxAnswers;
+                $this->markerId = 0;
+		$this->certMarker = array();
         
                 $arr=explode("__",$fieldName);
                 if(count($arr)>1){
@@ -138,6 +140,7 @@ class kequestionnaire_input_matrix extends kequestionnaire_input{
                 $tmplInput=$this->cObj->getSubpart($this->tmpl,"###INPUT###");
                 
                 $question=$type=="semantic"?$this->sublines[$this->fieldName]:$this->subquestions[$this->fieldName];
+                $this->markerId = $question['uid'];
         
                 $markerArrayInput=array(
                         "###SUBQUESTION_ID###"=>$question["uid"],
@@ -181,10 +184,12 @@ class kequestionnaire_input_matrix extends kequestionnaire_input{
                         $markerArraySub=array();
                         $markerArraySub["###SUBQUESTION_ID###"]=$question["uid"];
                         $markerArraySub["###VALUE###"]=$column["uid"];
+                        $this->markerId = $question['uid'].'_'.$column['uid'];
                         $markerArraySub["###COLUMN_ID###"]=$column["uid"];
                         $markerArraySub['###LINE###']=$question['title'];
                         $markerArraySub['###COL###']=$column['title'];
                         //t3lib_div::debug($markerArraySub);
+                        $this->certMarker[] = $question['uid'].'_'.$column['uid'];
             
                         $value=isset($this->value["options"][$question["uid"]])?($this->value["options"][$question["uid"]]):($type=="matrix_checkbox"?array():0);
                         if ($column['different_type'] != ''){
