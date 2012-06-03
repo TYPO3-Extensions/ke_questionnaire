@@ -547,7 +547,8 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 		$content .= '<p>';
 		$content .= '<input type="checkbox" name="html_oneperpage" value="1" /> '.$LANG->getLL('download_html_oneperpage').'<br /><br />';
 		$content .= $LANG->getLL('download_html_fileending').'&nbsp;&nbsp;<input type="text" name="html_fileending" value="zip" /><br />';
-		$content .= $LANG->getLL('download_html_firstpage').'&nbsp;&nbsp;<input type="text" name="html_firstpage" value="index.html" /><br /><br />';
+		$content .= $LANG->getLL('download_html_firstpage').'&nbsp;&nbsp;<input type="text" name="html_firstpage" value="index.html" /><br />';
+		$content .= '<input type="checkbox" name="double_export" value="1" /> '.$LANG->getLL('download_double_export').'<br /><br />';
 		$content .= '<input type="submit" name="get_html_blank" value="'.$LANG->getLL('download_button_html_blank').'" /></p>';
 		$content .= '<br /><hr><br />';
 		/*$content .= '<p>';
@@ -587,7 +588,8 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 		$content .= '<p>';
 		$content .= '<input type="checkbox" name="html_oneperpage" value="1" /> '.$LANG->getLL('download_html_oneperpage').'<br /><br />';
 		$content .= $LANG->getLL('download_html_fileending').'&nbsp;&nbsp;<input type="text" name="html_fileending" value="zip" /><br />';
-		$content .= $LANG->getLL('download_html_firstpage').'&nbsp;&nbsp;<input type="text" name="html_firstpage" value="index.html" /><br /><br />';
+		$content .= $LANG->getLL('download_html_firstpage').'&nbsp;&nbsp;<input type="text" name="html_firstpage" value="index.html" /><br />';
+		$content .= '<input type="checkbox" name="double_export" value="1" /> '.$LANG->getLL('download_double_export').'<br /><br />';
 		$content .= '<input type="submit" name="get_html_blank" value="'.$LANG->getLL('download_button_html_blank').'" /></p>';
 		$content .= '<br /><hr><br />';
 		/*$content .= '<p>';
@@ -1371,6 +1373,7 @@ Event.observe(window, 'load', function() {
 				$conf['language'] = $lang;
 				$conf['oneperpage'] = t3lib_div::_GP('html_oneperpage');
 				$conf['firstpage'] = t3lib_div::_GP('html_firstpage');
+				$conf['double_export'] = t3lib_div::_GP('double_export');
 				$conf['exportHTMLpagefield'] = $this->extConf['exportHTMLpagefield'];
 				
 				$html = new html_export($q_id,$conf,$ts_setup);

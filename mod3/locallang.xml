@@ -43,6 +43,7 @@
 			<label index="download_html_oneperpage">download one question per page, otherwise the plugin-selection will be taken</label>
 			<label index="download_html_fileending">Ending of the file. Default is zip</label>
 			<label index="download_html_firstpage">Name of the first page (must be with ending)</label>
+			<label index="download_double_export">Double Export</label>
 
 			<label index="CSV_download_type">Select the type of Export you want to make:</label>
 			<label index="CSV_download_simple">Simple Data-Download</label>
@@ -94,6 +95,7 @@
 			<label index="download_with_authcode">mit dem zugehörigen AuthCode herunterladen</label>
 			<label index="download_only_this_lang">nur die Ergebnisse der ausgewählten Sprache herunterladen</label>
 			<label index="download_html_oneperpage">eine Frage/Seite runterladen, ansonsten werden die Einstellungen des Plugins berücksichtigt</label>
+			<label index="download_double_export">Doppelter Export</label>
 
 			<label index="CSV_download_type">Bitte wählen Sie den Typ des Exports:</label>
 			<label index="CSV_download_simple">Einfacher Daten-Download</label>

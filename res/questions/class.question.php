@@ -519,6 +519,7 @@ class question{
     function renderFields(){
 		$out = array();
 		$odd = 0;
+		$temp_counter = 1;
 		foreach($this->fields as $key => $field){
 			if (!$this->checkDependancies()) {
 			    $this->fields[$key]->value = FALSE;
@@ -531,7 +532,21 @@ class question{
 			    $this->fields[$key]->odd = $odd; $odd=!$odd;
 			}
 			//#############################################
+			
 			$render_temp = $this->fields[$key]->render();
+			//#############################################
+			// KENNZIFFER Nadine Schwingler 03.06.2012
+			// Anpassung Title Line
+			$temp_marker = '###DOUBLE_MARKER###';
+			$temp_replacer = '';
+			if ($this->conf['html_double_export']) {
+			    $temp_replacer .= '<div class="result"><span id="VotingResult'.$temp_counter.'">0</span> Stimmen</div>';
+			    $temp_counter ++;
+			    //t3lib_div::debug($render_temp,'temp');
+			}
+			$render_temp = str_replace($temp_marker,$temp_replacer,$render_temp);
+			//#############################################
+			
 			if ($this->fields[$key]->closed_onchange) {
 			    $out['closed_onchangejs'] .= $this->fields[$key]->closed_onchange;
 			}
@@ -549,6 +564,7 @@ class question{
 			    $render_temp .= '<div style="font-size:10px">'.$temp_marker_render.'</div>';
 			}
 			$out[$marker] .= $render_temp;
+			//t3lib_div::debug($out,'out');
 		}
 		return $out;
 	}
