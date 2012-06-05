@@ -1407,6 +1407,7 @@ Event.observe(window, 'load', function() {
 			}
 			//$zip_filename = $this->q_id.'_'.time().'_html.zip';
 			$zip_filename = $temp_title.'_html.'.$ending;
+			$conf['subfolder'] = $temp_title;
 			
 			$html = new html_export($this->q_id, $conf, $ts_setup);
 			$html->createZip($zip_filename);
