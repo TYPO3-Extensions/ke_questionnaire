@@ -331,22 +331,36 @@ class  tx_kequestionnaire_module4 extends t3lib_SCbase {
 					foreach($markerArray as $key=>$val) $body=str_replace($key,$val,$body);
 					$markerArray["###LINK###"]=$html_link;
 					foreach($markerArray as $key=>$val) $html_body=str_replace($key,$val,$html_body);
-
+					
 					$html_start="<html><head><title>".$mailTexts["subject"]."</title></head><body>";
 					$html_end="</body></html>";
-
-					$this->htmlMail = t3lib_div::makeInstance('t3lib_htmlmail');
-					$this->htmlMail->start();
-					$this->htmlMail->recipient = $email;
-					$this->htmlMail->subject = $mailTexts['subject'];
-					$this->htmlMail->from_email = $mailTexts['fromEmail'];
-					$this->htmlMail->from_name = $mailTexts['fromName'];
-					$this->htmlMail->replyto_name = $mailTexts['fromName'];
-					$this->htmlMail->organisation = $mailTexts['fromName'];
-					$this->htmlMail->returnPath = $mailTexts['fromEmail'];
-					//$this->htmlMail->addPlain($body);
-					$this->htmlMail->setHTML($this->htmlMail->encodeMsg($html_start.$html_body.$html_end));
-					$out=$this->htmlMail->send($email);
+					
+					if($GLOBALS['TYPO3_CONF_VARS']['MAIL']['substituteOldMailAPI'] == 0 && $GLOBALS['TYPO3_CONF_VARS']['SYS']['compat_version'] < '4.6') {	
+						$this->htmlMail = t3lib_div::makeInstance('t3lib_htmlmail');
+						$this->htmlMail->start();
+						$this->htmlMail->recipient = $email;
+						$this->htmlMail->subject = $mailTexts['subject'];
+						$this->htmlMail->from_email = $mailTexts['fromEmail'];
+						$this->htmlMail->from_name = $mailTexts['fromName'];
+						$this->htmlMail->replyto_name = $mailTexts['fromName'];
+						$this->htmlMail->organisation = $mailTexts['fromName'];
+						$this->htmlMail->returnPath = $mailTexts['fromEmail'];
+						//$this->htmlMail->addPlain($body);
+						$this->htmlMail->setHTML($this->htmlMail->encodeMsg($html_start.$html_body.$html_end));
+						$out=$this->htmlMail->send($email);
+					} else {
+						$mail = t3lib_div::makeInstance('t3lib_mail_Message');
+						$mail->setFrom(array( $mailTexts['fromEmail'] => $mailTexts['fromName']));
+						$mail->setReturnPath($mailTexts['fromEmail']);
+						$mail->setReplyTo($mailTexts['fromEmail']);
+						$mail->setContentType();
+						$mail->setCharset('uft-8');
+						$mail->setTo(array($email));
+						$mail->setSubject($mailTexts['subject']);
+						$mail->setBody($html_start.$html_body.$html_end, 'text/html');
+						//$mail->addPart($html_start.$html_body.$html_end, 'text/plain');
+						$out = $mail->send();
+					}
 
 					return $out;
 

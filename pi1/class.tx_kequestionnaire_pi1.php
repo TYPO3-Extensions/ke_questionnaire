@@ -2148,8 +2148,6 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 			
 		$mailData = $plain->getPlain($this->saveArray);
 		
-		$emailText .= $this->ffdata['send_finish_mail_subject']."\r\n";
-		$emailText .= $this->ffdata['send_finish_mail_emailhead']."\r\n";
 		foreach($mailData as $emailContent) {
 			if(is_array($emailContent) && count($emailContent) >= 2) {
 				$emailText .= $emailContent['title']."\r\n";
@@ -2164,9 +2162,26 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 				$emailText .= "\r\n";
 			}
 		}
-
-		$emailText = strip_tags($emailText);
-		if($this->cObj->sendNotifyEmail($emailText,$email,'',$this->ffdata['send_finish_mail_email'],$this->ffdata['send_finish_mail_email'],$this->ffdata['send_finish_mail_email'])) {
+		
+		if($GLOBALS['TYPO3_CONF_VARS']['MAIL']['substituteOldMailAPI'] == 0 && $GLOBALS['TYPO3_CONF_VARS']['SYS']['compat_version'] < '4.6') {
+			$emailTextHeader = $this->ffdata['send_finish_mail_subject']."\r\n";
+			$emailTextHeader .= $this->ffdata['send_finish_mail_emailhead']."\r\n";
+			$emailText = $emailTextHeader . strip_tags($emailText);
+			$numMailsSent = $this->cObj->sendNotifyEmail($emailText,$email,'',$this->ffdata['send_finish_mail_email'],$this->ffdata['send_finish_mail_email'],$this->ffdata['send_finish_mail_email']);
+		} else {
+			$mail = t3lib_div::makeInstance('t3lib_mail_Message');
+			$mail->setFrom(array($this->ffdata['send_finish_mail_email']));
+			$mail->setReturnPath($this->ffdata['send_finish_mail_email']);
+			$mail->setReplyTo($this->ffdata['send_finish_mail_email']);
+			$mail->setContentType();
+			$mail->setCharset('uft-8');
+			$mail->setTo(array($email));
+			$mail->setSubject($this->ffdata['send_finish_mail_subject']);
+			$mail->setBody(strip_tags($emailText), 'text/plain');
+			$numMailsSent = $mail->send();
+		}
+		
+		if($numMailsSent) {
 			return true;
 		} else {
 			return false;
@@ -2693,25 +2708,45 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 		
 		$html_start="<html><head><title>".$subject."</title></head><body>";
 		$html_end="</body></html>";
-
-		$this->htmlMail = t3lib_div::makeInstance('t3lib_htmlmail');
-		$this->htmlMail->start();
-		$this->htmlMail->recipient = $email;
-		$this->htmlMail->subject = $subject;
-		$this->htmlMail->from_email = $mailTexts['fromEmail'];
-		$this->htmlMail->from_name = $mailTexts['fromName'];
-		$this->htmlMail->replyto_name = $mailTexts['fromName'];
-		$this->htmlMail->organisation = $mailTexts['fromName'];
-		$this->htmlMail->returnPath = $mailTexts['fromEmail'];
-		$this->htmlMail->addPlain($body);
-		$this->htmlMail->setHTML($this->htmlMail->encodeMsg($html_start.$body.$html_end));
 		$mails = explode(',',$email);
-		foreach ($mails as $mail){
-			$out .= $this->htmlMail->send($mail).'<br />';
+		
+		if(is_array($mails) && count($mails)) {
+			//use swiftmailer?
+			if($GLOBALS['TYPO3_CONF_VARS']['MAIL']['substituteOldMailAPI'] == 0 && $GLOBALS['TYPO3_CONF_VARS']['SYS']['compat_version'] < '4.6') {
+				//use old api calls
+				$this->htmlMail = t3lib_div::makeInstance('t3lib_htmlmail');
+				$this->htmlMail->start();
+				$this->htmlMail->recipient = $email;
+				$this->htmlMail->subject = $subject;
+				$this->htmlMail->from_email = $mailTexts['fromEmail'];
+				$this->htmlMail->from_name = $mailTexts['fromName'];
+				$this->htmlMail->replyto_name = $mailTexts['fromName'];
+				$this->htmlMail->organisation = $mailTexts['fromName'];
+				$this->htmlMail->returnPath = $mailTexts['fromEmail'];
+				$this->htmlMail->addPlain($body);
+				$this->htmlMail->setHTML($this->htmlMail->encodeMsg($html_start.$body.$html_end));
+				foreach ($mails as $mail){
+					$out .= $this->htmlMail->send($mail).'<br />';
+				}
+			} else {
+				//use swiftmailer
+				$mail = t3lib_div::makeInstance('t3lib_mail_Message');
+				$mail->setFrom(array($mailTexts['fromEmail'] => $mailTexts['fromName']));
+				$mail->setReturnPath($mailTexts['fromEmail']);
+				$mail->setReplyTo( $mailTexts['fromEmail']);
+				$mail->setContentType();
+				$mail->setTo($mails);
+				$mail->setSubject($subject);
+				$mail->setBody($body, 'text/html');
+				$mail->addPart($body, 'text/plain');
+				$mail->send();
+			}
 		}
+		
 		//t3lib_div::devLog('sendMail out', $this->prefixId, 0, array($out,$mails,$mailTexts));
+		$out = '';
 		return $out;
-	}
+	}	
 
 }
 
