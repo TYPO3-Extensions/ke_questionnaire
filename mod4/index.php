@@ -348,18 +348,23 @@ class  tx_kequestionnaire_module4 extends t3lib_SCbase {
 						//$this->htmlMail->addPlain($body);
 						$this->htmlMail->setHTML($this->htmlMail->encodeMsg($html_start.$html_body.$html_end));
 						$out=$this->htmlMail->send($email);
-					} else {
-						$mail = t3lib_div::makeInstance('t3lib_mail_Message');
-						$mail->setFrom(array( $mailTexts['fromEmail'] => $mailTexts['fromName']));
-						$mail->setReturnPath($mailTexts['fromEmail']);
-						$mail->setReplyTo($mailTexts['fromEmail']);
-						$mail->setContentType();
-						$mail->setCharset('uft-8');
-						$mail->setTo(array($email));
-						$mail->setSubject($mailTexts['subject']);
-						$mail->setBody($html_start.$html_body.$html_end, 'text/html');
-						//$mail->addPart($html_start.$html_body.$html_end, 'text/plain');
-						$out = $mail->send();
+					} else {						
+						//use swiftmailer
+						$swiftParams = array(
+							'setFrom' => array( $mailTexts['fromEmail'] => $mailTexts['fromName']),
+							'setReturnPath' => $mailTexts['fromEmail'],
+							'setReplyTo' => $mailTexts['fromEmail'],
+							'setContentType' => '',
+							'setCharset' => 'uft-8',
+							'setTo' => array($email),
+							'setSubject' => $mailTexts['subject'],
+							'setBody' => array($html_start.$html_body.$html_end, 'text/html'),
+							//'addPart' => array($html_start.$html_body.$html_end, 'text/plain')
+						);
+						
+						$mail = t3lib_div::makeInstance('tx_kequestionnaire_swiftmailer');
+						$out = $mail->send($swiftParams);
+						unset($mail);
 					}
 
 					return $out;
