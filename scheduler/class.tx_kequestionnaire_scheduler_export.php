@@ -132,27 +132,46 @@ class tx_kequestionnaire_scheduler_export extends tx_scheduler_Task {
         
 	function sendMail($email,$mailTexts,$file){
 		$body = $mailTexts["body"];
-
 		$html_start="<html><head><title>".$mailTexts["subject"]."</title></head><body>";
 		$html_end="</body></html>";
-
-		$this->htmlMail = t3lib_div::makeInstance('t3lib_htmlmail');
-		$this->htmlMail->start();
-		$this->htmlMail->recipient = $email;
-		$this->htmlMail->subject = $mailTexts['subject'];
-		$this->htmlMail->from_email = $mailTexts['fromEmail'];
-		$this->htmlMail->from_name = $mailTexts['fromName'];
-		$this->htmlMail->replyto_name = $mailTexts['fromName'];
-		$this->htmlMail->organisation = $mailTexts['fromName'];
-		$this->htmlMail->returnPath = $mailTexts['fromEmail'];
-		$this->htmlMail->addPlain($body);
-                $this->htmlMail->addAttachment($file);
-		$this->htmlMail->setHTML($this->htmlMail->encodeMsg($html_start.$body.$html_end));
-		$mails = explode(',',$email);
-		foreach ($mails as $mail){
-			$out .= $this->htmlMail->send($mail).'<br />';
+		
+		if($GLOBALS['TYPO3_CONF_VARS']['MAIL']['substituteOldMailAPI'] == 0 && $GLOBALS['TYPO3_CONF_VARS']['SYS']['compat_version'] < '4.6') {
+			$this->htmlMail = t3lib_div::makeInstance('t3lib_htmlmail');
+			$this->htmlMail->start();
+			$this->htmlMail->recipient = $email;
+			$this->htmlMail->subject = $mailTexts['subject'];
+			$this->htmlMail->from_email = $mailTexts['fromEmail'];
+			$this->htmlMail->from_name = $mailTexts['fromName'];
+			$this->htmlMail->replyto_name = $mailTexts['fromName'];
+			$this->htmlMail->organisation = $mailTexts['fromName'];
+			$this->htmlMail->returnPath = $mailTexts['fromEmail'];
+			$this->htmlMail->addPlain($body);
+	                $this->htmlMail->addAttachment($file);
+			$this->htmlMail->setHTML($this->htmlMail->encodeMsg($html_start.$body.$html_end));
+			$mails = explode(',',$email);
+			foreach ($mails as $mail){
+				$out .= $this->htmlMail->send($mail).'<br />';
+			}
+		} else {
+			//use swiftmailer
+			$swiftParams = array(
+				'setFrom' => array( $mailTexts['fromEmail'] => $mailTexts['fromName']),
+				'setReturnPath' => $mailTexts['fromEmail'],
+				'setReplyTo' => $mailTexts['fromEmail'],
+				'setContentType' => '',
+				'setCharset' => 'uft-8',
+				'setTo' => array($email),
+				'setSubject' => $mailTexts['subject'],
+				'setBody' => array($html_start.$body.$html_end, 'text/html'),
+				'addPart' => array($body, 'text/plain'),
+				'attach' => $file
+			);
+			
+			$mail = t3lib_div::makeInstance('tx_kequestionnaire_swiftmailer');
+			$out = $mail->send($swiftParams);
+			unset($mail);
 		}
-		//t3lib_div::devLog('sendMail out', 'scheduler', 0, array($out,$mails,$mailTexts,$file));
+		
 		return $out;
 	}
 }

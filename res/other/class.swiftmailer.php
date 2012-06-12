@@ -37,7 +37,7 @@ class tx_kequestionnaire_swiftmailer {
 		$this->swiftMailObj = t3lib_div::makeInstance('t3lib_mail_Message');
 	}
 	
-	public function send($swiftParameters = array()) {
+	public function send($swiftParameters = array()) {		
 		$checkRequired = array('setTo','setFrom','setSubject','setBody');
 		
 		//parameters not set properly
@@ -60,6 +60,8 @@ class tx_kequestionnaire_swiftmailer {
 					$bodyContentType = $swValue[1];
 					
 					$this->swiftMailObj->$swKey($bodyText,$bodyContentType);
+				} elseif($swKey == 'attach') {
+					$this->swiftMailObj->$swKey(Swift_Attachment::fromPath($swValue));
 				} else {
 					$this->swiftMailObj->$swKey($swValue);
 				}
@@ -72,7 +74,6 @@ class tx_kequestionnaire_swiftmailer {
 	}
 	
 	public function __destruct() {
-		//destroy swiftmailer object
 		$this->swiftMailObj = null;
 	}
 	

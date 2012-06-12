@@ -2728,18 +2728,21 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 				foreach ($mails as $mail){
 					$out .= $this->htmlMail->send($mail).'<br />';
 				}
-			} else {
+			} else {				
 				//use swiftmailer
-				$mail = t3lib_div::makeInstance('t3lib_mail_Message');
-				$mail->setFrom(array($mailTexts['fromEmail'] => $mailTexts['fromName']));
-				$mail->setReturnPath($mailTexts['fromEmail']);
-				$mail->setReplyTo( $mailTexts['fromEmail']);
-				$mail->setContentType();
-				$mail->setTo($mails);
-				$mail->setSubject($subject);
-				$mail->setBody($body, 'text/html');
-				$mail->addPart($body, 'text/plain');
-				$mail->send();
+				$swiftParams = array(
+					'setFrom' =>  array($mailTexts['fromEmail'] => $mailTexts['fromName']),
+					'setReturnPath' => $mailTexts['fromEmail'],
+					'setReplyTo' => $mailTexts['fromEmail'],
+					'setContentType' => '',
+					'setTo' => $mails,
+					'setSubject' => $subject,
+					'setBody' => array($body, 'text/html'),
+					'addPart' => array($body, 'text/plain')
+				);
+				
+				$mail = t3lib_div::makeInstance('tx_kequestionnaire_swiftmailer');
+				$out = $mail->send($swiftParams);
 			}
 		}
 		
