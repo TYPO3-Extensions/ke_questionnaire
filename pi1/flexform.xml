@@ -419,6 +419,17 @@
 						</config>
 					</TCEforms>
 				</end_page>
+				<closed_multi_horizontal>
+					<TCEforms>
+						<label>LLL:EXT:ke_questionnaire/locallang.xml:tt_content.pi_flexform.closed_multi_horizontal</label>
+						<config>
+							<type>input</type>
+							<eval>num</eval>
+							<size>5</size>
+							<default>1</default>
+						</config>
+					</TCEforms>
+				</closed_multi_horizontal>
 				</el>
 			</ROOT>
 		</dDEF>

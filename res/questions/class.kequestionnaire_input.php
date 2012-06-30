@@ -196,6 +196,7 @@
 		
 		function renderRadiobutton(){
 			$markerArray['###STYLE###'] = '';
+			$markerArray['###COLUMNS###'] = '';
 			//t3lib_div::devLog('renderRadio Button '.$this->fieldName, 'input', 0, $this->options[$this->fieldName]);
 			$markerArray["###LABEL###"]=$this->options[$this->fieldName]["title"];
 			if ($this->options[$this->fieldName]['text'] != '') {
@@ -214,6 +215,17 @@
 			$this->certMarker[] = $this->markerId;
 			$markerArray['###DEPENDANT_AJAX###'] = $this->checkDependant($this->fieldName,$this->options[$this->fieldName]['uid']);
 			//t3lib_div::devLog('markerArray', 'input', 0, $markerArray);
+			
+			/*******************************
+			 * Nadine Schwingler, 30.06.12
+			 * Columns for Closed Questions
+			 ******************************/
+			if ($this->obj->ffdata['closed_multi_horizontal'] > 1){
+				$col_amount = $this->obj->ffdata['closed_multi_horizontal'];
+				$part = 90/$col_amount;
+				$style = 'style="width:'.$part.'%;float:left;display:block;"';
+				$markerArray['###COLUMNSTYLE###'] = $style;
+			}
 			
 			//images
 			$markerArray = $this->renderImage($markerArray,$this->options[$this->fieldName]);
@@ -234,6 +246,7 @@
 
 		function renderRadiobuttonWithInput(){
 			$markerArray['###STYLE###'] = '';
+			$markerArray['###COLUMNS###'] = '';
 			$markerArray["###LABEL###"]=$this->options[$this->fieldName]["title"];
 			if ($this->options[$this->fieldName]['text'] != '') {
 				$temp_val = str_replace('&nbsp;','',$this->options[$this->fieldName]['text']);
@@ -263,6 +276,17 @@
 
 			//t3lib_div::devLog('markerArray', 'input', 0, $markerArray);
 			
+			/*******************************
+			 * Nadine Schwingler, 30.06.12
+			 * Columns for Closed Questions
+			 ******************************/
+			if ($this->obj->ffdata['closed_multi_horizontal'] > 1){
+				$col_amount = $this->obj->ffdata['closed_multi_horizontal'];
+				$part = 90/$col_amount;
+				$style = 'style="width:'.$part.'%;float:left;display:block;"';
+				$markerArray['###COLUMNSTYLE###'] = $style;
+			}
+			
 			//images
 			$markerArray = $this->renderImage($markerArray,$this->options[$this->fieldName]);
 
@@ -282,7 +306,9 @@
 		}
 
 		function renderCheckbox(){
+			//t3lib_div::debug($this->obj->ffdata,'ffdata');
 			$markerArray['###STYLE###'] = '';
+			$markerArray['###COLUMNS###'] = '';
 			$markerArray["###LABEL###"]=$this->options[$this->fieldName]["title"];
 			if ($this->options[$this->fieldName]['text'] != '') {
 				$temp_val = str_replace('&nbsp;','',$this->options[$this->fieldName]['text']);
@@ -307,6 +333,17 @@
 			$markerArray['###DEPENDANT_AJAX###'] = $this->checkDependant($this->fieldName,$this->options[$this->fieldName]['uid'],false,$this->maxAnswers);
 			//t3lib_div::devLog('markerArray', 'input', 0, $markerArray);
 			
+			/*******************************
+			 * Nadine Schwingler, 30.06.12
+			 * Columns for Closed Questions
+			 ******************************/
+			if ($this->obj->ffdata['closed_multi_horizontal'] > 1){
+				$col_amount = $this->obj->ffdata['closed_multi_horizontal'];
+				$part = 90/$col_amount;
+				$style = 'style="width:'.$part.'%;float:left;display:block;"';
+				$markerArray['###COLUMNSTYLE###'] = $style;
+			}
+			
 			//images
 			$markerArray = $this->renderImage($markerArray,$this->options[$this->fieldName]);
 
@@ -327,6 +364,7 @@
 
 		function renderCheckboxWithInput(){
 			$markerArray['###STYLE###'] = '';
+			$markerArray['###COLUMNS###'] = '';
 			$markerArray["###LABEL###"]=$this->options[$this->fieldName]["title"];
 			if ($this->options[$this->fieldName]['text'] != '') {
 				$temp_val = str_replace('&nbsp;','',$this->options[$this->fieldName]['text']);
@@ -356,6 +394,17 @@
 			$this->markerId = $this->options[$this->fieldName]['uid'];
 			$this->certMarker[] = $this->markerId;
 			$markerArray['###DEPENDANT_AJAX###'] = $this->checkDependant($this->fieldName,$this->options[$this->fieldName]['uid'],true,$this->maxAnswers);
+			
+			/*******************************
+			 * Nadine Schwingler, 30.06.12
+			 * Columns for Closed Questions
+			 ******************************/
+			if ($this->obj->ffdata['closed_multi_horizontal'] > 1){
+				$col_amount = $this->obj->ffdata['closed_multi_horizontal'];
+				$part = 90/$col_amount;
+				$style = 'style="width:'.$part.'%;float:left;display:block;"';
+				$markerArray['###COLUMNSTYLE###'] = $style;
+			}
 			
 			//images
 			$markerArray = $this->renderImage($markerArray,$this->options[$this->fieldName]);

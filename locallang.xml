@@ -39,6 +39,7 @@
 			<label index="tt_content.pi_flexform.show_pagemap">Show an overview on wich page you are.</label>
 			<label index="tt_content.pi_flexform.show_pagecounter">Show progress bar as overview.</label>
 			<label index="tt_content.pi_flexform.pagemap_navigation">Allow navigation through the overview</label>
+			<label index="tt_content.pi_flexform.closed_multi_columns">Closed Questions: Amount of answer columns (Radio and Checkboxes)</label>
 			
 			<label index="tt_content.pi_flexform.pdf_type">PDF-Export after finishing</label>
 			<label index="tt_content.pi_flexform.pdf_type.none">none</label>
@@ -152,6 +153,7 @@
 			<label index="tt_content.pi_flexform.show_pagemap">Überblick anzeigen auf welcher Seite man sich gerade befindet.</label>
 			<label index="tt_content.pi_flexform.show_pagecounter">Fortschrittsbalken anzeigen.</label>
 			<label index="tt_content.pi_flexform.pagemap_navigation">Navigation über den Überblick erlauben.</label>
+			<label index="tt_content.pi_flexform.closed_multi_horizontal">Geschlossene Fragen: Anzahl der Spalten für Antworten (Radio und Checkboxen)</label>
 			
 			<label index="tt_content.pi_flexform.pdf_type">PDF-Export nach Beendigung</label>
 			<label index="tt_content.pi_flexform.pdf_type.none">keiner</label>
