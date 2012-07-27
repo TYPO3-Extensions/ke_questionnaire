@@ -376,6 +376,14 @@ class question{
 		// Error
 		$out['###ERRORCLASS###'] = $this->error?$this->errorClass:"";
 
+		// Hook to manipulate the markerArray for questions
+    if(is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$this->extKey]['questions_markerArray'])) {
+        foreach($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$this->extKey]['questions_markerArray'] as $_classRef) {
+            $_procObj = &t3lib_div::getUserObj($_classRef);
+            $_procObj->questions_markerArray($out, $this);
+        }
+    }
+
 		return $out;
 
 	}
@@ -532,7 +540,7 @@ class question{
 			    $this->fields[$key]->odd = $odd; $odd=!$odd;
 			}
 			//#############################################
-			
+
 			$render_temp = $this->fields[$key]->render();
 			//#############################################
 			// KENNZIFFER Nadine Schwingler 03.06.2012
@@ -546,7 +554,7 @@ class question{
 			}
 			$render_temp = str_replace($temp_marker,$temp_replacer,$render_temp);
 			//#############################################
-			
+
 			if ($this->fields[$key]->closed_onchange) {
 			    $out['closed_onchangejs'] .= $this->fields[$key]->closed_onchange;
 			}

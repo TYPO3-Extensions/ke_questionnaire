@@ -3,6 +3,7 @@
 2012-07-27 Stefan Froemken <froemken@kennziffer.com>
 	* Fixed: Missing email head for mails just after completing the questionnaire: http://forge.typo3.org/issues/39225
 	* Fixed: makeInstanceClassName is deprecated
+	* Hook: Hook to manipulate the markerArray
 
 2012-04-22 Nadine Schwingler <schwingler@kennziffer.com>
 
