@@ -67,7 +67,7 @@ class pdfresult_dompdf {
 	public function getQuestions(){
 		$this->questionCount['total'] = 0; //total of questions
 		$this->questionCount['only_questions'] = 0; //no blind-texts counting
-		
+
 		// SF: I think they don't make use of enableFields because of PDF generation in BE
 		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
 			'*',
@@ -468,7 +468,7 @@ class pdfresult_dompdf {
 							$answers[$answer['uid']]['points'] = $answer['value'];
 							$answer_max_points += $answer['value'];
 					}
-					
+
 					// sum points of all answers of each question
 					$total_points = 0;
 					if ($results){
@@ -482,7 +482,7 @@ class pdfresult_dompdf {
 						}
 						// calculate average points
 					}
-					
+
 					$own_total += $bars['own'][$qid];
 					$max_points += $answer_max_points;
 					break;
@@ -498,7 +498,7 @@ class pdfresult_dompdf {
 								foreach ($columns as $col){
 									$single_max_points = 0;
 									foreach ($subquestions as $sub){
-										//für zeilen
+										//fï¿½r zeilen
 										//$total_points += $question_obj->subquestions[$result[$qid]['answer']['options'][$sub['uid']]['single']]['value'];
 										if ($single_max_points < $sub['value']) $single_max_points = $sub['value'];
 									}
@@ -519,7 +519,7 @@ class pdfresult_dompdf {
 								foreach ($columns as $col){
 									$single_max_points = 0;
 									foreach ($subquestions as $sub){
-										//für zeilen
+										//fï¿½r zeilen
 										//$total_points += $question_obj->subquestions[$result[$qid]['answer']['options'][$sub['uid']]['single']]['value'];
 										if ($sub['value'] > 0) $single_max_points += $sub['value'];
 									}
@@ -546,7 +546,7 @@ class pdfresult_dompdf {
 							$areas[$answer['answerarea']][] = $answer['uid'];
 							$answer_max_points += $answer['value'];
 					}
-					
+
 					// sum points of all answers of each question
 					$total_points = 0;
 					if (is_array($result[$qid]['answer']['options'])){
@@ -557,8 +557,8 @@ class pdfresult_dompdf {
 							}
 						}
 					}
-					
-									
+
+
 					$own_total += $bars['own'][$qid];
 					$max_points += $answer_max_points;
 					break;
@@ -574,7 +574,7 @@ class pdfresult_dompdf {
 								foreach ($columns as $col){
 									$single_max_points = 0;
 									foreach ($subquestions as $sub){
-										//für zeilen
+										//fï¿½r zeilen
 										//$total_points += $question_obj->subquestions[$result[$qid]['answer']['options'][$sub['uid']]['single']]['value'];
 										if ($single_max_points < $sub['value']) $single_max_points = $sub['value'];
 									}
@@ -595,7 +595,7 @@ class pdfresult_dompdf {
 								foreach ($columns as $col){
 									$single_max_points = 0;
 									foreach ($subquestions as $sub){
-										//für zeilen
+										//fï¿½r zeilen
 										//$total_points += $question_obj->subquestions[$result[$qid]['answer']['options'][$sub['uid']]['single']]['value'];
 										if ($sub['value'] > 0) $single_max_points += $sub['value'];
 									}
@@ -612,8 +612,8 @@ class pdfresult_dompdf {
 							}
 							break;
 					}
-					
-					$total_points = 0;					
+
+					$total_points = 0;
 					//t3lib_div::debug($this->piVars,'piVars');
 					switch ($question['matrix_type']){
 						case 'radio':
@@ -654,8 +654,8 @@ class pdfresult_dompdf {
 					$max_points += $matrix_max_points;
 					break;
 			}
+			}
 		}
-		//t3lib_div::devLog('points bars', 'pdf_export', 0, $bars);
 		$returner['percent'] = ($own_total/$max_points)*100;
 		$returner['own'] = $own_total;
 		$returner['max'] = $max_points;
@@ -722,7 +722,7 @@ class pdfresult_dompdf {
 		return $content;
 	}
 
-	public function renderQuestion($question, $compare=false) {
+	function renderQuestion($question, $compare=false) {
 		$markerArray = array();
 		$markerArray['###QUESTION_TITLE###'] = '';
 		$markerArray['###QUESTION###'] = '';
@@ -1026,9 +1026,6 @@ class pdfresult_dompdf {
 		require_once(PATH_tslib.'class.tslib_content.php');
 		require_once(PATH_tslib.'class.tslib_gifbuilder.php');
 
-		/* Declare */
-		$temp_TSFEclassName = t3lib_div::makeInstanceClassName('tslib_fe');
-
 		/* Begin */
 		if (!is_object($GLOBALS['TT'])) {
 			$GLOBALS['TT'] = new t3lib_timeTrack;
@@ -1037,7 +1034,7 @@ class pdfresult_dompdf {
 
 		if (!is_object($GLOBALS['TSFE']) && $this->pid) {
 			//*** Builds TSFE object
-			$GLOBALS['TSFE'] = new $temp_TSFEclassName($GLOBALS['TYPO3_CONF_VARS'],$this->pid,0,0,0,0,0,0);
+			$GLOBALS['TSFE'] = t3lib_div::makeInstance('tslib_fe', $GLOBALS['TYPO3_CONF_VARS'], $this->pid, 0, 0, 0, 0, 0, 0);
 
 			//*** Builds sub objects
 			$GLOBALS['TSFE']->tmpl = t3lib_div::makeInstance('t3lib_tsparser_ext');
@@ -1071,8 +1068,7 @@ class pdfresult_dompdf {
 		}
 	}
 }
-
-if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/ke_questionnaire/res/other/class.pdfresult_dompdf.php']){
+if(defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/ke_questionnaire/res/other/class.pdfresult_dompdf.php']) {
 	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/ke_questionnaire/res/other/class.pdfresult_dompdf.php']);
 }
 ?>

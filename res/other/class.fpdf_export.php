@@ -18,7 +18,7 @@ class pdf_export {
   var $pid = 0;             //Pid of data Storage
   var $description = '';
   var $title = '';
-  
+
   var $cellHeight = 0;      //Base-Definition Cell Height
   var $cellWidth = array(); //Base-Definition Cell Width
 
@@ -31,7 +31,7 @@ class pdf_export {
     $this->conf = $conf;
     // Get a new instance of the FPDF library
     $this->pdf = new HTML2FPDF($this->conf['orientation'], $this->conf['unit'], $this->conf['format']);
-    
+
     //Initialization WriteHTML
     $this->B=0;
     $this->I=0;
@@ -47,7 +47,7 @@ class pdf_export {
     if ($this->conf['template']){
       $this->pdf->tx_fpdf->template = PATH_site.$this->conf['template'];
     }
-    
+
     //testen wir doch mal
 
     // Set the page margins and start a new page
@@ -55,7 +55,7 @@ class pdf_export {
     $this->pdf->AddPage();
     $this->pdf->SetFont($this->conf['font'],'',intval($this->conf['font_size']));
     //$this->pdf->SetFillColor(intval($this->conf['fill_color']));
-    
+
     $this->getQuestions();
     // The data must be in iso-8859-1: Determine the charset from the database
     $this->fromCharset = $GLOBALS['TYPO3_CONF_VARS']['BE']['forceCharset'] ? $GLOBALS['TYPO3_CONF_VARS']['BE']['forceCharset'] : 'iso-8859-1';
@@ -63,7 +63,7 @@ class pdf_export {
     $this->cs = t3lib_div::makeInstance('t3lib_cs');
     $this->cs->convArray($this->questions, $this->fromCharset, 'iso-8859-1');
     $this->description = $this->cs->conv($this->description,$this->fromCharset,'iso-8859-1');
-    
+
     //t3lib_div::devLog('PDF '.$this->pid, 'pdf_export', 0, $this->conf);
   }
 
@@ -89,7 +89,7 @@ class pdf_export {
 				$row['text'] = preg_replace('/###(.|\n)*?###/iu', 'ZU_ERSETZENDES_WORT', $row['text']);
 			}
 		}
-      	
+
       	$this->allQuestions[] = $row;
         if ($row['type'] != 'blind') $this->questions[] = $row;
         $this->questionsByID[$row['uid']] = $row;
@@ -100,10 +100,10 @@ class pdf_export {
     $this->questionCount['total'] = count($this->allQuestions);
     //t3lib_div::devLog('questionCount', $this->prefixId, 0, $this->questionCount);
   }
-  
+
   function getOptions($uid){
     $options = array();
-    
+
     $selectFields = '*';
     $where = 'question_uid='.$uid.' AND hidden = 0 AND deleted = 0';
     //t3lib_div::devLog('where', 'pdf_export', 0, array($where));
@@ -120,22 +120,22 @@ class pdf_export {
   function getPDFBlank(){
     //t3lib_div::devLog('PDF conf', 'pdf_export', 0, $this->conf);
     //t3lib_div::devLog('PDF questions', 'pdf_export', 0, $this->questions);
-    
-    $this->pdf->SetFont($this->conf['font'],'B',$this->conf['font_size']+2);  
+
+    $this->pdf->SetFont($this->conf['font'],'B',$this->conf['font_size']+2);
     $this->pdf->WriteHTML($this->title);
-    $this->pdf->SetFont($this->conf['font'],'',$this->conf['font_size']);  
+    $this->pdf->SetFont($this->conf['font'],'',$this->conf['font_size']);
     $this->renderFirstPage();
     $this->pdf->AddPage();
     foreach ($this->questions as $id => $question){
-      $this->pdf->SetFont($this->conf['font'],'B',$this->conf['font_size']+2);  
+      $this->pdf->SetFont($this->conf['font'],'B',$this->conf['font_size']+2);
       $this->renderQuestion($question);
-    }    
+    }
     // Convert to PDF
     $content = $this->pdf->Output('', 'S');
 
     return $content;
   }
-  
+
   function buildTSFE() {
       #needed for TSFE
     require_once(PATH_t3lib.'class.t3lib_timetrack.php');
@@ -147,9 +147,6 @@ class pdf_export {
     require_once(PATH_tslib.'class.tslib_content.php');
     require_once(PATH_tslib.'class.tslib_gifbuilder.php');
 
-    /* Declare */
-    $temp_TSFEclassName = t3lib_div::makeInstanceClassName('tslib_fe');
-
     /* Begin */
     if (!is_object($GLOBALS['TT'])) {
       $GLOBALS['TT'] = new t3lib_timeTrack;
@@ -158,7 +155,7 @@ class pdf_export {
 
     if (!is_object($GLOBALS['TSFE']) && $this->pid) {
       //*** Builds TSFE object
-      $GLOBALS['TSFE'] = new $temp_TSFEclassName($GLOBALS['TYPO3_CONF_VARS'],$this->pid,0,0,0,0,0,0);
+      $GLOBALS['TSFE'] = t3lib_div::makeInstance('tslib_fe', $GLOBALS['TYPO3_CONF_VARS'], $this->pid, 0, 0, 0, 0, 0, 0);
 
       //*** Builds sub objects
       $GLOBALS['TSFE']->tmpl = t3lib_div::makeInstance('t3lib_tsparser_ext');
@@ -191,7 +188,7 @@ class pdf_export {
       $GLOBALS['TSFE']->newCObj();
   }
 }
-  
+
   function renderQuestion($question){
     if ($question['text'] == '') $title_text = $question['title'];
     else $title_text = $question['text'];
@@ -199,7 +196,7 @@ class pdf_export {
     $this->pdf->WriteHTML($title_text);
     //$this->pdf->MultiCell('',$this->cellHeight,$title_text,0,'L');
     $this->pdf->Cell('',($this->cellHeight *1.5), '', '', 1);
-    
+
     switch ($question['type']){
       case 'open':
           $this->pdf->Cell('',$this->cellHeight, '', 1, 1);
@@ -226,20 +223,20 @@ class pdf_export {
     }
     $this->pdf->Cell('',($this->cellHeight *2), '', '', 1);
   }
-  
+
   /**
    * renders the Start-Page for the Questionnaire
    */
   function renderFirstPage(){
     $content = '';
-    
+
     $this->pdf->Cell('',$this->cellHeight, '', 0, 1);
     $this->pdf->WriteHTML(html_entity_decode($this->description));
     //$this->pdf->MultiCell('',$this->cellHeight, $this->description, 1, 1);
     $this->pdf->Cell('',$this->cellHeight, '', 0, 1);
-     
+
     return $content;
-  }  
+  }
 }
 
 ?>

@@ -56,7 +56,7 @@ class dompdf_export {
 
 		//get the Locallang of the pi1 / the questionnaire
 		$basePath = t3lib_extMgm::extPath('ke_questionnaire').'pi1/locallang.php';
-		
+
 		//t3lib_div::devLog('conf', 'DOMPDF Export', 0, $this->conf);
 		$lang = $this->conf['language'];
 		$tempLOCAL_LANG = t3lib_div::readLLfile($basePath,$lang);
@@ -67,7 +67,7 @@ class dompdf_export {
 		if (count($this->LOCAL_LANG[$lang]) > 0) $this->LOCAL_LANG = $this->LOCAL_LANG[$lang];
 		else $this->LOCAL_LANG = $this->LOCAL_LANG['default'];
 		//t3lib_div::devLog('lang end', 'DOMPDF Export', 0, $this->LOCAL_LANG);
-		
+
 		//t3lib_div::devLog('ffdata', 'DOMPDF Export', 0, $this->ffdata);
 	}
 
@@ -95,7 +95,7 @@ class dompdf_export {
 						$row['text'] = preg_replace('/###(.|\n)*?###/iu', $replaceText, $row['text']);
 					}
 				}
-				
+
 				$this->allQuestions[] = $row;
 				$this->questions[] = $row;
 				$this->questionsByID[$row['uid']] = $row;
@@ -110,7 +110,7 @@ class dompdf_export {
 				$_procObj = & t3lib_div::getUserObj($_classRef);
 				/*$hook_questions = $_procObj->dompdf_export_getQuestions($this);
 				if (is_array($hook_questions)){
-					$this->questions = $hook_questions;					
+					$this->questions = $hook_questions;
 				}*/
 				$_procObj->dompdf_export_getQuestions($this);
 			}
@@ -118,7 +118,7 @@ class dompdf_export {
 
 		//t3lib_div::devLog('questions', 'DOMPDF Export', 0, $this->questions);
 	}
-        
+
         /**
          * getOutcomes(): get the outcome-Data of the questionnaire (Point-Report)
          */
@@ -141,7 +141,7 @@ class dompdf_export {
 
 		//t3lib_div::devLog('outcomes', 'DOMPDF Export', 0, $this->outcomes);
 	}
-        
+
         /**
          * getOptions(): get the answer-options of the closed question
          *
@@ -383,7 +383,7 @@ class dompdf_export {
 				$content .= $this->renderOutcomes();
 			break;
 		}
-		
+
 		$html = str_replace('###CONTENT###',$content,$this->templates['base']);
 		$html = str_replace('###PDF_TITLE###',$this->LOCAL_LANG['pdf_title'],$html);
 		$html = str_replace('###DATE###',$date,$html);
@@ -393,9 +393,9 @@ class dompdf_export {
 		$css = $this->getCSS();
 		$html = str_replace('###CSS###',$css,$html);
 		$html = str_replace('###BASE_PATH###',PATH_site,$html);
-		
+
 		$html = $this->renderContent($html,$this->user_marker);
-		
+
 		return $html;
 	}
 
@@ -441,7 +441,7 @@ class dompdf_export {
 		$this->templates['dd_words_options'] = t3lib_parsehtml::getSubpart($temp, '###DOMPDF_OPTION###');
 		$this->templates['dd_words_compare'] = t3lib_parsehtml::getSubpart($temp, '###DOMPDF_COMPARE###');
 
-	
+
 		//semantic questions
 		$templateName = 'question_semantic.html';
 		$temp = file_get_contents($templateFolder.$templateName);
@@ -491,7 +491,7 @@ class dompdf_export {
 	}
 
         /**
-         * getCSS(): get the CSS needed for the right display of the pdf. Stored in a file 
+         * getCSS(): get the CSS needed for the right display of the pdf. Stored in a file
          */
 	function getCSS(){
 		$css = '';
@@ -580,7 +580,7 @@ class dompdf_export {
 							$answer_max_points += $answer['value'];
 						}
 					}
-					
+
 					// sum points of all answers of each question
 					$total_points = 0;
 					if ($results){
@@ -594,7 +594,7 @@ class dompdf_export {
 						}
 						// calculate average points
 					}
-					
+
 					$own_total += $bars['own'][$qid];
 					$max_points += $answer_max_points;
 					break;
@@ -613,7 +613,7 @@ class dompdf_export {
 							$answer_max_points += $answer['value'];
 						}
 					}
-					
+
 					// sum points of all answers of each question
 					$total_points = 0;
 					if (is_array($result[$qid]['answer']['options'])){
@@ -624,8 +624,8 @@ class dompdf_export {
 							}
 						}
 					}
-					
-									
+
+
 					$own_total += $bars['own'][$qid];
 					$max_points += $answer_max_points;
 					break;
@@ -635,7 +635,7 @@ class dompdf_export {
 					//t3lib_div::debug($question,'question');
 					$columns = $this->getColumns($qid);
 					$subquestions = $this->getMatrixLines($qid);
-					
+
 					switch ($question['matrix_type']){
 						case 'radio':
 							if ($question['matrix_pointsforcolumn'] == 1){
@@ -680,8 +680,8 @@ class dompdf_export {
 							}
 							break;
 					}
-					
-					$total_points = 0;					
+
+					$total_points = 0;
 					//t3lib_div::debug($this->piVars,'piVars');
 					switch ($question['matrix_type']){
 						case 'radio':
@@ -837,7 +837,7 @@ class dompdf_export {
 			case 'open':
 				$markerArray['###OPEN_PRE_TEXT###'] = (strlen($question['open_pre_text']))?$question['open_pre_text']:'';
 				$markerArray['###OPEN_POST_TEXT###'] = (strlen($question['open_post_text']))?$question['open_post_text']:'';
-				
+
 				if ($answered) $markerArray['###VALUE###'] = $answered;
 				if ($question['open_type'] == 1){
 					if ($answered) $markerArray['###VALUE###'] = nl2br($answered);
@@ -889,7 +889,7 @@ class dompdf_export {
 					if ($option['text'] != '') $text = $option['text'];
 					$o_markerArray['###TEXT###'] = $text;
 					$o_markerArray['###IMAGE###'] = 'uploads/tx_kequestionnaire/' . $option['image'];
-					
+
 					if(is_array($answered['options']) && in_array($option['uid'], $answered['options']) || $answered['options'] == $option['uid']) {
 						if(array_key_exists($option['answerarea'], $coords)) {
 							$o_markerArray['###TOP###'] = $top = $coords[$option['answerarea']]['start']['top'];
@@ -904,7 +904,7 @@ class dompdf_export {
 						$optionContent = '<div style="' . $style . '">' . $optionContent . '</div>';
 						$markerArray['###OPTIONS###'] .= $optionContent;
 					} else {
-						$markerArray['###OPTIONS###'] .= $this->renderContent($this->templates['dd_pictures_options'], $o_markerArray);					
+						$markerArray['###OPTIONS###'] .= $this->renderContent($this->templates['dd_pictures_options'], $o_markerArray);
 					}
 				}
 				$html = $this->renderContent($this->templates['dd_pictures'],$markerArray);
@@ -1047,7 +1047,7 @@ class dompdf_export {
 
 		return $content;
 	}
-        
+
 	/**
 	 * get coords from answer
 	 *
@@ -1158,7 +1158,7 @@ class dompdf_export {
 
         /**
          * renderMatrixQuestion(): render a matrix question for pdf
-         
+
          * @param       array   $question
          * @param       array   $markerArray: prefilled marker array for rendering
          * @param       array   $answered: answers given
@@ -1282,9 +1282,6 @@ class dompdf_export {
 		require_once(PATH_tslib.'class.tslib_content.php');
 		require_once(PATH_tslib.'class.tslib_gifbuilder.php');
 
-		/* Declare */
-		$temp_TSFEclassName = t3lib_div::makeInstanceClassName('tslib_fe');
-
 		/* Begin */
 		if (!is_object($GLOBALS['TT'])) {
 			$GLOBALS['TT'] = new t3lib_timeTrack;
@@ -1293,7 +1290,7 @@ class dompdf_export {
 
 		if (!is_object($GLOBALS['TSFE']) && $this->pid) {
 			//*** Builds TSFE object
-			$GLOBALS['TSFE'] = new $temp_TSFEclassName($GLOBALS['TYPO3_CONF_VARS'],$this->pid,0,0,0,0,0,0);
+			$GLOBALS['TSFE'] = t3lib_div::makeInstance('tslib_fe', $GLOBALS['TYPO3_CONF_VARS'], $this->pid, 0, 0, 0, 0, 0, 0);
 
 			//*** Builds sub objects
 			$GLOBALS['TSFE']->tmpl = t3lib_div::makeInstance('t3lib_tsparser_ext');

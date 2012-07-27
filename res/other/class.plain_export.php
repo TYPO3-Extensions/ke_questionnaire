@@ -20,29 +20,29 @@ class plain_export {
         var $title = '';
         var $templates = array();
         var $result = array();
-        
+
         var $cellHeight = 0;      //Base-Definition Cell Height
         var $cellWidth = array(); //Base-Definition Cell Width
-      
+
         var $questions = array();  //Question-array
 		var $outputPlain = array();
-        
+
         function plain_export($conf, $pid, $title, $ffdata){
                 $this->title = $title;
                 $this->ffdata = $ffdata;
                 $this->pid = $pid;
                 $this->conf = $conf;
-                
+
                 $this->templateFolder = trim(rtrim(PATH_site,'/').$this->ffdata['dDEF']['lDEF']['template_dir']['vDEF']);
                 if ($this->templateFolder == '') '../../../../'.trim($this->templateFolder);
-                
+
 		$basePath = t3lib_extMgm::extPath('ke_questionnaire').'pi1/locallang.php';
                 $tempLOCAL_LANG = t3lib_div::readLLfile($basePath,'default');
                 //array_merge with new array first, so a value in locallang (or typoscript) can overwrite values from ../locallang_db
                 $this->LOCAL_LANG = array_merge_recursive($tempLOCAL_LANG,is_array($this->LOCAL_LANG) ? $this->LOCAL_LANG : array());
                 $this->LOCAL_LANG = $this->LOCAL_LANG['default'];
         }
-              
+
         /**
          * Gather all the questions of this questionnaire ready for showing
          *
@@ -56,7 +56,7 @@ class plain_export {
                 $orderBy = 'sorting';
                 $res = $GLOBALS['TYPO3_DB']->exec_SELECTquery($selectFields,'tx_kequestionnaire_questions',$where,'',$orderBy);
                 //t3lib_div::devLog('where', 'pdf_export', 0, array($where));
-            
+
                 if ($res){
                         while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)){
                                 $this->allQuestions[] = $row;
@@ -64,10 +64,10 @@ class plain_export {
                                 $this->questionsByID[$row['uid']] = $row;
                         }
                 }
-            
+
                 $this->questionCount['only_questions'] = count($this->questions);
                 $this->questionCount['total'] = count($this->allQuestions);
-                
+
                 if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['ke_questionnaire']['dompdf_export_getQuestions'])){
                         foreach($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['ke_questionnaire']['dompdf_export_getQuestions'] as $_classRef){
                                 $_procObj = & t3lib_div::getUserObj($_classRef);
@@ -75,10 +75,10 @@ class plain_export {
                                 if (is_array($hook_questions)) $this->questions = $hook_questions;
                         }
                 }
-                
+
                 //t3lib_div::devLog('questions', 'DOMPDF Export', 0, $this->questions);
         }
-        
+
         function getOutcomes(){
                 $selectFields = '*';
                 $where = 'pid='.$this->pid.' AND hidden = 0 AND deleted = 0';
@@ -87,7 +87,7 @@ class plain_export {
                 while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)){
                         $this->outcomes[] = $row;
                 }
-                
+
                 if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['ke_questionnaire']['dompdf_export_getOutcomes'])){
                         foreach($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['ke_questionnaire']['dompdf_export_getOutcomes'] as $_classRef){
                                 $_procObj = & t3lib_div::getUserObj($_classRef);
@@ -95,13 +95,13 @@ class plain_export {
                                 if (is_array($hook_outcomes)) $this->outcomes = $hook_outcomes;
                         }
                 }
-                
+
                 //t3lib_div::devLog('outcomes', 'DOMPDF Export', 0, $this->outcomes);
         }
-        
+
         function getOptions($uid){
                 $options = array();
-                
+
                 $selectFields = '*';
                 $where = 'question_uid='.$uid.' AND hidden = 0 AND deleted = 0';
                 //t3lib_div::devLog('where', 'pdf_export', 0, array($where));
@@ -114,10 +114,10 @@ class plain_export {
                 }
                 return $options;
         }
-        
+
         function getMatrixLines($uid){
                 $lines = array();
-                
+
                 $selectFields = '*';
                 $where = 'question_uid='.$uid.' AND hidden=0 AND deleted=0';
                 $orderBy = 'sorting';
@@ -127,13 +127,13 @@ class plain_export {
                                 $lines[] = $row;
                         }
                 }
-                
+
                 return $lines;
         }
-        
+
         function getSemanticLines($uid){
                 $lines = array();
-                
+
                 $selectFields = '*';
                 $where = 'question_uid='.$uid.' AND hidden=0 AND deleted=0';
                 $orderBy = 'sorting';
@@ -143,10 +143,10 @@ class plain_export {
                                 $lines[] = $row;
                         }
                 }
-                
+
                 return $lines;
         }
-        
+
         /**
 	 * Find the Questions type and get the question-Object
 	 */
@@ -161,13 +161,13 @@ class plain_export {
                         $dependants[$row["uid"]]=$row;
                     }
                 }
-                
+
                 return $dependants;
 	}
-        
+
         function getColumns($uid){
                 $lines = array();
-                
+
                 $selectFields = '*';
                 $where = 'question_uid='.$uid.' AND hidden=0 AND deleted=0';
                 $orderBy = 'sorting';
@@ -178,25 +178,25 @@ class plain_export {
                                 $lines[] = $row;
                         }
                 }
-                                
+
                 return $lines;
         }
-      
+
 	public function getPlain($result) {
 		$content = '';
 		$this->result = $result;
 		$this->getQuestions();
-	
+
 		foreach ($this->questions as $nr => $question){
 			$this->renderQuestion($question, false);
 		}
-			
+
 		return $this->outputPlain;
 	}
-		
+
 	function getHTML($type,$date){
                 $content = '';
-                
+
                 $this->getTemplates();
                 if ($date == '') $date = date('d.m.Y');
                 switch ($type){
@@ -226,22 +226,22 @@ class plain_export {
                                 $content .= $this->renderOutcomes();
                         break;
                 }
-                
+
                 $html = str_replace('###CONTENT###',$content,$this->templates['base']);
                 $html = str_replace('###PDF_TITLE###',$this->LOCAL_LANG['pdf_title'],$html);
                 $html = str_replace('###DATE###',$date,$html);
                 //t3lib_div::devLog('getHTML html '.$type, 'pdf_export', 0,array($html,$content,$this->templates['base']));
-                
+
                 $css = $this->getCSS();
                 $html = str_replace('###CSS###',$css,$html);
                 $html = str_replace('###BASE_PATH###',PATH_site,$html);
-                
+
                 return $html;
         }
-        
+
         function getTemplates(){
                 $templateFolder = $this->templateFolder;
-                
+
                 //open questions
                 $templateName = 'question_open.html';
                 $temp = file_get_contents($templateFolder.$templateName);
@@ -256,14 +256,14 @@ class plain_export {
                 $this->templates['open_multi'] = $open_template;
                 $open_template = t3lib_parsehtml::getSubpart($temp, '###DOMPDF_COMPARE###');
                 $this->templates['open_compare'] = $open_template;
-                
+
                 //closed questions
                 $templateName = 'question_closed.html';
                 $temp = file_get_contents($templateFolder.$templateName);
                 $this->templates['closed'] = t3lib_parsehtml::getSubpart($temp, '###DOMPDF###');
                 $this->templates['closed_options'] = t3lib_parsehtml::getSubpart($temp, '###DOMPDF_OPTION###');
                 $this->templates['closed_compare'] = t3lib_parsehtml::getSubpart($temp, '###DOMPDF_COMPARE###');
-                
+
                 //semantic questions
                 $templateName = 'question_semantic.html';
                 $temp = file_get_contents($templateFolder.$templateName);
@@ -271,7 +271,7 @@ class plain_export {
                 $this->templates['semantic_line'] = t3lib_parsehtml::getSubpart($temp, '###DOMPDF_LINE###');
                 $this->templates['semantic_column'] = t3lib_parsehtml::getSubpart($temp, '###DOMPDF_COLUMN###');
                 $this->templates['semantic_compare'] = t3lib_parsehtml::getSubpart($temp, '###DOMPDF_COMPARE###');
-                
+
                 //matrix questions
                 $templateName = 'question_matrix.html';
                 $temp = file_get_contents($templateFolder.$templateName);
@@ -279,23 +279,23 @@ class plain_export {
                 $this->templates['matrix_line'] = t3lib_parsehtml::getSubpart($temp, '###DOMPDF_LINE###');
                 $this->templates['matrix_column'] = t3lib_parsehtml::getSubpart($temp, '###DOMPDF_COLUMN###');
                 $this->templates['matrix_compare'] = t3lib_parsehtml::getSubpart($temp, '###DOMPDF_COMPARE###');
-                
+
                 //blind questions
                 $templateName = 'question_blind.html';
                 $temp = file_get_contents($templateFolder.$templateName);
                 $this->templates['blind'] = t3lib_parsehtml::getSubpart($temp, '###DOMPDF###');
-                
+
                 //demograhic questions
                 $templateName = 'question_demographic.html';
                 $temp = file_get_contents($templateFolder.$templateName);
                 $this->templates['demographic'] = t3lib_parsehtml::getSubpart($temp, '###DOMPDF###');
                 $this->templates['demographic_line'] = t3lib_parsehtml::getSubpart($temp, '###DOMPDF_LINE###');
-                
+
                 //privacy questions
                 $templateName = 'question_privacy.html';
                 $temp = file_get_contents($templateFolder.$templateName);
                 $this->templates['privacy'] = t3lib_parsehtml::getSubpart($temp, '###DOMPDF###');
-                
+
                 //base
                 $templateName = 'questionnaire.html';
                 $temp = file_get_contents($templateFolder.$templateName);
@@ -308,14 +308,14 @@ class plain_export {
                                 $this->templates = $_procObj->dompdf_export_getTemplates($this,$templateFolder,$this->templates);
                         }
                 }
-                
+
                 t3lib_div::devLog('templates', 'pdf', 0, $this->templates);
-                
+
         }
-        
+
         function getCSS(){
                 $css = '';
-                
+
                 $templateFolder = $this->templateFolder;
                 $templateName = 'dompdf_template.css';
                 $temp = file_get_contents($templateFolder.$templateName);
@@ -325,10 +325,10 @@ class plain_export {
                         $temp = file_get_contents($templateFolder.$templateName);
                 }
                 $css = $temp;
-                
+
                 return $css;
         }
-        
+
         /**
 	 * calculatePoints(): Calculate the points for the result
 	 *
@@ -401,7 +401,7 @@ class plain_export {
 							$answer_max_points += $answer['value'];
 						}
 					}
-					
+
 					// sum points of all answers of each question
 					$total_points = 0;
 					if ($results){
@@ -415,7 +415,7 @@ class plain_export {
 						}
 						// calculate average points
 					}
-					
+
 					$own_total += $bars['own'][$qid];
 					$max_points += $answer_max_points;
 					break;
@@ -434,7 +434,7 @@ class plain_export {
 							$answer_max_points += $answer['value'];
 						}
 					}
-					
+
 					// sum points of all answers of each question
 					$total_points = 0;
 					if (is_array($result[$qid]['answer']['options'])){
@@ -445,8 +445,8 @@ class plain_export {
 							}
 						}
 					}
-					
-									
+
+
 					$own_total += $bars['own'][$qid];
 					$max_points += $answer_max_points;
 					break;
@@ -470,14 +470,14 @@ class plain_export {
 							$columns[$sub['uid']] = $sub;
 						}
 					}
-					
+
 					switch ($question['matrix_type']){
 						case 'radio':
 							if ($question['matrix_pointsforcolumn'] == 1){
 								foreach ($columns as $col){
 									$single_max_points = 0;
 									foreach ($subquestions as $sub){
-										//für zeilen
+										//fï¿½r zeilen
 										//$total_points += $question_obj->subquestions[$result[$qid]['answer']['options'][$sub['uid']]['single']]['value'];
 										if ($single_max_points < $sub['value']) $single_max_points = $sub['value'];
 									}
@@ -498,7 +498,7 @@ class plain_export {
 								foreach ($columns as $col){
 									$single_max_points = 0;
 									foreach ($subquestions as $sub){
-										//für zeilen
+										//fï¿½r zeilen
 										//$total_points += $question_obj->subquestions[$result[$qid]['answer']['options'][$sub['uid']]['single']]['value'];
 										if ($sub['value'] > 0) $single_max_points += $sub['value'];
 									}
@@ -515,8 +515,8 @@ class plain_export {
 							}
 							break;
 					}
-					
-					$total_points = 0;					
+
+					$total_points = 0;
 					//t3lib_div::debug($this->piVars,'piVars');
 					switch ($question['matrix_type']){
 						case 'radio':
@@ -565,7 +565,7 @@ class plain_export {
 
 		return $returner;
 	}
-        
+
         function renderOutcomes(){
                 $content = '';
                 $answers = $this->result;
@@ -621,13 +621,13 @@ class plain_export {
                                 }
                         }
                 }
-                
+
                 return $content;
         }
-        
-	public function renderQuestion($question, $compare = false){				
+
+	public function renderQuestion($question, $compare = false){
 		$tmpOutput = array();
-				
+
 		if ($question['text'] == '') {
                         $tmpOutput['title'] = $question['title'];
                 } else {
@@ -636,16 +636,16 @@ class plain_export {
                         }
                         $tmpOutput['title'] = $question['text'];
                 }
-                
+
                 $answered = array();
                 if (is_array($this->result)) {
                         if (is_array ($this->result[$question['uid']])){
                                 $answered = $this->result[$question['uid']]['answer'];
                         }
                 }
-				
+
 				//t3lib_div::debug($answered,'answered');
-				
+
                 switch ($question['type']){
                         case 'blind':
                                 break;
@@ -664,7 +664,7 @@ class plain_export {
                         case 'closed':
                                 $options = $this->getOptions($question['uid']);
                                 $tmpOutput['value'] = array();
-								
+
                                 foreach ($options as $option){
                                         if (is_array($answered['options'])){
 												if (in_array($option['uid'],$answered['options'])){
@@ -678,7 +678,7 @@ class plain_export {
                                         if (is_array($answered['text'])){
 												if ($answered['text'][$option['uid']] != '') $tmpOutput['value'] = $option['title'] . ' '.$answered['text'][$option['uid']];
 										}
-										
+
                                         $text = $option['title'];
                                         if ($option['text'] != '') $text = $option['text'];
                                         $tmpOutput['text'] = $text;
@@ -706,14 +706,14 @@ class plain_export {
                                 }
                 }
                 //$html .= '</div>';
-				
+
 		$this->outputPlain[] = $tmpOutput;
 	}
-        
+
         function renderCompare($question){
                 $content = '';
                 $markerArray = array();
-                
+
                 $markerArray['###COMPARE_TITLE###'] = $this->LOCAL_LANG['pdf_compare_title'];
                 switch ($question['type']){
                         case 'open':
@@ -742,10 +742,10 @@ class plain_export {
                                 if ($markerArray['###OPTIONS###'] != '') $content .= $this->renderContent($this->templates['closed_compare'],$markerArray);
                                 break;
                 }
-                
+
                 return $content;
         }
-        
+
         function renderDemographicQuestion($question,$markerArray,$answered){
 			   $tmpOutput = array();
 				$tmpOutput['text'] = $question['text'];
@@ -755,32 +755,32 @@ class plain_export {
                                 $tmpOutput['value'][] = $key.': '.$value;
                         }
                 }
-                
+
                 $this->outputPlain[] = $tmpOutput;
         }
-        
+
         function renderSemanticQuestion($question,$markerArray,$answered){
                 $tmpOutput = array();
-                
+
                 $sublines = $this->getSemanticLines($question['uid']);
                 $columns = $this->getColumns($question['uid']);
                 //t3lib_div::devLog('columns', $this->prefixId, 0, $columns);
-                
+
 				$tmpOutput['title'] = $question['title'];
 				$tmpOutput['text'] = $question['text'];
-				
+
                 if (is_array($columns)){
                         foreach ($columns as $column){
                                 $tmpOutput['column'][$column['uid']] = $column['title'];
                         }
                 }
-				
+
                 foreach ($sublines as $subline){
                         $tmp = $subline['start'];
 						$tmp .= ' ('. join(' , ',$tmpOutput['column']) .') ';
                         foreach ($columns as $column){
                                 if (is_array($answered['options'])){
-                                        if ($answered['options'][$subline['uid']] == $column['uid']) {	
+                                        if ($answered['options'][$subline['uid']] == $column['uid']) {
 											$tmpValue = $tmpOutput['column'][$column['uid']];
                                         }
                                 }
@@ -788,37 +788,37 @@ class plain_export {
                         $tmp .= $subline['end'].': '.$tmpValue;
 						$tmpOutput['value'][] = $tmp;
                 }
-                
+
 				unset($tmpOutput['column']);
 				$this->outputPlain[] = $tmpOutput;
         }
-        
+
         function renderMatrixQuestion($question,$markerArray,$answered){
                 $tmpOutput = array();
                 $subquestions = $this->getMatrixLines($question['uid']);
                 $columns = $this->getColumns($question['uid']);
-                
+
                 if (is_array($columns)){
                         foreach ($columns as $column){
                                 $tmpOutput['column'][$column['uid']] = $column['title'];
                         }
                 }
-				
+
 				//t3lib_div::debug($answered);
 				//t3lib_div::debug($question);
 				//t3lib_div::debug($subquestions);
 				//t3lib_div::debug($columns);
 				//t3lib_div::debug($tmpOutput['column']);
-				
+
 				$tmpOutput['title'] = $question['title'];
 				$tmpOutput['text'] = $question['text'];
-				
+
                 foreach ($subquestions as $subquestion){
                         $tmp = $subquestion['title'];
                         if ($subquestion['text'] != '') $tmp = $subquestion['text'];
 						$tmp .= ': ';
-						
-                        foreach ($columns as $column){								
+
+                        foreach ($columns as $column){
                                 if ($column['different_type'] != ''){
                                         $m_type = $column['different_type'];
                                 } else {
@@ -841,25 +841,25 @@ class plain_export {
                                                 break;
                                 }
                         }
-						
+
 						$tmpOutput['value'][] = $tmp;
                 }
-                
+
                 unset($tmpOutput['column']);
 				$this->outputPlain[] = $tmpOutput;
         }
-        
+
         /**
          * renders the Start-Page for the Questionnaire
          */
         function renderFirstPage(){
                 $content = '';
-                
+
                 if ($this->ffdata['tDEF']['lDEF']['description']['vDEF'] != '') $content .= '<div class="questionnaire_description">'.$this->ffdata['tDEF']['lDEF']['description']['vDEF'].'</div>';
-                 
+
                 return $content;
         }
-        
+
         function renderContent($content,$markerArray){
                 //t3lib_div::devLog('renderContent', 'pdf', 0, array($content,$markerArray));
                 if (is_array($markerArray)){
@@ -869,51 +869,48 @@ class plain_export {
                 }
                 return $content;
         }
-        
+
         function buildTSFE() {
                 #needed for TSFE
                 require_once(PATH_t3lib.'class.t3lib_timetrack.php');
                 require_once(PATH_t3lib.'class.t3lib_tsparser_ext.php');
                 require_once(PATH_t3lib.'class.t3lib_page.php');
                 require_once(PATH_t3lib.'class.t3lib_stdgraphic.php');
-            
+
                 require_once(PATH_tslib.'class.tslib_fe.php');
                 require_once(PATH_tslib.'class.tslib_content.php');
                 require_once(PATH_tslib.'class.tslib_gifbuilder.php');
-            
-                /* Declare */
-                $temp_TSFEclassName = t3lib_div::makeInstanceClassName('tslib_fe');
-            
+
                 /* Begin */
                 if (!is_object($GLOBALS['TT'])) {
                         $GLOBALS['TT'] = new t3lib_timeTrack;
                         $GLOBALS['TT']->start();
                 }
-            
+
                 if (!is_object($GLOBALS['TSFE']) && $this->pid) {
                         //*** Builds TSFE object
-                        $GLOBALS['TSFE'] = new $temp_TSFEclassName($GLOBALS['TYPO3_CONF_VARS'],$this->pid,0,0,0,0,0,0);
-                  
+                        $GLOBALS['TSFE'] = t3lib_div::makeInstance('tslib_fe', $GLOBALS['TYPO3_CONF_VARS'], $this->pid, 0, 0, 0, 0, 0, 0);
+
                         //*** Builds sub objects
                         $GLOBALS['TSFE']->tmpl = t3lib_div::makeInstance('t3lib_tsparser_ext');
                         $GLOBALS['TSFE']->sys_page = t3lib_div::makeInstance('t3lib_pageSelect');
-                  
+
                         //*** init template
                         $GLOBALS['TSFE']->tmpl->tt_track = 0;// Do not log time-performance information
                         $GLOBALS['TSFE']->tmpl->init();
-                  
+
                         $rootLine = $GLOBALS['TSFE']->sys_page->getRootLine($this->pid);
-                  
+
                         //*** This generates the constants/config + hierarchy info for the template.
-                  
+
                         $GLOBALS['TSFE']->tmpl->runThroughTemplates($rootLine,$template_uid);
                         $GLOBALS['TSFE']->tmpl->generateConfig();
                         $GLOBALS['TSFE']->tmpl->loaded=1;
-                  
+
                         //*** Get config array and other init from pagegen
                         $GLOBALS['TSFE']->getConfigArray();
                         $GLOBALS['TSFE']->linkVars = ''.$GLOBALS['TSFE']->config['config']['linkVars'];
-                  
+
                         if ($GLOBALS['TSFE']->config['config']['simulateStaticDocuments_pEnc_onlyP'])
                         {
                                 foreach (t3lib_div::trimExplode(',',$GLOBALS['TSFE']->config['config']['simulateStaticDocuments_pEnc_onlyP'],1) as $temp_p)
