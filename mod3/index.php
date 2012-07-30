@@ -58,7 +58,7 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 		$this->q_id = intval(t3lib_div::_GP('q_id'));
 		$this->pid = intval(t3lib_div::_GP('id'));
 		$this->temp_file = 'tx_kequestionnaire_temp_'.$this->q_id.'_'.$GLOBALS['BE_USER']->user['uid'];
-		
+
 		$this->extConf = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['ke_questionnaire']);
 		if (t3lib_extMgm::isLoaded('ke_questionnaire_premium')) $this->pr_extConf = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['ke_questionnaire_premium']);
 
@@ -67,7 +67,7 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 			$ff_data = t3lib_div::xml2array($this->q_data['pi_flexform']);
 			$this->ff_data = $ff_data['data'];
 		}
-		
+
 		//t3lib_div::devLog('getCSVInfos POST', 'ke_questionnaire Export Mod', 0, $_POST);
 	}
 
@@ -88,7 +88,7 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 			$this->MOD_MENU['function']['2'] = $LANG->getLL('function2');
 			$this->MOD_MENU['function']['4'] = $LANG->getLL('function4');
 		}
-				
+
 		parent::menuConfig();
 	}
 
@@ -100,7 +100,7 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 	 */
 	function main()	{
 		global $BE_USER,$LANG,$BACK_PATH,$TCA_DESCR,$TCA,$CLIENT,$TYPO3_CONF_VARS;
-		
+
 		// Access check!
 		// The page will show only if there is a valid page and if this page may be viewed by the user
 		$this->pageinfo = t3lib_BEfunc::readPageAccess($this->id,$this->perms_clause);
@@ -111,7 +111,7 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 			$this->doc = t3lib_div::makeInstance('mediumDoc');
 			$this->doc->backPath = $BACK_PATH;
 			$this->doc->form='<form action="" method="POST">';
-			
+
 			$this->doc->loadJavascriptLib('contrib/prototype/prototype.js');
 			$this->doc->loadJavascriptLib('js/common.js');
 
@@ -187,7 +187,7 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 	function moduleContent(){
 		global $LANG;
 		//set_time_limit(240);
-		
+
 		//t3lib_div::debug($_GET,'get');
 		//t3lib_div::debug($this->MOD_SETTINGS,'settings');
 		if ($this->q_id == 0 AND $this->MOD_SETTINGS['function'] != 4 ){
@@ -231,7 +231,7 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 							$myVars['only_finished'] = 0;
 						}
 						$GLOBALS['BE_USER']->setAndSaveSessionData('tx_kequestionnaire',$myVars);
-						
+
 						$this->results = $myVars['results'];
 						//t3lib_div::debug($_POST,'post');
 						//t3lib_div::debug($myVars,'myVars');
@@ -289,7 +289,7 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 					//t3lib_div::debug($_GET,'get');
 					//t3lib_div::debug($_POST,'post');
 					$title = $LANG->getLL('function4');
-					
+
 					if ($this->q_id == 0){
 						$ids = t3lib_div::_GP('questionnaires');
 						$content = $this->getHTMLAllInfos();
@@ -320,14 +320,14 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 		//t3lib_div::debug($content);
 		$content = $this->doc->insertStylesAndJS($content);
 		$this->content.=$this->doc->section($title,$content,0,1);
-		
+
 	}
-	
+
 	function loadResults(){
 		$counters = array();
 		$counters['counting'] = 0;
 		$counters['finished'] = 0;
-		
+
 		$this->results = array();
 		$finished = 0;
 		$counting = 0;
@@ -335,9 +335,9 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 		//$content .= t3lib_div::view_array($this->ff_data);
 		$storage_pid = $this->ff_data['sDEF']['lDEF']['storage_pid']['vDEF'];
 		//t3lib_div::devLog('getCSVInfos', 'ke_questionnaire Export Mod', 0, $storage_pid);
-		
+
 		$where = 'pid='.$storage_pid.' AND hidden=0 AND deleted=0';
-		
+
 		//Check if only the actual plugin-lang should be selected
 		$myVars = $GLOBALS['BE_USER']->getSessionData('tx_kequestionnaire');
 		//t3lib_div::devLog('load Results myVars', 'ke_questionnaire Export Mod', 0, $myVars);
@@ -348,17 +348,17 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 			$only_lang = explode('_',htmlentities(t3lib_div::_GP('only_this_lang')));
 			$where .= ' AND sys_language_uid='.$only_lang[1];
 		}
-		
+
 		//Check if only the finished should be exported
 		$langs = array();
 		if (htmlentities(t3lib_div::_GP('only_finished')) or (t3lib_div::_GP('get_csv_parted_download') == 1 AND $myVars['only_finished'] == 1)){
 			$where .= ' AND finished_tstamp>0';
 		}
-		
+
 		//t3lib_div::devLog('getCSVInfos', 'ke_questionnaire Export Mod', 0, $only_lang);
-		
+
 		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*','tx_kequestionnaire_results',$where,'','uid');
-		
+
 		if ($res){
 			$result_array = '';
 			$encoding = "UTF-8";
@@ -372,20 +372,20 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 					$temp_array['start_tstamp'] = $row['start_tstamp'];
 					$temp_array['finished_tstamp'] = $row['finished_tstamp'];
 					$this->results[] = $temp_array;
-					
+
 					$langs[$row['sys_language_uid']] = 1;
 					if ($row['finished_tstamp'] > 0) $finished ++;
 					$counting ++;
 				}
 			}
 		}
-	
+
 		$counters['counting'] = $counting;
 		$counters['finished'] = $finished;
 		$counters['langs'] = $langs;
-		
+
 		//t3lib_div::debug($this->results, 'result_array');
-		
+
 		return $counters;
 	}
 
@@ -397,7 +397,7 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 		$content = '';
 		$counters = $this->loadResults();
 		$langs = $counters['langs'];
-		
+
 		$content = $LANG->getLL('result_count').': '.$counters['counting'].'<br />';
 		$content .= $LANG->getLL('finished_count').': '.$counters['finished'];
 
@@ -430,7 +430,7 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 			$content .= '<br/><p>'.$this->getFeUserFields().'</p><br />';
 		}
 		$content .= '<br />';
-			
+
 		//set some vars in the session
 		$myVars = $GLOBALS['BE_USER']->getSessionData('tx_kequestionnaire');
 		$myVars['q_id'] = $this->q_id;
@@ -467,7 +467,7 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 			$content .= $LANG->getLL('create_export_mail').' <input type="text" name="mailExportTo" style="width:200px"/><br /><br /><br />';
 			$content .= '<input type="submit" name="get_csv_parted" value="'.$LANG->getLL('create_export_button').'" />';
 		} else {
-			$content .= '<input type="submit" name="get_csv" value="'.$LANG->getLL('download_button').'" />';	
+			$content .= '<input type="submit" name="get_csv" value="'.$LANG->getLL('download_button').'" />';
 		}
 		//t3lib_div::devLog('session', 'ke_questionnaire Export Mod', 0, $myVars);
 		//t3lib_div::devLog('_POST', 'ke_questionnaire Export Mod', 0, $_POST);
@@ -485,7 +485,7 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 
 		$content = '';
 		$counters = $this->loadResults();
-		
+
 		$content = $LANG->getLL('result_count').': '.$counters['counting'].'<br />';
 		$content .= $LANG->getLL('finished_count').': '.$counters['finished'];
 
@@ -521,7 +521,7 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 		$content = '';
 		if (t3lib_extMgm::isLoaded('fpdf') or t3lib_extMgm::isLoaded('ke_dompdf')){
 			$content .= $this->getLanguageSelect();
-			$content .= '<p>';			
+			$content .= '<p>';
 			$content .= '<input type="submit" name="get_pdf_blank" value="'.$LANG->getLL('download_button_pdf_blank').'" /></p>';
 			$content .= '<br /><hr><br />';
 			$content .= '<p>';
@@ -536,13 +536,13 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 		}
 		return $content;
 	}
-	
+
 	function getHTMLInfos(){
 		//t3lib_div::devLog('getSPSSInfos GET', 'ke_questionnaire Export Mod', 0, $_GET);
 		//t3lib_div::devLog('getSPSSInfos POST', 'ke_questionnaire Export Mod', 0, $_POST);
 		global $LANG;
-		
-		$content = '';		
+
+		$content = '';
 		$content .= $this->getLanguageSelect('html');
 		$content .= '<p>';
 		$content .= '<input type="checkbox" name="html_oneperpage" value="1" /> '.$LANG->getLL('download_html_oneperpage').'<br /><br />';
@@ -558,13 +558,13 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 
 		return $content;
 	}
-	
+
 	function getHTMLAllInfos(){
 		//t3lib_div::devLog('getSPSSInfos GET', 'ke_questionnaire Export Mod', 0, $_GET);
 		//t3lib_div::devLog('getSPSSInfos POST', 'ke_questionnaire Export Mod', 0, $_POST);
 		global $LANG;
-		
-		$content = '';		
+
+		$content = '';
 		//get the activated plugins
 		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
 			'*',
@@ -599,20 +599,20 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 
 		return $content;
 	}
-	
+
 	function getLanguageSelect($type = 'pdf'){
 		global $LANG;
 		$content = '';
 		$lang_id = 0;
-		
+
 		//check for other languages
 		if ($this->q_data['l18n_parent']){
 			$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*','tt_content',"list_type = 'ke_questionnaire_pi1' and l18n_parent=".$this->q_data['l18n_parent']);
 			$lang_id = $this->q_data['sys_language_uid'];
 		} else {
-			$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*','tt_content',"list_type = 'ke_questionnaire_pi1' and l18n_parent=".$this->q_data['uid']);	
+			$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*','tt_content',"list_type = 'ke_questionnaire_pi1' and l18n_parent=".$this->q_data['uid']);
 		}
-		
+
 		//t3lib_div::debug($GLOBALS['TYPO3_DB']->SELECTquery('*','tt_content',"list_type = 'ke_questionnaire_pi1' and l18n_parent=".$this->q_data['uid']));
 		if ($res){
 			$content .= $LANG->getLL('download_button_'.$type.'_lang').' <select name="get_'.$type.'_language">';
@@ -626,15 +626,15 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 			$content .= '</select>';
 			$content .= '<hr><br />';
 		}
-		
+
 		return $content;
 	}
-	
+
 	function getFeUserFields(){
 		global $LANG;
-		
+
 		$excludes = explode(',',$this->extConf['demographic_fields_exclude']);
-		
+
 		$content = '';
 		$content .= '<b>'.$LANG->getLL('CSV_feUserHeader').'</b><br />';
 		t3lib_div::loadTCA("fe_users");
@@ -645,29 +645,65 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 				$content .= $name.'<br />';
 			}
 		}
-		
+
 		return $content;
 	}
-	
+
 	function getResultSelect($type = 'filled'){
 		$content = '';
 		$content .= '<select name="result_id_'.$type.'">';
-		
+
 		$table = 'tx_kequestionnaire_results';
 		$where = 'pid='.$this->ff_data['sDEF']['lDEF']['storage_pid']['vDEF'];
 		$where .= ' AND deleted=0 AND hidden=0';
-		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('uid',$table,$where);
-		if ($res){
-			while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)){
-				//t3lib_div::devLog('getResults', 'ke_questionnaire Export Mod', 0, $row);
-				$content .= '<option value="'.$row['uid'].'">'.$row['uid'].'</option>';
+		$rows = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
+			'*',
+			$table,
+			$where,
+			'', 'uid', ''
+		);
+		// add additional data to results
+		foreach($rows as $key => $row) {
+			$label = $row['uid'];
+			// if a user id was found and our premium version is loaded
+			if($row['cruser_id'] &&
+				t3lib_extMgm::isLoaded('ke_questionnaire_premium') &&
+				$this->extConf['sendMailWithFeUserData']
+			) {
+				$feUser = t3lib_BEfunc::getRecord('fe_users', $row['cruser_id']);
+				// check is a valid user record was returned
+				if(is_array($feUser) && count($feUser)) {
+					// merge first and last name if possible
+					if($feUser['first_name'] && $feUser['last_name']) {
+						$label = $feUser['first_name']  . ' ' . $feUser['last_name'];
+					} else $label = $feUser['name'];
+					$label = $feUser['username'] . ' (' . $label . ')';
+				}
 			}
+			$labels[] = array(
+				'uid' => $row['uid'],
+				'label' => $label
+			);
 		}
-		
+		// sort labels with multisort if our premium version is installed
+		if(
+			t3lib_extMgm::isLoaded('ke_questionnaire_premium') &&
+			$this->extConf['sendMailWithFeUserData']
+		) {
+			foreach($labels as $key => $label) {
+				$entryLabel[$key] = $label['label'];
+			}
+			array_multisort($entryLabel, SORT_ASC, SORT_STRING, $labels);
+		}
+
+		foreach($labels as $label) {
+			$content .= '<option value="' . $label['uid'] . '">' . $label['label'] . '</option>';
+		}
+
 		$content .= '</select>';
 		return $content;
 	}
-	
+
 	function createSchedulerTask(){
 		$myVars = $GLOBALS['BE_USER']->getSessionData('tx_kequestionnaire');
 		$file_path = PATH_site.'typo3temp/'.$this->temp_file;
@@ -681,7 +717,7 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 		//make it recurrent
 		//$task->registerSingleExecution(time());
 		$task->registerRecurringExecution(time(),'1');
-		
+
 		//add Mail Address
 		$task->mailTo = t3lib_div::_GP('mailExportTo');
 		//add Question id
@@ -717,24 +753,24 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 		//add to database
 		$scheduler->addTask($task);
 	}
-	
+
 	function createDataFileAtOnce(){
 		include_once('ajax.php');
 		$creator = t3lib_div::makeInstance('tx_kequestionnaire_module3_ajax');
 		$creator->init();
-		
+
 		$type = t3lib_div::_GP('download_type');
 		if ($type == ''){
 			$myVars = $GLOBALS['BE_USER']->getSessionData('tx_kequestionnaire');
 			$type = $myVars['download_type'];
 		}
-		
+
 		//delete the old generated file
 		$file_path = PATH_site.'typo3temp/'.$this->temp_file;
 		if (file_exists($file_path)) {
 		    unlink($file_path);
 		}
-		
+
 		//t3lib_div::devLog('atOnce', 'ke_questionnaire Export Mod', 0, $this->results);
 		foreach ($this->results as $nr => $result){
 			switch ($type){
@@ -747,7 +783,7 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 			}
 		}
 	}
-	
+
 	function createDataFile($pointer){
 		//t3lib_div::debug($_ENV);
 		//t3lib_div::debug($_SERVER);
@@ -767,7 +803,7 @@ var pointer = $pointer;
  function callFileCreate () {
 	new Ajax.Request('../../../../typo3/ajax.php', {
 	    method: 'get',
-	    
+
 	    parameters: 'ajaxID=tx_kequestionnaire::csv_createDataFile&pointer='+pointer,
 	    onComplete: function(xhr, json) {
 		// display results, should be The tree works
@@ -784,7 +820,7 @@ var pointer = $pointer;
 	    }.bind(this)
 	});
 }
-Event.observe(window, 'load', function() { 
+Event.observe(window, 'load', function() {
 	callFileCreate();
 });
 </script>
@@ -795,7 +831,7 @@ Event.observe(window, 'load', function() {
 		if (file_exists($file_path)) {
 		    unlink($file_path);
 		}
-		
+
 		//return the marker to show wich result is worked on
 		return $content;
 	}
@@ -828,10 +864,10 @@ Event.observe(window, 'load', function() {
 			$feUserFields = $myVars['feUserFields'];
 		}
 		//t3lib_div::devLog('getCSVDownload session '.$only_this_lang, 'ke_questionnaire Export Mod', 0, $myVars);
-		
+
 		require_once(t3lib_extMgm::extPath('ke_questionnaire').'res/other/class.csv_export.php');
 		$csv_export = new csv_export($this->extConf,$this->results,$this->q_data,$this->ff_data,$this->temp_file,$only_this_lang,$only_finished,$with_authcode,$feUserFields);
-		
+
 		switch ($type){
 			/*case 'simple':
 				//$csvdata = $this->getCSVSimple();
@@ -855,17 +891,17 @@ Event.observe(window, 'load', function() {
 				}
 				break;
 		}
-	
+
 		$csvdata = mb_convert_encoding($csvdata, "Windows-1252", "UTF-8");
 		header("content-type: application/csv-tab-delimited-table");
 		header("content-length: ".strlen($csvdata));
 		header("content-disposition: attachment; filename=\"".$this->q_id."_csv_export.csv\"");
-	
+
 		print $csvdata;
 		//t3lib_div::debug($csvdata);
 	}
 
-	
+
 /**
  * old function, will be deleted soon
 	function simplifyResults(){
@@ -1111,7 +1147,7 @@ Event.observe(window, 'load', function() {
 								}
 							}
 						break;
-					default: 	
+					default:
 							// Hook to make other types available for export
 							if (is_array($act_v) AND is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['ke_questionnaire']['CSVExportSimplifyResults'])){
 								foreach($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['ke_questionnaire']['CSVExportSimplifyResults'] as $_classRef){
@@ -1140,7 +1176,7 @@ Event.observe(window, 'load', function() {
 		//t3lib_div::devLog('getCSVQBase simple results', 'ke_questionnaire Export Mod', 0, $this->simpleResults);
 	}
 	 */
-	
+
 	function getSPSSDownload($type){
 		require_once(t3lib_extMgm::extPath('ke_questionnaire_premium').'res/other/class.spss_export.php');
 		$csvdata = '';
@@ -1174,7 +1210,7 @@ Event.observe(window, 'load', function() {
 
 	function getSPSSBase($data_filename){
 		$base_row = array();
-		
+
 		$storage_pid = $this->ff_data['sDEF']['lDEF']['storage_pid']['vDEF'];
 		$where = 'pid='.$storage_pid.' and hidden=0 and deleted=0 and type!="blind"';
 		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*','tx_kequestionnaire_questions',$where,'','sorting');
@@ -1197,11 +1233,11 @@ Event.observe(window, 'load', function() {
 					case 'closed':
 							$base_row[$row['uid']]['subtype'] = $row['closed_type'];
 							//t3lib_div::devLog('getCSVQBase '.$question['type'], 'ke_questionnaire Export Mod', 0, $row);
-			    
+
 							//if there are Inputfields in the closed answers spss needs to know
 							$base_row[$row['uid']]['inputs'] = 0;
 							$base_row[$row['uid']]['inputs'] = $row['closed_inputfield'];
-			    
+
 							$where = 'question_uid='.$row['uid'].' and hidden=0 and deleted=0';
 							$res_answers = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*','tx_kequestionnaire_answers',$where,'','sorting');
 							//t3lib_div::devLog('getSPSSBase '.$row['type'], 'ke_questionnaire Export Mod', 0, array($GLOBALS['TYPO3_DB']->SELECTquery('*','tx_kequestionnaire_answers',$where,'','sorting')));
@@ -1284,7 +1320,7 @@ Event.observe(window, 'load', function() {
 		if (t3lib_extMgm::isLoaded('ke_dompdf')){
 			require_once(t3lib_extMgm::extPath('ke_questionnaire').'res/other/class.dompdf_export.php');
 			$pdfdata = '';
-							
+
 			$conf = $this->loadTypoScriptForBEModule('tx_kequestionnaire');
 			//t3lib_div::devLog('ts conf', 'ke_questionnaire Export Mod', 0, $conf);
 			$pdf_conf = $conf['pdf.'];
@@ -1292,7 +1328,7 @@ Event.observe(window, 'load', function() {
 			$storage_pid = $this->ff_data['sDEF']['lDEF']['storage_pid']['vDEF'];
 
 			$header = $this->q_data['header'];
-				
+
 			$pdf = new dompdf_export($pdf_conf,$storage_pid, $header,$this->ff_data);
 			$row = t3lib_BEfunc::getRecord('tx_kequestionnaire_results',t3lib_div::_GP('result_id_filled'));
 			//t3lib_div::devLog('result_row', 'ke_questionnaire Export Mod', 0, $row);
@@ -1311,7 +1347,7 @@ Event.observe(window, 'load', function() {
 					$pdf->user_marker = $markerArray;
 				}
 			}
-			
+
 			switch ($type){
 				case 'blank':
 					$pdfdata = $pdf->getPDFBlank();
@@ -1346,14 +1382,14 @@ Event.observe(window, 'load', function() {
 			}
 		}
 	}
-	
+
 	function getHTMLDownload($type, $ids = false){
 		require_once(t3lib_extMgm::extPath('ke_questionnaire_premium').'res/other/class.html_export.php');
 		$ending = 'zip';
 		if (t3lib_div::_GP('html_fileending')){
 			$ending = t3lib_div::_GP('html_fileending');
 		}
-		
+
 		if (is_array($ids)){
 			$zip_filename = 'questionnaires_html.'.$ending;
 			$htmls = array();
@@ -1362,7 +1398,7 @@ Event.observe(window, 'load', function() {
 				$this->id = $q_data['pid'];
 				$ts_setup = $this->loadTypoScriptForBEModule(false, 'setup');
 				$ts_constants = $this->loadTypoScriptForBEModule();
-				
+
 				$conf = array();
 				$conf['sys_language_uid'] = t3lib_div::_GP('get_html_language');
 				$lang = $this->getLanguageFromUid($conf['sys_language_uid']);
@@ -1375,7 +1411,7 @@ Event.observe(window, 'load', function() {
 				$conf['firstpage'] = t3lib_div::_GP('html_firstpage');
 				$conf['double_export'] = t3lib_div::_GP('double_export');
 				$conf['exportHTMLpagefield'] = $this->extConf['exportHTMLpagefield'];
-				
+
 				$html = new html_export($q_id,$conf,$ts_setup);
 				$htmls[] = $html;
 				//t3lib_div::debug($html,'html');
@@ -1389,7 +1425,7 @@ Event.observe(window, 'load', function() {
 		} else {
 			$ts_setup = $this->loadTypoScriptForBEModule(false, 'setup');
 			$ts_constants = $this->loadTypoScriptForBEModule();
-			
+
 			$conf = array();
 			$conf['sys_language_uid'] = t3lib_div::_GP('get_html_language');
 			$lang = $this->getLanguageFromUid($conf['sys_language_uid']);
@@ -1399,7 +1435,7 @@ Event.observe(window, 'load', function() {
 			}
 			$conf['language'] = $lang;
 			$conf['oneperpage'] = t3lib_div::_GP('html_oneperpage');
-			
+
 			$temp_title = $this->q_id;
 			if ($this->extConf['exportHTMLpagefield'] != ''){
 				$pagy = t3lib_BEfunc::getRecord('pages',$this->pid);
@@ -1408,7 +1444,7 @@ Event.observe(window, 'load', function() {
 			//$zip_filename = $this->q_id.'_'.time().'_html.zip';
 			$zip_filename = $temp_title.'_html.'.$ending;
 			$conf['subfolder'] = $temp_title;
-			
+
 			$html = new html_export($this->q_id, $conf, $ts_setup);
 			$html->createZip($zip_filename);
 		}
@@ -1441,16 +1477,16 @@ Event.observe(window, 'load', function() {
 			//return $TSObj->flatSetup;
 			if ($type == 'constants'){
 				if ($extKey) return $TSObj->setup_constants['plugin.'][$extKey.'.'];
-				else return $TSObj->setup_constants;	
+				else return $TSObj->setup_constants;
 			} elseif ($type == 'setup'){
 				if ($extKey) return $TSObj->setup['plugin.'][$extKey.'.'];
-				else return $TSObj->setup;	
+				else return $TSObj->setup;
 			}
         }
-	
+
 	function getLanguageFromUid($uid){
 		$language = '';
-		
+
 		$lang = t3lib_BEfunc::getRecord('sys_language',$uid);
 		if ($lang){
 			$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*','static_languages','uid='.$lang['static_lang_isocode']);
@@ -1462,10 +1498,10 @@ Event.observe(window, 'load', function() {
 			}
 		}
 		//t3lib_div::debug($lang, 'lang '.$uid);
-		
+
 		return $language;
 	}
-	
+
 	function stripString($temp){
 		$temp = strip_tags($temp);
 		$temp = html_entity_decode($temp);

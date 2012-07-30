@@ -1,5 +1,8 @@
 (add new changes on top of this file)
 
+2012-07-30 Stefan Froemken <froemken@kennziffer.com>
+	* Feature: If you are using ke_questionnaire_premium you can see who has filled which questionnaire in backend
+
 2012-07-27 Stefan Froemken <froemken@kennziffer.com>
 	* Fixed: Missing email head for mails just after completing the questionnaire: http://forge.typo3.org/issues/39225
 	* Fixed: makeInstanceClassName is deprecated
