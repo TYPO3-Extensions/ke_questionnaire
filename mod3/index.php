@@ -491,7 +491,8 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 
 		$content .= '<p><br /><hr />';
 		$content .= '<p><input type="checkbox" name="only_finished" value="1" checked /> '.$LANG->getLL('download_only_finished').'</p><br />';
-		if ($this->ff_data['sDEF']['lDEF']['access']['vDEF'] == 'AUTH_CODE'){
+		//t3lib_div::debug($this->ff_data);
+		if ($this->ff_data['aDEF']['lDEF']['access']['vDEF'] == 'AUTH_CODE'){
 			$content .= '<p><input type="checkbox" name="with_authcode" value="1" /> '.$LANG->getLL('download_with_authcode').'</p>';
 		}
 		//check if the selected plugin lang has own results
@@ -1308,7 +1309,7 @@ Event.observe(window, 'load', function() {
 		}
 		//t3lib_div::devLog('SPSS base_row', 'ke_questionnaire Export Mod', 0, $base_row);
 		$with_authcode = false;
-		if ($this->ff_data['sDEF']['lDEF']['access']['vDEF'] == 'AUTH_CODE' AND t3lib_div::_GP('with_authcode') == 1){
+		if ($this->ff_data['aDEF']['lDEF']['access']['vDEF'] == 'AUTH_CODE' AND t3lib_div::_GP('with_authcode') == 1){
 			$with_authcode = true;
 		}
 		$spss = new spss_export($data_filename,$base_row,array(),$with_authcode);
