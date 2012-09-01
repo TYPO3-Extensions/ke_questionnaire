@@ -786,17 +786,20 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 		}
 		//when there should be a timer, set the session-keys for the timer
 		if ($this->ffdata['timer_type'] != 'FREE'){
-			// If page is not given, our sessions must be deleted.
-			if(!$pageNr) {
-				$GLOBALS['TSFE']->fe_user->setKey('ses', 'kequestionnaire_page', 0);
-				$GLOBALS['TSFE']->fe_user->setKey('ses', 'kequestionnaire_start_tstamp', time());
-			} else {
-				// If page is given we have to check if there are some modifications made in url
-				if($GLOBALS['TSFE']->fe_user->getKey('ses', 'kequestionnaire_page') && $GLOBALS['TSFE']->fe_user->getKey('ses', 'kequestionnaire_page') > $pageNr) {
-					$pageNr = $GLOBALS['TSFE']->fe_user->getKey('ses', 'kequestionnaire_page');
-				}
-				$GLOBALS['TSFE']->fe_user->setKey('ses', 'kequestionnaire_page', $pageNr);
+		    // If page is not given, our sessions must be deleted.
+		    if(!$pageNr) {               
+			$GLOBALS['TSFE']->fe_user->setKey('ses', 'kequestionnaire_page', 0);
+			if ($this->ffdata['description'] == '')
+			    $GLOBALS['TSFE']->fe_user->setKey('ses', 'kequestionnaire_start_tstamp', time());
+		    } else {
+			if ($this->ffdata['description'] != '' AND $pageNr == 1)
+			    $GLOBALS['TSFE']->fe_user->setKey('ses', 'kequestionnaire_start_tstamp', time());
+			// If page is given we have to check if there are some modifications made in url
+			if($GLOBALS['TSFE']->fe_user->getKey('ses', 'kequestionnaire_page') && $GLOBALS['TSFE']->fe_user->getKey('ses', 'kequestionnaire_page') > $pageNr) {
+			    $pageNr = $GLOBALS['TSFE']->fe_user->getKey('ses', 'kequestionnaire_page');
 			}
+			$GLOBALS['TSFE']->fe_user->setKey('ses', 'kequestionnaire_page', $pageNr);
+		    }
 		}
 		//set the piVars with the correct pageNr
 		$this->piVars['page']=$pageNr;
