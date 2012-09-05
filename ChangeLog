@@ -1,5 +1,8 @@
 (add new changes on top of this file)
 
+2012-09-05 Stefan Froemken <froemken@kennziffer.com>
+	* Fixed: Return to previous page does not work
+
 2012-07-30 Stefan Froemken <froemken@kennziffer.com>
 	* Feature: If you are using ke_questionnaire_premium you can see who has filled which questionnaire in backend
 

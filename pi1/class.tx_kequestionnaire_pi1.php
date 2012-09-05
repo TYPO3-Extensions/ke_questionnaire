@@ -785,9 +785,9 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 			//t3lib_div::devLog('getPageNr lastAnswered '.$this->lastAnswered, 'test', 0, array('amount' => $amount,'pages'=>$pagecount, 'p Nr'=>$pageNr, 'qpp' =>$qpp, 'page-nr'=>$this->piVars['page'], 'q_nr'=>$q_nr));
 		}
 		//when there should be a timer, set the session-keys for the timer
-		if ($this->ffdata['timer_type'] != 'FREE'){
+		if (isset($this->ffdata['timer_type']) && $this->ffdata['timer_type'] != 'FREE'){
 		    // If page is not given, our sessions must be deleted.
-		    if(!$pageNr) {               
+		    if(!$pageNr) {
 			$GLOBALS['TSFE']->fe_user->setKey('ses', 'kequestionnaire_page', 0);
 			if ($this->ffdata['description'] == '')
 			    $GLOBALS['TSFE']->fe_user->setKey('ses', 'kequestionnaire_start_tstamp', time());
