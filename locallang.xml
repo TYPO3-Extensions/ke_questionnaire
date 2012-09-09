@@ -53,6 +53,7 @@
 			<label index="tt_content.pi_flexform.access.fe_users">FE-User</label>
 			<label index="tt_content.pi_flexform.access.authcode">AuthCode Invitation</label>
 			<label index="tt_content.pi_flexform.max_participations">Max participations for user \n(not for free access)</label>
+			<label index="tt_content.pi_flexform.stop_part_solved">Participations allowed till the user solves the questionnaire (Gets the required points for certificate)</label>
 
 			<label index="tt_content.pi_flexform.timer_type">Type of time to work on the questionnaire</label>
 			<label index="tt_content.pi_flexform.timer_type.free">free</label>
@@ -167,6 +168,7 @@
 			<label index="tt_content.pi_flexform.access.fe_users">FE-Nutzer</label>
 			<label index="tt_content.pi_flexform.access.authcode">AuthCode Einladung</label>
 			<label index="tt_content.pi_flexform.max_participations">Maximale Anzahl an Teilnahmen pro Nutzer \n(greift nicht bei freiem Zugriff)</label>
+			<label index="tt_content.pi_flexform.stop_part_solved">Teilnahme erlaubt bis der Nutzer den Fragebogen richtig beantwortet hat (Die benötigten Punkte für das Zertifikat erhalten hat.)</label>
 
 			<label index="tt_content.pi_flexform.timer_type">Typ der zur Verfügung stehenden Bearbeitungszeit</label>
 			<label index="tt_content.pi_flexform.timer_type.free">freie Bearbeitung</label>

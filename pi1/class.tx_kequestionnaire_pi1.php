@@ -240,9 +240,31 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 					$last_result = array();
 					if (!$this->piVars['result_id']){
 						$check_result = $this->checkResults();
+						if ($this->ffdata['stop_part_solved'] == 1) $check_result['finished_count'] = 0;
 					}
+					//t3lib_div::debug($check_result,'checkResults');
+					//9.2012
+					// Premium Addition Check for block after finish
+					if ($this->ffdata['stop_part_solved'] == 1 AND $check_result['points_complete'] == 1){
+						$subPart = 'NOMORE';
+						$markerArray['###TEXT###'] = $this->pi_getLL('already_completed');
+						//t3lib_div::debug($this->cObj->data['uid'],'id');
+						if ($this->ffdata['cert_linkbyblock'] == 1){
+							$link_title = $this->pi_getLL('already_completed_cert_link');
+							$add_params = array();
+							$add_params[$this->prefixId.'[certificate]'] = 1;
+							$add_params[$this->prefixId.'[q_id]'] = $this->cObj->data['uid'];
+							$add_params[$this->prefixId.'[p_id]'] = $check_result['points_complete_result'];
+							$cert_link = $this->pi_linkToPage($link_title,
+								$GLOBALS['TSFE']->id,
+								'',
+								$add_params
+							);
+							$markerArray['###TEXT###'] .= '<br>'.$this->pi_getLL('already_completed_cert').$cert_link;
+						};
+						$save = false;
 					//and select the last one if there is one and not working on one
-					if ($check_result['last_result'] > 0 AND $check_result['finished_count'] < $this->ffdata['max_participations'] AND !$this->piVars['result_id']){
+					} elseif ($check_result['last_result'] > 0 AND $check_result['finished_count'] < $this->ffdata['max_participations'] AND !$this->piVars['result_id']){
 						if ($this->ffdata['restart_possible'] != 1){
 							$this->getResults($check_result['last_result'],$make_history);
 							if ($this->lastAnswered > 0) $this->getPageNr();
@@ -478,7 +500,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 	function checkResults(){
 		$content = array();
 		$results = array();
-
+		
 		//get the authCodeId
 		$authCodeId = $this->getAuthCodeId();
 		//and create the where clause
@@ -486,13 +508,12 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 		$where .= ' AND finished_tstamp = 0';
 		$where .= ' AND deleted = 0';
 		$where .= ' AND pid = '.$this->pid;
+		//t3lib_div::debug($where,'w');
 		$orderBy = 'start_tstamp DESC,tstamp DESC';
-		$res_results = $GLOBALS['TYPO3_DB']->exec_SELECTquery('uid,finished_tstamp','tx_kequestionnaire_results',$where,'',$orderBy,1);
+		$res_results = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*','tx_kequestionnaire_results',$where,'',$orderBy,1);
 		if ($res_results){
 			$results = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res_results);
 			$content['last_result'] = $results['uid'];
-			//if there are existing results the resultset is not new
-			$this->new = false;
 		}
 		$where = 'auth='.$authCodeId;
 		$where .= ' AND finished_tstamp != 0';
@@ -503,6 +524,45 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 		if ($res_results){
 			$counter = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res_results);
 			$content['finished_count'] = $counter['counter'];
+		}
+		
+		// 9.2012 Schwingler
+		//Extended Functionality for Premium Version
+		$content['points_complete'] = 0;
+		if ($this->ffdata['stop_part_solved'] == 1){
+			$where = 'auth='.$authCodeId;
+			$where .= ' AND finished_tstamp != 0';
+			$where .= ' AND pid = '.$this->pid;
+			$where .= ' AND deleted = 0';
+			$where .= " AND xmldata != ''";
+			//t3lib_div::debug($where,'w');
+			$res_results = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*','tx_kequestionnaire_results',$where);
+			//get the count of the results to be able to check if the user has already used all his possible accesses to this questionnaire
+			if ($res_results){
+				while (	$row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res_results)){
+					######################################
+					//encoding-block for non-utf-8-DBs
+					$encoding = "UTF-8";
+					$temp_array = '';
+					if ( true === mb_check_encoding ($row['xmldata'], $encoding ) ){
+						$temp_array = t3lib_div::xml2array($row['xmldata']);
+						if (count($temp_array) == 1) $temp_array = t3lib_div::xml2array(utf8_encode($row['xmldata']));
+					} else {
+						$temp_array = t3lib_div::xml2array(utf8_encode($row['xmldata']));
+					}
+					#########################################
+					$temp_results = array();
+					$temp_results[$row['uid']] = $temp_array;
+					$points = $this->calculatePoints($temp_results, $temp_array);
+					//t3lib_div::debug($temp_results,'results');
+					//t3lib_div::debug($points,'points '.$row['uid']);
+					//t3lib_div::debug($this->ffdata);
+					if ($points['percent'] >= $this->ffdata['cert_minPercent']){
+						$content['points_complete'] = 1;
+						$content['points_complete_result'] = $row['uid'];
+					}
+				}				
+			}
 		}
 
 		return $content;
@@ -1698,9 +1758,10 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 	 * calculatePoints(): Calculate the points gathered
 	 *
 	 * @param	array	$results: results made for this questionnaire
+	 * @param 	array 	$single_result: single result to be calculated (if different to piVars result)
 	 * @return	array	gathered points, own, total and max
 	 */
-	function calculatePoints($results = NULL){
+	function calculatePoints($results = NULL, $single_result = false){
 		//t3lib_div::devLog('PIVars', $this->prefixId, 0, $this->piVars);
 		$returner = array();
 		$blocks = array();
@@ -1710,6 +1771,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 		}
 		//t3lib_div::debug($this->questionsByID,'q by id');
 		//t3lib_div::debug($blocks,'blocks');
+		//t3lib_div::debug($single_result,'single');
 
 		foreach ($this->questionsByID as $qid => $question){
 			$temp .= $qid;
@@ -1747,8 +1809,10 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 								case 'radio_single':
 								case 'sbm_button':
 								case 'select_single':
-									$total_points += $answers[$result[$qid]['answer']['options']]['points'];
-									//t3lib_div::devLog('total_points', $this->prefixId, 0, array($total_points,$answers[$result[$qid]['answer']['options']],$answers,$result[$qid]['answer']['options'],$result[$qid]['answer']));
+									if (is_array($result[$qid])){
+										$total_points += $answers[$result[$qid]['answer']['options']]['points'];
+										//t3lib_div::devLog('total_points', $this->prefixId, 0, array($total_points,$answers[$result[$qid]['answer']['options']],$answers,$result[$qid]['answer']['options'],$result[$qid]['answer']));
+									}
 									break;
 								case 'check_multi':
 								case 'select_multi':
@@ -1770,14 +1834,24 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 						case 'sbm_button':
 						case 'radio_single':
 						case 'select_single':
-							$bars['own'][$qid] = intval($answers[$this->piVars[$qid]['options']]['points']);
+							if ($single_result) $bars['own'][$qid] = intval($answers[$single_result[$qid]['answer']['options']]['points']);
+							else $bars['own'][$qid] = intval($answers[$this->piVars[$qid]['options']]['points']);
+							//t3lib_div::debug ($bars,'bs');
 							break;
 						case 'check_multi':
 						case 'select_multi':
 							//t3lib_div::devLog('piVar', $this->prefixId, 0, array($this->piVars[$qid]['options']));
-							if (is_array($this->piVars[$qid]['options'])){
-								foreach ($this->piVars[$qid]['options'] as $item){
-									$bars['own'][$qid] += intval($answers[$item]['points']);
+							if ($single_result){
+								if (is_array($single_result[$qid]['answer']['options'])){
+									foreach ($single_result[$qid]['answer']['options'] as $item){
+										$bars['own'][$qid] += intval($answers[$item]['points']);
+									}
+								}
+							} else {
+								if (is_array($this->piVars[$qid]['options'])){
+									foreach ($this->piVars[$qid]['options'] as $item){
+										$bars['own'][$qid] += intval($answers[$item]['points']);
+									}
 								}
 							}
 							break;
@@ -1818,9 +1892,17 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 					}
 
 					//t3lib_div::devLog('piVar', $this->prefixId, 0, array($this->piVars[$qid]['options']));
-					if (is_array($this->piVars[$qid]['options'])){
-						foreach ($this->piVars[$qid]['options'] as $item){
-							$bars['own'][$qid] += $answers[$item]['points'];
+					if ($single_result){
+						if (is_array($single_result[$qid]['answer']['options'])){
+							foreach ($single_result[$qid]['answer']['options'] as $item){
+								$bars['own'][$qid] += $answers[$item]['points'];
+							}
+						}
+					} else {
+						if (is_array($this->piVars[$qid]['options'])){
+							foreach ($this->piVars[$qid]['options'] as $item){
+								$bars['own'][$qid] += $answers[$item]['points'];
+							}
 						}
 					}
 
@@ -1864,10 +1946,17 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 						// calculate average points
 						$bars['total'][$qid] = $total_points/count($results);
 					}
-
-					if (is_array($this->piVars[$qid]['options'])){
-						foreach ($this->piVars[$qid]['options'] as $area){
-							$bars['own'][$qid] += $answers[$area]['points'];
+					if ($single_result){
+						if (is_array($single_result[$qid]['answer']['options'])){
+							foreach ($single_result[$qid]['answer']['options'] as $area){
+								$bars['own'][$qid] += $answers[$area]['points'];
+							}
+						}
+					} else {
+						if (is_array($this->piVars[$qid]['options'])){
+							foreach ($this->piVars[$qid]['options'] as $area){
+								$bars['own'][$qid] += $answers[$area]['points'];
+							}
 						}
 					}
 
@@ -1969,8 +2058,14 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 						case 'radio':
 							foreach ($question_obj->subquestions as $sub){
 								if ($question['matrix_pointsforcolumn'] == 1){
-									if ($this->piVars[$qid]['options'][$sub['uid']]){
-										$bars['own'][$qid] += intval($sub['value']);
+									if ($single_result){
+										if ($single_result[$qid]['answer']['options'][$sub['uid']]){
+											$bars['own'][$qid] += intval($sub['value']);
+										}
+									} else {
+										if ($this->piVars[$qid]['options'][$sub['uid']]){
+											$bars['own'][$qid] += intval($sub['value']);
+										}
 									}
 									//$bars['own'][$qid] += intval($question_obj->subquestions[$this->piVars[$qid]['options'][$sub['uid']]['single']]['value']);
 								} else {
@@ -1983,15 +2078,29 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 								if ($question['matrix_pointsforcolumn'] == 1){
 									foreach ($question_obj->columns as $col){
 										//t3lib_div::debug($this->piVars[$qid]['options'][$sub['uid']][$col['uid']],'test');
-										if ($this->piVars[$qid]['options'][$sub['uid']][$col['uid']][0] == $col['uid']){
-											$bars['own'][$qid] += intval($sub['value']);
+										if ($single_result){
+											if ($single_result[$qid]['answer']['options'][$sub['uid']][$col['uid']][0] == $col['uid']){
+												$bars['own'][$qid] += intval($sub['value']);
+											}
+										} else {
+											if ($this->piVars[$qid]['options'][$sub['uid']][$col['uid']][0] == $col['uid']){
+												$bars['own'][$qid] += intval($sub['value']);
+											}
 										}
 									}
 									//$bars['own'][$qid] += intval($question_obj->subquestions[$this->piVars[$qid]['options'][$sub['uid']]['single']]['value']);
 								} else {
-									if (is_array($this->piVars[$qid]['options'][$sub['uid']])){
-										foreach ($this->piVars[$qid]['options'][$sub['uid']] as $r_item){
-											$bars['own'][$qid] += intval($question_obj->columns[$r_item[0]]['value']);
+									if ($single_result){
+										if (is_array($single_result[$qid]['answer']['options'][$sub['uid']])){
+											foreach ($single_result[$qid]['options'][$sub['uid']] as $r_item){
+												$bars['own'][$qid] += intval($question_obj->columns[$r_item[0]]['value']);
+											}
+										}
+									} else {
+										if (is_array($this->piVars[$qid]['options'][$sub['uid']])){
+											foreach ($this->piVars[$qid]['options'][$sub['uid']] as $r_item){
+												$bars['own'][$qid] += intval($question_obj->columns[$r_item[0]]['value']);
+											}
 										}
 									}
 								}

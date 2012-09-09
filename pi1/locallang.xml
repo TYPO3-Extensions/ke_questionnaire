@@ -45,6 +45,9 @@
 			<label index="restart_label">restart</label>
 
 			<label index="no_more">You have already participated</label>
+			<label index="already_completed">You already solved the questionnaire.</label>
+			<label index="already_completed_cert">You can download the certificate: </label>
+			<label index="already_completed_cert_link">Certificate</label>
 
 			<label index="no_authcode">This questionnaire can only be called with an AuthCode. Please insert your AuthCode</label>
 			<label index="authcode_submit_label">submit AuthCode</label>
@@ -167,6 +170,9 @@
 			<label index="restart_label">neu beginnen</label>
 
 			<label index="no_more">Sie haben bereits an diesem Fragebogen teilgenommen!</label>
+			<label index="already_completed">Sie haben diesen Fragebogen bereits gelöst.</label>
+			<label index="already_completed_cert">Sie können das Zertifikat herunter laden: </label>
+			<label index="already_completed_cert_link">Zertifikat</label>
 
 			<label index="no_authcode">Diese Umfrage ist nur mittels Auth-Code zugänglich. Bitte nutzen Sie den Link in Ihrer Email oder tragen Sie den Auth-Code in das Eingabefeld ein.</label>
 			<label index="no_authcode_falseuser">Der Auth-Code den sie eingegeben haben ist einem anderen Nutzer zugeordnet. Bitte nutzen sie ihren Auth-Code</label>

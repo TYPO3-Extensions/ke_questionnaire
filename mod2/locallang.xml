@@ -38,6 +38,8 @@
 			<label index="question_pie_chart">Portions</label>
 
 			<label index="none_selected">You must select a Questionnaire first!</label>
+			<label index="usercount">Count of FeUsers already participated on one of the questionnaires:</label>
+			<label index="groupcount">Usergroup Participations</label>
 		</languageKey>
 		<languageKey index="de" type="array">
 			<label index="title">Auswerten</label>
@@ -72,6 +74,8 @@
 			<label index="question_pie_chart">Anteile</label>
 
 			<label index="none_selected">Sie müssen zuerst einen Fragebogen auswählen!</label>
+			<label index="usercount">Anzahl der FeUser, die bereits an einem Test teilgenommen haben:</label>
+			<label index="groupcount">Nutzergruppen Teilnahmen</label>
 		</languageKey>
 	</data>
 </T3locallang>

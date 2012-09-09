@@ -210,7 +210,12 @@ class  tx_kequestionnaire_module2 extends t3lib_SCbase {
 		global $LANG;
 		if ($this->q_id == 0){
 			$title = $LANG->getLL('none_selected');
-			$content = $LANG->getLL('none_selected');
+			$content = '';
+			if (t3lib_extMgm::isLoaded('ke_questionnaire_premium') AND $this->extConf_premium['mod2_show_usercount'] == 1){
+				$content .= '<div>';
+				$content .= $LANG->getLL('usercount').' '.$this->getGeneralUserCount();
+				$content .= '</div>';
+			}
 		} else {
 			switch((string)$this->MOD_SETTINGS['function'])	{
 				case 1:
@@ -239,6 +244,85 @@ class  tx_kequestionnaire_module2 extends t3lib_SCbase {
 		}
 		$this->content.=$this->doc->section($title,$content,0,1);
 	}
+	
+	/**
+	 * Count the registered users already participated on one questionnaire
+	 */
+	function getGeneralUserCount(){
+		$counter = 0;
+		
+		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*','tx_kequestionnaire_results');
+		if ($res){
+			$counter_array = array();
+			while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)){
+				if ($row['auth'] > 0){
+					//t3lib_div::debug($row,'row');
+					$auth_res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*','tx_kequestionnaire_authcodes','uid='.$row['auth']);
+					if ($auth_res){
+						$auth_row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($auth_res);
+						//t3lib_div::debug($auth_row,'auth row');
+						if ($auth_row['feuser'] > 0){
+							$user_res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*','fe_users','uid='.$auth_row['feuser']);
+							if ($user_res){
+								$user_row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($user_res);
+								//t3lib_div::debug($user_row,'row');
+								$counter_array[$user_row['uid']] = 1;
+							}									
+						}
+					}
+				}
+			}
+			$counter = count ($counter_array);
+		}
+		
+		return $counter;
+	}
+	
+	/**
+	 * Groupcounts for registered users, participated on selected questionnaire
+	 */
+	function getGroupCount($result_array) {
+		global $LANG;
+		$counter_div = '<div style="margin-top: 5px">';
+		$counter_div .= '<b>'.$LANG->getLL('groupcount').'</b><br>';
+		
+		$counter_array = array();
+		foreach ($result_array as $result){
+			if ($result['auth'] > 0){
+				//t3lib_div::debug($row,'row');
+				$auth_res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*','tx_kequestionnaire_authcodes','uid='.$result['auth']);
+				if ($auth_res){
+					$auth_row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($auth_res);
+					//t3lib_div::debug($auth_row,'auth row');
+					if ($auth_row['feuser'] > 0){
+						$user_res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*','fe_users','uid='.$auth_row['feuser']);
+						if ($user_res){
+							$user_row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($user_res);
+							//t3lib_div::debug($user_row,'row');
+							$groups = explode(',',$user_row['usergroup']);
+							//t3lib_div::debug($groups);
+							foreach ($groups as $usergroup){
+								$counter_array[$usergroup['uid']][$user_row['uid']] = 1;								
+							}
+							//$counter_array[$user_row['uid']] = 1;
+						}									
+					}
+				}
+			}
+		}
+		foreach ($counter_array as $group_id => $user){
+			$group_res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*','fe_groups','uid='.$group_id);
+			if ($group_res){
+				$group = $GLOBALS['TYPO3_DB']->sql_fetch_assoc ($group_res);
+				$counter_div .= $group['title'].': ';
+				$counter_div .= count($user).'<br>';
+			}
+		}
+		//t3lib_div::debug($counter_array);
+		
+		$counter_div .= '</div>';		
+		return $counter_div;
+	}
 
 ##############################################################################################
 # Open Flash Map 2 Charts
@@ -262,6 +346,7 @@ class  tx_kequestionnaire_module2 extends t3lib_SCbase {
 		}
 		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*','tx_kequestionnaire_results',$where,'','uid');
 		//t3lib_div::devLog('getCSVInfos', 'ke_questionnaire Export Mod', 0, array($GLOBALS['TYPO3_DB']->SELECTquery('*','tx_kequestionnaire_results','pid='.$storage_pid.' AND hidden=0 AND deleted=0')));
+		$result_array = array();
 		if ($res){
 			while($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)){
 				if ($row['xmldata'] != '') {
@@ -269,12 +354,17 @@ class  tx_kequestionnaire_module2 extends t3lib_SCbase {
 					else $parted ++;
 					$counting ++;
 				}
+				$result_array[] = $row;
 			}
 		}
 
 		$markerArray['###COUNT###'] = $LANG->getLL('result_count').': '.$counting.'<br />';
 		$markerArray['###COUNT###'] .= $LANG->getLL('parted_count').': '.$parted.'<br />';
 		$markerArray['###COUNT###'] .= $LANG->getLL('finished_count').': '.$finished;
+		if (t3lib_extMgm::isLoaded('ke_questionnaire_premium') AND $this->extConf_premium['mod2_show_groupcount'] == 1){
+			$markerArray['###COUNT###'] .= $this->getGroupCount($result_array);	
+		}
+		
 
 		$markerArray['###WEEK###'] = $LANG->getLL('OFchart_select_week');
 		$markerArray['###SELECTED_WEEK###'] = '';
@@ -852,7 +942,11 @@ class  tx_kequestionnaire_module2 extends t3lib_SCbase {
 
 		$markerArray['###COUNT###'] = $LANG->getLL('result_count').': '.$counting.'<br />';
 		$markerArray['###COUNT###'] .= $LANG->getLL('parted_count').': '.$parted.'<br />';
-		$markerArray['###COUNT###'] .= $LANG->getLL('finished_count').': '.$finished;
+		$markerArray['###COUNT###'] .= $LANG->getLL('finished_count').': '.$finished;		
+		if (t3lib_extMgm::isLoaded('ke_questionnaire_premium') AND $this->extConf_premium['mod2_show_groupcount'] == 1){
+			$markerArray['###COUNT###'] .= $this->getGroupCount();	
+		}
+		
 
 		$content = $this->fillTemplate($templ, $markerArray);
 
