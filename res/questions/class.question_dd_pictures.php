@@ -154,11 +154,11 @@ class question_dd_pictures extends question {
 
 		foreach($coords as $rowId => $row) {
 			$markerArray = array();
-			foreach($this->answers as $answer) {
-				if($answer['answerarea'] == $rowId) {
-					$markerArray['###ANSWERID###'] = $answer['uid'];
-				}
-			}
+			//foreach($this->answers as $answer) {
+				//if($answer['answerarea'] == $rowId) {
+					$markerArray['###ANSWERID###'] = $this->answers[$rowId]['uid'];
+				//}
+			//}
 			$markerArray['###ID###'] = $this->question['uid'];
 			$markerArray['###ROW###'] = $rowId;
 			$markerArray['###PH_TOP###'] = $row['start']['top'];
@@ -183,7 +183,9 @@ class question_dd_pictures extends question {
 			$conf['file'] = 'uploads/tx_kequestionnaire/' . $answer['image'];
 			$conf['altText'] = $answer['title'];
 			$markerArray = array();
-			$markerArray['###ID###'] = $answer['answerarea'];
+			//$markerArray['###ID###'] = $answer['answerarea'];
+			$markerArray['###ID###'] = $answer['uid'];
+			$markerArray['###QID###'] = $answer['question_uid'];
 			$markerArray['###IMG###'] = $this->cObj->IMAGE($conf);
 			$size = getimagesize($conf['file']);
 			$markerArray['###WIDTH###'] = $size[0];

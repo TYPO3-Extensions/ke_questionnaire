@@ -55,10 +55,10 @@ class dompdf_export {
 		$this->pdf = new DOMPDF();
 
 		//get the Locallang of the pi1 / the questionnaire
-		$basePath = t3lib_extMgm::extPath('ke_questionnaire').'pi1/locallang.php';
+		$basePath = t3lib_extMgm::extPath('ke_questionnaire').'pi1/locallang.xml';
 
 		//t3lib_div::devLog('conf', 'DOMPDF Export', 0, $this->conf);
-		$lang = $this->conf['language'];
+		$lang = $GLOBALS['BE_USER']->uc['lang'];
 		$tempLOCAL_LANG = t3lib_div::readLLfile($basePath,$lang);
 		//t3lib_div::devLog('lang temp', 'DOMPDF Export', 0, $tempLOCAL_LANG);
 		//array_merge with new array first, so a value in locallang (or typoscript) can overwrite values from ../locallang_db
@@ -70,6 +70,27 @@ class dompdf_export {
 
 		//t3lib_div::devLog('ffdata', 'DOMPDF Export', 0, $this->ffdata);
 	}
+
+
+	/**
+	 * get LOCAL_LANG entry
+	 *
+	 * @param string $key
+	 * @return string The localized string
+	 */
+	public function getLL($key) {
+		if (isset($this->LOCAL_LANG[$key])) {
+			if (is_array($this->LOCAL_LANG[$key])) {
+					// TYPO3 >= 4.6
+				$value = $this->LOCAL_LANG[$key][0]['target'];
+			} else {
+					// TYPO3 < 4.6
+				$value = $this->LOCAL_LANG[$key];
+			}
+		}
+		return $value;
+	}
+
 
 	/**
 	 * getQuestions(): Gather all the questions of this questionnaire ready for showing
@@ -90,7 +111,7 @@ class dompdf_export {
 			while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)){
 				//replace all drag and drop placeholder marks in question text (question type: dd_words) for export
 				if($row['type'] === 'dd_words') {
-					$replaceText = (TYPO3_MODE === 'BE')?'ZU_ERSETZENDES_WORT':$this->LOCAL_LANG['dd_words_replacetext'];
+					$replaceText = (TYPO3_MODE === 'BE')?'ZU_ERSETZENDES_WORT':$this->getLL('dd_words_replacetext');
 					if(preg_match('/###(.|\n)*?###/iu', $row['text']) === 1) {
 						$row['text'] = preg_replace('/###(.|\n)*?###/iu', $replaceText, $row['text']);
 					}
@@ -385,7 +406,7 @@ class dompdf_export {
 		}
 
 		$html = str_replace('###CONTENT###',$content,$this->templates['base']);
-		$html = str_replace('###PDF_TITLE###',$this->LOCAL_LANG['pdf_title'],$html);
+		$html = str_replace('###PDF_TITLE###',$this->getLL('pdf_title'),$html);
 		$html = str_replace('###DATE###',$date,$html);
 		$html = str_replace('###QUESTIONNAIRE_NAME###',$this->title,$html);
 		//t3lib_div::devLog('getHTML html '.$type, 'pdf_export', 0,array($html,$content,$this->templates['base']));
@@ -890,12 +911,13 @@ class dompdf_export {
 					$o_markerArray['###TEXT###'] = $text;
 					$o_markerArray['###IMAGE###'] = 'uploads/tx_kequestionnaire/' . $option['image'];
 
-					if(is_array($answered['options']) && in_array($option['uid'], $answered['options']) || $answered['options'] == $option['uid']) {
+					if(is_array($answered['options']) && array_key_exists($option['uid'], $answered['options']) || $answered['options'] == $option['uid']) {
 						if(array_key_exists($option['answerarea'], $coords)) {
-							$o_markerArray['###TOP###'] = $top = $coords[$option['answerarea']]['start']['top'];
-							$o_markerArray['###LEFT###'] = $left = $coords[$option['answerarea']]['start']['left'];
-							$o_markerArray['###HEIGHT###'] = $height = $coords[$option['answerarea']]['end']['top'] - $coords[$option['answerarea']]['start']['top'];
-							$o_markerArray['###WIDTH###'] = $width = $coords[$option['answerarea']]['end']['left'] - $coords[$option['answerarea']]['start']['left'];
+							$pos = $answered['options'][$option['uid']];
+							$o_markerArray['###TOP###'] = $top = $coords[$pos]['start']['top'];
+							$o_markerArray['###LEFT###'] = $left = $coords[$pos]['start']['left'];
+							$o_markerArray['###HEIGHT###'] = $height = $coords[$pos]['end']['top'] - $coords[$pos]['start']['top'];
+							$o_markerArray['###WIDTH###'] = $width = $coords[$pos]['end']['left'] - $coords[$pos]['start']['left'];
 							$style = 'position: absolute; top: ' . $top . 'px; left: ' . $left . 'px; width: ' . $width . 'px; height: ' . $height . 'px;';
 						} else {
 							continue;
@@ -972,7 +994,7 @@ class dompdf_export {
 		$content = '';
 		$markerArray = array();
 
-		$markerArray['###COMPARE_TITLE###'] = $this->LOCAL_LANG['pdf_compare_title'];
+		$markerArray['###COMPARE_TITLE###'] = $this->getLL('pdf_compare_title');
 		switch ($question['type']){
 			case 'open':
 				if ($question['open_compare_text']){

@@ -39,7 +39,6 @@
 <!-- ###QUESTION_DD_PICTURES### end-->
 
 <!-- ###PLACEHOLDER### begin-->
-<input class="checkbox" style="display: none;" type="checkbox" name="tx_kequestionnaire_pi1[###ID###][options][]" id="keq_###ID###_###ROW###" value="###ANSWERID###">
 <div id="keq-ddarea-placeholder-###ID###-###ROW###" class="keq-ddarea-placeholder keq-ddarea-placeholder-###ID###" style="
 	z-index: 5;
 	position: absolute;
@@ -51,6 +50,7 @@
 <!-- ###PLACEHOLDER### end-->
 
 <!-- ###ANSWER_PICTURE### begin-->
+<input type="hidden" type="text" name="tx_kequestionnaire_pi1[###QID###][options][###ID###]" id="keq_###QID###_###ID###" value="">
 <li value="###ID###">
 	###IMG###
 </li>
@@ -65,15 +65,18 @@ $placeHolders.droppable({
 	hoverClass: "keq-hover",
 	activeClass: "keq-possible",
 	drop: function(event, ui) {
-		placeholderValue = $( this ).prev( "input" ).attr( "id" ).replace( /keq_###ID###_/, "" );
+		/*placeholderValue = $( this ).prev( "input" ).attr( "id" ).replace( /keq_###ID###_/, "" );
 		answerValue = ui.draggable.attr( "value" );
 		if( placeholderValue == answerValue ) {
 			$( this ).prev( "input" ).attr( "checked", "checked" );
-		}
+		}*/
+		placeholderValue = $( this ).attr( "id" ).replace( /keq-ddarea-placeholder-###ID###-/, "" );
+		ui.draggable.prev( "input" ).val( placeholderValue );
 	},
 	out: function(event, ui) {
-		answerValue = ui.draggable.attr( "value" );
-		$( "#keq_###ID###_" + answerValue ).removeAttr( "checked" );
+		/*answerValue = ui.draggable.attr( "value" );
+		$( "#keq_###ID###_" + answerValue ).removeAttr( "checked" );*/
+		ui.draggable.prev( "input" ).val( "" );
 	}
 });
 
@@ -119,6 +122,7 @@ $answers.draggable({
 
 <!-- ###DOMPDF_COMPARE### begin-->
 <div class="compare" style="page-break-before: always;">
+	###COMPARE_TITLE###
 	<div class="dd_image" style="position: relative">
 		<img src="###BASE_PATH######DDIMAGE###" alt="###QUESTION_TITLE###" />
 		###OPTIONS###
