@@ -2117,7 +2117,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 			}
 		}
 		if ($own_total < 0) $own_total = 0;
-		if ($max_points > 0) $returner['percent'] = ($own_total/$max_points)*100;
+		if ($max_points > 0) $returner['percent'] = round(($own_total/$max_points)*100);
 		else $returner['precent'] = 0;
 		$returner['own'] = $own_total;
 		$returner['max'] = $max_points;
