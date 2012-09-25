@@ -500,7 +500,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 	function checkResults(){
 		$content = array();
 		$results = array();
-
+		
 		//get the authCodeId
 		$authCodeId = $this->getAuthCodeId();
 		//and create the where clause
@@ -525,7 +525,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 			$counter = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res_results);
 			$content['finished_count'] = $counter['counter'];
 		}
-
+		
 		// 9.2012 Schwingler
 		//Extended Functionality for Premium Version
 		$content['points_complete'] = 0;
@@ -561,7 +561,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 						$content['points_complete'] = 1;
 						$content['points_complete_result'] = $row['uid'];
 					}
-				}
+				}				
 			}
 		}
 
@@ -706,6 +706,14 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 		$saveFields['pid'] = $this->pid;
 		$saveFields['tstamp'] = mktime();
 		$saveFields['sys_language_uid'] = $GLOBALS['TSFE']->sys_language_uid;
+		
+		foreach ($this->saveArray as $sidy => $save_part){
+			//t3lib_div::debug($save_part,'part');
+			//t3lib_div::debug($this->piVars,'vars');
+			if ($this->piVars[$save_part['question_id']] AND !$save_part['answer']){
+				$this->saveArray[$sidy]['answer'] = $this->piVars[$save_part['question_id']];
+			}
+		}
 		//Hook to manipulate the saved Array
 		if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$this->extKey]['pi1_setResultsSaveArray'])){
 			foreach($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$this->extKey]['pi1_setResultsSaveArray'] as $_classRef){
@@ -844,21 +852,22 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 			}
 			//t3lib_div::devLog('getPageNr lastAnswered '.$this->lastAnswered, 'test', 0, array('amount' => $amount,'pages'=>$pagecount, 'p Nr'=>$pageNr, 'qpp' =>$qpp, 'page-nr'=>$this->piVars['page'], 'q_nr'=>$q_nr));
 		}
-		// if there should be a timer, set the session-keys for the timer
-		if (isset($this->ffdata['timer_type']) && $this->ffdata['timer_type'] != 'FREE') {
-			if (empty($pageNr)) {
-				// only on page 0 we can set a new session for start time
-				$startTime = $GLOBALS['TSFE']->fe_user->getKey('ses', 'kequestionnaire_start_tstamp');
-				if($startTime) {
-					$allowedSeconds = $this->ffdata['max_time'] * 60;
-					$diff = time() - $startTime;
-					if($diff > $allowedSeconds) {
-						$GLOBALS['TSFE']->fe_user->setKey('ses', 'kequestionnaire_start_tstamp', time());
-					}
-				} else {
-					$GLOBALS['TSFE']->fe_user->setKey('ses', 'kequestionnaire_start_tstamp', time());
-				}
+		//when there should be a timer, set the session-keys for the timer
+		if (isset($this->ffdata['timer_type']) && $this->ffdata['timer_type'] != 'FREE'){
+		    // If page is not given, our sessions must be deleted.
+		    if(!$pageNr) {
+			$GLOBALS['TSFE']->fe_user->setKey('ses', 'kequestionnaire_page', 0);
+			if ($this->ffdata['description'] == '')
+			    $GLOBALS['TSFE']->fe_user->setKey('ses', 'kequestionnaire_start_tstamp', time());
+		    } else {
+			if ($this->ffdata['description'] != '' AND $pageNr == 1)
+			    $GLOBALS['TSFE']->fe_user->setKey('ses', 'kequestionnaire_start_tstamp', time());
+			// If page is given we have to check if there are some modifications made in url
+			if($GLOBALS['TSFE']->fe_user->getKey('ses', 'kequestionnaire_page') && $GLOBALS['TSFE']->fe_user->getKey('ses', 'kequestionnaire_page') > $pageNr) {
+			    $pageNr = $GLOBALS['TSFE']->fe_user->getKey('ses', 'kequestionnaire_page');
 			}
+			$GLOBALS['TSFE']->fe_user->setKey('ses', 'kequestionnaire_page', $pageNr);
+		    }
 		}
 		//set the piVars with the correct pageNr
 		$this->piVars['page']=$pageNr;
@@ -1406,7 +1415,6 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 		//save the Results when showing the last page, regardless of access-type
 		$resultId = $this->setResults($this->piVars['result_id']);
 		if (!$this->piVars['result_id']) $this->piVars['result_id'] = $resultId;
-		//t3lib_div::debug($this->saveArray,'sa');
 		//t3lib_div::devLog('renderLastPage '.$resultId, $this->prefixId, 0, array($this->saveArray));
 
 		//if the mailing is active and set to direct, send the information mail
@@ -2117,7 +2125,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 			}
 		}
 		if ($own_total < 0) $own_total = 0;
-		if ($max_points > 0) $returner['percent'] = round(($own_total/$max_points)*100);
+		if ($max_points > 0) $returner['percent'] = ($own_total/$max_points)*100;
 		else $returner['precent'] = 0;
 		$returner['own'] = $own_total;
 		$returner['max'] = $max_points;
@@ -2552,7 +2560,6 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 		$this->type = $this->ffdata['type'];
 
 		//t3lib_div::devLog('ffdata', $this->prefixId, 0, $this->ffdata);
-		//t3lib_div::debug($this->ffdata,'ff main');
 		$this->pid = $this->ffdata['storage_pid'];
 
 		//get the Template
