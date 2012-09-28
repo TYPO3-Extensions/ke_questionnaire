@@ -54,10 +54,10 @@ class pdfresult_dompdf {
 
 		$this->pdf = new DOMPDF();
 
-		$basePath = t3lib_extMgm::extPath('ke_questionnaire').'pi1/locallang.php';
-		$tempLOCAL_LANG = t3lib_div::readLLfile($basePath,'default');
+		$basePath = t3lib_extMgm::extPath('ke_questionnaire') . 'pi1/locallang.php';
+		$tempLOCAL_LANG = t3lib_div::readLLfile($basePath, 'default');
 		//array_merge with new array first, so a value in locallang (or typoscript) can overwrite values from ../locallang_db
-		$this->LOCAL_LANG = array_merge_recursive($tempLOCAL_LANG,is_array($this->LOCAL_LANG) ? $this->LOCAL_LANG : array());
+		$this->LOCAL_LANG = array_merge_recursive($tempLOCAL_LANG, is_array($this->LOCAL_LANG) ? $this->LOCAL_LANG : array());
 		$this->LOCAL_LANG = $this->LOCAL_LANG['default'];
 	}
 

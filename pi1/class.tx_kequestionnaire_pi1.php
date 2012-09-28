@@ -382,7 +382,8 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 			$diff = $chk_time - $this->piVars['page_tstamp'][$this->piVars['page']];
 			$secs = ceil($seconds - $diff);
 		} else {
-			$diff = $chk_time - $GLOBALS['TSFE']->fe_user->getKey('ses', 'kequestionnaire_start_tstamp');
+			$sesTimer = $GLOBALS['TSFE']->fe_user->getKey('ses', 'kequestionnaire_timer');
+			$diff = $chk_time - $sesTimer['tstamp'];
 			$secs = ceil($seconds - $diff);
 		}
 
@@ -397,7 +398,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 			$markerArray['###TEXT###'] = $this->pi_getLL('timer_text_pages');
 		}
 
-		$content = $this->renderContent('###TIMER###',$markerArray);
+		$content = $this->renderContent('###TIMER###', $markerArray);
 
 		return $content;
 	}
@@ -500,7 +501,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 	function checkResults(){
 		$content = array();
 		$results = array();
-		
+
 		//get the authCodeId
 		$authCodeId = $this->getAuthCodeId();
 		//and create the where clause
@@ -525,7 +526,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 			$counter = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res_results);
 			$content['finished_count'] = $counter['counter'];
 		}
-		
+
 		// 9.2012 Schwingler
 		//Extended Functionality for Premium Version
 		$content['points_complete'] = 0;
@@ -561,7 +562,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 						$content['points_complete'] = 1;
 						$content['points_complete_result'] = $row['uid'];
 					}
-				}				
+				}
 			}
 		}
 
@@ -706,7 +707,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 		$saveFields['pid'] = $this->pid;
 		$saveFields['tstamp'] = mktime();
 		$saveFields['sys_language_uid'] = $GLOBALS['TSFE']->sys_language_uid;
-		
+
 		foreach ($this->saveArray as $sidy => $save_part){
 			//t3lib_div::debug($save_part,'part');
 			//t3lib_div::debug($this->piVars,'vars');
@@ -852,22 +853,27 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 			}
 			//t3lib_div::devLog('getPageNr lastAnswered '.$this->lastAnswered, 'test', 0, array('amount' => $amount,'pages'=>$pagecount, 'p Nr'=>$pageNr, 'qpp' =>$qpp, 'page-nr'=>$this->piVars['page'], 'q_nr'=>$q_nr));
 		}
-		//when there should be a timer, set the session-keys for the timer
-		if (isset($this->ffdata['timer_type']) && $this->ffdata['timer_type'] != 'FREE'){
-		    // If page is not given, our sessions must be deleted.
-		    if(!$pageNr) {
-			$GLOBALS['TSFE']->fe_user->setKey('ses', 'kequestionnaire_page', 0);
-			if ($this->ffdata['description'] == '')
-			    $GLOBALS['TSFE']->fe_user->setKey('ses', 'kequestionnaire_start_tstamp', time());
-		    } else {
-			if ($this->ffdata['description'] != '' AND $pageNr == 1)
-			    $GLOBALS['TSFE']->fe_user->setKey('ses', 'kequestionnaire_start_tstamp', time());
-			// If page is given we have to check if there are some modifications made in url
-			if($GLOBALS['TSFE']->fe_user->getKey('ses', 'kequestionnaire_page') && $GLOBALS['TSFE']->fe_user->getKey('ses', 'kequestionnaire_page') > $pageNr) {
-			    $pageNr = $GLOBALS['TSFE']->fe_user->getKey('ses', 'kequestionnaire_page');
+		// if there should be a timer, set the session-keys for the timer
+		if (isset($this->ffdata['timer_type']) && $this->ffdata['timer_type'] != 'FREE') {
+			// only on page 0 we can set a new session for start time
+			if (empty($pageNr)) {
+				$timer = $GLOBALS['TSFE']->fe_user->getKey('ses', 'kequestionnaire_timer');
+				if (is_array($timer) && $timer['pid'] == $this->pid) {
+					$allowedSeconds = $this->ffdata['max_time'] * 60;
+					$diff = time() - $timer['tstamp'];
+					if ($diff > $allowedSeconds) {
+						$GLOBALS['TSFE']->fe_user->setKey('ses', 'kequestionnaire_timer', array(
+							'tstamp' => time(),
+							'pid' => $this->pid
+						));
+					}
+				} else {
+					$GLOBALS['TSFE']->fe_user->setKey('ses', 'kequestionnaire_timer', array(
+						'tstamp' => time(),
+						'pid' => $this->pid
+					));
+				}
 			}
-			$GLOBALS['TSFE']->fe_user->setKey('ses', 'kequestionnaire_page', $pageNr);
-		    }
 		}
 		//set the piVars with the correct pageNr
 		$this->piVars['page']=$pageNr;
@@ -1332,9 +1338,14 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 			if ($this->conf['timestamp_startpage']) $timestamp_start = $this->conf['timestamp_startpage'];
 			//Inserted by Stefan Froemken
 			if($timestamp_start > 0 AND $this->piVars['page'] >= $timestamp_start) {
-				if(!$GLOBALS['TSFE']->fe_user->getKey('ses', 'kequestionnaire_start_tstamp')) $started = mktime();
-				else $started = $GLOBALS['TSFE']->fe_user->getKey('ses', 'kequestionnaire_start_tstamp');
-				$GLOBALS['TSFE']->fe_user->setKey('ses', 'kequestionnaire_start_tstamp', $started);
+				if(!$GLOBALS['TSFE']->fe_user->getKey('ses', 'kequestionnaire_timer')) {
+					$timer = array(
+						'tstamp' => mktime(),
+						'pid' => $this->pid
+					);
+				} else $timer = $GLOBALS['TSFE']->fe_user->getKey('ses', 'kequestionnaire_timer');
+
+				$GLOBALS['TSFE']->fe_user->setKey('ses', 'kequestionnaire_timer', $timer);
  			}
 			if ($this->ffdata['timer_type'] AND $this->piVars['page'] > 0){
 				$started = mktime();
@@ -1962,8 +1973,8 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 						}
 					} else {
 						if (is_array($this->piVars[$qid]['options'])){
-							foreach ($this->piVars[$qid]['options'] as $area){
-								$bars['own'][$qid] += $answers[$area]['points'];
+							foreach ($this->piVars[$qid]['options'] as $key => $area){
+								$bars['own'][$qid] += $answers[$key]['points'];
 							}
 						}
 					}

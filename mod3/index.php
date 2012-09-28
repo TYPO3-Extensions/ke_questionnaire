@@ -55,7 +55,11 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 		parent::init();
 
 		//get the given Parameters
-		$this->q_id = intval(t3lib_div::_GP('q_id'));
+		if(!list($this->q_data) = t3lib_BEfunc::getRecordLocalization('tt_content', intval(t3lib_div::_GP('q_id')), intval($_POST['get_pdf_language']))) {
+			// if no localisation was found, get the original one
+			$this->q_data = t3lib_BEfunc::getRecord('tt_content', intval(t3lib_div::_GP('q_id')));
+		}
+		$this->q_id = $this->q_data['uid'];
 		$this->pid = intval(t3lib_div::_GP('id'));
 		$this->temp_file = 'tx_kequestionnaire_temp_'.$this->q_id.'_'.$GLOBALS['BE_USER']->user['uid'];
 
@@ -63,7 +67,6 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 		if (t3lib_extMgm::isLoaded('ke_questionnaire_premium')) $this->pr_extConf = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['ke_questionnaire_premium']);
 
 		if ($this->q_id > 0){
-			$this->q_data = t3lib_BEfunc::getRecord('tt_content',$this->q_id);
 			$ff_data = t3lib_div::xml2array($this->q_data['pi_flexform']);
 			$this->ff_data = $ff_data['data'];
 		}

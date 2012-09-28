@@ -55,11 +55,13 @@ class dompdf_export {
 		$this->pdf = new DOMPDF();
 
 		//get the Locallang of the pi1 / the questionnaire
+		$lang = 'en';
 		$basePath = t3lib_extMgm::extPath('ke_questionnaire').'pi1/locallang.xml';
-
-		//t3lib_div::devLog('conf', 'DOMPDF Export', 0, $this->conf);
-		$lang = $GLOBALS['BE_USER']->uc['lang'];
-		$tempLOCAL_LANG = t3lib_div::readLLfile($basePath,$lang);
+		if(isset($_POST['get_pdf_language']) && intval($_POST['get_pdf_language']) > 0) {
+			$record = t3lib_BEfunc::getRecord('sys_language', $_POST['get_pdf_language']);
+			$lang = $record['flag'];
+		}
+		$tempLOCAL_LANG = t3lib_div::readLLfile($basePath, $lang);
 		//t3lib_div::devLog('lang temp', 'DOMPDF Export', 0, $tempLOCAL_LANG);
 		//array_merge with new array first, so a value in locallang (or typoscript) can overwrite values from ../locallang_db
 		$this->LOCAL_LANG = array_merge_recursive($tempLOCAL_LANG,is_array($this->LOCAL_LANG) ? $this->LOCAL_LANG : array());
@@ -845,8 +847,9 @@ class dompdf_export {
 		$markerArray['###VALUE###'] = $value;
 		$answered = array();
 		if (is_array($this->result) AND $filled) {
-			if (is_array ($this->result[$question['uid']])){
-				$answered = $this->result[$question['uid']]['answer'];
+			$uid = ($question['l18n_parent']) ? $question['l18n_parent'] : $question['uid'];
+			if (is_array ($this->result[$uid])){
+				$answered = $this->result[$uid]['answer'];
 			}
 		}
 		//t3lib_div::devLog('answered', 'pdf_export', 0, array($answered));
@@ -874,20 +877,21 @@ class dompdf_export {
 				$options = $this->getOptions($question['uid']);
 				$markerArray['###OPTIONS###'] = '';
 				foreach ($options as $option){
+					$uid = ($option['l18n_parent']) ? $option['l18n_parent'] : $option['uid'];
 					$o_markerArray = array();
 					$o_markerArray['###VALUE###'] = $value;
 					$o_markerArray['###INPUT_TEXT###'] = '';
 					if (is_array($answered['options'])){
-						if (in_array($option['uid'],$answered['options'])){
+						if (in_array($uid,$answered['options'])){
 							$o_markerArray['###VALUE###'] = 'X';
 						}
 					} else {
-						if ($answered['options'] == $option['uid']) {
+						if ($answered['options'] == $uid) {
 							$o_markerArray['###VALUE###'] = 'X';
 						}
 					}
 					if (is_array($answered['text'])){
-						if ($answered['text'][$option['uid']] != '') $o_markerArray['###INPUT_TEXT###'] = '['.$answered['text'][$option['uid']].']';
+						if ($answered['text'][$uid] != '') $o_markerArray['###INPUT_TEXT###'] = '['.$answered['text'][$uid].']';
 					}
 					$text = $option['title'];
 					if ($option['text'] != '') $text = $option['text'];
@@ -910,10 +914,10 @@ class dompdf_export {
 					if ($option['text'] != '') $text = $option['text'];
 					$o_markerArray['###TEXT###'] = $text;
 					$o_markerArray['###IMAGE###'] = 'uploads/tx_kequestionnaire/' . $option['image'];
-
-					if(is_array($answered['options']) && array_key_exists($option['uid'], $answered['options']) || $answered['options'] == $option['uid']) {
+					$uid = ($option['l18n_parent']) ? $option['l18n_parent'] : $option['uid'];
+					if(is_array($answered['options']) && array_key_exists($uid, $answered['options']) || $answered['options'] == $uid) {
 						if(array_key_exists($option['answerarea'], $coords)) {
-							$pos = $answered['options'][$option['uid']];
+							$pos = $answered['options'][$uid];
 							$o_markerArray['###TOP###'] = $top = $coords[$pos]['start']['top'];
 							$o_markerArray['###LEFT###'] = $left = $coords[$pos]['start']['left'];
 							$o_markerArray['###HEIGHT###'] = $height = $coords[$pos]['end']['top'] - $coords[$pos]['start']['top'];
@@ -935,20 +939,21 @@ class dompdf_export {
 				$options = $this->getOptions($question['uid']);
 				$markerArray['###OPTIONS###'] = '';
 				foreach ($options as $option){
+					$uid = ($option['l18n_parent']) ? $option['l18n_parent'] : $option['uid'];
 					$o_markerArray = array();
 					$o_markerArray['###VALUE###'] = $value;
 					$o_markerArray['###INPUT_TEXT###'] = '';
 					if (is_array($answered['options'])){
-						if (in_array($option['uid'],$answered['options'])){
+						if (in_array($uid,$answered['options'])){
 							$o_markerArray['###VALUE###'] = 'X';
 						}
 					} else {
-						if ($answered['options'] == $option['uid']) {
+						if ($answered['options'] == $uid) {
 							$o_markerArray['###VALUE###'] = 'X';
 						}
 					}
 					if (is_array($answered['text'])){
-						if ($answered['text'][$option['uid']] != '') $o_markerArray['###INPUT_TEXT###'] = '['.$answered['text'][$option['uid']].']';
+						if ($answered['text'][$uid] != '') $o_markerArray['###INPUT_TEXT###'] = '['.$answered['text'][$uid].']';
 					}
 					$text = $option['title'];
 					if ($option['text'] != '') $text = $option['text'];
