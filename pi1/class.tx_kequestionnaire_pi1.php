@@ -332,9 +332,19 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 		if ($save){
 			//save the results
 			$this->setResults($this->piVars['result_id']);
-			//t3lib_div::devLog('saved saveArray '.$this->piVars['result_id'], $this->prefixId, 0, array($this->saveArray));
 		}
-		//t3lib_div::devLog('saved saveArray '.$this->piVars['result_id'], $this->prefixId, 0, array($this->saveArray));
+
+		//Hook to do something after all
+		//uherrmann, 2012-06-06, +9
+		if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$this->extKey]['postProcess'])){
+			foreach($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$this->extKey]['postProcess'] as $_classRef){
+				$_procObj   = & t3lib_div::getUserObj($_classRef);
+				$hookResult = $_procObj->postProcess($this);
+				if (!empty ($hookResult)) {
+					$content = $hookResult;
+				}
+			}
+		}
 
 		//if there is additional Header Data in the array
 		if (is_array($this->addHeaderData)){
