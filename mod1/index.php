@@ -169,8 +169,9 @@ class tx_kequestionnaire_navframe{
 		$out = '';
 		if ($res){
 			while ($row = $TYPO3_DB->sql_fetch_assoc($res)){
-				if(t3lib_BEfunc::readPageAccess($row['pid'],$GLOBALS['BE_USER']->getPagePermsClause(1)) || $GLOBALS['BE_USER']->check('modules','txkequestionnaireM1_txkequestionnaireM2')){
-					$pagy = t3lib_BEfunc::getRecord('pages',$row['pid']);
+				//if(t3lib_BEfunc::readPageAccess($row['pid'],$GLOBALS['BE_USER']->getPagePermsClause(1)) || $GLOBALS['BE_USER']->check('modules','txkequestionnaireM1_txkequestionnaireM2')){
+				$pagy = t3lib_BEfunc::getRecord('pages',$row['pid']);
+				if($GLOBALS["BE_USER"]->doesUserHaveAccess($pagy,1) && $GLOBALS['BE_USER']->check('modules','txkequestionnaireM1_txkequestionnaireM2')){
 					$out .= '<tr onmouseover="this.style.backgroundColor=\'';
 					$out .= t3lib_div::modifyHTMLColorAll($this->doc->bgColor,-5);
 					$out .= '\'" onmouseout="this.style.backgroundColor=\'\'">';

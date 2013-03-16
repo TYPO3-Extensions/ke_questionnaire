@@ -566,8 +566,8 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 					$temp_results[$row['uid']] = $temp_array;
 					$points = $this->calculatePoints($temp_results, $temp_array);
 					//t3lib_div::debug($temp_results,'results');
-					//t3lib_div::debug($points,'points '.$row['uid']);
-					//t3lib_div::debug($this->ffdata);
+					t3lib_div::debug($points,'points '.$row['uid']);
+					t3lib_div::debug($this->ffdata);
 					if ($points['percent'] >= $this->ffdata['cert_minPercent']){
 						$content['points_complete'] = 1;
 						$content['points_complete_result'] = $row['uid'];
@@ -717,7 +717,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 		$saveFields['pid'] = $this->pid;
 		$saveFields['tstamp'] = mktime();
 		$saveFields['sys_language_uid'] = $GLOBALS['TSFE']->sys_language_uid;
-
+		
 		foreach ($this->saveArray as $sidy => $save_part){
 			//t3lib_div::debug($save_part,'part');
 			//t3lib_div::debug($this->piVars,'vars');
