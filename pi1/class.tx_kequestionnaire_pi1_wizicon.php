@@ -56,16 +56,29 @@ class tx_kequestionnaire_pi1_wizicon {
 					}
 
 					/**
-					 * Reads the [extDir]/locallang.xml and returns the $LOCAL_LANG array found in that file.
-					 *
-					 * @return	The array with language labels
-					 */
-					function includeLocalLang()	{
-						$llFile = t3lib_extMgm::extPath('ke_questionnaire').'locallang.xml';
-						$LOCAL_LANG = t3lib_div::readLLXMLfile($llFile, $GLOBALS['LANG']->lang);
-						
-						return $LOCAL_LANG;
-					}
+                      * Reads the [extDir]/locallang.xml and returns the $LOCAL_LANG array found in that file.
+                      *
+                      * @return    The array with language labels
+					
+                    function includeLocalLang()    {
+                         $llFile = t3lib_extMgm::extPath('ke_questionnaire').'locallang.xml';
+                         $LOCAL_LANG = t3lib_div::readLLXMLfile($llFile, $GLOBALS['LANG']->lang);
+
+                         return $LOCAL_LANG;
+                     }*/
+
+                     function includeLocalLang()    {
+                                   $llFile = t3lib_extMgm::extPath('ke_questionnaire').'locallang.xml';
+                                   $version = class_exists('t3lib_utility_VersionNumber') ? t3lib_utility_VersionNumber::convertVersionNumberToInteger(TYPO3_version): t3lib_div::int_from_ver(TYPO3_version);
+                                   if ($version >= 4007000) {
+                                           $object = t3lib_div::makeInstance('t3lib_l10n_parser_Llxml');
+                                           $LOCAL_LANG = $object->getParsedData($llFile, $GLOBALS['LANG']->lang);
+                                   } else {
+                                       $LOCAL_LANG = t3lib_div::readLLXMLfile($llFile, $GLOBALS['LANG']->lang);
+                                   }
+
+                                   return $LOCAL_LANG;
+                           }
 				}
 
 
