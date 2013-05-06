@@ -54,7 +54,7 @@ CREATE TABLE tx_kequestionnaire_questions (
 	matrix_validation varchar(7) DEFAULT '' NOT NULL,
 	matrix_maxanswers int(11) DEFAULT '0' NOT NULL,
 	matrix_inputfield int(11) DEFAULT '0' NOT NULL,
-        matrix_pointsforcolumn tinyint(3) DEFAULT '0' NOT NULL,
+    matrix_pointsforcolumn tinyint(3) DEFAULT '0' NOT NULL,
 	demographic_type varchar(7) DEFAULT '' NOT NULL,
 	demographic_fields text NOT NULL,
 	demographic_addressfields text NOT NULL,
@@ -70,8 +70,8 @@ CREATE TABLE tx_kequestionnaire_questions (
 	submatrix blob NOT NULL,
 	coords text NOT NULL,
 	ddarea_onetry tinyint(4) DEFAULT '0' NOT NULL,
-        ddarea_maxitems tinyint(4) DEFAULT '0' NOT NULL,
-	
+    ddarea_maxitems tinyint(4) DEFAULT '0' NOT NULL,
+	timestop_link tinytext NOT NULL,
 	PRIMARY KEY (uid),
 	KEY parent (pid),
 	KEY t3ver_oid (t3ver_oid,t3ver_wsid)

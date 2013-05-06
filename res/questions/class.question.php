@@ -78,7 +78,7 @@ class question{
 		$this->addOptions=$addOptions;
 		$this->answers=array();
 		//t3lib_div::devLog('dateFormat '.$uid, 'questions', 0, array($dateFormat,$this->dateFormat));
-
+		
 		if ($GLOBALS['TYPO3_CONF_VARS']['SYS']['compat_version'] > 4.1) {
 		    $this->answer = $this->removeXSSFromAnswer($answer);
 		} else {

@@ -55,11 +55,13 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 		parent::init();
 
 		//get the given Parameters
-		if(!list($this->q_data) = t3lib_BEfunc::getRecordLocalization('tt_content', intval(t3lib_div::_GP('q_id')), intval($_POST['get_pdf_language']))) {
-			// if no localisation was found, get the original one
-			$this->q_data = t3lib_BEfunc::getRecord('tt_content', intval(t3lib_div::_GP('q_id')));
+		if (t3lib_div::_GP('q_id')){
+			if(!list($this->q_data) = t3lib_BEfunc::getRecordLocalization('tt_content', intval(t3lib_div::_GP('q_id')), intval($_POST['get_pdf_language']))) {
+				// if no localisation was found, get the original one
+				$this->q_data = t3lib_BEfunc::getRecord('tt_content', intval(t3lib_div::_GP('q_id')));
+			}
+			$this->q_id = $this->q_data['uid'];
 		}
-		$this->q_id = $this->q_data['uid'];
 		$this->pid = intval(t3lib_div::_GP('id'));
 		$this->temp_file = 'tx_kequestionnaire_temp_'.$this->q_id.'_'.$GLOBALS['BE_USER']->user['uid'];
 
@@ -191,8 +193,6 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 		global $LANG;
 		//set_time_limit(240);
 
-		//t3lib_div::debug($_GET,'get');
-		//t3lib_div::debug($this->MOD_SETTINGS,'settings');
 		if ($this->q_id == 0 AND $this->MOD_SETTINGS['function'] != 4 ){
 			$title = $LANG->getLL('none_selected');
 			$content = $LANG->getLL('none_selected');

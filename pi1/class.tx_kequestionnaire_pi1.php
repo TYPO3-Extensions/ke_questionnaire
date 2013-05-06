@@ -99,7 +99,6 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 		//Initialize the Plugin
 		$this->init();
 
-
 		// There are main tasks we might have to do:
 		//   mainAskQuestions OR mainGetPdf OR mainSendMail
 		// First thing is to set a flag indicating what's needed
@@ -333,7 +332,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 			//save the results
 			$this->setResults($this->piVars['result_id']);
 		}
-
+		
 		//Hook to do something after all
 		//uherrmann, 2012-06-06, +9
 		if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$this->extKey]['postProcess'])){
@@ -566,8 +565,6 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 					$temp_results[$row['uid']] = $temp_array;
 					$points = $this->calculatePoints($temp_results, $temp_array);
 					//t3lib_div::debug($temp_results,'results');
-					t3lib_div::debug($points,'points '.$row['uid']);
-					t3lib_div::debug($this->ffdata);
 					if ($points['percent'] >= $this->ffdata['cert_minPercent']){
 						$content['points_complete'] = 1;
 						$content['points_complete_result'] = $row['uid'];
