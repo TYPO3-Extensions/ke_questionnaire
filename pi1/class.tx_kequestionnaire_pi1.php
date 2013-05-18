@@ -715,11 +715,13 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 		$saveFields['tstamp'] = mktime();
 		$saveFields['sys_language_uid'] = $GLOBALS['TSFE']->sys_language_uid;
 		
-		foreach ($this->saveArray as $sidy => $save_part){
-			//t3lib_div::debug($save_part,'part');
-			//t3lib_div::debug($this->piVars,'vars');
-			if ($this->piVars[$save_part['question_id']] AND !$save_part['answer']){
-				$this->saveArray[$sidy]['answer'] = $this->piVars[$save_part['question_id']];
+		if (is_array($this->saveArray)) {
+			foreach ($this->saveArray as $sidy => $save_part){
+				//t3lib_div::debug($save_part,'part');
+				//t3lib_div::debug($this->piVars,'vars');
+				if ($this->piVars[$save_part['question_id']] AND !$save_part['answer']){
+					$this->saveArray[$sidy]['answer'] = $this->piVars[$save_part['question_id']];
+				}
 			}
 		}
 		//Hook to manipulate the saved Array
@@ -1792,8 +1794,10 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 		$returner = array();
 		$blocks = array();
 		$pools = $this->piVars['random_pools'];
-		foreach ($pools as $p_id => $pool){
-			$blocks[$p_id] = array();
+		if (is_array($pools)){
+			foreach ($pools as $p_id => $pool){
+				$blocks[$p_id] = array();
+			}
 		}
 		//t3lib_div::debug($this->questionsByID,'q by id');
 		//t3lib_div::debug($blocks,'blocks');
