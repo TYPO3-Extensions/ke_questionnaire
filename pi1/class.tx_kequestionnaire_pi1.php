@@ -98,7 +98,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 		$this->pi_USER_INT_obj=1;	// Configuring so caching is not expected. This value means that no cHash params are ever set. We do this, because it's a USER_INT object!
 		//Initialize the Plugin
 		$this->init();
-
+		
 		// There are main tasks we might have to do:
 		//   mainAskQuestions OR mainGetPdf OR mainSendMail
 		// First thing is to set a flag indicating what's needed
@@ -332,6 +332,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 			//save the results
 			$this->setResults($this->piVars['result_id']);
 		}
+
 		
 		//Hook to do something after all
 		//uherrmann, 2012-06-06, +9
@@ -344,7 +345,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 				}
 			}
 		}
-
+		
 		//if there is additional Header Data in the array
 		if (is_array($this->addHeaderData)){
 			//t3lib_div::devLog('fe js', $this->prefixId, 0, $this->addHeaderData);
@@ -362,7 +363,6 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 				</script>
 			';
 		}
-
 		return $this->pi_wrapInBaseClass($content);
 	}
 
@@ -781,6 +781,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 		if ($this->ffdata['linear'] == 1) $this->ffdata['render_type'] = 'QUESTIONS';
 
 		$page_count = $this->pageCount;
+		
 		//if the timer is set and the type is "total" the questionnaire is finnished as soon as the timer reaches 0
 		if (isset($this->piVars['timer']) AND $this->ffdata['timer_type'] == 'TOTAL' AND $this->piVars['timer'] <= 0) $page_nr = $page_count +1;
 
@@ -948,6 +949,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 	function renderPage($page_nr,$page_count,$form_pre_add='',$form_post_add=''){
 		$questions = '';
 		$markerArray = array();
+		
 		if ($this->user_id){
 			foreach ($this->userMarker as $marker => $value){
 				$markerArray[$marker] = $value;
@@ -974,6 +976,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 
 		//get the questions shown on this page
 		$page_questions = $this->getQuestionsOfPage($page_nr,$page_count);
+		
 		$markerArray['###PAGE_MAP###'] = $this->renderPagemap($page_nr,$page_count,$page_questions);
 		//t3lib_div::debug($page_questions);
 		$shown = $this->shown;
@@ -981,7 +984,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 			//render reach question
 			$questions .= $this->getQuestionTypeRender($quest);
 		}
-
+				
 		//navigation for the questionnaire (first page, last page, next page, last page)
 		$nav_markerArray = array();
 		if (($page_nr - 1) > 0 AND $this->ffdata['linear'] != 1 AND $this->ffdata['type'] != 'QUIZ'){
@@ -1093,12 +1096,10 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 		if ($this->pageJS != ''){
 			$markerArray['###JS###'] = '<script type="text/javascript">'.$this->pageJS.'</script>';
 		}
-
-
+		
 		$content = $this->renderContent('###PAGE###',$markerArray);
-
 		$content = $this->renderMarker($content, $this->userMarker);
-
+		
 		return $content;
 	}
 
