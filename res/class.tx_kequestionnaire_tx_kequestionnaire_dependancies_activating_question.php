@@ -54,7 +54,9 @@ class tx_kequestionnaire_tx_kequestionnaire_dependancies_activating_question {
 				$params['items'][] = array('['.$row['uid'].'] '.$row['title'], $row['uid']);	
 			}
 		}
-		t3lib_div::loadTCA("tx_kequestionnaire_dependancies");
+		if (version_compare(TYPO3_branch, '6.1', '<')) {
+			t3lib_div::loadTCA("tx_kequestionnaire_dependancies");
+		}
 		$TCA = &$GLOBALS["TCA"]["tx_kequestionnaire_dependancies"];
 		$TCA['columns']['activating_value']['config']['items'] = array();
 		if ($params['row']['activating_question']){

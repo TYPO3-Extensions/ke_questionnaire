@@ -42,7 +42,10 @@ class tx_kequestionnaire_tx_kequestionnaire_questions_demographic_fields {
 		
 		$allowed_types = array('input','text','select','check');
 		
-		t3lib_div::loadTCA("fe_users");
+		if (version_compare(TYPO3_branch, '6.1', '<')) {
+			t3lib_div::loadTCA("fe_users");
+		}
+		
 		$TCA = &$GLOBALS["TCA"]["fe_users"];
 		//t3lib_div::devLog('tca', 'demographic_fields', 0, $TCA);
 		$content = '';
@@ -68,7 +71,9 @@ class tx_kequestionnaire_tx_kequestionnaire_questions_demographic_fields {
 		
 		$allowed_types = array('input','text','select','check');
 		
-		t3lib_div::loadTCA("fe_users");
+		if (version_compare(TYPO3_branch, '6.1', '<')) {
+			t3lib_div::loadTCA("fe_users");
+		}
 		$TCA = &$GLOBALS["TCA"]["fe_users"];
 		//t3lib_div::devLog('tca', 'demographic_fields', 0, $TCA);
 		$content = '';

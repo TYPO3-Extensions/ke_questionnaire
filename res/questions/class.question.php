@@ -395,13 +395,15 @@ class question{
 	 */
 
 	function processRTEFields($row,$table){
-		t3lib_div::loadTCA($table);
+		if (version_compare(TYPO3_branch, '6.1', '<')) {
+			t3lib_div::loadTCA($table);
+		}
 		$TCA = $GLOBALS["TCA"][$table];
 
 		$out=array();
 		foreach($row as $col=>$val){
 			$rte=isset($TCA["columns"][$col]["config"]["wizards"]["RTE"]);
-			if ($rte){
+			if ($rte and $val != ''){
 			    $temp_val = str_replace('&nbsp;','',$val);
 			    $temp_val = str_replace('<br />','',$temp_val);
 			    if (trim($temp_val) != '') $out[$col] = $this->obj->pi_RTEcssText($val);

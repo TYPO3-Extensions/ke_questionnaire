@@ -283,8 +283,9 @@ $TCA["tx_kequestionnaire_history"] = array (
 		"fe_admin_fieldList" => "sys_language_uid, hidden, fe_group, data_2e86c50d23, history_time, result_id",
 	)
 );
-
-t3lib_div::loadTCA('tt_content');
+if (version_compare(TYPO3_branch, '6.1', '<')) {
+   t3lib_div::loadTCA('tt_content');
+}
 t3lib_extMgm::addPlugin(array('LLL:EXT:ke_questionnaire/locallang_db.xml:tt_content.list_type_pi1', $_EXTKEY.'_pi1'),'list_type');
 t3lib_extMgm::addStaticFile($_EXTKEY,"/pi1/static/","keq questionnaire");
 

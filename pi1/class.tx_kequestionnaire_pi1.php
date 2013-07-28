@@ -124,7 +124,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 			default:
 				$content = 'unknown task \'' . $this->mainTask . '\'';
 		}
-
+		
 		return $content;
 	}
 
@@ -187,6 +187,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 			}
 			return $this->pi_wrapInBaseClass($content);
 		}
+		
 		//if the validation is not processed correctly the former page will be shown
 		if (!$this->checkValidation()) $this->piVars['page'] --;
 
@@ -2566,7 +2567,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 		//t3lib_div::debug($this->cObj->data);
 		// Assign the flexform data to a local variable for easier access
 		$piFlexForm = $this->cObj->data['pi_flexform'];
-
+		
 		// Traverse the entire flexform array based on the language
 		// and write the content to an array
 		if (is_array($piFlexForm['data'])) {
@@ -2716,7 +2717,8 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 		}
 
 		//if there are no questions (could be out if the hook) take the normal way
-		if (!$questions){
+		if (!is_array($questions)){
+			$questions = array();
 			$selectFields = '*';
 			$where = 'pid = ' . $this->pid;
 			$where .= ' AND sys_language_uid = ' . $GLOBALS['TSFE']->sys_language_uid;

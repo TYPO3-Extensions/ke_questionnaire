@@ -641,7 +641,9 @@ class  tx_kequestionnaire_module3 extends t3lib_SCbase {
 
 		$content = '';
 		$content .= '<b>'.$LANG->getLL('CSV_feUserHeader').'</b><br />';
-		t3lib_div::loadTCA("fe_users");
+		if (version_compare(TYPO3_branch, '6.1', '<')) {
+			t3lib_div::loadTCA("fe_users");
+		}
 		$TCA = &$GLOBALS["TCA"]["fe_users"];
 		foreach ($TCA['columns'] as $name => $conf){
 			if (!in_array($name,$excludes)){

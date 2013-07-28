@@ -104,7 +104,9 @@ class question_demographic extends question{
 	 *
 	 */
 	function getOptionsForDemographic($question,$table){
-		t3lib_div::loadTCA($table);
+		if (version_compare(TYPO3_branch, '6.1', '<')) {
+			t3lib_div::loadTCA($table);
+		}
 		$TCA = $GLOBALS["TCA"][$table];
 
 

@@ -122,7 +122,8 @@ class question_dd_words extends question {
 				}
 			});
 		';
-
+		
+		$markerArray = array();
 		// create the answers for each question
 		// create also hidden fields to save the answer
 		foreach($this->answers as $key => $value) {
