@@ -2706,7 +2706,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 
 		$temp_count = 0;
 		$temp_count_hidden = 0;
-		$questions = array();
+		$questions = false;
 
 		//Hook to manipulate the Question-Array
 		if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$this->extKey]['pi1_getQuestions'])){
@@ -2717,13 +2717,15 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 		}
 
 		//if there are no questions (could be out if the hook) take the normal way
+		//t3lib_utility_debug::debug($questions,'qs');
 		if (!is_array($questions)){
 			$questions = array();
 			$selectFields = '*';
 			$where = 'pid = ' . $this->pid;
 			$where .= ' AND sys_language_uid = ' . $GLOBALS['TSFE']->sys_language_uid;
-			$where .= $this->cObj->enableFields('tx_kequestionnaire_questions');
+			//$where .= $this->cObj->enableFields('tx_kequestionnaire_questions');
 			$orderBy = 'sorting';
+			//t3lib_utility_debug::debug($where,'qs');
 			$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
 				$selectFields,
 				'tx_kequestionnaire_questions',
