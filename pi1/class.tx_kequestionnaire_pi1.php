@@ -91,7 +91,7 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 			$dummy_obj->init(0,$this,array());
 			exit;
 		}
-		$this->conf=$conf;
+        $this->conf=$conf;
 		$this->pi_setPiVarDefaults();
 		$this->pi_loadLL();
 		$this->pi_initPIflexform();
@@ -741,13 +741,11 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 		}
 
 		if (is_array($this->saveArray)) $saveFields['xmldata'] = t3lib_div::array2xml($this->saveArray);
-
-		//when the questionnaire is finished and all questions are answered
-		if ($this->finished){
-			$saveFields['finished_tstamp'] = mktime();
-		}
-
-		//if there exists an result, make an update
+        //when the questionnaire is finished and all questions are answered
+        //t3lib_utility_debug::debug($this->piVars,'piVars');
+        //t3lib_utility_debug::debug($this->saveArray,'result '.$result_id);exit;
+		
+        //if there exists an result, make an update
 		if ($result_id){
 			$where = 'uid='.$result_id;
 			$GLOBALS['TYPO3_DB']->exec_UPDATEquery('tx_kequestionnaire_results',$where,$saveFields);
@@ -1395,8 +1393,10 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 			}
 		}
 
-		$result_id = $this->setResults(0);
-		$this->piVars['result_id'] = $result_id;
+		if (!$this->piVars['result_id']) {
+            $result_id = $this->setResults(0);
+            $this->piVars['result_id'] = $result_id;
+        }
 
 		$markerArray['###TEXT###'] = $this->pi_RTEcssText($this->ffdata['description']);
 		//$markerArray['###NAV###'] = $this->pi_linkTP($this->pi_getLL('to_questionnaire'),array($this->prefixId.'[page]'=>1));
