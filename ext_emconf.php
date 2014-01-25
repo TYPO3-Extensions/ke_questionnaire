@@ -29,10 +29,11 @@ $EM_CONF[$_EXTKEY] = array(
 	'clearCacheOnLoad' => 1,
 	'lockType' => '',
 	'author_company' => 'www.kennziffer.com GmbH',
-	'version' => '2.5.5',
+	'version' => '2.5.6',
 	'constraints' => array(
 		'depends' => array(
-			'cms' => '',
+            'cms' => '',
+			'typo3' => '4.5.0-6.1.0',
 			'xajax' => '0.2.5',
 		),
 		'conflicts' => array(
