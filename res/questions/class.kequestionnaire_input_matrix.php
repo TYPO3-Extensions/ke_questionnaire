@@ -516,7 +516,7 @@ class kequestionnaire_input_matrix extends kequestionnaire_input{
                         case "matrix_required_input":
                                 foreach($this->subquestions as $key=>$subquestion){
                                         foreach($this->columns as $keyCol => $column){
-                                                if(isset($value[$key][$keyCol]) && $value[$key][$keyCol]!="") continue;
+                                                if(isset($value[$key][$keyCol]) && $value[$key][$keyCol][0]!="" || $subquestion['title_line'] == 1) continue;
                                                 $out=0;
                                                 $this->subquestions[$key]["error"]=$validationType;
                                         }
