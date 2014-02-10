@@ -1027,10 +1027,10 @@ $TCA['tx_kequestionnaire_questions'] = array (
 				dependancy,
 				--div--;LLL:EXT:ke_questionnaire/locallang.xml:tx_kequestionnaire.type_based,
 				closed_randomanswers,
-				--div--;LLL:EXT:ke_questionnaire/locallang.xml:tx_kequestionnaire.answers,'
-				.'ddarea_drop_once,
-                                coords,
-                                answers'
+				--div--;LLL:EXT:ke_questionnaire/locallang.xml:tx_kequestionnaire.answers,
+				ddarea_onetry,
+				coords,
+                answers'
 		),
                 'dd_pictures' => array(
 			'showitem' => '
