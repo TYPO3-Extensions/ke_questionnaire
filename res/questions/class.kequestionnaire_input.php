@@ -119,7 +119,7 @@
 			
 			//#############################################
 			// KENNZIFFER Nadine Schwingler 03.11.2009
-			// Anpassungen Title-Line für Matrix
+			// Anpassungen Title-Line fï¿½r Matrix
 			if ($this->type == 'matrix_title_line'){
 				$markerArray["###ODD_EVEN###"]='title_line';
 			} else {
@@ -558,7 +558,11 @@
 				switch($type){
 					case "matrix_radio":
 					case "semantic":
-						$markerArraySub["###CHECKED###"]=$value['single']==$column["uid"]?"checked='checked'":"";
+						if(is_array($value) && array_key_exists('single', $value)) {
+							$markerArraySub["###CHECKED###"]=$value['single']==$column["uid"]?"checked='checked'":"";
+						} else {
+							$markerArraySub["###CHECKED###"]=$value==$column["uid"]?"checked='checked'":"";
+						}
 					break;
 					case "matrix_checkbox":
 						if (is_array($value)){
