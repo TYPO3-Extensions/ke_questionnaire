@@ -741,10 +741,12 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 		}
 
 		if (is_array($this->saveArray)) $saveFields['xmldata'] = t3lib_div::array2xml($this->saveArray);
-        //when the questionnaire is finished and all questions are answered
-        //t3lib_utility_debug::debug($this->piVars,'piVars');
-        //t3lib_utility_debug::debug($this->saveArray,'result '.$result_id);exit;
-		
+
+		//when the questionnaire is finished and all questions are answered
+		if ($this->finished){
+			$saveFields['finished_tstamp'] = mktime();
+		}
+
         //if there exists an result, make an update
 		if ($result_id){
 			$where = 'uid='.$result_id;
