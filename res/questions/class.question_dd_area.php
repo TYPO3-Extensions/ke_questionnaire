@@ -73,7 +73,7 @@ class question_dd_area extends question {
 	 */
 	function buildFieldArray(){
  		// check if frong answers should be maked as wrong
-		if($this->question['ddarea_drop_once']) {
+		if($this->question['ddarea_onetry']) {
  			$jsForWrongAnswers = '
  				$("#keq-ddarea-checkbox" + answerId[0]).css("backgroundColor", "#DD0000");
  				$("#keq-ddarea-moveable" + answerId[0] + "-" + answerId[1]).fadeOut();
