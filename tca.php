@@ -732,7 +732,7 @@ $TCA['tx_kequestionnaire_questions'] = array (
 				'rows' => '5'
 			)
 		),
-		'ddarea_onetry' => array (
+        'ddarea_onetry' => array (
 			'exclude' => 1,
 			'label'   => 'LLL:EXT:ke_questionnaire/locallang_db.xml:tx_kequestionnaire_questions.ddarea_onetry',
 			'config'  => array (
@@ -740,7 +740,15 @@ $TCA['tx_kequestionnaire_questions'] = array (
 				'default' => '0'
 			)
 		),
-                'ddarea_maxitems' => array (
+		'ddarea_drop_once' => array (
+			'exclude' => 1,
+			'label'   => 'LLL:EXT:ke_questionnaire/locallang_db.xml:tx_kequestionnaire_questions.ddarea_drop_once',
+			'config'  => array (
+				'type'	=> 'check',
+				'default' => '0'
+			)
+		),
+        'ddarea_maxitems' => array (
 			'exclude' => 1,
 			'label'   => 'LLL:EXT:ke_questionnaire/locallang_db.xml:tx_kequestionnaire_questions.ddarea_maxitems',
 			'config'  => array (
@@ -1028,7 +1036,7 @@ $TCA['tx_kequestionnaire_questions'] = array (
 				--div--;LLL:EXT:ke_questionnaire/locallang.xml:tx_kequestionnaire.type_based,
 				closed_randomanswers,
 				--div--;LLL:EXT:ke_questionnaire/locallang.xml:tx_kequestionnaire.answers,
-				ddarea_onetry,
+				ddarea_drop_once,
 				coords,
                 answers'
 		),
