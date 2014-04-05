@@ -2714,18 +2714,17 @@ class tx_kequestionnaire_pi1 extends tslib_pibase {
 		if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$this->extKey]['pi1_getQuestions'])){
 			foreach($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$this->extKey]['pi1_getQuestions'] as $_classRef){
 				$_procObj = & t3lib_div::getUserObj($_classRef);
-				$questions = $_procObj->pi1_getQuestions($this);
+				if ($_procObj->pi1_getQuestions($this))$questions = $_procObj->pi1_getQuestions($this);
 			}
 		}
 
 		//if there are no questions (could be out if the hook) take the normal way
-		//t3lib_utility_debug::debug($questions,'qs');
 		if (!is_array($questions)){
 			$questions = array();
 			$selectFields = '*';
 			$where = 'pid = ' . $this->pid;
 			$where .= ' AND sys_language_uid = ' . $GLOBALS['TSFE']->sys_language_uid;
-			//$where .= $this->cObj->enableFields('tx_kequestionnaire_questions');
+			$where .= $this->cObj->enableFields('tx_kequestionnaire_questions');
 			$orderBy = 'sorting';
 			//t3lib_utility_debug::debug($where,'qs');
 			$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
